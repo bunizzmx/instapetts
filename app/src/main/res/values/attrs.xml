@@ -1,0 +1,75 @@
+<resources>
+
+    <dimen name="default_trace_width">16dp</dimen>
+    <dimen name="default_progress_text_size">28sp</dimen>
+    <dimen name="default_corner_radius">5dp</dimen>
+    <dimen name="default_horizontal_text_size">14sp</dimen>
+    <dimen name="default_zone_length">22dp</dimen>
+    <dimen name="default_zone_width">6dp</dimen>
+    <dimen name="default_zone_padding">16dp</dimen>
+    <dimen name="default_zone_corner_radius">8dp</dimen>
+
+    <declare-styleable name="ImageViewZoom">
+        <attr name="circle" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="SubsamplingScaleImageView">
+        <attr name="src" format="reference"/>
+        <attr name="assetName" format="string"/>
+        <attr name="panEnabled" format="boolean"/>
+        <attr name="zoomEnabled" format="boolean"/>
+        <attr name="quickScaleEnabled" format="boolean"/>
+        <attr name="tileBackgroundColor" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="DotsIndicator">
+        <attr name="dotsColor"/>
+        <attr name="selectedDotColor"/>
+        <attr name="dotsSize"/>
+        <attr name="dotsWidthFactor"/>
+        <attr name="dotsSpacing"/>
+        <attr name="dotsCornerRadius"/>
+        <attr name="progressMode"/>
+    </declare-styleable>
+
+    <declare-styleable name="HorizontalProgressView">
+        <attr name="track_width"/>
+        <attr name="start_progress"/>
+        <attr name="end_progress"/>
+        <attr name="start_color"/>
+        <attr name="end_color"/>
+        <attr name="isTracked"/>
+        <attr name="trackColor"/>
+        <attr name="progressDuration"/>
+        <attr name="progressTextVisibility"/>
+        <attr name="progressTextColor"/>
+        <attr name="progressTextSize"/>
+        <attr name="animateType"/>
+        <attr name="corner_radius" format="dimension"/>
+        <attr name="text_padding_bottom" format="dimension"/>
+        <attr name="textMovedEnable" format="boolean"/>
+
+    </declare-styleable>
+
+    <!-- SLIDING BOTTOOM_SHEET -->
+    <declare-styleable name="SlidingUpPanelLayout">
+        <attr name="umanoPanelHeight" format="dimension" />
+        <attr name="umanoShadowHeight" format="dimension" />
+        <attr name="umanoParallaxOffset" format="dimension" />
+        <attr name="umanoFadeColor" format="color" />
+        <attr name="umanoFlingVelocity" format="integer" />
+        <attr name="umanoDragView" format="reference" />
+        <attr name="umanoScrollableView" format="reference" />
+        <attr name="umanoOverlay" format="boolean"/>
+        <attr name="umanoClipPanel" format="boolean"/>
+        <attr name="umanoAnchorPoint" format="float" />
+        <attr name="umanoInitialState" format="enum">
+            <enum name="expanded" value="0" />
+            <enum name="collapsed" value="1" />
+            <enum name="anchored" value="2" />
+            <enum name="hidden" value="3" />
+        </attr>
+        <attr name="umanoScrollInterpolator" format="reference" />
+    </declare-styleable>
+
+</resources>

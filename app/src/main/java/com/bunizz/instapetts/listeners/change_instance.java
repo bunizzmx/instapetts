@@ -1,0 +1,5 @@
+package com.bunizz.instapetts.listeners;
+
+public interface change_instance {
+    void change(int fragment_element);
+}

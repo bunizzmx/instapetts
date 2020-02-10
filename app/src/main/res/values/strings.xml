@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Instapetts</string>
+    <string name="config">Configurar</string>
+    <string name="next">Siguiente</string>
+    <string name="exit">Salir</string>
+    <string name="acept_next">Aceptar</string>
+</resources>

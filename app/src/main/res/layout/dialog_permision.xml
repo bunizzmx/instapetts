@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    android:layout_marginTop="30dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:id="@+id/background"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@android:color/transparent">
+    <RelativeLayout
+        android:paddingTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="top"
+        android:background="@drawable/round_white"
+        android:clickable="true"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_margin="15dp"
+            android:id="@+id/close_dialog"
+            android:tint="@color/black"
+            android:src="@drawable/ic_cross"
+            android:layout_width="15dp"
+            android:layout_height="15dp"></ImageView>
+        <TextView
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/close_dialog"
+            android:id="@+id/label_activate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="10dp"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/lottie_anim"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_fileName="lottie_atorage.json"
+            android:layout_width="250dp"
+            android:layout_height="250dp" />
+        <TextView
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/label_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="10dp"
+            android:text=""
+            android:textAlignment="center"
+            android:textSize="12dp" />
+        <Button
+            android:textAllCaps="false"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:layout_above="@+id/label_body"
+            android:id="@+id/configure_permision"
+            android:text="@string/config"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>
