@@ -13,6 +13,8 @@ public class FragmentElement<T extends Fragment> {
     public static final int INSTANCE_MAIN_LOGIN = 1;
     public static final int INSTANCE_SIGIN = 2;
     public static final int INSTANCE_LOGIN = 3;
+    public static final int INSTANCE_FEED = 4;
+
 
     //endregion
     private String mTitle;

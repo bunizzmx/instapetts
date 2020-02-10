@@ -15,6 +15,7 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.MainActivity;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.login.LoginActivity;
+import com.bunizz.instapetts.activitys.main.Main;
 import com.bunizz.instapetts.fragments.intro.Fragment1;
 import com.bunizz.instapetts.fragments.intro.Fragment2;
 import com.bunizz.instapetts.fragments.intro.Fragment3;
@@ -104,12 +105,12 @@ public class IntroActivity extends AppCompatActivity implements VisibleItem {
                     back.setText(getResources().getString(R.string.exit));
                     skip.setText(getResources().getString(R.string.acept_next));
                 }else if(position ==2){
-                    Intent i = new Intent(IntroActivity.this, LoginActivity.class);
+                    Intent i = new Intent(IntroActivity.this, Main.class);
                     startActivity(i);
                     progress_intro.setVisibility(View.VISIBLE);
                     skip.setVisibility(View.GONE);
                 }else{
-                    Intent i = new Intent(IntroActivity.this, LoginActivity.class);
+                    Intent i = new Intent(IntroActivity.this, Main.class);
                     startActivity(i);
 
                 }

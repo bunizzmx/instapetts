@@ -72,4 +72,12 @@
         <attr name="umanoScrollInterpolator" format="reference" />
     </declare-styleable>
 
+    <declare-styleable name="ImagenCircular">
+        <attr format="dimension" name="civ_border_width"/>
+        <attr format="color" name="civ_border_color"/>
+        <attr format="boolean" name="civ_border_overlay"/>
+        <attr format="color" name="civ_fill_color"/>
+        <attr format="color" name="civ_circle_background_color"/>
+    </declare-styleable>
+
 </resources>
