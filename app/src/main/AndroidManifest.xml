@@ -20,6 +20,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activitys.login.LoginActivity"></activity>
+        <activity android:name=".fragments.login.MainActivity"></activity>
     </application>
 
 </manifest>

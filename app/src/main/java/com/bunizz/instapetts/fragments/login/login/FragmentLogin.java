@@ -22,27 +22,14 @@ import butterknife.OnClick;
 
 public class FragmentLogin extends Fragment {
 
-    change_instance listener;
 
-    @OnClick(R.id.register_user)
-    void register_user()
+    @OnClick(R.id.back_to_main)
+    void back_to_main()
     {
-       listener.change(FragmentElement.INSTANCE_SIGIN);
+        listener.onback();
     }
 
-    @BindView(R.id.title_login)
-    TextView title_login;
-    @BindView(R.id.user_login)
-    TextView user_login;
-
-    @BindView(R.id.xxx)
-    TextView xxx;
-
-    @BindView(R.id.label_facebook)
-    TextView label_facebook;
-
-
-
+    change_instance listener;
 
     public static FragmentLogin newInstance() {
         return new FragmentLogin();
@@ -63,10 +50,6 @@ public class FragmentLogin extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        title_login.setTypeface(App.avenir_black);
-        user_login.setTypeface(App.fuente);
-        xxx.setTypeface(App.fuente);
-        label_facebook.setTypeface(App.fuente);
     }
 
 

@@ -10,8 +10,10 @@ import androidx.fragment.app.Fragment;
 public class FragmentElement<T extends Fragment> {
     //region Variables
     //region Statics
-    public static final int INSTANCE_SIGIN = 1;
-    public static final int INSTANCE_LOGIN = 2;
+    public static final int INSTANCE_MAIN_LOGIN = 1;
+    public static final int INSTANCE_SIGIN = 2;
+    public static final int INSTANCE_LOGIN = 3;
+
     //endregion
     private String mTitle;
     private T fragment;
