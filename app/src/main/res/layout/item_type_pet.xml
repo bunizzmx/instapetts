@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+   <com.bunizz.instapetts.utils.ImagenCircular
+       android:layout_centerHorizontal="true"
+     android:src="@drawable/logo"
+       android:id="@+id/type_pet_image"
+       android:layout_width="wrap_content"
+       android:layout_height="150dp"/>
+   <TextView
+       android:fontFamily="@font/avenir_black"
+       android:textSize="20dp"
+       android:textColor="@color/black"
+       android:text="Dog"
+       android:layout_marginTop="10dp"
+       android:layout_centerHorizontal="true"
+       android:layout_below="@+id/type_pet_image"
+       android:id="@+id/name_type_pet"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"/>
+</RelativeLayout>

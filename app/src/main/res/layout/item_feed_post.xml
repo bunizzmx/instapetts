@@ -6,14 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <RelativeLayout
-        android:padding="10dp"
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <com.bunizz.instapetts.utils.ImagenCircular
             android:id="@+id/image_pet"
             android:src="@drawable/logo"
-            app:civ_border_color="@color/amarillo"
-            app:civ_border_width="1dp"
             android:layout_width="50dp"
             android:layout_height="50dp"/>
         <TextView
@@ -70,12 +68,48 @@
             app:selectedDotColor="@color/amarillo"
             />
     </RelativeLayout>
+    <RelativeLayout
+        android:layout_marginTop="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+           android:layout_alignParentRight="true"
+            android:src="@drawable/ic_save_favorite"
+            android:layout_width="15dp"
+            android:layout_height="15dp"/>
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/ic_corazon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"/>
+    </RelativeLayout>
+    <TextView
+        android:fontFamily="@font/avenir_b"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textColor="@color/black"
+        android:text="My pets is better than you pet motafuka!!! :)"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <RelativeLayout
+        android:layout_marginTop="5dp"
+        android:paddingLeft="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
 
-    <ImageView
-        android:layout_margin="10dp"
-        android:layout_gravity="end"
-        android:src="@drawable/ic_save_favorite"
-        android:layout_width="15dp"
-        android:layout_height="15dp"/>
+            android:text="HACE 20 MIN"
+            android:textSize="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
 
 </LinearLayout>

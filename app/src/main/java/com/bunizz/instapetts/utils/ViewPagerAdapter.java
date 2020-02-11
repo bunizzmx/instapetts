@@ -24,7 +24,7 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return image_urls.size();
+        return 5;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ViewPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         ImageView imageView = new ImageView(context);
-        Glide.with(context).load(image_urls.get(position)).centerCrop().into(imageView);
+        Glide.with(context).load("https://firebasestorage.googleapis.com/v0/b/melove-principal/o/C18%2F15cb3831f0b9426c484d380f0ab1afac.jpg?alt=media&token=042d5974-e96c-4bcc-9fa2-f657fe2167af").centerCrop().into(imageView);
         container.addView(imageView);
         return  imageView;
     }

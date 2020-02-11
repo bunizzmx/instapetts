@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_bottom_nav"
     android:layout_width="match_parent"
-    android:layout_height="58dp"
+    android:layout_height="50dp"
     android:layout_alignParentBottom="true"
     android:background="#fff">
     <LinearLayout
@@ -27,8 +27,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:id="@+id/icon_top"
-                android:layout_width="23dp"
-                android:layout_height="23dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/ic_home_pet"
                 tools:ignore="ContentDescription" />
         </RelativeLayout>
@@ -43,8 +43,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:id="@+id/icon_match"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_food_pet"
                 tools:ignore="ContentDescription" />
@@ -58,15 +58,15 @@
             >
             <ImageView
                 android:id="@+id/icon_chat"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_centerInParent="true"
                 android:src="@drawable/ic_food_pet"
                 tools:ignore="ContentDescription" />
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/tab_quotes"
+            android:id="@+id/tab_profile_pet"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="bottom"
@@ -77,8 +77,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:id="@+id/icon_premios"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/ic_hand_pet"
                 tools:ignore="ContentDescription" />
         </RelativeLayout>

@@ -14,8 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.beans.HistoriesBean;
+import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.login.login.FragmentLogin;
 import com.bunizz.instapetts.listeners.change_instance;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,10 +32,10 @@ public class FeedFragment extends Fragment {
     @BindView(R.id.feed_list)
     RecyclerView feed_list;
 
-
-
     change_instance listener;
     FeedAdapter feedAdapter;
+
+    ArrayList<Object> data = new ArrayList<>();
 
     public static FeedFragment newInstance() {
         return new FeedFragment();
@@ -40,7 +44,11 @@ public class FeedFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        feedAdapter = new FeedAdapter(getContext());
+        data.add(new HistoriesBean());
+        data.add(new PostBean());
+        data.add(new PostBean());
+        data.add(new PostBean());
+        feedAdapter = new FeedAdapter(getContext(),data);
     }
 
     @Nullable

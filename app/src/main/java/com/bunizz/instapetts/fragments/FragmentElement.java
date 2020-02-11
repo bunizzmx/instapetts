@@ -14,6 +14,10 @@ public class FragmentElement<T extends Fragment> {
     public static final int INSTANCE_SIGIN = 2;
     public static final int INSTANCE_LOGIN = 3;
     public static final int INSTANCE_FEED = 4;
+    public static final int INSTANCE_PROFILE_PET= 5;
+    public static final int INSTANCE_TYPE_PET = 6;
+    public static final int INSTANCE_TYPE_SEARCH_RAZA = 7;
+    public static final int INSTANCE_DATA_PET= 8;
 
 
     //endregion
