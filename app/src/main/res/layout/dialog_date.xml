@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <com.bunizz.instapetts.utils.datepicker.date.DatePicker
+        android:background="@color/white"
+        android:id="@+id/dayPicker_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </com.bunizz.instapetts.utils.datepicker.date.DatePicker>
+    <LinearLayout
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:padding="16dp"
+            android:id="@+id/btn_dialog_date_cancel"
+            android:background="#fff"
+            android:text="cancel"
+            android:textColor="@color/com_ycuwq_datepicker_selectedTextColor"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <Button
+            android:padding="16dp"
+            android:id="@+id/btn_dialog_date_decide"
+            android:background="#fff"
+            android:text="ok"
+            android:textColor="@color/com_ycuwq_datepicker_selectedTextColor"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>

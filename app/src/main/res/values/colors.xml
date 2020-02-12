@@ -11,4 +11,9 @@
     <color name="beish">#f6efe4</color>
     <color name="cafe_claro">#664441</color>
     <color name="azul_facebook">#2B6EAA</color>
+
+    <color name="com_ycuwq_datepicker_selectedTextColor">#33aaff</color>
+    <color name="com_ycuwq_datepicker_divider">#cccccc</color>
+
+
 </resources>

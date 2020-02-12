@@ -26,14 +26,14 @@
             <ImageView
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:id="@+id/icon_top"
+                android:id="@+id/icon_feed"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_home_pet"
                 tools:ignore="ContentDescription" />
         </RelativeLayout>
         <RelativeLayout
-            android:id="@+id/tab_match"
+            android:id="@+id/tap_tips"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="bottom"
@@ -42,7 +42,7 @@
             <ImageView
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:id="@+id/icon_match"
+                android:id="@+id/icon_tips"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center"
@@ -76,7 +76,7 @@
             <ImageView
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:id="@+id/icon_premios"
+                android:id="@+id/icon_profile_pet"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_hand_pet"

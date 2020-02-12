@@ -22,6 +22,8 @@ import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
+import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
+import com.bunizz.instapetts.fragments.post.FragmentPostList;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.utils.tabs.SlidingFragmentPagerAdapter;
 import com.bunizz.instapetts.utils.tabs.SlidingTabLayout;
@@ -121,7 +123,13 @@ public class FragmentProfileUserPet extends Fragment {
         public Fragment getItem(int position) {
             Bundle bundle = new Bundle();
             bundle.putInt("x", position + 1);
-            FeedFragment fragment = new FeedFragment();
+            Fragment fragment;
+            if(position == 0){
+                fragment = new FragmentPostList();
+            }else{
+                fragment = new FragmentPostGalery();
+            }
+
             fragment.setArguments(bundle);
             return fragment;
         }

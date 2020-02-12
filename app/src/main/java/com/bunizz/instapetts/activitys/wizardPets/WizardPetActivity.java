@@ -1,6 +1,7 @@
 package com.bunizz.instapetts.activitys.wizardPets;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -164,12 +165,23 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
             changeOfInstance(FragmentElement.INSTANCE_TYPE_PET,null);
         }
         else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_TYPE_PET){
-           finish();
+               Intent data = new Intent();
+               data.putExtra("pet_saved",false);
+               setResult(RESULT_OK,data);
+               finish();
         }
     }
 
     @Override
     public void onchange(int type_fragment, Bundle data) {
         changeOfInstance(type_fragment,data);
+    }
+
+    @Override
+    public void onpetFinish(boolean pet_saved) {
+        Intent data = new Intent();
+        data.putExtra("pet_saved",true);
+        setResult(RESULT_OK,data);
+        finish();
     }
 }

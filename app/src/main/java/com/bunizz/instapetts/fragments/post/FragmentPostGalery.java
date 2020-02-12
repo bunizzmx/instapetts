@@ -1,11 +1,10 @@
-package com.bunizz.instapetts.fragments.wizardPets;
+package com.bunizz.instapetts.fragments.post;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,65 +18,56 @@ import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
-import com.bunizz.instapetts.fragments.wizardPets.adapters.TypePetsAdapter;
+import com.bunizz.instapetts.fragments.post.adapters.GaleryAdapter;
 import com.bunizz.instapetts.listeners.change_instance;
-import com.bunizz.instapetts.listeners.change_instance_wizard;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FragmentTypePet extends Fragment {
+public class FragmentPostGalery extends Fragment {
+    @BindView(R.id.list_galery)
+    RecyclerView list_galery;
 
-    @BindView(R.id.list_types_pet)
-    RecyclerView list_types_pet;
+    change_instance listener;
+    GaleryAdapter feedAdapter;
 
-    change_instance_wizard listener;
+    ArrayList<Object> data = new ArrayList<>();
 
-    TypePetsAdapter adapter;
-    public static FragmentTypePet newInstance() {
-        return new FragmentTypePet();
+    public static FragmentPostGalery newInstance() {
+        return new FragmentPostGalery();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new TypePetsAdapter(getContext());
-        adapter.setListener(new change_instance_wizard() {
-            @Override
-            public void onchange(int type_fragment, Bundle data) {
-                if(listener!=null){
-                    listener.onchange(type_fragment,data);
-                }
-            }
-
-            @Override
-            public void onpetFinish(boolean pet_saved) {
-
-            }
-        });
+        data.add(new HistoriesBean());
+        data.add(new PostBean());
+        data.add(new PostBean());
+        data.add(new PostBean());
+        feedAdapter = new GaleryAdapter(getContext());
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_type_pet, container, false);
+        return inflater.inflate(R.layout.fragment_post_galery, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        list_types_pet.setLayoutManager(new GridLayoutManager(getContext(),2));
-        list_types_pet.setAdapter(adapter);
-
+        list_galery.setLayoutManager(new GridLayoutManager(getContext(),3));
+        list_galery.setAdapter(feedAdapter);
     }
 
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        listener= (change_instance_wizard) context;
+        listener= (change_instance) context;
     }
 }
+
