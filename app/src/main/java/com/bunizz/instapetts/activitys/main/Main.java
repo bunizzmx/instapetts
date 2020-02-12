@@ -49,6 +49,13 @@ public class Main extends AppCompatActivity implements change_instance {
       // changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET);
     }
 
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.tab_p)
+    void tab_p()
+    {
+         changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET);
+    }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

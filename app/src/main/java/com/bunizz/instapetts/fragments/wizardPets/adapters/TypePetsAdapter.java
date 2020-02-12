@@ -47,6 +47,7 @@ public class TypePetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                           listener.onchange(FragmentElement.INSTANCE_TYPE_SEARCH_RAZA,b);
                       }
         });
+        h.type_pet_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_perro));
     }
 
     @Override

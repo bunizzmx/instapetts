@@ -51,7 +51,7 @@
         </RelativeLayout>
         <RelativeLayout
             android:padding="10dp"
-            android:id="@+id/tab_chat"
+            android:id="@+id/tab_p"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="3"

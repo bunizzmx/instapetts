@@ -3,6 +3,7 @@ package com.bunizz.instapetts.activitys.wizardPets;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -97,14 +98,14 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
         saveFragment();
         if (intanceType == FragmentElement.INSTANCE_TYPE_PET) {
             if (stack_type_pet.size() == 0) {
-                change_first(new FragmentElement<>("", FragmentTypePet.newInstance(), FragmentElement.INSTANCE_LOGIN));
+                change_first(new FragmentElement<>("", FragmentTypePet.newInstance(), FragmentElement.INSTANCE_TYPE_PET));
             } else {
                 change_first(stack_type_pet.pop());
             }
         }
         else if (intanceType == FragmentElement.INSTANCE_TYPE_SEARCH_RAZA) {
             if (stack_search_raza_pet.size() == 0) {
-                change_search_raza(new FragmentElement<>("", FragmentSearchPet.newInstance(), FragmentElement.INSTANCE_PROFILE_PET));
+                change_search_raza(new FragmentElement<>("", FragmentSearchPet.newInstance(), FragmentElement.INSTANCE_TYPE_SEARCH_RAZA));
             } else {
                 change_search_raza(stack_search_raza_pet.pop());
             }
@@ -112,7 +113,7 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
 
         else if (intanceType == FragmentElement.INSTANCE_DATA_PET) {
             if (stack_data_pet.size() == 0) {
-                change_data_pet(new FragmentElement<>("", FragmentDataPet.newInstance(), FragmentElement.INSTANCE_PROFILE_PET));
+                change_data_pet(new FragmentElement<>("", FragmentDataPet.newInstance(), FragmentElement.INSTANCE_DATA_PET));
             } else {
                 change_data_pet(stack_data_pet.pop());
             }
@@ -129,7 +130,7 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
                 if (mCurrentFragment.getFragment().isAdded()) {
                     fragmentManager
                             .beginTransaction()
-                            .setCustomAnimations(R.anim.enter_left, R.anim.exit_right, R.anim.enter_right, R.anim.exit_left)
+                            .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
                             .addToBackStack(null)
                             .hide(mOldFragment.getFragment())
                             .show(mCurrentFragment.getFragment()).commit();
@@ -155,7 +156,16 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
 
     @Override
     public void onBackPressed() {
-
+        Log.e("SUPER_ONBACL",".." + mCurrentFragment.getInstanceType());
+           if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_DATA_PET){
+               changeOfInstance(FragmentElement.INSTANCE_TYPE_SEARCH_RAZA,null);
+           }
+        else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_TYPE_SEARCH_RAZA){
+            changeOfInstance(FragmentElement.INSTANCE_TYPE_PET,null);
+        }
+        else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_TYPE_PET){
+           finish();
+        }
     }
 
     @Override
