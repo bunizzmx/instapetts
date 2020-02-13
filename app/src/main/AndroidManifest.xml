@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -15,19 +16,19 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3652627287925800~2029449466" />
-        <activity android:name=".activitys.intro.IntroActivity">
+        <activity android:name=".activitys.Splash"
+            android:theme="@style/Style_Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activitys.intro.IntroActivity"/>
         <activity android:name=".activitys.login.LoginActivity" />
-        <activity android:name=".fragments.login.MainActivity"/>
         <activity android:name=".activitys.main.Main"/>
         <activity android:name=".activitys.wizardPets.WizardPetActivity"
             android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".activitys.searchingPets.SearchPetActivity" android:windowSoftInputMode="adjustPan"/>
     </application>
 
 </manifest>

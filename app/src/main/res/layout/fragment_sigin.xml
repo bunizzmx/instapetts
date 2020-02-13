@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.cardview.widget.CardView
         android:id="@+id/back_to_main"
@@ -24,56 +25,72 @@
         android:layout_margin="20dp"
         android:textColor="@color/black"
         android:id="@+id/title_login"
-        android:text="Sigin"
+        android:text="Registra tu cuenta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-    <LinearLayout
-        android:layout_below="@+id/title_login"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:textColor="@color/white"
-            android:background="@color/azul_facebook"
-            android:fontFamily="@font/avenir_black"
-            android:textAllCaps="false"
-            android:text="Facebook"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"/>
-        <Button
-            android:fontFamily="@font/avenir_black"
-            android:textAllCaps="false"
-            android:text="Gmail"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"/>
-    </LinearLayout>
-
     <LinearLayout
         android:paddingRight="20dp"
         android:paddingLeft="20dp"
         android:paddingBottom="30dp"
-        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="true"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <EditText
-            android:hint="correo"
-            android:layout_marginBottom="20dp"
+        <com.bunizz.instapetts.utils.edittext.TextFieldBoxes
+            android:background="@drawable/edittext_shadow"
+            android:layout_marginTop="16dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:hint="contraseña"
-            android:layout_marginBottom="20dp"
+            android:layout_height="wrap_content"
+            app:labelText="Correo"
+            app:isResponsiveIconColor="true">
+            <com.bunizz.instapetts.utils.edittext.ExtendedEditText
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress"
+                android:textSize="18sp"
+                android:maxLines="1" />
+        </com.bunizz.instapetts.utils.edittext.TextFieldBoxes>
+
+        <com.bunizz.instapetts.utils.edittext.TextFieldBoxes
+            android:background="@drawable/edittext_shadow"
+            android:id="@+id/text_field_boxes6"
+            android:layout_marginTop="16dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <EditText
-            android:hint="confirmar contraseña"
-            android:layout_marginBottom="20dp"
+            android:layout_height="wrap_content"
+            app:labelText="Password"
+            app:hasFocus="true">
+            <com.bunizz.instapetts.utils.edittext.ExtendedEditText
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:inputType="textPassword"
+                android:textSize="18sp"
+                android:maxLines="1" />
+        </com.bunizz.instapetts.utils.edittext.TextFieldBoxes>
+
+        <com.bunizz.instapetts.utils.edittext.TextFieldBoxes
+            android:background="@drawable/edittext_shadow"
+            android:layout_marginTop="16dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            app:labelText="Confirmar password"
+            app:hasFocus="true">
+            <com.bunizz.instapetts.utils.edittext.ExtendedEditText
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:inputType="textPassword"
+                android:textSize="18sp"
+                android:maxLines="1" />
+        </com.bunizz.instapetts.utils.edittext.TextFieldBoxes>
+
         <Button
+            android:id="@+id/button_signin"
+            android:layout_marginTop="30dp"
             android:textColor="@color/white"
             android:background="@color/amarillo"
             android:fontFamily="@font/avenir_black"
@@ -81,8 +98,8 @@
             android:text="Sigin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-    </LinearLayout>
 
+    </LinearLayout>
 
 
 </RelativeLayout>

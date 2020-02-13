@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:padding="5dp"
+    android:padding="10dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
    <com.bunizz.instapetts.utils.ImagenCircular
-       android:src="@drawable/logo"
+       android:layout_marginLeft="10dp"
+       android:src="@drawable/perro_demo"
        android:layout_marginRight="10dp"
        android:id="@+id/image_pet_searching"
        android:layout_width="50dp"
@@ -14,7 +15,7 @@
      android:layout_marginTop="10dp"
         android:fontFamily="@font/avenir_black"
         android:textColor="@color/black"
-        android:text="NOmbre de la mascota"
+        android:text="Nombre de la mascota"
         android:layout_toRightOf="@+id/image_pet_searching"
         android:id="@+id/name_pet_searching"
         android:layout_width="wrap_content"

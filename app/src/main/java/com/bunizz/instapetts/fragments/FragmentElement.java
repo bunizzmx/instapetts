@@ -19,6 +19,7 @@ public class FragmentElement<T extends Fragment> {
     public static final int INSTANCE_TYPE_SEARCH_RAZA = 7;
     public static final int INSTANCE_DATA_PET= 8;
     public static final int INSTANCE_TIPS= 9;
+    public static final int INSTANCE_SEARCH= 10;
 
 
     //endregion

@@ -39,7 +39,7 @@ public class App extends Application {
     public static int idsend, id_refresh, id_chat, id_cuack;
     public static Typeface roboto;
     public static Typeface popin_subs,monserrat_black,monserrat_medium;
-    String PREF = "com.bunizz.melove";
+    String PREF = "com.bunizz.instapetts";
     private static SharedPreferences pref;
     private static App application;
     private static FirebaseAnalytics mFirebaseAnalytics;
@@ -59,7 +59,11 @@ public class App extends Application {
         SQLiteDatabase.loadLibs(getApplicationContext());
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        pref = this.getSharedPreferences(PREF, Activity.MODE_PRIVATE);
+        if(pref == null){
+            pref = this.getSharedPreferences(PREF, Activity.MODE_PRIVATE);
+        }else{
+
+        }
         application = this;
         String idioma = Locale.getDefault().getLanguage();
         Log.e("IDIOMA","-->" + idioma);
@@ -84,8 +88,7 @@ public class App extends Application {
 
 
     private void initTypeface() {
-        fuente = Typeface.createFromAsset(getAssets(), MONSERRAT_MEDIUM);
-        avenir_black = Typeface.createFromAsset(getAssets(), AVENIR_BLACK);
+
       /*  monserrat_medium = Typeface.createFromAsset(getAssets(), MONSERRAT_MEDIUM);
         roboto = Typeface.createFromAsset(getAssets(), CANARO_EXTRA_BOLD_PATH);
         popin_subs = Typeface.createFromAsset(getAssets(), POPIN_SUBS);

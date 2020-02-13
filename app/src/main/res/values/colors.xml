@@ -14,6 +14,9 @@
 
     <color name="com_ycuwq_datepicker_selectedTextColor">#33aaff</color>
     <color name="com_ycuwq_datepicker_divider">#cccccc</color>
+    <color name="text_gray">#858585</color>
 
+    <color name="A400red">#AA0021</color>
 
+    <color name="gris_edittext">#EEEDED</color>
 </resources>

@@ -9,12 +9,16 @@ import android.view.Window;
 import android.view.WindowManager;
 
 
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.Splash;
+import com.bunizz.instapetts.activitys.main.Main;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.login.MainLogin;
 import com.bunizz.instapetts.fragments.login.login.FragmentLogin;
 import com.bunizz.instapetts.fragments.login.sigin.FragmentSigin;
 import com.bunizz.instapetts.listeners.change_instance;
+import com.bunizz.instapetts.listeners.login_listener;
 
 import java.util.Stack;
 
@@ -23,7 +27,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
-public class LoginActivity extends AppCompatActivity implements change_instance {
+import static com.bunizz.instapetts.constantes.PREFERENCES.IS_LOGUEDD;
+
+public class LoginActivity extends AppCompatActivity implements change_instance, login_listener {
 
     private Stack<FragmentElement> stack_login;
     private Stack<FragmentElement> stack_sigin;
@@ -154,4 +160,15 @@ public class LoginActivity extends AppCompatActivity implements change_instance 
     public void onBackPressed() {
             changeOfInstance(FragmentElement.INSTANCE_MAIN_LOGIN);
     }
+
+    @Override
+    public void onLoginSuccess(boolean success) {
+        App.write(IS_LOGUEDD,true);
+        Intent i ;
+        i = new Intent(LoginActivity.this, Main.class);
+        startActivity(i);
+    }
+
+
+
 }

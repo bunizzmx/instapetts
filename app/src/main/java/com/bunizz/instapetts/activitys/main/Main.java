@@ -4,29 +4,22 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.activitys.searchingPets.SearchPetActivity;
-import com.bunizz.instapetts.activitys.wizardPets.WizardPetActivity;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
-import com.bunizz.instapetts.fragments.login.MainLogin;
-import com.bunizz.instapetts.fragments.login.login.FragmentLogin;
-import com.bunizz.instapetts.fragments.login.sigin.FragmentSigin;
 import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
+import com.bunizz.instapetts.fragments.search.FragmentSearchPet;
 import com.bunizz.instapetts.fragments.tips.FragmentTips;
 import com.bunizz.instapetts.listeners.change_instance;
 
@@ -42,6 +35,7 @@ public class Main extends AppCompatActivity implements change_instance {
     private Stack<FragmentElement> stack_feed;
     private Stack<FragmentElement> stack_profile_pet;
     private Stack<FragmentElement> stack_tips;
+    private Stack<FragmentElement> stack_serch_pet;
 
     private FragmentElement mCurrentFragment;
     private FragmentElement mOldFragment;
@@ -51,31 +45,34 @@ public class Main extends AppCompatActivity implements change_instance {
 
     @BindView(R.id.icon_tips)
     ImageView icon_tips;
-    @BindView(R.id.icon_feed)
-    ImageView icon_feed;
-    @BindView(R.id.icon_chat)
-    ImageView icon_chat;
+    @BindView(R.id.icon_feed_pet)
+    ImageView icon_feed_pet;
+    @BindView(R.id.icon_add_image_pet)
+    ImageView icon_add_image_pet;
+    @BindView(R.id.icon_search_pet)
+    ImageView icon_search_pet;
     @BindView(R.id.icon_profile_pet)
     ImageView icon_profile_pet;
-
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tab_profile_pet)
     void tab_profile_pet() {
-        Log.e("CHANGE_INSTANCE", "profile pet");
+       /* Log.e("CHANGE_INSTANCE", "profile pet");
         Intent i = new Intent(Main.this, WizardPetActivity.class);
         startActivityForResult(i, NEW_PET_REQUEST);
-        // changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET);
+         changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET);*/
+        changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET);
+        repaint_nav(R.id.tab_profile_pet);
     }
 
-    @SuppressLint("MissingPermission")
+    /*@SuppressLint("MissingPermission")
     @OnClick(R.id.searc_pet_now)
     void searc_pet_now() {
         Log.e("CHANGE_INSTANCE", "profile pet");
-        Intent i = new Intent(Main.this, SearchPetActivity.class);
+        Intent i = new Intent(Main.this, FragmentSearchPet.class);
         startActivityForResult(i, NEW_PET_REQUEST);
         // changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET);
-    }
+    }*/
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tap_tips)
@@ -87,24 +84,33 @@ public class Main extends AppCompatActivity implements change_instance {
     }
 
     @SuppressLint("MissingPermission")
-    @OnClick(R.id.tab_top)
-    void tab_top() {
+    @OnClick(R.id.tab_add_image)
+    void tab_add_image() {
         if(mCurrentFragment.getInstanceType() != FragmentElement.INSTANCE_FEED) {
             changeOfInstance(FragmentElement.INSTANCE_FEED);
-            repaint_nav(R.id.tab_top);
+            repaint_nav(R.id.tab_feed);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.tab_feed)
+    void tab_feed() {
+        if(mCurrentFragment.getInstanceType() != FragmentElement.INSTANCE_FEED) {
+            changeOfInstance(FragmentElement.INSTANCE_FEED);
+            repaint_nav(R.id.tab_feed);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.tab_search_pet)
+    void tab_search_pet() {
+        if(mCurrentFragment.getInstanceType() != FragmentElement.INSTANCE_SEARCH) {
+            changeOfInstance(FragmentElement.INSTANCE_SEARCH);
+            repaint_nav(R.id.tab_search_pet);
         }
     }
 
 
-
-
-
-
-    @SuppressLint("MissingPermission")
-    @OnClick(R.id.tab_p)
-    void tab_p() {
-        changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET);
-    }
 
 
 
@@ -117,6 +123,7 @@ public class Main extends AppCompatActivity implements change_instance {
         stack_feed = new Stack<>();
         stack_profile_pet = new Stack<>();
         stack_tips = new Stack<>();
+        stack_serch_pet = new Stack<>();
         setupFirstFragment();
     }
 
@@ -132,6 +139,7 @@ public class Main extends AppCompatActivity implements change_instance {
     }
 
     private void setupFirstFragment() {
+        repaint_nav(R.id.tab_feed);
         mCurrentFragment = new FragmentElement<>(null, FeedFragment.newInstance(), FragmentElement.INSTANCE_FEED, true);
         change_main(mCurrentFragment);
     }
@@ -167,6 +175,16 @@ public class Main extends AppCompatActivity implements change_instance {
         inflateFragment();
     }
 
+    private void change_search_pet(FragmentElement fragment) {
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            if (stack_serch_pet.size() <= 0) {
+                stack_serch_pet.push(mCurrentFragment);
+            }
+        }
+        inflateFragment();
+    }
+
 
     private void saveFragment() {
         mOldFragment = mCurrentFragment;
@@ -194,6 +212,13 @@ public class Main extends AppCompatActivity implements change_instance {
                 change_tips(stack_tips.pop());
             }
         }
+        else if (intanceType == FragmentElement.INSTANCE_SEARCH) {
+            if (stack_serch_pet.size() == 0) {
+                change_search_pet(new FragmentElement<>("", FragmentSearchPet.newInstance(), FragmentElement.INSTANCE_SEARCH));
+            } else {
+                change_search_pet(stack_serch_pet.pop());
+            }
+        }
 
 
     }
@@ -206,14 +231,12 @@ public class Main extends AppCompatActivity implements change_instance {
                 if (mCurrentFragment.getFragment().isAdded()) {
                     fragmentManager
                             .beginTransaction()
-                            .setCustomAnimations(R.anim.enter_left, R.anim.exit_right, R.anim.enter_right, R.anim.exit_left)
                             .addToBackStack(null)
                             .hide(mOldFragment.getFragment())
                             .show(mCurrentFragment.getFragment()).commit();
                 } else {
                     fragmentManager
                             .beginTransaction()
-                            .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
                             .addToBackStack(null)
                             .hide(mOldFragment.getFragment())
                             .add(R.id.root_main, mCurrentFragment.getFragment()).commit();
@@ -260,19 +283,21 @@ public class Main extends AppCompatActivity implements change_instance {
 
     private void repaint_nav(int id ){
         icon_tips.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_food_pet));
-        icon_feed.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_home_pet));
-        icon_chat.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_food_pet));
-        icon_profile_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_food_pet));
+        icon_profile_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_hand_pet));
+        icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_add_image));
+        icon_feed_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_home_pet));
+        icon_search_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_search));
 
         if(id == R.id.tap_tips)
             icon_tips.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_food_pet_black));
         else if(id == R.id.tab_profile_pet)
-            icon_feed.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_home_pet_black));
-        else if(id == R.id.tab_p)
-            icon_chat.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_food_pet_black));
-        else if(id == R.id.tab_top)
-            icon_profile_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_food_pet_black));
-
+            icon_profile_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_hand_pet_black));
+        else if(id == R.id.tab_feed)
+            icon_feed_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_home_pet_black));
+        else if(id == R.id.tab_search_pet)
+            icon_search_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_search_black));
+        else if(id == R.id.tab_add_image)
+            icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_add_image_black));
     }
 
 }

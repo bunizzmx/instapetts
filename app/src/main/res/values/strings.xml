@@ -4,4 +4,6 @@
     <string name="next">Siguiente</string>
     <string name="exit">Salir</string>
     <string name="acept_next">Aceptar</string>
+
+    <string name="counter_label_text_constructor" formatted="false">%s%s%s%s</string>
 </resources>

@@ -21,4 +21,8 @@
         <item name="android:windowEnterAnimation">@anim/com_ycuwq_datepicker_dialog_in</item>
         <item name="android:windowExitAnimation">@anim/com_ycuwq_datepicker_dialog_out</item>
     </style>
+
+    <style name="Style_Splash" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+    </style>
 </resources>

@@ -12,16 +12,13 @@ import android.widget.TextView;
 
 
 import com.bunizz.instapetts.App;
-import com.bunizz.instapetts.MainActivity;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.login.LoginActivity;
-import com.bunizz.instapetts.activitys.main.Main;
 import com.bunizz.instapetts.fragments.intro.Fragment1;
 import com.bunizz.instapetts.fragments.intro.Fragment2;
 import com.bunizz.instapetts.fragments.intro.Fragment3;
 import com.bunizz.instapetts.listeners.VisibleItem;
 import com.bunizz.instapetts.utils.Dots.DotsIndicator;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
 
@@ -32,6 +29,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import static com.bunizz.instapetts.constantes.PREFERENCES.IS_INTRO_COMPLETED;
 
 public class IntroActivity extends AppCompatActivity implements VisibleItem {
     DotsIndicator dotsIndicator ;
@@ -105,14 +104,15 @@ public class IntroActivity extends AppCompatActivity implements VisibleItem {
                     back.setText(getResources().getString(R.string.exit));
                     skip.setText(getResources().getString(R.string.acept_next));
                 }else if(position ==2){
-                    Intent i = new Intent(IntroActivity.this, Main.class);
+                    Intent i = new Intent(IntroActivity.this, LoginActivity.class);
                     startActivity(i);
                     progress_intro.setVisibility(View.VISIBLE);
                     skip.setVisibility(View.GONE);
+                    App.write(IS_INTRO_COMPLETED,true);
                 }else{
-                    Intent i = new Intent(IntroActivity.this, Main.class);
+                    Intent i = new Intent(IntroActivity.this, LoginActivity.class);
                     startActivity(i);
-
+                    App.write(IS_INTRO_COMPLETED,true);
                 }
 
             });
