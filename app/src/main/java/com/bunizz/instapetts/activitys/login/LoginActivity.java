@@ -157,6 +157,11 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     }
 
     @Override
+    public void open_sheet() {
+
+    }
+
+    @Override
     public void onBackPressed() {
             changeOfInstance(FragmentElement.INSTANCE_MAIN_LOGIN);
     }

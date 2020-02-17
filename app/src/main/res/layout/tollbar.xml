@@ -15,20 +15,28 @@
        android:text="news Feed"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"/>
-    <androidx.cardview.widget.CardView
-        android:id="@+id/searc_pet_now"
+    <RelativeLayout
+        android:id="@+id/open_notifications"
         android:layout_centerVertical="true"
         android:elevation="5dp"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="20dp"
-        app:contentPadding="10dp"
-        app:cardCornerRadius="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="50dp"
+        android:layout_height="match_parent">
         <ImageView
-            android:src="@drawable/ic_search"
-            android:layout_width="15dp"
-            android:layout_height="15dp"/>
-    </androidx.cardview.widget.CardView>
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_notification"
+            android:layout_width="20dp"
+            android:layout_height="20dp"/>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/badge_notification"
+            app:cardCornerRadius="5dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginRight="13dp"
+            android:layout_alignParentRight="true"
+            app:cardBackgroundColor="#FF5722"
+            android:layout_width="9dp"
+            android:layout_height="9dp"/>
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
+import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.login.login.FragmentLogin;
 import com.bunizz.instapetts.listeners.change_instance;
 
@@ -25,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FeedFragment extends Fragment {
+public class FeedFragment extends Fragment implements  FeedContract.View{
 
 
 
@@ -40,6 +42,15 @@ public class FeedFragment extends Fragment {
     public static FeedFragment newInstance() {
         return new FeedFragment();
     }
+    FeedPresenter mPresenter;
+
+
+    @OnClick(R.id.open_notifications)
+    void open_notifications()
+    {
+        listener.change(FragmentElement.INSTANCE_NOTIFICATIONS);
+    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,6 +60,7 @@ public class FeedFragment extends Fragment {
         data.add(new PostBean());
         data.add(new PostBean());
         feedAdapter = new FeedAdapter(getContext(),data);
+        mPresenter = new FeedPresenter(this, getContext());
     }
 
     @Nullable
@@ -70,6 +82,11 @@ public class FeedFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         listener= (change_instance) context;
+    }
+
+    @Override
+    public void show_feed(ArrayList<PetBean> data) {
+
     }
 }
 

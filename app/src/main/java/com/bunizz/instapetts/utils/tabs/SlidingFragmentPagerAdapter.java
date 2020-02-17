@@ -11,7 +11,7 @@ public abstract class SlidingFragmentPagerAdapter extends FragmentPagerAdapter {
     private static final String EMPTY_TOOLBAR_TITLE = "";
 
     public SlidingFragmentPagerAdapter(FragmentManager fm) {
-        super(fm);
+        super(fm,BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
     }
 
     public Drawable getPageDrawable(int position) {

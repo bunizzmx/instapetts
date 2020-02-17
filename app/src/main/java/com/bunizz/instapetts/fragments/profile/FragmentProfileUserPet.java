@@ -25,6 +25,7 @@ import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
 import com.bunizz.instapetts.fragments.post.FragmentPostList;
 import com.bunizz.instapetts.listeners.change_instance;
+import com.bunizz.instapetts.listeners.open_sheet_listener;
 import com.bunizz.instapetts.utils.tabs.SlidingFragmentPagerAdapter;
 import com.bunizz.instapetts.utils.tabs.SlidingTabLayout;
 import com.bunizz.instapetts.utils.tabs.TabType;
@@ -80,6 +81,12 @@ public class FragmentProfileUserPet extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         list_pets_propietary.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
+        petsPropietaryAdapter.setListener(new open_sheet_listener() {
+            @Override
+            public void open() {
+                listener.open_sheet();
+            }
+        });
         list_pets_propietary.setAdapter(petsPropietaryAdapter);
         viewpager_profile.setAdapter(adapter);
         tabs_profile_propietary.setTabType(TabType.ICON_ONLY);

@@ -6,4 +6,5 @@
     <string name="acept_next">Aceptar</string>
 
     <string name="counter_label_text_constructor" formatted="false">%s%s%s%s</string>
+    <string name="demo">El firulas es una mascota que le gusta comer a todas horas y solo quiere estar dormido , por lo que necesita de un lgar de mucha paz y silencio si no le da rabia.</string>
 </resources>

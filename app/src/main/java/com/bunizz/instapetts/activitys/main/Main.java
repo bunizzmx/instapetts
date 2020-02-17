@@ -18,16 +18,22 @@ import androidx.fragment.app.FragmentManager;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
+import com.bunizz.instapetts.fragments.info.InfoPetFragment;
+import com.bunizz.instapetts.fragments.notifications.NotificationsFragment;
 import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.fragments.search.FragmentSearchPet;
 import com.bunizz.instapetts.fragments.tips.FragmentTips;
 import com.bunizz.instapetts.listeners.change_instance;
+import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
 
 import java.util.Stack;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 public class Main extends AppCompatActivity implements change_instance {
 
@@ -36,8 +42,11 @@ public class Main extends AppCompatActivity implements change_instance {
     private Stack<FragmentElement> stack_profile_pet;
     private Stack<FragmentElement> stack_tips;
     private Stack<FragmentElement> stack_serch_pet;
+    private Stack<FragmentElement> stack_notifications;
 
     private FragmentElement mCurrentFragment;
+
+    private FragmentElement mCurrenSheet;
     private FragmentElement mOldFragment;
     static final int NEW_PET_REQUEST = 1;
 
@@ -53,6 +62,10 @@ public class Main extends AppCompatActivity implements change_instance {
     ImageView icon_search_pet;
     @BindView(R.id.icon_profile_pet)
     ImageView icon_profile_pet;
+
+
+    @BindView(R.id.sliding_layout)
+    SlidingUpPanelLayout mLayout;
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tab_profile_pet)
@@ -124,7 +137,26 @@ public class Main extends AppCompatActivity implements change_instance {
         stack_profile_pet = new Stack<>();
         stack_tips = new Stack<>();
         stack_serch_pet = new Stack<>();
+        stack_notifications = new Stack<>();
         setupFirstFragment();
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                    mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                } else if (newState == SlidingUpPanelLayout.PanelState.HIDDEN) {
+
+
+                } else if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+
+                }
+            }
+        });
     }
 
     public void changeStatusBarColor(int color) {
@@ -150,6 +182,16 @@ public class Main extends AppCompatActivity implements change_instance {
             mCurrentFragment = fragment;
             if (stack_feed.size() <= 0) {
                 stack_feed.push(mCurrentFragment);
+            }
+        }
+        inflateFragment();
+    }
+
+    private void change_notifications(FragmentElement fragment) {
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            if (stack_notifications.size() <= 0) {
+                stack_notifications.push(mCurrentFragment);
             }
         }
         inflateFragment();
@@ -220,6 +262,14 @@ public class Main extends AppCompatActivity implements change_instance {
             }
         }
 
+        else if (intanceType == FragmentElement.INSTANCE_NOTIFICATIONS) {
+            if (stack_notifications.size() == 0) {
+                change_notifications(new FragmentElement<>("", NotificationsFragment.newInstance(), FragmentElement.INSTANCE_NOTIFICATIONS));
+            } else {
+                change_notifications(stack_notifications.pop());
+            }
+        }
+
 
     }
 
@@ -254,18 +304,23 @@ public class Main extends AppCompatActivity implements change_instance {
 
     @Override
     public void change(int fragment_element) {
-
-        // changeOfInstance(fragment_element);
+        changeOfInstance(fragment_element);
     }
 
     @Override
     public void onback() {
-        changeOfInstance(FragmentElement.INSTANCE_MAIN_LOGIN);
+        changeOfInstance(FragmentElement.INSTANCE_FEED);
+    }
+
+    @Override
+    public void open_sheet() {
+        changue_instance_sheet();
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
     }
 
     @Override
     public void onBackPressed() {
-        changeOfInstance(FragmentElement.INSTANCE_MAIN_LOGIN);
+        changeOfInstance(FragmentElement.INSTANCE_FEED);
     }
 
     @Override
@@ -298,6 +353,30 @@ public class Main extends AppCompatActivity implements change_instance {
             icon_search_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_search_black));
         else if(id == R.id.tab_add_image)
             icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_add_image_black));
+    }
+
+    void changue_instance_sheet(){
+        changue_sheet(new FragmentElement<>("", InfoPetFragment.newInstance(), FragmentElement.INSTANCE_PROFILE_PET));
+    }
+
+    private void changue_sheet(FragmentElement fragment) {
+        if (fragment != null) {
+            mCurrenSheet = fragment;
+        }
+        inflate_sheet();
+    }
+
+    @SuppressLint("RestrictedApi")
+    private synchronized void inflate_sheet() {
+        try {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager
+                        .beginTransaction()
+                        .addToBackStack(null)
+                        .replace(R.id.root_scrool, mCurrenSheet.getFragment()).commit();
+
+        } catch (IllegalStateException ignored) {
+        }
     }
 
 }
