@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -25,6 +26,9 @@ import com.bunizz.instapetts.fragments.search.FragmentSearchPet;
 import com.bunizz.instapetts.fragments.tips.FragmentTips;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
+import com.bunizz.instapetts.utils.imagePicker.ImagePicker;
+import com.bunizz.instapetts.utils.imagePicker.helper.RequestCode;
+import com.bunizz.instapetts.utils.imagePicker.ui.picker.ImagePickerActivity;
 
 import java.util.Stack;
 
@@ -99,10 +103,10 @@ public class Main extends AppCompatActivity implements change_instance {
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tab_add_image)
     void tab_add_image() {
-        if(mCurrentFragment.getInstanceType() != FragmentElement.INSTANCE_FEED) {
-            changeOfInstance(FragmentElement.INSTANCE_FEED);
+        new ImagePicker.Builder(this).packageName(getPackageName())
+        .maxCount(5).start();
             repaint_nav(R.id.tab_feed);
-        }
+
     }
 
     @SuppressLint("MissingPermission")
