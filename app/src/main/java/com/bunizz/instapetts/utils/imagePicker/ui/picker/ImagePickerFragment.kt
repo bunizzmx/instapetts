@@ -224,7 +224,6 @@ class ImagePickerFragment : Fragment(),
         when (parent.tag) {
             Tag.IMAGE -> {
                 if (!selectable) return
-                imageAdapter.updateItemView(position, config.maxCount)
                 crop_view.setUri(Uri.parse(imageAdapter.get_uri(position)))
             }
         }
@@ -236,9 +235,11 @@ class ImagePickerFragment : Fragment(),
         when (parent.tag) {
             Tag.IMAGE -> {
                 if (!selectable) return false
-                Intent(context, DetailActivity::class.java)
+                imageAdapter.updateItemView(position, config.maxCount)
+                crop_view.setUri(Uri.parse(imageAdapter.get_uri(position)))
+               /* Intent(context, DetailActivity::class.java)
                         .apply { putExtra(ExtraName.IMAGE_PATH.name, item.path) }
-                        .let { startActivity(it) }
+                        .let { startActivity(it) }*/
                 return true
             }
         }

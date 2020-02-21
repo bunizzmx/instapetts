@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +20,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
+import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
@@ -52,6 +54,13 @@ public class FragmentProfileUserPet extends Fragment {
     @BindView(R.id.viewpager_profile)
     ViewPager viewpager_profile;
 
+    @BindView(R.id.title_toolbar)
+    TextView title_toolbar;
+
+
+
+    ArrayList<PetBean> pets = new ArrayList<>();
+
 
 
     private TabAdapter adapter;
@@ -68,6 +77,8 @@ public class FragmentProfileUserPet extends Fragment {
         super.onCreate(savedInstanceState);
         petsPropietaryAdapter = new PetsPropietaryAdapter(getContext());
         adapter = new TabAdapter(getFragmentManager(), getContext());
+        pets.add(new PetBean());
+        petsPropietaryAdapter.setPets(pets);
     }
 
     @Nullable
@@ -86,6 +97,11 @@ public class FragmentProfileUserPet extends Fragment {
             public void open() {
                 listener.open_sheet();
             }
+
+            @Override
+            public void open_wizard_pet() {
+                listener.open_wizard_pet();
+            }
         });
         list_pets_propietary.setAdapter(petsPropietaryAdapter);
         viewpager_profile.setAdapter(adapter);
@@ -95,7 +111,7 @@ public class FragmentProfileUserPet extends Fragment {
         tabs_profile_propietary.setDistributeEvenly(true);
         tabs_profile_propietary.setCustomUnfocusedColor(R.color.black);
         tabs_profile_propietary.setSelectedIndicatorColors(getResources().getColor(R.color.naranja));
-
+        title_toolbar.setText("Louis Bardaley");
 
     }
 
@@ -104,6 +120,10 @@ public class FragmentProfileUserPet extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         listener= (change_instance) context;
+    }
+
+    public void refresh_list_pets(){
+        petsPropietaryAdapter.add_new_pet(new PetBean("El pochilais","","","","","","","","","",1));
     }
 
     public class TabAdapter extends SlidingFragmentPagerAdapter {

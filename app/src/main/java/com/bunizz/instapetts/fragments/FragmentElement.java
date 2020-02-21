@@ -21,6 +21,12 @@ public class FragmentElement<T extends Fragment> {
     public static final int INSTANCE_TIPS= 9;
     public static final int INSTANCE_SEARCH= 10;
     public static final int INSTANCE_NOTIFICATIONS= 11;
+    public static final int INSTANCE_TIP_DETAIL= 12;
+
+    public static final int INSTANCE_SHARE= 13;
+
+    public static final int INSTANCE_PICKER= 14;
+
 
     //endregion
     private String mTitle;

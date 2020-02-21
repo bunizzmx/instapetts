@@ -1,16 +1,20 @@
 package com.bunizz.instapetts.fragments.tips.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
+import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedAdapter;
+import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 
 import java.util.ArrayList;
 
@@ -20,6 +24,15 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_TIP_TOP=1;
     private static final int TYPE_TIP_NORMAL = 2;
     ArrayList<Object> data = new ArrayList<>();
+    changue_fragment_parameters_listener listener;
+
+    public changue_fragment_parameters_listener getListener() {
+        return listener;
+    }
+
+    public void setListener(changue_fragment_parameters_listener listener) {
+        this.listener = listener;
+    }
 
     public ArrayList<Object> getData() {
         return data;
@@ -61,16 +74,34 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             case TYPE_TIP_NORMAL:
             default:
-                View unifiedNativeLayoutView = LayoutInflater.from(
+                view = LayoutInflater.from(
                         parent.getContext()).inflate(R.layout.item_tips_simple,
                         parent, false);
-                return new TipsHolder(unifiedNativeLayoutView);
+                return new TipsHolder(view);
         }
     }
 
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        int viewtype = getItemViewType(position);
+        switch (viewtype) {
+            case TYPE_TIP_TOP:
+                TipsTopHolder h = (TipsTopHolder)holder;
+                break;
+            default:
+                TipsHolder f = (TipsHolder)holder;
+                f.root_tip_simple.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(listener!=null){
+                            Bundle b = new Bundle();
+                            listener.change_fragment_parameter(FragmentElement.INSTANCE_TIP_DETAIL,b);
+                        }
+                    }
+                });
+                break;
+        }
 
     }
 
@@ -81,9 +112,10 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
     public class TipsHolder extends RecyclerView.ViewHolder{
-
+RelativeLayout root_tip_simple;
         public TipsHolder(@NonNull View itemView) {
             super(itemView);
+            root_tip_simple = itemView.findViewById(R.id.root_tip_simple);
         }
     }
 

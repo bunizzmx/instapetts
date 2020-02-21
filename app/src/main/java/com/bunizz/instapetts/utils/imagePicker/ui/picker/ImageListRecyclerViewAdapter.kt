@@ -82,7 +82,7 @@ class ImageListRecyclerViewAdapter(private val context: Context) : RecyclerView.
                                 selectable || isSelectedImage
                         )
             }
-            it.setOnLongClickListener { view ->
+            it.setOnClickListener{ view ->
                 onItemLongClickListener
                         ?.onItemLongClickListener(
                                 parent,

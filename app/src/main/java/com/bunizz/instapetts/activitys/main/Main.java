@@ -17,14 +17,18 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.share_post.ShareActivity;
+import com.bunizz.instapetts.activitys.wizardPets.WizardPetActivity;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.fragments.info.InfoPetFragment;
 import com.bunizz.instapetts.fragments.notifications.NotificationsFragment;
 import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.fragments.search.FragmentSearchPet;
+import com.bunizz.instapetts.fragments.tips.FragmentTipDetail;
 import com.bunizz.instapetts.fragments.tips.FragmentTips;
 import com.bunizz.instapetts.listeners.change_instance;
+import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
 import com.bunizz.instapetts.utils.imagePicker.ImagePicker;
 import com.bunizz.instapetts.utils.imagePicker.helper.RequestCode;
@@ -39,7 +43,7 @@ import butterknife.OnClick;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class Main extends AppCompatActivity implements change_instance {
+public class Main extends AppCompatActivity implements change_instance, changue_fragment_parameters_listener {
 
 
     private Stack<FragmentElement> stack_feed;
@@ -47,7 +51,7 @@ public class Main extends AppCompatActivity implements change_instance {
     private Stack<FragmentElement> stack_tips;
     private Stack<FragmentElement> stack_serch_pet;
     private Stack<FragmentElement> stack_notifications;
-
+    private Stack<FragmentElement> stack_tip_detail;
     private FragmentElement mCurrentFragment;
 
     private FragmentElement mCurrenSheet;
@@ -75,8 +79,7 @@ public class Main extends AppCompatActivity implements change_instance {
     @OnClick(R.id.tab_profile_pet)
     void tab_profile_pet() {
        /* Log.e("CHANGE_INSTANCE", "profile pet");
-        Intent i = new Intent(Main.this, WizardPetActivity.class);
-        startActivityForResult(i, NEW_PET_REQUEST);
+
          changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET);*/
         changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET);
         repaint_nav(R.id.tab_profile_pet);
@@ -103,9 +106,8 @@ public class Main extends AppCompatActivity implements change_instance {
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tab_add_image)
     void tab_add_image() {
-        new ImagePicker.Builder(this).packageName(getPackageName())
-        .maxCount(5).start();
-            repaint_nav(R.id.tab_feed);
+       Intent i = new Intent(Main.this, ShareActivity.class);
+       startActivity(i);
 
     }
 
@@ -142,6 +144,7 @@ public class Main extends AppCompatActivity implements change_instance {
         stack_tips = new Stack<>();
         stack_serch_pet = new Stack<>();
         stack_notifications = new Stack<>();
+        stack_tip_detail = new Stack<>();
         setupFirstFragment();
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
@@ -186,6 +189,16 @@ public class Main extends AppCompatActivity implements change_instance {
             mCurrentFragment = fragment;
             if (stack_feed.size() <= 0) {
                 stack_feed.push(mCurrentFragment);
+            }
+        }
+        inflateFragment();
+    }
+
+    private void change_detail_tip(FragmentElement fragment) {
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            if (stack_tip_detail.size() <= 0) {
+                stack_tip_detail.push(mCurrentFragment);
             }
         }
         inflateFragment();
@@ -273,6 +286,13 @@ public class Main extends AppCompatActivity implements change_instance {
                 change_notifications(stack_notifications.pop());
             }
         }
+        else if (intanceType == FragmentElement.INSTANCE_TIP_DETAIL) {
+            if (stack_tip_detail.size() == 0) {
+                change_detail_tip(new FragmentElement<>("", FragmentTipDetail.newInstance(), FragmentElement.INSTANCE_TIP_DETAIL));
+            } else {
+                change_detail_tip(stack_tip_detail.pop());
+            }
+        }
 
 
     }
@@ -323,8 +343,19 @@ public class Main extends AppCompatActivity implements change_instance {
     }
 
     @Override
+    public void open_wizard_pet() {
+        Intent i = new Intent(Main.this, WizardPetActivity.class);
+        startActivityForResult(i, NEW_PET_REQUEST);
+    }
+
+    @Override
     public void onBackPressed() {
-        changeOfInstance(FragmentElement.INSTANCE_FEED);
+        if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_TIP_DETAIL){
+            changeOfInstance(FragmentElement.INSTANCE_TIPS);
+        }else{
+            changeOfInstance(FragmentElement.INSTANCE_FEED);
+        }
+
     }
 
     @Override
@@ -334,7 +365,9 @@ public class Main extends AppCompatActivity implements change_instance {
         if (requestCode == NEW_PET_REQUEST) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                Toast.makeText(this,"Pet configurado",Toast.LENGTH_SHORT).show();
+                if (mCurrentFragment.getFragment() instanceof FragmentProfileUserPet) {
+                            ((FragmentProfileUserPet) mCurrentFragment.getFragment()).refresh_list_pets();
+                }
             }
         }
 
@@ -383,4 +416,8 @@ public class Main extends AppCompatActivity implements change_instance {
         }
     }
 
+    @Override
+    public void change_fragment_parameter(int type_fragment, Bundle data) {
+        changeOfInstance(type_fragment);
+    }
 }
