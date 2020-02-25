@@ -1,27 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
+    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="bottom"
     android:background="#ffffff">
-    <androidx.cardview.widget.CardView
-        android:id="@+id/back_to_main"
-       android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        app:cardElevation="5dp"
-        app:cardCornerRadius="30dp"
-        app:contentPadding="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/back_to_main"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            app:cardElevation="5dp"
+            app:cardCornerRadius="30dp"
+            app:contentPadding="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:tint="@color/amarillo"
+                android:src="@drawable/ic_arrow_back"
+                android:layout_width="15dp"
+                android:layout_height="15dp"/>
+        </androidx.cardview.widget.CardView>
         <ImageView
-            android:tint="@color/amarillo"
-            android:src="@drawable/ic_arrow_back"
-            android:layout_width="15dp"
-            android:layout_height="15dp"/>
-    </androidx.cardview.widget.CardView>
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_corazon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"/>
+    </RelativeLayout>
     <ScrollView
         android:layout_below="@+id/back_to_main"
         android:layout_width="match_parent"
@@ -58,4 +68,4 @@
         </LinearLayout>
     </ScrollView>
 
-</RelativeLayout>
+</LinearLayout>

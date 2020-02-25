@@ -1,9 +1,10 @@
-package com.bunizz.instapetts.utils.imagePicker.ui.picker
+package com.bunizz.instapetts.fragments.share_post.Picker
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bunizz.instapetts.R
@@ -50,8 +51,6 @@ class ImageListRecyclerViewAdapter(private val context: Context) : RecyclerView.
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val itemView = holder.itemView
         val item = getItem(position)
-
-        itemView.view_disable.visibility = View.GONE
         itemView.view_selected.visibility = View.GONE
 
         Glide.with(context)
@@ -68,7 +67,7 @@ class ImageListRecyclerViewAdapter(private val context: Context) : RecyclerView.
         }
 
         if (!selectable && !isSelectedImage) {
-            itemView.view_disable.visibility = View.VISIBLE
+            Toast.makeText(context,"Solo puedes seleccionar 5 imagenes",Toast.LENGTH_LONG).show()
         }
 
         itemView.also {
@@ -82,7 +81,7 @@ class ImageListRecyclerViewAdapter(private val context: Context) : RecyclerView.
                                 selectable || isSelectedImage
                         )
             }
-            it.setOnClickListener{ view ->
+            it.setOnLongClickListener{ view ->
                 onItemLongClickListener
                         ?.onItemLongClickListener(
                                 parent,

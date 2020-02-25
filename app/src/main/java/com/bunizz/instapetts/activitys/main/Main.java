@@ -1,7 +1,9 @@
 package com.bunizz.instapetts.activitys.main;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -16,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.share_post.ShareActivity;
 import com.bunizz.instapetts.activitys.wizardPets.WizardPetActivity;
@@ -30,10 +33,15 @@ import com.bunizz.instapetts.fragments.tips.FragmentTips;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
-import com.bunizz.instapetts.utils.imagePicker.ImagePicker;
-import com.bunizz.instapetts.utils.imagePicker.helper.RequestCode;
-import com.bunizz.instapetts.utils.imagePicker.ui.picker.ImagePickerActivity;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
+import java.util.List;
 import java.util.Stack;
 
 import butterknife.BindView;
@@ -57,7 +65,7 @@ public class Main extends AppCompatActivity implements change_instance, changue_
     private FragmentElement mCurrenSheet;
     private FragmentElement mOldFragment;
     static final int NEW_PET_REQUEST = 1;
-
+    static final int NEW_POST_REQUEST = 2;
 
 
     @BindView(R.id.icon_tips)
@@ -74,6 +82,10 @@ public class Main extends AppCompatActivity implements change_instance, changue_
 
     @BindView(R.id.sliding_layout)
     SlidingUpPanelLayout mLayout;
+    private boolean mSaved;
+
+    RxPermissions rxPermissions ;
+    private StorageReference mStorageRef;
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tab_profile_pet)
@@ -103,11 +115,22 @@ public class Main extends AppCompatActivity implements change_instance, changue_
         }
     }
 
-    @SuppressLint("MissingPermission")
+    @SuppressLint({"MissingPermission", "CheckResult"})
     @OnClick(R.id.tab_add_image)
     void tab_add_image() {
-       Intent i = new Intent(Main.this, ShareActivity.class);
-       startActivity(i);
+        rxPermissions
+                .request(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .subscribe(granted -> {
+                    if (granted) {
+                        Intent i = new Intent(Main.this, ShareActivity.class);
+                        startActivityForResult(i,NEW_POST_REQUEST);
+                    } else {
+                        App.getInstance().show_dialog_permision(Main.this,getResources().getString(R.string.permision_storage),
+                                getResources().getString(R.string.permision_storage_body),0);
+                    }
+                });
+
 
     }
 
@@ -139,6 +162,7 @@ public class Main extends AppCompatActivity implements change_instance, changue_
         setContentView(R.layout.main);
         ButterKnife.bind(this);
         changeStatusBarColor(R.color.white);
+        rxPermissions = new RxPermissions(this);
         stack_feed = new Stack<>();
         stack_profile_pet = new Stack<>();
         stack_tips = new Stack<>();
@@ -369,6 +393,10 @@ public class Main extends AppCompatActivity implements change_instance, changue_
                             ((FragmentProfileUserPet) mCurrentFragment.getFragment()).refresh_list_pets();
                 }
             }
+        }else if(requestCode == NEW_POST_REQUEST){
+            if(data!=null) {
+                data.getStringArrayListExtra("URIS_PATHS");
+            }
         }
 
     }
@@ -420,4 +448,13 @@ public class Main extends AppCompatActivity implements change_instance, changue_
     public void change_fragment_parameter(int type_fragment, Bundle data) {
         changeOfInstance(type_fragment);
     }
+
+
+    void share_images(){
+
+    }
+
+
+
+
 }

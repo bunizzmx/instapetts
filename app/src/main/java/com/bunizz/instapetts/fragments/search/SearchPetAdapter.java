@@ -59,8 +59,8 @@ public class SearchPetAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         SearchPetHolder h =(SearchPetHolder)holder;
         PropietaryBean data_parsed = (PropietaryBean) data.get(position);
-        h.name_pet_searching.setText(data_parsed.getNombre());
-        Glide.with(context).load(data_parsed.getImage_propietary()).into(h.image_pet_searching);
+        h.name_pet_searching.setText(data_parsed.getName());
+        Glide.with(context).load(data_parsed.getUrl_photo()).into(h.image_pet_searching);
     }
 
     @Override

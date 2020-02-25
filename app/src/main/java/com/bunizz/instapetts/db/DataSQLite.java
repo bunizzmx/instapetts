@@ -45,6 +45,7 @@ public class DataSQLite extends SQLiteOpenHelper {
         db.execSQL(context.getString(R.string.table_historias_vistas));
         db.execSQL(context.getString(R.string.histories));
         db.execSQL(context.getString(R.string.pets));
+        db.execSQL(context.getString(R.string.propietary));
 
     }
 

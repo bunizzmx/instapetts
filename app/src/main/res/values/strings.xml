@@ -9,6 +9,9 @@
     <string name="demo">El firulas es una mascota que le gusta comer a todas horas y solo quiere estar dormido , por lo que necesita de un lgar de mucha paz y silencio si no le da rabia.</string>
 
     <string name="text_imagepicker_album_all_key">all</string>
+
+    <string name="permision_storage">Permisos de Almacenamientos Requeridos</string>
+    <string name="permision_storage_body">Para mejorar la experiencia en Eshary necesitamos tu permiso para acceder a tu almacenamiento.</string>
     <string name="text_imagepicker_permission_denied_external_storage">Please grant the permission to show media.</string>
     <string name="tip_demo">Efectivamente, sería una verdadera imprudencia no mantener contacto alguno con nuestro perito en estos casos, puesto que, siempre respetando la veracidad del contenido de su informe y su obligación de ser imparcial y objetivo, existen diversas reglas, unas generales sobre la prueba pericial y otras particulares del caso objeto de pericia, que todo perito debe conocer y que deben clarificarse antes de su intervención.
 A continuación, vamos a destacar algunas de las reglas que debe conocer el perito en relación con su intervención en el juicio oral (basadas en el trabajo de Niccy Valera, Eficacia del Perito en el Juicio Oral):
@@ -19,4 +22,17 @@ Caso de no entender una pregunta, deberá solicitar se le repita hasta que alcan
 Jamás responder a una pregunta que haya sido previamente declarada impertinente o inútil por el juez.
 Cuando pregunte el abogado contrario, nunca deberá mirar al abogado que lo ha propuesto buscando una respuesta o aclaración.
 Hay que ser siempre respetuoso y cortés y no discutir nunca con quienes lo examinen, especialmente con el abogado contrario, ni menos aún enfrentarse, pues es símbolo de falta de objetividad y, cómo no, de respeto. Esta actitud, ajena a la calma y sosiego que debe mantener el perito, es más que contraproducente.</string>
+
+
+<string name="pet_type_dog">Pero</string>
+<string name="pet_type_cat">Gato</string>
+<string name="pet_type_ave">Ave</string>
+<string name="pet_type_conejo">Conejo</string>
+<string name="pet_type_hamster">Hamster</string>
+<string name="pet_type_otro">Otro</string>
+
+    <string name="edit_profile">Editar</string>
+
+
+
 </resources>

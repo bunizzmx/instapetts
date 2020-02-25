@@ -44,10 +44,8 @@ public class FragmentPopietaryList  extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        data.add(new PropietaryBean("https://t1.ea.ltmcdn.com/es/images/6/4/2/la_educacion_de_un_pit_bull_cachorro_22246_600.jpg","Angel yardani",3));
-        data.add(new PropietaryBean("https://www.zooplus.es/magazine/wp-content/uploads/2017/09/fotolia_165277191.jpg","Alan Natanael",3));
-        data.add(new PropietaryBean("https://www.micachorro.net/wp-content/uploads/2018/02/cacne-corso.png","Ichxhel Alejnadra",3));
-        data.add(new PropietaryBean("https://www.micachorro.net/wp-content/uploads/2018/02/cacne-corso.png","Pedro tlacuache",3));
+        data.add(new PropietaryBean("Sanganutins",45,3,4.6f,"xxx",3,"https://t1.ea.ltmcdn.com/es/images/6/4/2/la_educacion_de_un_pit_bull_cachorro_22246_600.jpg",""));
+        data.add(new PropietaryBean("Sanganutins",45,3,4.6f,"xxx",3,"https://t1.ea.ltmcdn.com/es/images/6/4/2/la_educacion_de_un_pit_bull_cachorro_22246_600.jpg",""));
         adapter = new SearchPetAdapter(getContext());
         adapter.setData(data);
     }

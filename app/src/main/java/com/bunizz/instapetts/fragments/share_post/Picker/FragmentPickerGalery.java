@@ -1,5 +1,6 @@
-package com.bunizz.instapetts.fragments.share_post;
+package com.bunizz.instapetts.fragments.share_post.Picker;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -12,8 +13,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,17 +22,15 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PetBean;
+import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
+import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.utils.crop.CropLayout;
 import com.bunizz.instapetts.utils.crop.OnCropListener;
 import com.bunizz.instapetts.utils.imagePicker.data.Album;
 import com.bunizz.instapetts.utils.imagePicker.data.Config;
 import com.bunizz.instapetts.utils.imagePicker.data.Image;
 import com.bunizz.instapetts.utils.imagePicker.helper.EmptySupportedRecyclerView;
-import com.bunizz.instapetts.utils.imagePicker.ui.picker.ImageListRecyclerViewAdapter;
-import com.bunizz.instapetts.utils.imagePicker.ui.picker.ImagePickerContract;
-import com.bunizz.instapetts.utils.imagePicker.ui.picker.ImagePickerFragment;
-import com.bunizz.instapetts.utils.imagePicker.ui.picker.ImagePickerPresenter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -71,6 +68,13 @@ public class FragmentPickerGalery  extends Fragment implements  FeedContract.Vie
     ImagePickerPresenter presenter;
     ArrayAdapter albumAdapter;
     Config config;
+    boolean IS_CROPED_IMAGE_FINISH = false;
+
+    String PATH_after ="";
+
+    ArrayList<String> paths = new ArrayList<>();
+
+    changue_fragment_parameters_listener listener;
 
   //  private enum class Tag { SPINNER_ALBUM, IMAGE, BUTTON_SETTING };
 
@@ -89,6 +93,7 @@ public class FragmentPickerGalery  extends Fragment implements  FeedContract.Vie
         config.setPackageName(getContext().getPackageName());
         albumAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_dropdown_item);
         presenter = new ImagePickerPresenter(this,getContext(),config);
+        paths.clear();
     }
 
     @Override
@@ -107,16 +112,18 @@ public class FragmentPickerGalery  extends Fragment implements  FeedContract.Vie
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(),4));
         //recyclerView.setTag(ImagePickerFragment.IMAGE);
         recyclerView.setAdapter(adapter);
-
         cropLayout.addOnCropListener(new OnCropListener() {
             @Override
             public void onSuccess(@NotNull Bitmap bitmap) {
                 if(saveImage(bitmap,"Instapetts","Instapetts_", Bitmap.CompressFormat.JPEG)){
-                    Toast.makeText(getContext(),"IMAGEN gUARDADA",Toast.LENGTH_SHORT).show();
+                    if(IS_CROPED_IMAGE_FINISH) {
+                        presenter.saveSelected(adapter.getSelectedImages());
+                    }else{
+                        Log.e("FINISH_STATUS","NO A FINALIZADO");
+                    }
                 }
             }
 
@@ -127,27 +134,23 @@ public class FragmentPickerGalery  extends Fragment implements  FeedContract.Vie
         });
         crop_now.setOnClickListener(view1 -> {
             if (cropLayout.isOffFrame()) {
-                Log.e("FUERA_FRAME","true");
-                // Snackbar.make(parent, R.string.error_image_is_off_of_frame, Snackbar.LENGTH_LONG).show()
                 return;
             }else{
-                Log.e("FUERA_FRAME","false");
+                IS_CROPED_IMAGE_FINISH = true;
+                cropLayout.crop();
             }
-            cropLayout.crop();
         });
-
         spinner_album.setAdapter(albumAdapter);
         spinner_album.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 presenter.albumSelected(i);
             }
-
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) { }
         });
+        adapter.setOnItemClickListener(this);
+        adapter.setOnItemLongClickListener(this);
     }
 
 
@@ -219,7 +222,11 @@ public class FragmentPickerGalery  extends Fragment implements  FeedContract.Vie
 
     @Override
     public void finishPickImages(@NotNull List<Image> items) {
-
+        Bundle b = new Bundle();
+        b.putStringArrayList("data_pahs",paths);
+        if(listener!=null){
+            listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
+        }
     }
 
     @Override
@@ -229,12 +236,21 @@ public class FragmentPickerGalery  extends Fragment implements  FeedContract.Vie
 
     @Override
     public void onItemClick(@NotNull ViewGroup parent, @NotNull View view, int position, @NotNull Image item, boolean selectable) {
-
+        if (!selectable) return;
+        cropLayout.setUri(Uri.parse(adapter.get_uri(position)));
     }
 
     @Override
     public boolean onItemLongClickListener(@NotNull ViewGroup parent, @NotNull View view, int position, @NotNull Image item, boolean selectable) {
-        return false;
+        if (!selectable) return false;
+        if(PATH_after.length()>2){
+            Log.e("CORTO_ANETERIOR","si");
+            cropLayout.crop();
+        }
+        adapter.updateItemView(position, config.getMaxCount());
+        PATH_after = adapter.get_uri(position);
+        cropLayout.setUri(Uri.parse(PATH_after));
+        return true;
     }
 
     public  boolean saveImage(Bitmap bitmap, String folderName, String filename, Bitmap.CompressFormat compressFormat) {
@@ -250,6 +266,8 @@ public class FragmentPickerGalery  extends Fragment implements  FeedContract.Vie
             out.flush();
             out.close();
             PATH_TEMP = file.getPath();
+            Log.e("PATH_CROPED","-->" + PATH_TEMP);
+            paths.add(PATH_TEMP);
             try {
                 Intent mediaScannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                 Uri fileContentUri = Uri.fromFile(file);
@@ -265,6 +283,15 @@ public class FragmentPickerGalery  extends Fragment implements  FeedContract.Vie
             return true;
 
         }
+    }
+
+
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        listener= (changue_fragment_parameters_listener) context;
     }
 
 }

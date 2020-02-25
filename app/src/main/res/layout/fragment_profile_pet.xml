@@ -39,8 +39,16 @@
                 android:layout_height="wrap_content">
                 <include layout="@layout/tollbar_profile"/>
              <include layout="@layout/include_info_profile"></include>
-                <com.bunizz.instapetts.utils.tabs.SlidingTabLayout
+                <RelativeLayout
+                    android:layout_marginBottom="10dp"
+                    android:id="@+id/llx"
                     android:layout_below="@+id/root_info_profile_include"
+                    android:layout_marginTop="10dp"
+                    android:background="#CAC8C8"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dp"/>
+                <com.bunizz.instapetts.utils.tabs.SlidingTabLayout
+                    android:layout_below="@+id/llx"
                     android:id="@+id/tabs_profile_propietary"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"

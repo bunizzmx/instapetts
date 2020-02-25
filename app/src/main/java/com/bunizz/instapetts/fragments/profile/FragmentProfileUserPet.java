@@ -1,12 +1,15 @@
 package com.bunizz.instapetts.fragments.profile;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.GetChars;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +60,12 @@ public class FragmentProfileUserPet extends Fragment {
     @BindView(R.id.title_toolbar)
     TextView title_toolbar;
 
+    @BindView(R.id.icon_toolbar)
+    ImageView icon_toolbar;
+
+    @BindView(R.id.follow_edit)
+    Button follow_edit;
+
 
 
     ArrayList<PetBean> pets = new ArrayList<>();
@@ -91,6 +100,7 @@ public class FragmentProfileUserPet extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        icon_toolbar.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_settings));
         list_pets_propietary.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
         petsPropietaryAdapter.setListener(new open_sheet_listener() {
             @Override
@@ -112,6 +122,12 @@ public class FragmentProfileUserPet extends Fragment {
         tabs_profile_propietary.setCustomUnfocusedColor(R.color.black);
         tabs_profile_propietary.setSelectedIndicatorColors(getResources().getColor(R.color.naranja));
         title_toolbar.setText("Louis Bardaley");
+
+        if(true){
+            follow_edit.setText(R.string.edit_profile);
+            follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_edit_profile));
+            follow_edit.setTextColor(Color.BLACK);
+        }
 
     }
 
