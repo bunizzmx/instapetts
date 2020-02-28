@@ -3,9 +3,12 @@ package com.bunizz.instapetts.activitys.intro;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,6 +17,7 @@ import android.widget.TextView;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.login.LoginActivity;
+import com.bunizz.instapetts.db.Utilities;
 import com.bunizz.instapetts.fragments.intro.Fragment1;
 import com.bunizz.instapetts.fragments.intro.Fragment2;
 import com.bunizz.instapetts.fragments.intro.Fragment3;
@@ -30,6 +34,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.bunizz.instapetts.constantes.PREFERENCES.IS_INTRO_COMPLETED;
 
 public class IntroActivity extends AppCompatActivity implements VisibleItem {
@@ -37,21 +44,40 @@ public class IntroActivity extends AppCompatActivity implements VisibleItem {
     ViewPager viewPager ;
     PagerAdapter pagerAdapter;
     Fragment[] fragments_data = null;
-    TextView back,skip;
-    RelativeLayout indicators;
+    Button skip,back,omitter;
     FragmentManager fragmentManager;
     ProgressBar progress_intro;
+
+
+    @BindView(R.id.indicators)
+    RelativeLayout indicators;
+
+
     String data_fecha = App.formatDateGMT(new Date());
     int RETRY =0;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
             setContentView(R.layout.intro_activity);
-            changeStatusBarColor(R.color.white);
+            ButterKnife.bind(this);
+            View decorView = getWindow().getDecorView();
+            decorView.setOnSystemUiVisibilityChangeListener
+                (visibility -> {
+                    if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                        move_pager_up();
+                       Log.e("BARRA_ESTATUS","barra visible");
+                    } else {
+                        move_pager_down();
+                        Log.e("BARRA_ESTATUS","barra oculta");
+                    }
+                });
+
+            //changeStatusBarColor(R.color.white);
             dotsIndicator = findViewById(R.id.dots_indicator);
             viewPager = findViewById(R.id.viewpager);
             skip = findViewById(R.id.skip);
             back = findViewById(R.id.back);
+            omitter = findViewById(R.id.omitter);
             indicators =findViewById(R.id.indicators);
             fragmentManager = getSupportFragmentManager();
             fragments_data = new Fragment[]{
@@ -71,12 +97,11 @@ public class IntroActivity extends AppCompatActivity implements VisibleItem {
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                     if(position==0){
                         back.setVisibility(View.GONE);
-                    }else if(position ==2){
-                            indicators.setVisibility(View.VISIBLE);
-                            skip.setVisibility(View.VISIBLE);
-                            back.setVisibility(View.VISIBLE);
-                            dotsIndicator.setVisibility(View.VISIBLE);
-
+                    }else if(position ==1){
+                        back.setVisibility(View.VISIBLE);
+                    }else{
+                        omitter.setVisibility(View.GONE);
+                        skip.setText("Continuar");
                     }
 
                 }
@@ -93,21 +118,19 @@ public class IntroActivity extends AppCompatActivity implements VisibleItem {
             });
 
             back.setOnClickListener(view -> {
-               finish();
+                int position = viewPager.getCurrentItem();
+                if(position>0) {
+                    viewPager.setCurrentItem(position - 1);
+                }
             });
-
 
             skip.setOnClickListener(view -> {
                 int position = viewPager.getCurrentItem();
                 if(position<fragments_data.length-1) {
                     viewPager.setCurrentItem(position +1);
-                    back.setText(getResources().getString(R.string.exit));
-                    skip.setText(getResources().getString(R.string.acept_next));
                 }else if(position ==2){
                     Intent i = new Intent(IntroActivity.this, LoginActivity.class);
                     startActivity(i);
-                    progress_intro.setVisibility(View.VISIBLE);
-                    skip.setVisibility(View.GONE);
                     App.write(IS_INTRO_COMPLETED,true);
                 }else{
                     Intent i = new Intent(IntroActivity.this, LoginActivity.class);
@@ -120,6 +143,53 @@ public class IntroActivity extends AppCompatActivity implements VisibleItem {
 
 
     }
+
+    void move_pager_up(){
+        indicators.setPadding(0
+                ,0
+                ,0
+                , Utilities.convertDpToPixel(70f,this));
+    }
+    void move_pager_down(){
+        indicators.setPadding( 0,0,0,0);
+    }
+
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            hideSystemUI();
+        }
+    }
+
+    private void hideSystemUI() {
+        // Enables regular immersive mode.
+        // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
+        // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE
+                        // Set the content to appear under the system bars so that the
+                        // content doesn't resize when the system bars hide and show.
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        // Hide the nav bar and status bar
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
+    }
+
+    // Shows the system bars by removing all the flags
+    // except for the ones that make the content appear under the system bars.
+    private void showSystemUI() {
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+    }
+
 
     @Override
     public void onSUccess(boolean success) {

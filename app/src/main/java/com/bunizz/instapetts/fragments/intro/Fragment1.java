@@ -20,7 +20,7 @@ public class Fragment1 extends Fragment {
 
     @BindView(R.id.title)
     TextView title;
-    @BindView(R.id.desc)
+    @BindView(R.id.description)
     TextView desc;
 
 

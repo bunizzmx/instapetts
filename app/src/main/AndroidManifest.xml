@@ -33,13 +33,13 @@
         <!-- ACTIVIDADES  -->
 
 
-        <activity android:name=".activitys.Splash" android:theme="@style/Style_Splash">
+        <activity android:name=".activitys.Splash" android:theme="@style/Style_Splash" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activitys.intro.IntroActivity"/>
+        <activity android:name=".activitys.intro.IntroActivity" />
         <activity android:name=".activitys.login.LoginActivity" />
         <activity android:name=".activitys.main.Main"/>
         <activity android:name=".activitys.wizardPets.WizardPetActivity" android:windowSoftInputMode="adjustPan"/>

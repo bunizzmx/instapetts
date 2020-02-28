@@ -19,24 +19,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class Fragment3  extends Fragment {
-    @BindView(R.id.title_fragment_1)
-    TextView title_fragment_1;
-
-    @BindView(R.id.body_fragment_2)
-    TextView body_fragment_1;
-
-    @BindView(R.id.progress_politicas)
-    ProgressBar progress_politicas;
-
-    FirebaseFirestore db;
-    VisibleItem interfaz;
-
-    @BindView(R.id.layout_politicas)
-    RelativeLayout layout_politicas;
-
-    @BindView(R.id.politics)
-    TextView politics;
-
 
 
     @Override
@@ -47,7 +29,7 @@ public class Fragment3  extends Fragment {
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment2, container, false);
+        return inflater.inflate(R.layout.fragment3, container, false);
     }
 
     @Override
@@ -59,15 +41,5 @@ public class Fragment3  extends Fragment {
     }
 
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            interfaz = (VisibleItem) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + e.getMessage());
-        }
-    }
 
 }
