@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.listeners.change_instance;
+import com.bunizz.instapetts.listeners.login_listener;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,11 +21,21 @@ import butterknife.OnClick;
 public class FragmentSigin extends Fragment {
 
     change_instance listener;
+    login_listener login_listener;
     @OnClick(R.id.back_to_main)
     void back_to_main()
     {
         listener.onback();
     }
+
+    @OnClick(R.id.button_signin)
+    void button_signin()
+    {
+        if(login_listener!=null)
+         login_listener.onLoginSuccess(true);
+    }
+
+
 
     public static FragmentSigin newInstance() {
         return new FragmentSigin();
@@ -51,5 +62,6 @@ public class FragmentSigin extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         listener= (change_instance) context;
+        login_listener= (login_listener) context;
     }
 }

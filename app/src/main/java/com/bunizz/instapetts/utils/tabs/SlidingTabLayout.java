@@ -17,6 +17,7 @@
 package com.bunizz.instapetts.utils.tabs;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -55,7 +56,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private int customUnfocusedColor;
 
     private int mTitleOffset;
-    private int textSize = 14;
+    private int textSize = 10;
 
     private TabType tabType;
     private ActionBar actionBar;
@@ -236,7 +237,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 tabTitleView.setText(adapter.getPageTitle(i));
                 tabTitleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, this.textSize);
                 tabTitleView.setTextColor(i == mViewPager.getCurrentItem() ?
-                        focused_color : unfocused_color);
+                        Color.parseColor("#f8bc3c") : Color.parseColor("#858585"));
             }
 
             if (tabImageView != null && adapter.getPageDrawable(i) != null) {
@@ -336,7 +337,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                     case TEXT_ONLY:
                         tabTitleView = (TextView) mTabStrip.getChildAt(i).findViewById(TEXT_ID);
                         tabTitleView.setTextColor(i == mViewPager.getCurrentItem() ?
-                                focused_color : unfocused_color);
+                                Color.parseColor("#f8bc3c") : Color.parseColor("#858585"));
                         break;
 
                     case ICON_ONLY:

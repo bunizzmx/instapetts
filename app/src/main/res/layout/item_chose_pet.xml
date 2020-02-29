@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:padding="10dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <com.bunizz.instapetts.utils.ImagenCircular
+        android:src="@drawable/perro_demo"
+        android:layout_width="60dp"
+        android:layout_height="60dp"/>
+
+    <TextView
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/avenir_black"
+        android:layout_marginLeft="20dp"
+        android:layout_gravity="center_vertical"
+        android:text="Firulais"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

@@ -36,6 +36,7 @@ public class FragmentTypePet extends Fragment {
     change_instance_wizard listener;
 
     TypePetsAdapter adapter;
+    ArrayList<PetTtype> petTtypes = new ArrayList<>();
     public static FragmentTypePet newInstance() {
         return new FragmentTypePet();
     }
@@ -51,7 +52,19 @@ public class FragmentTypePet extends Fragment {
                     listener.onchange(type_fragment,data);
                 }
             }
+
+            @Override
+            public void onpetFinish(boolean pet_saved) {
+
+            }
         });
+        petTtypes.add(new PetTtype(R.drawable.ic_perro,getContext().getResources().getString(R.string.pet_type_dog),1));
+        petTtypes.add(new PetTtype(R.drawable.ic_gato,getContext().getResources().getString(R.string.pet_type_cat),2));
+        petTtypes.add(new PetTtype(R.drawable.ic_mascota_perico,getContext().getResources().getString(R.string.pet_type_ave),3));
+        petTtypes.add(new PetTtype(R.drawable.ic_mascota_conejo,getContext().getResources().getString(R.string.pet_type_conejo),4));
+        petTtypes.add(new PetTtype(R.drawable.ic_mascota_hamster,getContext().getResources().getString(R.string.pet_type_hamster),5));
+        petTtypes.add(new PetTtype(R.drawable.ic_perro,getContext().getResources().getString(R.string.pet_type_otro),6));
+        adapter.setPetTtypes(petTtypes);
     }
 
     @Nullable

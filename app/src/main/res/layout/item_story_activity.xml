@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView android:layout_width="match_parent"
+    android:background="@color/black"
+    android:layout_height="match_parent"
+    app:cardCornerRadius="10dp"
+    android:layout_margin="1dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <ImageView
+        android:scaleType="centerCrop"
+        android:src="@drawable/story_demo"
+        android:id="@+id/image_story"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ImageView>
+    <ProgressBar
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/progress_top"
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/reverse"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <View
+            android:id="@+id/skip"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
+    <com.bunizz.instapetts.utils.HistoryView.StoryPlayerProgressView
+        app:gapBetweenProgressBar="2dp"
+        app:progressBarHeight="1dp"
+        app:progressBarPrimaryColor="#ffffff"
+        app:progressBarSecondaryColor="#3effffff"
+        android:id="@+id/progressBarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:id="@+id/info_user_expresions"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/progressBarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+        <com.bunizz.instapetts.utils.ImagenCircular
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
+            android:id="@+id/imagen_usuario_historia"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/perro_demo"
+            app:civ_border_width="2dp"
+            app:civ_border_color="@color/white"/>
+        <TextView
+            android:layout_marginTop="5dp"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_toRightOf="@+id/imagen_usuario_historia"
+            android:id="@+id/usuario_historia_nombre"
+            android:text="La dueña del firulais"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/fecha_expresion"
+            android:textSize="14dp"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/white"
+            android:layout_below="@+id/usuario_historia_nombre"
+            android:layout_toRightOf="@+id/imagen_usuario_historia"
+            android:text="Hace 500 años"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

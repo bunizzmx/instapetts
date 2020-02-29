@@ -1,6 +1,7 @@
 package com.bunizz.instapetts.activitys.wizardPets;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.beans.PetBean;
+import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
@@ -22,12 +25,13 @@ import com.bunizz.instapetts.fragments.wizardPets.FragmentSearchPet;
 import com.bunizz.instapetts.fragments.wizardPets.FragmentTypePet;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.change_instance_wizard;
+import com.bunizz.instapetts.listeners.process_save_pet_listener;
 
 import java.util.Stack;
 
 import butterknife.ButterKnife;
 
-public class WizardPetActivity extends AppCompatActivity implements change_instance_wizard {
+public class WizardPetActivity extends AppCompatActivity implements change_instance_wizard, process_save_pet_listener {
 
     private Stack<FragmentElement> stack_type_pet;
     private Stack<FragmentElement> stack_search_raza_pet;
@@ -36,7 +40,8 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
 
     private FragmentElement mCurrentFragment;
     private FragmentElement mOldFragment;
-
+    PetHelper petHelper;
+    PetBean infoPet = new PetBean();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +52,8 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
         stack_type_pet = new Stack<>();
         stack_search_raza_pet = new Stack<>();
         setupFirstFragment();
+        petHelper = PetHelper.getInstance(this);
+
 
     }
 
@@ -156,7 +163,6 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
 
     @Override
     public void onBackPressed() {
-        Log.e("SUPER_ONBACL",".." + mCurrentFragment.getInstanceType());
            if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_DATA_PET){
                changeOfInstance(FragmentElement.INSTANCE_TYPE_SEARCH_RAZA,null);
            }
@@ -164,12 +170,45 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
             changeOfInstance(FragmentElement.INSTANCE_TYPE_PET,null);
         }
         else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_TYPE_PET){
-           finish();
+               Intent data = new Intent();
+               data.putExtra("pet_saved",false);
+               setResult(RESULT_OK,data);
+               finish();
         }
     }
 
     @Override
     public void onchange(int type_fragment, Bundle data) {
         changeOfInstance(type_fragment,data);
+    }
+
+    @Override
+    public void onpetFinish(boolean pet_saved) {
+        Intent data = new Intent();
+        data.putExtra("pet_saved",true);
+        setResult(RESULT_OK,data);
+        finish();
+    }
+
+
+    @Override
+    public void SaveDataPet(Bundle b, int donde) {
+        switch (donde){
+            case 1:
+                  infoPet.setType_pet(b.getInt("TYPE_PET"));
+                  infoPet.setRate_pet("0");
+                  infoPet.setDescripcion_pet("");
+                  infoPet.setUrl_photo("");
+                break;
+            case 2:
+                infoPet.setRate_pet(b.getString("RAZA_PET"));
+                break;
+            case 3:
+                infoPet.setEdad_pet(b.getString("EDAD_PET"));
+                infoPet.setGenero_pet(b.getString("GENERO_PET"));
+                infoPet.setPeso_pet(b.getString("RAZA_PET"));
+                break;
+            default:break;
+        }
     }
 }

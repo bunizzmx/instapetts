@@ -18,7 +18,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
-
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewOutlineProvider;
@@ -71,7 +70,7 @@ public class ImagenCircular extends AppCompatImageView {
     private boolean mSetupPending;
     private boolean mBorderOverlay;
     private boolean mDisableCircularTransformation;
-
+    boolean stroke_separate =false;
     public ImagenCircular(Context context) {
         super(context);
 
@@ -138,6 +137,14 @@ public class ImagenCircular extends AppCompatImageView {
         }
     }
 
+    public boolean isStroke_separate() {
+        return stroke_separate;
+    }
+
+    public void setStroke_separate(boolean stroke_separate) {
+        this.stroke_separate = stroke_separate;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         if (mDisableCircularTransformation) {
@@ -150,9 +157,19 @@ public class ImagenCircular extends AppCompatImageView {
         }
 
         if (mCircleBackgroundColor != Color.TRANSPARENT) {
-            canvas.drawCircle(mDrawableRect.centerX(), mDrawableRect.centerY(), mDrawableRadius, mCircleBackgroundPaint);
+            if(stroke_separate){
+                canvas.drawCircle(mDrawableRect.centerX(), mDrawableRect.centerY(), mDrawableRadius -15, mCircleBackgroundPaint);
+            }else{
+                canvas.drawCircle(mDrawableRect.centerX(), mDrawableRect.centerY(), mDrawableRadius-5 , mCircleBackgroundPaint);
+            }
+
         }
-        canvas.drawCircle(mDrawableRect.centerX(), mDrawableRect.centerY(), mDrawableRadius, mBitmapPaint);
+        if(stroke_separate){
+            canvas.drawCircle(mDrawableRect.centerX(), mDrawableRect.centerY(), mDrawableRadius -15, mBitmapPaint);
+        }else{
+            canvas.drawCircle(mDrawableRect.centerX(), mDrawableRect.centerY(), mDrawableRadius-5 , mBitmapPaint);
+        }
+
         if (mBorderWidth > 0) {
             canvas.drawCircle(mBorderRect.centerX(), mBorderRect.centerY(), mBorderRadius, mBorderPaint);
         }
@@ -416,7 +433,7 @@ public class ImagenCircular extends AppCompatImageView {
         if (!mBorderOverlay && mBorderWidth > 0) {
             mDrawableRect.inset(mBorderWidth - 1.0f, mBorderWidth - 1.0f);
         }
-        mDrawableRadius = Math.min(mDrawableRect.height() / 2.0f, mDrawableRect.width() / 2.0f);
+        mDrawableRadius = Math.min((mDrawableRect.height() / 2.0f)+5, (mDrawableRect.width() / 2.0f)+5);
 
         applyColorFilter();
         updateShaderMatrix();

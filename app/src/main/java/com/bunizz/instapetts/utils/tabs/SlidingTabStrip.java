@@ -29,7 +29,7 @@ class SlidingTabStrip extends LinearLayout {
 
     private static final int DEFAULT_BOTTOM_BORDER_THICKNESS_DIPS = 0;
     private static final byte DEFAULT_BOTTOM_BORDER_COLOR_ALPHA = 0x26;
-    private static final int SELECTED_INDICATOR_THICKNESS_DIPS = 3;
+    private static final int SELECTED_INDICATOR_THICKNESS_DIPS = 2;
 
     private final int mBottomBorderThickness;
     private final Paint mBottomBorderPaint;
@@ -112,8 +112,7 @@ class SlidingTabStrip extends LinearLayout {
 
             mSelectedIndicatorPaint.setColor(color);
 
-            canvas.drawRect(left, height - mSelectedIndicatorThickness, right,
-                    height, mSelectedIndicatorPaint);
+            canvas.drawRect(left, height - mSelectedIndicatorThickness, right, height, mSelectedIndicatorPaint);
         }
 
         // Thin underline along the entire bottom edge

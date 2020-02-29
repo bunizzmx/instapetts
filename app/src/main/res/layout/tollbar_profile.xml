@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="@color/white"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/root_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+   <TextView
+       android:id="@+id/title_toolbar"
+       android:textSize="20dp"
+       android:layout_marginLeft="15dp"
+       android:layout_centerVertical="true"
+       android:textColor="@color/black"
+       android:fontFamily="@font/avenir_black"
+       android:text="news Feed"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"/>
+    <RelativeLayout
+        android:id="@+id/searc_pet_now"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:padding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/icon_toolbar"
+            android:src="@drawable/ic_dots"
+            android:layout_width="20dp"
+            android:layout_height="20dp"/>
+    </RelativeLayout>
+
+</RelativeLayout>

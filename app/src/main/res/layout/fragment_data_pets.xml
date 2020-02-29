@@ -19,7 +19,7 @@
             android:layout_height="15dp"/>
     </androidx.cardview.widget.CardView>
   <Button
-      android:enabled="false"
+      android:id="@+id/finalice_pet"
       android:layout_marginRight="10dp"
       android:layout_marginTop="10dp"
       android:paddingLeft="30dp"
@@ -49,7 +49,7 @@
     <androidx.cardview.widget.CardView
         android:layout_below="@+id/title_type_pet"
         android:id="@+id/card_age"
-        app:contentPadding="5dp"
+        app:contentPadding="10dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_marginTop="15dp"
@@ -69,18 +69,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
-                android:textColor="@color/naranja"
-                android:fontFamily="@font/avenir_black"
-                android:textSize="10dp"
-                android:text="10 Enero del 2016"
-                android:layout_marginTop="5dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
+                android:id="@+id/date_selected"
+                android:visibility="gone"
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/avenir_black"
-                android:text="11 Meses"
                 android:textSize="20dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
@@ -101,6 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <androidx.cardview.widget.CardView
+                android:id="@+id/card_hembra"
                 android:layout_margin="10dp"
                 app:cardElevation="4dp"
                 app:cardCornerRadius="40dp"
@@ -108,6 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <ImageView
+                    android:id="@+id/icon_hembra"
                     android:src="@drawable/ic_hembra"
                     android:layout_width="40dp"
                     android:layout_height="40dp"/>
@@ -129,6 +123,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <androidx.cardview.widget.CardView
+                android:id="@+id/card_macho"
                 android:layout_margin="10dp"
                 app:cardElevation="4dp"
                 app:cardCornerRadius="40dp"
@@ -136,6 +131,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <ImageView
+                    android:id="@+id/icon_macho"
                     android:src="@drawable/ic_macho"
                     android:layout_width="40dp"
                     android:layout_height="40dp"/>
@@ -172,6 +168,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
+                android:id="@+id/factor_peso"
                 android:fontFamily="@font/avenir_black"
                 android:textColor="@color/black"
                 android:layout_marginLeft="10dp"
@@ -196,11 +193,11 @@
             android:layout_height="70dp"
             android:background="@color/white"
             app:indicator_color="@android:color/darker_gray"
-            app:indicator_interval="12dp"
+            app:indicator_interval="30dp"
             app:indicator_width="1dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:max_value="100"
+            app:max_value="50"
             app:min_value="1"
             app:notch_color="@color/white"
             app:ruler_text_size="4sp"

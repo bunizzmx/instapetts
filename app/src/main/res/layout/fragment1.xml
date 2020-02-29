@@ -5,33 +5,39 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 <ImageView
+    android:scaleType="centerCrop"
+    android:src="@drawable/intro_1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"/>
-
-
-    <TextView
-        android:textColor="@color/black"
-        android:text="Bienvenido a Melove"
-        android:textAlignment="center"
-        android:textSize="25dp"
-        android:layout_marginTop="10dp"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <TextView
-        android:layout_marginBottom="10dp"
-
-        android:textColor="@color/black"
-        android:textAlignment="center"
-        android:textSize="16dp"
-        android:layout_marginTop="10dp"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/desc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
+    <LinearLayout
+        android:paddingLeft="40dp"
+        android:paddingRight="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="200dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:fontFamily="@font/avenir_black"
+            android:textColor="@color/white"
+            android:text="Bienvenido a Melove"
+            android:textAlignment="center"
+            android:textSize="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:textColor="@color/white"
+            android:text="Saca a tu perito a pacear hijo de l averga no seas culero"
+            android:textSize="18dp"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 </RelativeLayout>

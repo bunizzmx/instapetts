@@ -7,6 +7,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/logo_instapetts"
         android:layout_marginTop="50dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -28,27 +29,61 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/buttons_logins"
+        android:layout_marginTop="20dp"
         android:paddingRight="30dp"
         android:paddingLeft="30dp"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/logo_instapetts"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <Button
+        android:elevation="4dp"
         android:textColor="@color/white"
         android:layout_marginBottom="20dp"
-        android:background="@color/naranja"
+        android:background="@drawable/button_facebook"
         android:id="@+id/change_to_login"
-        android:text="Login"
+        android:text="Continar con Facebook"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <Button
-        android:textColor="@color/white"
-        android:background="@color/amarillo"
+        android:elevation="4dp"
+        android:textColor="#f00"
+        android:background="@drawable/button_gmail"
         android:id="@+id/change_to_signin"
-        android:text="SignUp"
+        android:text="Continuar con Gmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+        <Button
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"
+            android:background="@drawable/button_create_acount"
+            android:id="@+id/change_to_create_account"
+            android:text="Crear una cuenta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
+
+    <LinearLayout
+        android:padding="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/buttons_logins"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:text="Ya tienes una cuenta en Instapetts? Login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_centerHorizontal="true"
+        android:padding="10dp"
+        android:id="@+id/politics"
+        android:layout_alignParentBottom="true"
+        android:text="Politicas de privadidad  cdc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

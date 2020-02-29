@@ -129,4 +129,177 @@
         <attr name="notch_color" />
     </declare-styleable>
 
+    <attr name="halfVisibleItemCount" format="integer"/>
+    <attr name="itemTextSize" format="dimension"/>
+    <attr name="itemMaximumWidthText" format="string"/>
+    <attr name="itemTextColor" format="color"/>
+    <attr name="textGradual" format="boolean"/>
+    <attr name="selectedTextColor" format="color"/>
+    <attr name="selectedTextSize" format="dimension"/>
+    <attr name="currentItemPosition" format="integer"/>
+    <attr name="itemWidthSpace" format="dimension"/>
+    <attr name="itemHeightSpace" format="dimension"/>
+    <attr name="zoomInSelectedItem" format="boolean"/>
+    <attr name="wheelCyclic" format="boolean"/>
+    <attr name="wheelCurtain" format="boolean"/>
+    <attr name="wheelCurtainColor" format="color"/>
+    <attr name="wheelCurtainBorder" format="boolean"/>
+    <attr name="wheelCurtainBorderColor" format="color"/>
+    <attr name="indicatorText" format="string"/>
+    <attr name="indicatorTextSize" format="dimension"/>
+    <attr name="indicatorTextColor" format="color"/>
+    <declare-styleable name="WheelPicker">
+        <attr name="halfVisibleItemCount"/>
+        <attr name="itemTextSize"/>
+        <attr name="itemMaximumWidthText"/>
+        <attr name="itemTextColor"/>
+        <attr name="textGradual"/>
+        <attr name="selectedTextColor"/>
+        <attr name="selectedTextSize"/>
+        <attr name="currentItemPosition"/>
+        <attr name="itemWidthSpace"/>
+        <attr name="itemHeightSpace"/>
+        <attr name="zoomInSelectedItem"/>
+        <attr name="wheelCyclic"/>
+        <attr name="wheelCurtain"/>
+        <attr name="wheelCurtainColor"/>
+        <attr name="wheelCurtainBorder" />
+        <attr name="wheelCurtainBorderColor"/>
+        <attr name="indicatorText"/>
+        <attr name="indicatorTextSize"/>
+        <attr name="indicatorTextColor"/>
+    </declare-styleable>
+
+    <declare-styleable name="YearPicker">
+        <attr name="startYear" format="integer"/>
+        <attr name="endYear" format="integer"/>
+    </declare-styleable>
+
+    <declare-styleable name="MonthPicker">
+    </declare-styleable>
+
+    <declare-styleable name="DatePicker">
+        <attr name="halfVisibleItemCount"/>
+        <attr name="itemTextSize"/>
+        <attr name="itemTextColor"/>
+        <attr name="textGradual"/>
+        <attr name="selectedTextColor"/>
+        <attr name="selectedTextSize"/>
+        <attr name="itemWidthSpace"/>
+        <attr name="itemHeightSpace"/>
+        <attr name="zoomInSelectedItem"/>
+        <attr name="wheelCyclic"/>
+        <attr name="wheelCurtain"/>
+        <attr name="wheelCurtainColor"/>
+        <attr name="wheelCurtainBorder"/>
+        <attr name="wheelCurtainBorderColor"/>
+    </declare-styleable>
+
+    <declare-styleable name="HourAndMinutePicker">
+        <attr name="halfVisibleItemCount"/>
+        <attr name="itemTextSize"/>
+        <attr name="itemTextColor"/>
+        <attr name="textGradual"/>
+        <attr name="selectedTextColor"/>
+        <attr name="selectedTextSize"/>
+        <attr name="itemWidthSpace"/>
+        <attr name="itemHeightSpace"/>
+        <attr name="zoomInSelectedItem"/>
+        <attr name="wheelCyclic"/>
+        <attr name="wheelCurtain"/>
+        <attr name="wheelCurtainColor"/>
+        <attr name="wheelCurtainBorder"/>
+        <attr name="wheelCurtainBorderColor"/>
+    </declare-styleable>
+
+
+    <declare-styleable name="TextFieldBoxes">
+
+        <!--Texts-->
+        <attr name="labelText" format="string" />
+        <attr name="helperText" format="string" />
+
+        <!--Colors-->
+        <attr name="helperTextColor" format="color" />
+        <attr name="mCounterTextColor" format="color" />
+        <attr name="errorColor" format="color" />
+        <attr name="primaryColor" format="color" />
+        <attr name="secondaryColor" format="color" />
+        <attr name="panelBackgroundColor" format="color" />
+
+        <!--Characters counter-->
+        <attr name="maxCharacters" format="integer" />
+        <attr name="minCharacters" format="integer" />
+
+        <!--Others-->
+        <attr name="enabled" format="boolean" />
+        <attr name="iconSignifier" format="reference" />
+        <attr name="endIcon" format="reference" />
+        <attr name="isResponsiveIconColor" format="boolean" />
+        <attr name="hasClearButton" format="boolean" />
+        <attr name="hasFocus" format="boolean" />
+        <attr name="alwaysShowHint" format="boolean" />
+        <attr name="useDenseSpacing" format="boolean" />
+        <attr name="rtl" format="boolean" />
+
+        <!-- Set whether to automaticavalidateErrordate, or only on demand
+               @see {@link TextFieldBoxes#setManualValidateError(boolean) } -->
+        <attr name="manualValidateError" format="boolean" />
+
+    </declare-styleable>
+
+    <declare-styleable name="ExtendedEditText">
+
+        <!--Texts-->
+        <attr name="prefix" format="string" />
+        <attr name="suffix" format="string" />
+
+        <!--Colors-->
+        <attr name="prefixTextColor" format="color" />
+        <attr name="suffixTextColor" format="color" />
+
+    </declare-styleable>
+
+    <declare-styleable name="historia_pregress">
+        <attr name="progressCount" format="integer|reference" />
+    </declare-styleable>
+
+    <declare-styleable name="StoryPlayerProgressView">
+        <attr name="progressBarHeight" format="dimension"/>
+        <attr name="gapBetweenProgressBar" format="dimension"/>
+        <attr name="progressBarPrimaryColor" format="color"/>
+        <attr name="progressBarSecondaryColor" format="color"/>
+        <attr name="singleStoryDisplayTime" format="integer"/>
+    </declare-styleable>
+
+
+    <attr name="cropme_frame_width_percent" format="fraction" />
+    <attr name="cropme_frame_height_percent" format="fraction" />
+    <attr name="cropme_max_scale" format="float" />
+    <attr name="cropme_with_border" format="boolean" />
+    <attr name="cropme_background_alpha" format="fraction" />
+    <attr name="cropme_custom_shape_layout" format="reference" />
+
+    <attr name="cropme_overlay_shape" format="enum">
+        <enum name="none" value="0" />
+        <enum name="rectangle" value="1" />
+        <enum name="circle" value="2" />
+        <enum name="custom" value="3" />
+    </attr>
+
+    <declare-styleable name="CropLayout">
+        <attr name="cropme_frame_width_percent" />
+        <attr name="cropme_frame_height_percent" />
+        <attr name="cropme_max_scale" />
+        <attr name="cropme_overlay_shape" />
+        <attr name="cropme_with_border" />
+        <attr name="cropme_background_alpha" />
+        <attr name="cropme_custom_shape_layout" />
+    </declare-styleable>
+
+    <declare-styleable name="CropOverlay">
+        <attr name="cropme_with_border" />
+        <attr name="cropme_background_alpha" />
+    </declare-styleable>
+
 </resources>

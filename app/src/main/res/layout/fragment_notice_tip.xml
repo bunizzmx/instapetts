@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/back_to_main"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            app:cardElevation="5dp"
+            app:cardCornerRadius="30dp"
+            app:contentPadding="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:tint="@color/amarillo"
+                android:src="@drawable/ic_arrow_back"
+                android:layout_width="15dp"
+                android:layout_height="15dp"/>
+        </androidx.cardview.widget.CardView>
+        <ImageView
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_corazon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"/>
+    </RelativeLayout>
+    <ScrollView
+        android:layout_below="@+id/back_to_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:padding="10dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:scaleType="centerCrop"
+                android:src="@drawable/perro_demo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/avenir_black"
+                android:textSize="18dp"
+                android:textColor="@color/black"
+                android:text="Titulo del tipo para tu peeriito varelo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:lineSpacingExtra="5dp"
+                android:textAlignment="textStart"
+                android:layout_margin="20dp"
+                android:text="@string/tip_demo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
