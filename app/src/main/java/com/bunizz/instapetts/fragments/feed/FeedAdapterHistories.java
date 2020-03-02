@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.camera_history.CameraHistoryActivity;
 import com.bunizz.instapetts.utils.HistoryView.StoryPlayer;
 import com.bunizz.instapetts.utils.ImagenCircular;
 
@@ -35,13 +36,19 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
         FeedHistoriesHolder h =(FeedHistoriesHolder)holder;
         //Glide.with(context).load("https://firebasestorage.googleapis.com/v0/b/melove-principal/o/C18%2F15cb3831f0b9426c484d380f0ab1afac.jpg?alt=media&token=042d5974-e96c-4bcc-9fa2-f657fe2167af").into(h.image_pet_history);
         h.image_pet_history.setStroke_separate(true);
-        h.image_pet_history.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        if(position == 0){
+            h.image_pet_history.setOnClickListener(view -> {
+                Intent i = new Intent(context, CameraHistoryActivity.class);
+                context.startActivity(i);
+            });
+
+        }else{
+            h.image_pet_history.setOnClickListener(view -> {
                 Intent i = new Intent(context, StoryPlayer.class);
                 context.startActivity(i);
-            }
-        });
+            });
+        }
+
     }
 
     @Override

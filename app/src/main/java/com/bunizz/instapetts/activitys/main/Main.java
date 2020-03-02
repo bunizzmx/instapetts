@@ -120,7 +120,8 @@ public class Main extends AppCompatActivity implements change_instance, changue_
     void tab_add_image() {
         rxPermissions
                 .request(Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA)
                 .subscribe(granted -> {
                     if (granted) {
                         Intent i = new Intent(Main.this, ShareActivity.class);
