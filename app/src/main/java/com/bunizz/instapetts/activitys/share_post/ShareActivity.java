@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -19,7 +20,8 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.main.Main;
 import com.bunizz.instapetts.fragments.FragmentElement;
-import com.bunizz.instapetts.fragments.share_post.Picker.FragmentPickerGalery;
+import com.bunizz.instapetts.fragments.camera.CameraFragment;
+import com.bunizz.instapetts.fragments.share_post.ContainerFragmentsShare;
 import com.bunizz.instapetts.fragments.share_post.Share.FragmentSharePost;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -27,6 +29,7 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.UUID;
 
 public class ShareActivity extends AppCompatActivity implements changue_fragment_parameters_listener {
 
@@ -63,7 +66,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
 
     private void setupFirstFragment() {
-        mCurrentFragment = new FragmentElement<>(null, FragmentPickerGalery.newInstance(), FragmentElement.INSTANCE_PICKER, true);
+        mCurrentFragment = new FragmentElement<>(null, ContainerFragmentsShare.newInstance(), FragmentElement.INSTANCE_PICKER, true);
         change_picker(mCurrentFragment,null);
     }
 
@@ -72,7 +75,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
         saveFragment();
         if (intanceType == FragmentElement.INSTANCE_PICKER) {
             if (stack_picker.size() == 0) {
-                change_picker(new FragmentElement<>("", FragmentPickerGalery.newInstance(), FragmentElement.INSTANCE_PICKER),bundle);
+                change_picker(new FragmentElement<>("", ContainerFragmentsShare.newInstance(), FragmentElement.INSTANCE_PICKER),bundle);
             } else {
                 change_picker(stack_picker.pop(),bundle);
             }
@@ -197,5 +200,15 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
         Intent data = new Intent();
         data.putExtra("URIS_PATHS",false);
         setResult(RESULT_OK,data);
+    }
+
+    public static File get_dir(){
+       String  filename = "perra" + UUID.randomUUID();
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + "Instapetts");
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + "Instapetts" + File.separator);
+        return  file;
     }
 }
