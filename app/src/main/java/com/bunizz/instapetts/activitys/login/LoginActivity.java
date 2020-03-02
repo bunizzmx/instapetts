@@ -173,10 +173,14 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     @Override
     public void onLoginSuccess(boolean success) {
-        App.write(IS_LOGUEDD,true);
-        Intent i ;
-        i = new Intent(LoginActivity.this, Main.class);
-        startActivity(i);
+        if(App.read("IS_NEW_USER",false)){
+
+        }else{
+            App.write(IS_LOGUEDD,true);
+            Intent i ;
+            i = new Intent(LoginActivity.this, Main.class);
+            startActivity(i);
+        }
     }
 
 

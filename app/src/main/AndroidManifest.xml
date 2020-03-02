@@ -48,6 +48,8 @@
         <activity android:name=".activitys.share_post.ShareActivity" android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".activitys.camera_history.CameraHistoryActivity"    android:screenOrientation="fullUser"
             android:rotationAnimation="seamless"/>
+        <activity android:name=".activitys.searchqr.QrSearchActivity"/>
+        <activity android:name=".utils.qr.QrCodeActivity"></activity>
 
         <!-- ACTIVIDADES  -->
     </application>

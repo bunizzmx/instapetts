@@ -302,4 +302,23 @@
         <attr name="cropme_background_alpha" />
     </declare-styleable>
 
+
+    <declare-styleable name="AnimatedGradientTextView">
+        <attr name="colors" format="reference"/>
+        <attr name="simultaneousColors" format="integer"/>
+        <attr name="angle" format="integer"/>
+        <attr name="speed" format="integer"/>
+        <attr name="maxFPS" format="integer"/>
+        <attr name="customFont" format="string"/>
+    </declare-styleable>
+
+    <array name="default_gradient_colors">
+        <item>@color/A400red</item>
+        <item>@color/amarillo</item>
+        <item>@color/naranja</item>
+        <item>@color/azul_facebook</item>
+        <item>@color/amarillo</item>
+        <item>@color/A400red</item>
+    </array>
+
 </resources>

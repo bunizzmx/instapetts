@@ -1,11 +1,13 @@
 package com.bunizz.instapetts.fragments.search;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.searchqr.QrSearchActivity;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
 import com.bunizz.instapetts.fragments.post.FragmentPostList;
 import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
@@ -47,6 +50,10 @@ public class FragmentSearchPet extends Fragment {
     ViewPager viewpager_search;
     TabAdapter tabAdapter;
 
+    @BindView(R.id.search_by_qr)
+    RelativeLayout search_by_qr;
+    private static final int REQUEST_CODE_QR_SCAN = 101;
+
 
     public static FragmentSearchPet newInstance() {
         return new FragmentSearchPet();
@@ -77,6 +84,13 @@ public class FragmentSearchPet extends Fragment {
         tabs_search.setDistributeEvenly(true);
         tabs_search.setCustomUnfocusedColor(R.color.black);
         tabs_search.setSelectedIndicatorColors(getResources().getColor(R.color.amarillo));
+        search_by_qr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getContext() , QrSearchActivity.class);
+                startActivityForResult( i,REQUEST_CODE_QR_SCAN);
+            }
+        });
     }
 
 

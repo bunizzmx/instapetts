@@ -19,4 +19,6 @@
     <color name="A400red">#AA0021</color>
 
     <color name="gris_edittext">#EEEDED</color>
+
+    <color name="trans">#05FFFFFF</color>
 </resources>
