@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/white"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <ImageView
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="30dp"
+        android:tint="#00BCD4"
+        android:src="@drawable/ic_hand_7"
+        android:layout_width="140dp"
+        android:layout_height="140dp"/>
+    <ImageView
+        android:layout_marginRight="-40dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:tint="#61E91E63"
+        android:src="@drawable/ic_hand_1"
+        android:layout_width="150dp"
+        android:layout_height="150dp"/>
 
+    <ImageView
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:tint="#F44336"
+        android:src="@drawable/ic_hand_5"
+        android:layout_width="150dp"
+        android:layout_height="150dp"/>
+    <RelativeLayout
+        android:background="#E9FFFFFF"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
     <LinearLayout
         android:id="@+id/logo_instapetts"
         android:layout_marginTop="50dp"

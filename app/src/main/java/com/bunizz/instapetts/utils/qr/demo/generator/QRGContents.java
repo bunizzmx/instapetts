@@ -1,4 +1,4 @@
-package com.bunizz.instapetts.utils.qr.generator;
+package com.bunizz.instapetts.utils.qr.demo.generator;
 
 import android.provider.ContactsContract;
 

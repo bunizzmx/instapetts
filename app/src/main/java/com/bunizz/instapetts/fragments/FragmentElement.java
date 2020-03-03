@@ -30,7 +30,7 @@ public class FragmentElement<T extends Fragment> {
 
     public static final int INSTANCE_DETECT_QR= 18;
     public static final int INSTANCE_VIEW_MY_QR= 19;
-
+    public static final int INSTANCE_PREVIEW_PROFILE= 20;
 
     //endregion
     private String mTitle;
