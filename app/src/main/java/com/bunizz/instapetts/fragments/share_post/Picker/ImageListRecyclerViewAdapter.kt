@@ -66,30 +66,40 @@ class ImageListRecyclerViewAdapter(private val context: Context) : RecyclerView.
             isSelectedImage = true
         }
 
-        if (!selectable && !isSelectedImage) {
-            Toast.makeText(context,"Solo puedes seleccionar 5 imagenes",Toast.LENGTH_LONG).show()
-        }
-
         itemView.also {
             it.setOnClickListener { view ->
-                onItemClickListener
-                        ?.onItemClick(
-                                parent,
-                                view,
-                                position,
-                                getItem(position),
-                                selectable || isSelectedImage
-                        )
+                run {
+                    if (!selectable && !isSelectedImage) {
+                        Toast.makeText(context, "Solo puedes seleccionar 5 imagenes", Toast.LENGTH_LONG).show()
+                    }
+
+                    onItemClickListener
+                            ?.onItemClick(
+                                    parent,
+                                    view,
+                                    position,
+                                    getItem(position),
+                                    selectable || isSelectedImage
+
+                            )
+                }
             }
             it.setOnLongClickListener{ view ->
-                onItemLongClickListener
-                        ?.onItemLongClickListener(
-                                parent,
-                                view,
-                                position,
-                                getItem(position),
-                                selectable || isSelectedImage
-                        ) == true
+                run {
+
+                    if (!selectable && !isSelectedImage) {
+                        Toast.makeText(context, "Solo puedes seleccionar 5 imagenes", Toast.LENGTH_LONG).show()
+                    }
+                    onItemLongClickListener
+                            ?.onItemLongClickListener(
+                                    parent,
+                                    view,
+                                    position,
+                                    getItem(position),
+                                    selectable || isSelectedImage
+                            ) == true
+
+                }
             }
         }
     }

@@ -81,19 +81,28 @@ public class FragmentPickerGalery  extends Fragment implements  FeedContract.Vie
     public static FragmentPickerGalery newInstance() {
         return new FragmentPickerGalery();
     }
-
+   int is_from_profile =0;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adapter = new ImageListRecyclerViewAdapter(getContext());
-        Bundle bundle=getArguments();
         config = new Config();
-        config.setMaxCount(5);
+
         config.setPackageName(getContext().getPackageName());
         albumAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_dropdown_item);
         presenter = new ImagePickerPresenter(this,getContext(),config);
         paths.clear();
+        Bundle bundle=getArguments();
+        if(bundle!=null){
+            is_from_profile = bundle.getInt("FROM_PROFILE");
+            Log.e("FROM_PROFILE","--->" + is_from_profile);
+            if(is_from_profile == 1){
+                config.setMaxCount(1);
+            }else{
+                config.setMaxCount(5);
+            }
+        }
     }
 
     @Override

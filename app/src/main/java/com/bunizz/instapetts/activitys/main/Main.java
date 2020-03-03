@@ -26,12 +26,14 @@ import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.fragments.info.InfoPetFragment;
 import com.bunizz.instapetts.fragments.notifications.NotificationsFragment;
+import com.bunizz.instapetts.fragments.profile.FragmentEditProfileUser;
 import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.fragments.search.FragmentSearchPet;
 import com.bunizz.instapetts.fragments.tips.FragmentTipDetail;
 import com.bunizz.instapetts.fragments.tips.FragmentTips;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -51,7 +53,7 @@ import butterknife.OnClick;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class Main extends AppCompatActivity implements change_instance, changue_fragment_parameters_listener {
+public class Main extends AppCompatActivity implements change_instance, changue_fragment_parameters_listener, uploads {
 
 
     private Stack<FragmentElement> stack_feed;
@@ -60,13 +62,14 @@ public class Main extends AppCompatActivity implements change_instance, changue_
     private Stack<FragmentElement> stack_serch_pet;
     private Stack<FragmentElement> stack_notifications;
     private Stack<FragmentElement> stack_tip_detail;
+    private Stack<FragmentElement> stack_edit_profile;
     private FragmentElement mCurrentFragment;
 
     private FragmentElement mCurrenSheet;
     private FragmentElement mOldFragment;
     static final int NEW_PET_REQUEST = 1;
     static final int NEW_POST_REQUEST = 2;
-
+    static final int NEW_PHOTO_UPLOADED= 3;
 
     @BindView(R.id.icon_tips)
     ImageView icon_tips;
@@ -170,6 +173,7 @@ public class Main extends AppCompatActivity implements change_instance, changue_
         stack_serch_pet = new Stack<>();
         stack_notifications = new Stack<>();
         stack_tip_detail = new Stack<>();
+        stack_edit_profile= new Stack<>();
         setupFirstFragment();
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
@@ -224,6 +228,16 @@ public class Main extends AppCompatActivity implements change_instance, changue_
             mCurrentFragment = fragment;
             if (stack_tip_detail.size() <= 0) {
                 stack_tip_detail.push(mCurrentFragment);
+            }
+        }
+        inflateFragment();
+    }
+
+    private void change_edit_profile(FragmentElement fragment) {
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            if (stack_edit_profile.size() <= 0) {
+                stack_edit_profile.push(mCurrentFragment);
             }
         }
         inflateFragment();
@@ -319,6 +333,16 @@ public class Main extends AppCompatActivity implements change_instance, changue_
             }
         }
 
+        else if (intanceType == FragmentElement.INSTANCE_EDIT_PROFILE_USER) {
+            if (stack_edit_profile.size() == 0) {
+                change_edit_profile(new FragmentElement<>("", FragmentEditProfileUser.newInstance(), FragmentElement.INSTANCE_EDIT_PROFILE_USER));
+            } else {
+                change_edit_profile(stack_edit_profile.pop());
+            }
+        }
+
+
+
 
     }
 
@@ -400,6 +424,15 @@ public class Main extends AppCompatActivity implements change_instance, changue_
             }
         }
 
+        else if(requestCode == NEW_PHOTO_UPLOADED){
+            if(data!=null) {
+               String url =  data.getStringExtra("URI_URL");
+                if (mCurrentFragment.getFragment() instanceof FragmentEditProfileUser) {
+                    ((FragmentEditProfileUser) mCurrentFragment.getFragment()).change_image_profile(url);
+                }
+            }
+        }
+
     }
 
     private void repaint_nav(int id ){
@@ -456,6 +489,22 @@ public class Main extends AppCompatActivity implements change_instance, changue_
     }
 
 
-
-
+    @SuppressLint("CheckResult")
+    @Override
+    public void onImageProfileUpdated() {
+        rxPermissions
+                .request(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA)
+                .subscribe(granted -> {
+                    if (granted) {
+                        Intent i = new Intent(Main.this, ShareActivity.class);
+                        i.putExtra("FROM","PROFILE_PHOTO");
+                        startActivityForResult(i,NEW_PHOTO_UPLOADED);
+                    } else {
+                        App.getInstance().show_dialog_permision(Main.this,getResources().getString(R.string.permision_storage),
+                                getResources().getString(R.string.permision_storage_body),0);
+                    }
+                });
+    }
 }

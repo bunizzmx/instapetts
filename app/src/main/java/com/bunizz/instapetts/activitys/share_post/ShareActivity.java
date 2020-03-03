@@ -40,6 +40,8 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
     private Stack<FragmentElement> stack_picker;
     RxPermissions rxPermissions ;
     ArrayList<String> paths_themp = new ArrayList<>();
+    boolean is_single_selection = false;
+    boolean is_from_profile = false;
 
     @SuppressLint("CheckResult")
     @Override
@@ -49,7 +51,18 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
         rxPermissions = new RxPermissions(this);
         changeStatusBarColor(R.color.white);
         stack_picker = new Stack<>();
-        stack_share = new Stack<>();
+        stack_share = new Stack<>();   Intent iin= getIntent();
+        Bundle b = iin.getExtras();
+        if(b!=null)
+        {
+            String j =(String) b.get("FROM");
+            if(j.equals("PROFILE_PHOTO")){
+                Log.e("SOLO1","foto");
+                is_single_selection = true;
+                is_from_profile = true;
+            }
+        }
+
         setupFirstFragment();
         rxPermissions
                 .request(Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -62,6 +75,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
                                 getResources().getString(R.string.permision_storage_body),0);
                     }
                 });
+
     }
 
 
@@ -103,7 +117,14 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
     }
 
     private void change_picker(FragmentElement fragment,Bundle bundle) {
+        if(bundle==null){
+            bundle = new Bundle();
+        }
         if (fragment != null) {
+            if(is_from_profile){
+                bundle.putInt("FROM_PROFILE",1);
+                Log.e("FROM_PROFILE","--->uuuuuuuuuu" + is_from_profile);
+            }
             mCurrentFragment = fragment;
             mCurrentFragment.getFragment().setArguments(bundle);
             if (stack_picker.size() <= 0) {
@@ -160,7 +181,19 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
     @Override
     public void change_fragment_parameter(int type_fragment, Bundle data) {
-        changeOfInstance(type_fragment,data);
+        if(is_from_profile){
+            String u = "";
+            if(data.getStringArrayList("data_pahs").size() == 1){
+                u = data.getStringArrayList("data_pahs").get(0);
+            }
+            Intent intent = new Intent();
+            intent.putExtra("URI_URL",u);
+            setResult(RESULT_OK,intent);
+            finish();
+        }else{
+            changeOfInstance(type_fragment,data);
+        }
+
     }
 
 

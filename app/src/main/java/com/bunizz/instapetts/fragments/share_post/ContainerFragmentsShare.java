@@ -3,6 +3,7 @@ package com.bunizz.instapetts.fragments.share_post;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,7 @@ public class ContainerFragmentsShare extends Fragment{
     ViewPager viewpager_camera;
 
     private TabAdapter adapter;
+    int is_from_profile=0;
 
     public static ContainerFragmentsShare newInstance() {
         return new ContainerFragmentsShare();
@@ -59,6 +61,11 @@ public class ContainerFragmentsShare extends Fragment{
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adapter = new TabAdapter(getFragmentManager(), getContext());
+        Bundle bundle=getArguments();
+        if(bundle!=null){
+            is_from_profile = bundle.getInt("FROM_PROFILE");
+            Log.e("FROM_PROFILE","--->yyyyy" + is_from_profile);
+        }
     }
 
     @Nullable
@@ -98,6 +105,8 @@ public class ContainerFragmentsShare extends Fragment{
         public Fragment getItem(int position) {
             Bundle bundle = new Bundle();
             bundle.putInt("x", position + 1);
+            bundle.putInt("FROM_PROFILE",is_from_profile);
+            Log.e("FROM_PROFILE","--->xxxxxx" + is_from_profile);
             Fragment fragment;
             if(position == 0){
                 fragment = new FragmentPickerGalery();

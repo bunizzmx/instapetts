@@ -25,6 +25,7 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
@@ -66,11 +67,7 @@ public class FragmentProfileUserPet extends Fragment {
     @BindView(R.id.follow_edit)
     Button follow_edit;
 
-
-
     ArrayList<PetBean> pets = new ArrayList<>();
-
-
 
     private TabAdapter adapter;
 
@@ -127,6 +124,7 @@ public class FragmentProfileUserPet extends Fragment {
             follow_edit.setText(R.string.edit_profile);
             follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_edit_profile));
             follow_edit.setTextColor(Color.BLACK);
+            follow_edit.setOnClickListener(view1 -> listener.change(FragmentElement.INSTANCE_EDIT_PROFILE_USER));
         }
 
     }
