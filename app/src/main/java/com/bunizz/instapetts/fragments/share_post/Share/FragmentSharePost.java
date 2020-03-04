@@ -1,10 +1,13 @@
 package com.bunizz.instapetts.fragments.share_post.Share;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,9 +19,11 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.fragments.feed.FeedPresenter;
+import com.bunizz.instapetts.services.MyService;
 import com.bunizz.instapetts.utils.dilogs.DialogShosePet;
 import com.google.android.gms.location.LocationServices;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -39,14 +44,10 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     @OnClick(R.id.share_post_pet)
     void share_post_pet()
     {
-        DialogShosePet dialogShosePet = new DialogShosePet(getActivity());
-        dialogShosePet.show();
+       /* DialogShosePet dialogShosePet = new DialogShosePet(getActivity());
+        dialogShosePet.show();*/
+        beginUploadInBackground(paths.get(0));
     }
-
-
-
-
-
     ArrayList<String> paths = new ArrayList<>();
     SharePostPresenter presenter;
 
@@ -86,6 +87,21 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     @Override
     public void showLocation(String corrdenadas) {
         location_user.setText(corrdenadas);
+    }
+
+    private void beginUploadInBackground(String filePath) {
+        if (filePath == null) {
+            Toast.makeText(getContext(), "Could not find the filepath of the selected file",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+        File file = new File(filePath);
+        Context context = getContext().getApplicationContext();
+        Intent intent = new Intent(context, MyService.class);
+        intent.putExtra(MyService.INTENT_KEY_NAME, file.getName());
+        intent.putExtra(MyService.INTENT_TRANSFER_OPERATION, MyService.TRANSFER_OPERATION_UPLOAD);
+        intent.putExtra(MyService.INTENT_FILE, file);
+        context.startService(intent);
     }
 }
 

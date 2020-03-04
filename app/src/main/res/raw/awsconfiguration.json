@@ -1,0 +1,20 @@
+{
+  "Version": "1.0",
+  "IdentityManager": {
+    "Default": {}
+  },
+  "CredentialsProvider": {
+    "CognitoIdentity": {
+      "Default": {
+        "PoolId": "us-east-1:e164de17-c332-4d52-ae4c-53e964555d8c",
+        "Region": "us-east-1"
+      }
+    }
+  },
+  "S3TransferUtility": {
+    "Default": {
+      "Bucket": "instapetts",
+      "Region": "us-east-1"
+    }
+  }
+}

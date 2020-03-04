@@ -103,6 +103,11 @@ dependencies {
     implementation 'com.google.zxing:core:3.2.0'
 
     implementation "com.google.android.gms:play-services-vision:19.0.0"
+
+    implementation("com.amazonaws:aws-android-sdk-cognitoidentityprovider:2.16.8")
+    implementation("com.amazonaws:aws-android-sdk-core:2.16.8")
+    implementation "com.amazonaws:aws-android-sdk-s3:2.16.8"
+    implementation("com.amazonaws:aws-android-sdk-mobile-client:2.16.8")
 }
 repositories {
     mavenCentral()

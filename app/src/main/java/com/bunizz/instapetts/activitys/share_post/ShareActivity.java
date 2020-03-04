@@ -2,7 +2,9 @@ package com.bunizz.instapetts.activitys.share_post;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -10,24 +12,49 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
+import com.amazonaws.auth.CognitoCredentialsProvider;
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.Callback;
+import com.amazonaws.mobile.client.UserStateDetails;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationContinuation;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.ChallengeContinuation;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferType;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.main.Main;
+import com.bunizz.instapetts.awsettings.CognitoSettings;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.camera.CameraFragment;
 import com.bunizz.instapetts.fragments.share_post.ContainerFragmentsShare;
 import com.bunizz.instapetts.fragments.share_post.Share.FragmentSharePost;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.services.MyService;
+import com.bunizz.instapetts.services.Util;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import java.util.UUID;
 
@@ -62,7 +89,6 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
                 is_from_profile = true;
             }
         }
-
         setupFirstFragment();
         rxPermissions
                 .request(Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -77,6 +103,9 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
                 });
 
     }
+
+
+
 
 
     private void setupFirstFragment() {
@@ -216,7 +245,6 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
     }
 
     void delete_files(){
@@ -243,5 +271,31 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
         }
         file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + "Instapetts" + File.separator);
         return  file;
+    }
+
+
+
+
+
+
+    public static void initData() {
+     /*   transferRecordMaps.clear();
+        // Use TransferUtility to get all upload transfers.
+        observers = transferUtility.getTransfersWithType(TransferType.UPLOAD);
+        TransferListener listener = new MyService.UploadListener();
+        for (TransferObserver observer : observers) {
+            observer.refresh();
+            HashMap<String, Object> map = new HashMap<String, Object>();
+            util.fillMap(map, observer, false);
+            transferRecordMaps.add(map);
+
+            // Sets listeners to in progress transfers
+            if (TransferState.WAITING.equals(observer.getState())
+                    || TransferState.WAITING_FOR_NETWORK.equals(observer.getState())
+                    || TransferState.IN_PROGRESS.equals(observer.getState())) {
+                observer.setTransferListener(listener);
+            }
+        }
+        simpleAdapter.notifyDataSetChanged();*/
     }
 }

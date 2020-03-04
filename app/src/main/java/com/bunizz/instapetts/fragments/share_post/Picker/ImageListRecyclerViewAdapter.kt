@@ -104,6 +104,7 @@ class ImageListRecyclerViewAdapter(private val context: Context) : RecyclerView.
         }
     }
 
+
     override fun getItemCount(): Int {
         return items.size
     }
