@@ -84,12 +84,9 @@ public class FragmentSearchPet extends Fragment {
         tabs_search.setDistributeEvenly(true);
         tabs_search.setCustomUnfocusedColor(R.color.black);
         tabs_search.setSelectedIndicatorColors(getResources().getColor(R.color.amarillo));
-        search_by_qr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getContext() , QrSearchActivity.class);
-                startActivityForResult( i,REQUEST_CODE_QR_SCAN);
-            }
+        search_by_qr.setOnClickListener(view1 -> {
+            Intent i = new Intent(getContext() , QrSearchActivity.class);
+            startActivityForResult( i,REQUEST_CODE_QR_SCAN);
         });
     }
 

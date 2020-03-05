@@ -146,6 +146,15 @@ class CameraFragment : Fragment() {
         displayManager.unregisterDisplayListener(displayListener)
     }
 
+    fun stop_camera(){
+        Log.e("SHUT_DOWN","CAMERA")
+        // Shut down our background executor
+        cameraExecutor.shutdown()
+        // Unregister the broadcast receivers and listeners
+        broadcastManager.unregisterReceiver(volumeDownReceiver)
+        displayManager.unregisterDisplayListener(displayListener)
+    }
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,

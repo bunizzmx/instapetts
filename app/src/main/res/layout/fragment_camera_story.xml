@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.camera.view.PreviewView
         android:id="@+id/view_finder"
         android:layout_width="match_parent"
@@ -23,4 +23,41 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"/>
         </RelativeLayout>
+
+    <ImageView
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:id="@+id/close_dialog"
+        android:tint="@color/white"
+        android:src="@drawable/ic_cross"
+        android:layout_width="20dp"
+        android:layout_height="20dp"/>
+
+    <ImageView
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="20dp"
+        android:tint="@color/white"
+        android:src="@drawable/ic_cambiar_de_camara"
+        android:layout_width="35dp"
+        android:layout_height="35dp"/>
+<androidx.cardview.widget.CardView
+    app:cardCornerRadius="5dp"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:layout_marginBottom="40dp"
+    android:layout_marginRight= "20dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:scaleType="centerCrop"
+        android:id="@+id/image_first_album"
+        android:layout_width="35dp"
+        android:layout_height="35dp"/>
+</androidx.cardview.widget.CardView>
+
+
 </RelativeLayout>

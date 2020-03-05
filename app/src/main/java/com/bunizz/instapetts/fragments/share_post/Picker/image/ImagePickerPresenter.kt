@@ -1,4 +1,4 @@
-package com.bunizz.instapetts.fragments.share_post.Picker
+package com.bunizz.instapetts.fragments.share_post.Picker.image
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.content.Context

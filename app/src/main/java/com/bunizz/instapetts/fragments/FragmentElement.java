@@ -23,7 +23,7 @@ public class FragmentElement<T extends Fragment> {
     public static final int INSTANCE_NOTIFICATIONS= 11;
     public static final int INSTANCE_TIP_DETAIL= 12;
     public static final int INSTANCE_SHARE= 13;
-    public static final int INSTANCE_PICKER= 14;
+    public static final int INSTANCE_PICKER_IMAGES= 14;
     public static final int INSTANCE_HISTORY_CAMERA= 15;
     public static final int INSTANCE_HISTORY_FOTO_PICKED= 16;
     public static final int INSTANCE_CONFIGURE_DATA_USER= 17;
@@ -32,6 +32,9 @@ public class FragmentElement<T extends Fragment> {
     public static final int INSTANCE_VIEW_MY_QR= 19;
     public static final int INSTANCE_PREVIEW_PROFILE= 20;
     public static final int INSTANCE_EDIT_PROFILE_USER= 21;
+
+    public static final int INSTANCE_PICKER_VIDEOS= 22;
+    public static final int INSTANCE_PICKER_CAMERA= 23;
 
     //endregion
     private String mTitle;

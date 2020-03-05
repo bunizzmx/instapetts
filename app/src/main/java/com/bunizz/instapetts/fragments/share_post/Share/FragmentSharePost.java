@@ -19,6 +19,7 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.fragments.feed.FeedPresenter;
+import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.services.MyService;
 import com.bunizz.instapetts.utils.dilogs.DialogShosePet;
 import com.google.android.gms.location.LocationServices;
@@ -39,7 +40,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
 
     @BindView(R.id.location_user)
     TextView location_user;
-
+    uploads listener;
 
     @OnClick(R.id.share_post_pet)
     void share_post_pet()
@@ -102,6 +103,13 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         intent.putExtra(MyService.INTENT_TRANSFER_OPERATION, MyService.TRANSFER_OPERATION_UPLOAD);
         intent.putExtra(MyService.INTENT_FILE, file);
         context.startService(intent);
+        listener.onImageProfileUpdated();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        listener =(uploads)context;
     }
 }
 

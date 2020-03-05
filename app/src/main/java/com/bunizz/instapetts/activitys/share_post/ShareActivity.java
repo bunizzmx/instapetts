@@ -2,9 +2,7 @@ package com.bunizz.instapetts.activitys.share_post;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -12,72 +10,89 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.SimpleAdapter;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
-import com.amazonaws.auth.CognitoCredentialsProvider;
-import com.amazonaws.mobile.client.AWSMobileClient;
-import com.amazonaws.mobile.client.Callback;
-import com.amazonaws.mobile.client.UserStateDetails;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationContinuation;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.ChallengeContinuation;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferType;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.activitys.main.Main;
-import com.bunizz.instapetts.awsettings.CognitoSettings;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.camera.CameraFragment;
 import com.bunizz.instapetts.fragments.share_post.ContainerFragmentsShare;
+import com.bunizz.instapetts.fragments.share_post.Picker.image.FragmentPickerGalery;
+import com.bunizz.instapetts.fragments.share_post.Picker.video.FragmentPickerVideo;
 import com.bunizz.instapetts.fragments.share_post.Share.FragmentSharePost;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
-import com.bunizz.instapetts.services.MyService;
-import com.bunizz.instapetts.services.Util;
+import com.bunizz.instapetts.listeners.uploads;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Stack;
 import java.util.UUID;
 
-public class ShareActivity extends AppCompatActivity implements changue_fragment_parameters_listener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+public class ShareActivity extends AppCompatActivity implements changue_fragment_parameters_listener, uploads {
 
     private FragmentElement mCurrentFragment;
     private FragmentElement mOldFragment;
 
     private Stack<FragmentElement> stack_share;
-    private Stack<FragmentElement> stack_picker;
+    private Stack<FragmentElement> stack_picker_images;
+    private Stack<FragmentElement> stack_picker_videos;
+    private Stack<FragmentElement> stack_picker_camera;
     RxPermissions rxPermissions ;
     ArrayList<String> paths_themp = new ArrayList<>();
     boolean is_single_selection = false;
     boolean is_from_profile = false;
+
+    @BindView(R.id.tabs_camera)
+    LinearLayout tabs_camera;
+
+
+
+    @OnClick(R.id.changue_to_pictures)
+    void changue_to_pictures()
+    {
+        if (mCurrentFragment.getFragment() instanceof CameraFragment) {
+            ((CameraFragment) mCurrentFragment.getFragment()).stop_camera();
+        }
+        changeOfInstance(FragmentElement.INSTANCE_PICKER_IMAGES,null);
+    }
+
+    @OnClick(R.id.changue_to_videos)
+    void changue_to_videos()
+    {
+        if (mCurrentFragment.getFragment() instanceof CameraFragment) {
+            ((CameraFragment) mCurrentFragment.getFragment()).stop_camera();
+        }
+        changeOfInstance(FragmentElement.INSTANCE_PICKER_VIDEOS,null);
+    }
+
+    @OnClick(R.id.changue_to_camera)
+    void changue_to_camera()
+    {
+        changeOfInstance(FragmentElement.INSTANCE_PICKER_CAMERA,null);
+    }
 
     @SuppressLint("CheckResult")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.share_activity);
+        ButterKnife.bind(this);
         rxPermissions = new RxPermissions(this);
         changeStatusBarColor(R.color.white);
-        stack_picker = new Stack<>();
+        stack_picker_videos = new Stack<>();
+        stack_picker_images= new Stack<>();
+        stack_picker_camera = new Stack<>();
         stack_share = new Stack<>();   Intent iin= getIntent();
         Bundle b = iin.getExtras();
         if(b!=null)
@@ -109,26 +124,43 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
 
     private void setupFirstFragment() {
-        mCurrentFragment = new FragmentElement<>(null, ContainerFragmentsShare.newInstance(), FragmentElement.INSTANCE_PICKER, true);
+        mCurrentFragment = new FragmentElement<>(null, FragmentPickerGalery.newInstance(), FragmentElement.INSTANCE_PICKER_CAMERA, true);
         change_picker(mCurrentFragment,null);
     }
 
 
     private synchronized void changeOfInstance(int intanceType,Bundle bundle) {
         saveFragment();
-        if (intanceType == FragmentElement.INSTANCE_PICKER) {
-            if (stack_picker.size() == 0) {
-                change_picker(new FragmentElement<>("", ContainerFragmentsShare.newInstance(), FragmentElement.INSTANCE_PICKER),bundle);
+        if (intanceType == FragmentElement.INSTANCE_PICKER_IMAGES) {
+            if (stack_picker_images.size() == 0) {
+                change_picker(new FragmentElement<>("", FragmentPickerGalery.newInstance(), FragmentElement.INSTANCE_PICKER_IMAGES),bundle);
             } else {
-                change_picker(stack_picker.pop(),bundle);
+                change_picker(stack_picker_images.pop(),bundle);
             }
-        } else if (intanceType == FragmentElement.INSTANCE_SHARE) {
+        }
+        else if (intanceType == FragmentElement.INSTANCE_PICKER_VIDEOS) {
+            if (stack_picker_videos.size() == 0) {
+                change_picker_video(new FragmentElement<>("", FragmentPickerVideo.newInstance(), FragmentElement.INSTANCE_PICKER_VIDEOS),bundle);
+            } else {
+                change_picker_video(stack_picker_videos.pop(),bundle);
+            }
+        }
+        else if (intanceType == FragmentElement.INSTANCE_PICKER_CAMERA) {
+            if (stack_picker_camera.size() == 0) {
+                change_picker_camera(new FragmentElement<>("", CameraFragment.newInstace(), FragmentElement.INSTANCE_PICKER_CAMERA),bundle);
+            } else {
+                change_picker_camera(stack_picker_camera.pop(),bundle);
+            }
+        }
+        else if (intanceType == FragmentElement.INSTANCE_SHARE) {
+
             if (stack_share.size() == 0) {
                 change_share(new FragmentElement<>("", FragmentSharePost.newInstance(), FragmentElement.INSTANCE_SHARE),bundle);
             } else {
                 change_share(stack_share.pop(),bundle);
             }
         }
+
     }
 
 
@@ -145,6 +177,34 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
         inflateFragment();
     }
 
+    private void change_picker_video(FragmentElement fragment,Bundle bundle) {
+        if(bundle==null){
+            bundle = new Bundle();
+        }
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            mCurrentFragment.getFragment().setArguments(bundle);
+            if (stack_picker_videos.size() <= 0) {
+                stack_picker_videos.push(mCurrentFragment);
+            }
+        }
+        inflateFragment();
+    }
+    private void change_picker_camera(FragmentElement fragment,Bundle bundle) {
+        if(bundle==null){
+            bundle = new Bundle();
+        }
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            mCurrentFragment.getFragment().setArguments(bundle);
+            if (stack_picker_camera.size() <= 0) {
+                stack_picker_camera.push(mCurrentFragment);
+            }
+        }
+        inflateFragment();
+    }
+
+
     private void change_picker(FragmentElement fragment,Bundle bundle) {
         if(bundle==null){
             bundle = new Bundle();
@@ -156,8 +216,8 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
             }
             mCurrentFragment = fragment;
             mCurrentFragment.getFragment().setArguments(bundle);
-            if (stack_picker.size() <= 0) {
-                stack_picker.push(mCurrentFragment);
+            if (stack_picker_images.size() <= 0) {
+                stack_picker_images.push(mCurrentFragment);
             }
         }
         inflateFragment();
@@ -210,6 +270,13 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
     @Override
     public void change_fragment_parameter(int type_fragment, Bundle data) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+
         if(is_from_profile){
             String u = "";
             if(data.getStringArrayList("data_pahs").size() == 1){
@@ -228,13 +295,14 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
     @Override
     public void onBackPressed() {
-        if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PICKER){
+        if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PICKER_IMAGES){
            finish();
         }else{
+            tabs_camera.setVisibility(View.VISIBLE);
             Log.e("VERIFICACION","VERIFICO SI HAY PATHS PENDIENTES");
             if(paths_themp.size()>0){
                 delete_files();
-                changeOfInstance(FragmentElement.INSTANCE_PICKER,null);
+                changeOfInstance(FragmentElement.INSTANCE_PICKER_IMAGES,null);
             }
 
         }
@@ -297,5 +365,10 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
             }
         }
         simpleAdapter.notifyDataSetChanged();*/
+    }
+
+    @Override
+    public void onImageProfileUpdated() {
+       finish();
     }
 }

@@ -1,44 +1,26 @@
 package com.bunizz.instapetts.fragments.share_post;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.fragments.camera.CameraFragment;
-import com.bunizz.instapetts.fragments.camera.CameraFragmentKt;
-import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
-import com.bunizz.instapetts.fragments.post.FragmentPostList;
-import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
-import com.bunizz.instapetts.fragments.search.tabs.FragmentPetList;
-import com.bunizz.instapetts.fragments.search.tabs.FragmentPopietaryList;
-import com.bunizz.instapetts.fragments.share_post.Picker.FragmentPickerGalery;
-import com.bunizz.instapetts.fragments.share_post.Share.FragmentSharePost;
-import com.bunizz.instapetts.fragments.share_post.Share.ListSelectedAdapter;
-import com.bunizz.instapetts.fragments.share_post.Share.SharePostContract;
-import com.bunizz.instapetts.fragments.share_post.Share.SharePostPresenter;
-import com.bunizz.instapetts.utils.dilogs.DialogShosePet;
+import com.bunizz.instapetts.fragments.share_post.Picker.image.FragmentPickerGalery;
 import com.bunizz.instapetts.utils.tabs.SlidingFragmentPagerAdapter;
 import com.bunizz.instapetts.utils.tabs.SlidingTabLayout;
 import com.bunizz.instapetts.utils.tabs.TabType;
-
-import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class ContainerFragmentsShare extends Fragment{
 
@@ -48,6 +30,10 @@ public class ContainerFragmentsShare extends Fragment{
 
     @BindView(R.id.viewpager_camera)
     ViewPager viewpager_camera;
+
+
+
+
 
     private TabAdapter adapter;
     int is_from_profile=0;

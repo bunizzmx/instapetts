@@ -1,10 +1,16 @@
 package com.bunizz.instapetts.services;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -34,10 +40,11 @@ public class MyService extends Service {
     public final static String TRANSFER_OPERATION_DOWNLOAD = "download";
 
     private final static String TAG = MyService.class.getSimpleName();
-   public static  NotificationManagerCompat notificationManager;
-    public static NotificationCompat.Builder builder;
+   public static  NotificationManager notificationManager;
     int PROGRESS_MAX = 100;
     int PROGRESS_CURRENT = 0;
+    public  static int notificationId = 1;
+    public  static  NotificationCompat.Builder mBuilder=null;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -52,23 +59,46 @@ public class MyService extends Service {
         final String transferOperation = intent.getStringExtra(INTENT_TRANSFER_OPERATION);
         TransferObserver transferObserver;
          transferObserver = transferUtility.upload(key, file);
+
          transferObserver.setTransferListener(new UploadListener());
-         notificationManager = NotificationManagerCompat.from(this);
-         builder = new NotificationCompat.Builder(this, "xxxx");
-         builder.setContentTitle("Picture Download")
-                .setContentText("Download in progress")
-                .setSmallIcon(R.drawable.ic_notification)
-                .setPriority(NotificationCompat.PRIORITY_LOW);
-        builder.setProgress(PROGRESS_MAX, PROGRESS_CURRENT, false);
-        notificationManager.notify(1, builder.build());
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_ONE_SHOT);
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        String channelId = "channel-01";
+        String channelName = "Channel Name";
+        int importance = NotificationManager.IMPORTANCE_HIGH;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel mChannel = new NotificationChannel(
+                    channelId, channelName, importance);
+            notificationManager.createNotificationChannel(mChannel);
+        }
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        mBuilder = new NotificationCompat.Builder(getApplicationContext(), channelId);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mBuilder.setSmallIcon(R.mipmap.ic_launcher_foreground)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText("xxxx"))
+                    .setContentTitle("Subiendo Post")
+                    .setAutoCancel(true)
+                    .setSound(defaultSoundUri)
+                    .setContentIntent(pendingIntent);
+        }else {
+            mBuilder.setSmallIcon(R.mipmap.ic_launcher_foreground)
+                    .setContentTitle("Subiendo Post")
+                    .setAutoCancel(true)
+                    .setSound(defaultSoundUri)
+                    .setContentIntent(pendingIntent);
+        }
 
-        // Do the job here that tracks the progress.
-        // Usually, this should be in a
-        // worker thread
-        // To show progress, update PROGRESS_CURRENT and update the notification with:
-
-
-        // When done, update the notification one more time to remove the progress bar
+        mBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_foreground));
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+        stackBuilder.addNextIntent(intent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(
+                0,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
+        mBuilder.setContentIntent(resultPendingIntent);
+        mBuilder
+                .setProgress(100,1,false);
+        notificationManager.notify(notificationId, mBuilder.build());
 
         return START_STICKY;
     }
@@ -103,9 +133,9 @@ public class MyService extends Service {
             float total = ((float) bytesCurrent / (float) bytesTotal) * 100;
             int porcentaje = (int) total;
             Log.e("PROGRESO_SUBIDA","-->" + porcentaje);
-            builder.setContentText("Download complete")
-                    .setProgress(0,porcentaje,false);
-            notificationManager.notify(1, builder.build());
+            mBuilder.setContentText("Progreso " + porcentaje + "%")
+                    .setProgress(100,porcentaje,false);
+            notificationManager.notify(notificationId, mBuilder.build());
         }
 
         @Override

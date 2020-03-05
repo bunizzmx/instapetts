@@ -28,6 +28,7 @@ import android.hardware.display.DisplayManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.KeyEvent
@@ -43,11 +44,15 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.bumptech.glide.Glide
 import com.bunizz.instapetts.R
 import com.bunizz.instapetts.activitys.share_post.ShareActivity
 import com.bunizz.instapetts.fragments.FragmentElement
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener
+import com.bunizz.instapetts.utils.imagePicker.data.Album
+import com.bunizz.instapetts.utils.imagePicker.data.Image
 import com.bunizz.instapetts.utils.simulateClick
+import kotlinx.android.synthetic.main.fragment_camera_story.*
 import java.io.File
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
@@ -88,7 +93,12 @@ class CameraStoryt : Fragment() {
     private val displayManager by lazy {
         requireContext().getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
     }
-
+    private val projection = arrayOf(
+            MediaStore.Images.Media._ID,
+            MediaStore.Images.Media.DISPLAY_NAME,
+            MediaStore.Images.Media.DATA,
+            MediaStore.Images.Media.BUCKET_DISPLAY_NAME
+    )
 
 
     /** Blocking camera operations are performed using this executor */
@@ -176,6 +186,7 @@ class CameraStoryt : Fragment() {
             // Bind use cases
             bindCameraUseCases()
         }
+        load_first_image()
     }
 
     /**
@@ -444,5 +455,27 @@ class CameraStoryt : Fragment() {
         }
     }
 
+
+    private fun load_first_image() {
+        val cursor = context?.contentResolver?.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                projection,
+                null,
+                null,
+                MediaStore.Images.Media.DATE_ADDED
+        )
+
+        cursor?.takeIf { it.count > 0 }?.use {
+            it.moveToFirst()
+                val id = it.getLong(it.getColumnIndex(projection[0]))
+                val name = it.getString(it.getColumnIndex(projection[1]))
+                val path = it.getString(it.getColumnIndex(projection[2]))
+                val bucket = it.getString(it.getColumnIndex(projection[3]))
+                val file = File(path)
+                if (file.exists()) {
+                    context?.let { it1 -> Glide.with(it1).load(path).into(image_first_album) }
+                }
+        }
+    }
 
 }

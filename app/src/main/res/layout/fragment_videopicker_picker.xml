@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sliding_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:background="#ffffff">
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:layout_toLeftOf="@+id/crop_now"
+            android:id="@+id/spinner_album"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp" />
+        <Button
+            android:id="@+id/crop_now"
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
+            android:textSize="10dp"
+            android:textColor="@color/white"
+            android:background="@drawable/button_follow"
+            android:layout_alignParentRight="true"
+            android:text="Continuar"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
+        <com.bunizz.instapetts.utils.imagePicker.helper.EmptySupportedRecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+</LinearLayout>

@@ -1,6 +1,7 @@
-package com.bunizz.instapetts.fragments.share_post.Picker
+package com.bunizz.instapetts.fragments.share_post.Picker.video
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,16 +10,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bunizz.instapetts.R
 import com.bunizz.instapetts.utils.imagePicker.data.Image
+import com.bunizz.instapetts.utils.imagePicker.data.Video
 import kotlinx.android.synthetic.main.item_imagepicker_image.view.*
+import kotlinx.android.synthetic.main.item_imagepicker_image.view.image_thumbnail
+import kotlinx.android.synthetic.main.item_imagepicker_image.view.text_index
+import kotlinx.android.synthetic.main.item_imagepicker_image.view.view_selected
+import kotlinx.android.synthetic.main.item_videopicker_video.view.*
 import java.io.File
 
-class ImageListRecyclerViewAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class VideoListRecyclerViewAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     interface OnItemClickListener {
         fun onItemClick(
                 parent: ViewGroup,
                 view: View,
                 position: Int,
-                item: Image,
+                item: Video,
                 selectable: Boolean
         ) {
         }
@@ -37,42 +43,32 @@ class ImageListRecyclerViewAdapter(private val context: Context) : RecyclerView.
     var onItemClickListener: OnItemClickListener? = null
     var onItemLongClickListener: OnItemLongClickListener? = null
     private lateinit var parent: ViewGroup
-    private val selectedImages = ArrayList<Image>()
+    private val selectedImages = ArrayList<Video>()
     private var selectable: Boolean = true
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private val items = ArrayList<Image>()
+    private val items = ArrayList<Video>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         this.parent = parent
-        return ViewHolder(inflater.inflate(R.layout.item_imagepicker_image, parent, false))
+        return ViewHolder(inflater.inflate(R.layout.item_videopicker_video, parent, false))
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val itemView = holder.itemView
         val item = getItem(position)
-        itemView.view_selected.visibility = View.GONE
-
         Glide.with(context)
                 .load(File(item.path))
                 .into(itemView.image_thumbnail)
-
+        Log.e("DURACION_VIDEO","-->" + items.get(position).duration)
+        itemView.text_duration.text = return_secs(items.get(position).duration)
         var isSelectedImage = false
-        if (selectedImages.contains(item)) {
-            itemView.apply {
-                view_selected.visibility = View.VISIBLE
-                text_index.text = (selectedImages.indexOf(item) + 1).toString()
-            }
-            isSelectedImage = true
-        }
-
         itemView.also {
             it.setOnClickListener { view ->
                 run {
                     if (!selectable && !isSelectedImage) {
                         Toast.makeText(context, "Solo puedes seleccionar 5 imagenes", Toast.LENGTH_LONG).show()
                     }
-
                     onItemClickListener
                             ?.onItemClick(
                                     parent,
@@ -84,24 +80,16 @@ class ImageListRecyclerViewAdapter(private val context: Context) : RecyclerView.
                             )
                 }
             }
-            it.setOnLongClickListener{ view ->
-                run {
 
-                    if (!selectable && !isSelectedImage) {
-                        Toast.makeText(context, "Solo puedes seleccionar 5 imagenes", Toast.LENGTH_LONG).show()
-                    }
-                    onItemLongClickListener
-                            ?.onItemLongClickListener(
-                                    parent,
-                                    view,
-                                    position,
-                                    getItem(position),
-                                    selectable || isSelectedImage
-                            ) == true
-
-                }
-            }
         }
+    }
+
+    fun return_secs( duration : String ) :String{
+        var duration_video : String ="";
+        var duration_int :Int =0;
+        duration_int = duration.toInt()
+        duration_video = (duration_int / 1000).toString() + " sec"
+        return  duration_video;
     }
 
 
@@ -116,12 +104,12 @@ class ImageListRecyclerViewAdapter(private val context: Context) : RecyclerView.
         notifyDataSetChanged()
     }
 
-    fun addAll(items: List<Image>) {
+    fun addAll(items: List<Video>) {
         this.items.addAll(items)
         notifyDataSetChanged()
     }
 
-    fun add(item: Image) {
+    fun add(item: Video) {
         this.items.add(item)
         notifyDataSetChanged()
     }
@@ -147,13 +135,13 @@ class ImageListRecyclerViewAdapter(private val context: Context) : RecyclerView.
         return items[position].path;
     }
 
-    fun getSelectedImages(): List<Image> {
+    fun getSelectedImages(): List<Video> {
         return selectedImages
     }
 
 // private
 
-    private fun getItem(position: Int): Image {
+    private fun getItem(position: Int): Video {
         return items[position]
     }
 

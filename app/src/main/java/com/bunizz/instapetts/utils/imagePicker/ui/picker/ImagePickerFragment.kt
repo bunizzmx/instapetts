@@ -22,9 +22,9 @@ import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bunizz.instapetts.R
-import com.bunizz.instapetts.fragments.share_post.Picker.ImageListRecyclerViewAdapter
-import com.bunizz.instapetts.fragments.share_post.Picker.ImagePickerContract
-import com.bunizz.instapetts.fragments.share_post.Picker.ImagePickerPresenter
+import com.bunizz.instapetts.fragments.share_post.Picker.image.ImageListRecyclerViewAdapter
+import com.bunizz.instapetts.fragments.share_post.Picker.image.ImagePickerContract
+import com.bunizz.instapetts.fragments.share_post.Picker.image.ImagePickerPresenter
 import com.bunizz.instapetts.utils.crop.OnCropListener
 import com.bunizz.instapetts.utils.imagePicker.data.Album
 import com.bunizz.instapetts.utils.imagePicker.data.Config

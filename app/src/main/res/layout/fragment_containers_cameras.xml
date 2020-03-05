@@ -2,15 +2,53 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <androidx.viewpager.widget.ViewPager
+    <FrameLayout
         android:layout_above="@+id/tabs_camera"
         android:id="@+id/viewpager_camera"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-    <com.bunizz.instapetts.utils.tabs.SlidingTabLayout
+    <LinearLayout
+        android:weightSum="3"
         android:layout_alignParentBottom="true"
         android:id="@+id/tabs_camera"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/white"/>
+        android:background="@color/white">
+        <RelativeLayout
+            android:id="@+id/changue_to_pictures"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="Imagenes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/changue_to_videos"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="Videos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/changue_to_camera"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="Camara Rapida"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+    </LinearLayout>
 </RelativeLayout>

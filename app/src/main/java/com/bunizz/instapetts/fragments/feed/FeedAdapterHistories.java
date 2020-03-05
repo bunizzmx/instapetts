@@ -74,4 +74,6 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
             icon_add_story_user = itemView.findViewById(R.id.icon_add_story_user);
         }
     }
+
+
 }
