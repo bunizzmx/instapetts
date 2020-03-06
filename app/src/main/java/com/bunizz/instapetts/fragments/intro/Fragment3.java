@@ -5,13 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.listeners.VisibleItem;
-import com.google.firebase.firestore.FirebaseFirestore;
+
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;

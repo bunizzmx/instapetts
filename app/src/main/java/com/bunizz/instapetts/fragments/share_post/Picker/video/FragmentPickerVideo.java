@@ -219,6 +219,21 @@ public class FragmentPickerVideo extends Fragment implements  FeedContract.View,
 
     @Override
     public void onItemClick(@NotNull ViewGroup parent, @NotNull View view, int position, @NotNull Video item, boolean selectable) {
+        Bundle b = new Bundle();
+
+        if((Integer.valueOf(item.getDuration())/1000) < 30){
+            Log.e("TAM_VIDEO","EL VIDEO ES CORTO ASI LO SUBO");
+            ArrayList url_final = new ArrayList();
+            url_final.add(item.getPath());
+            b.putStringArrayList("data_pahs",url_final);
+            listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE, b);
+        }else {
+            Log.e("TAM_VIDEO","EL VIDEO ES LARGO LO CORTO");
+            b.putString("PATH_TO_CROP",item.getPath());
+            Log.e("DURATION","----->"+ item.getDuration());
+            b.putInt("DURATION",Integer.valueOf(item.getDuration())/1000);
+            listener.change_fragment_parameter(FragmentElement.INSTANCE_CROP_VIDEO, b);
+        }
         if (!selectable) return;
     }
 

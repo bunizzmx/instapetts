@@ -22,6 +22,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferType;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.share_post.ShareActivity;
 
@@ -75,7 +76,6 @@ public class MyService extends Service {
         mBuilder = new NotificationCompat.Builder(getApplicationContext(), channelId);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mBuilder.setSmallIcon(R.mipmap.ic_launcher_foreground)
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText("xxxx"))
                     .setContentTitle("Subiendo Post")
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)
@@ -140,7 +140,9 @@ public class MyService extends Service {
 
         @Override
         public void onStateChanged(int id, TransferState state) {
-            Log.e("PROGRESO_SUBIDA","-->" + state);
+            mBuilder.setContentText("COMPLETADO");
+            notificationManager.notify(notificationId, mBuilder.build());
+            App.getInstance().vibrate();
         }
     }
 

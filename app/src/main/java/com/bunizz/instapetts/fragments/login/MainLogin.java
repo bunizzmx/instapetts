@@ -17,9 +17,10 @@ import androidx.fragment.app.Fragment;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainLogin extends Fragment {
+public class MainLogin extends Fragment implements  MainLoginContract.View{
 
     change_instance listener;
+    MainLoginPresenter presenter;
 
     @OnClick(R.id.change_to_login)
     void change_to_login()
@@ -40,6 +41,7 @@ public class MainLogin extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        presenter = new MainLoginPresenter(this,getContext());
     }
 
     @Nullable
@@ -52,12 +54,33 @@ public class MainLogin extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         listener= (change_instance) context;
+    }
+
+    @Override
+    public void registerCompleted(String corrdenadas) {
+
+    }
+
+    @Override
+    public void registerError() {
+
+    }
+
+    @Override
+    public void loginCompleted() {
+
+    }
+
+    @Override
+    public void loginError() {
+
     }
 }
 

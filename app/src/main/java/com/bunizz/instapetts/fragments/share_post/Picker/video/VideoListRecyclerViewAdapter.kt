@@ -60,7 +60,6 @@ class VideoListRecyclerViewAdapter(private val context: Context) : RecyclerView.
         Glide.with(context)
                 .load(File(item.path))
                 .into(itemView.image_thumbnail)
-        Log.e("DURACION_VIDEO","-->" + items.get(position).duration)
         itemView.text_duration.text = return_secs(items.get(position).duration)
         var isSelectedImage = false
         itemView.also {

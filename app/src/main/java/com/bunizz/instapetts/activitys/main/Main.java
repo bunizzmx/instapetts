@@ -35,12 +35,6 @@ import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageMetadata;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.List;
@@ -88,7 +82,7 @@ public class Main extends AppCompatActivity implements change_instance, changue_
     private boolean mSaved;
 
     RxPermissions rxPermissions ;
-    private StorageReference mStorageRef;
+
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tab_profile_pet)

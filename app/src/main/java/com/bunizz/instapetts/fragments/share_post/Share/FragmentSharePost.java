@@ -51,7 +51,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     }
     ArrayList<String> paths = new ArrayList<>();
     SharePostPresenter presenter;
-
+    int is_video =0;
     ListSelectedAdapter adapter;
     public static FragmentSharePost newInstance() {
         return new FragmentSharePost();
@@ -66,6 +66,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         Bundle bundle=getArguments();
         if(bundle!=null){
             paths.addAll(bundle.getStringArrayList("data_pahs"));
+            is_video = bundle.getInt("is_video");
         }
         adapter.setData(paths);
     }

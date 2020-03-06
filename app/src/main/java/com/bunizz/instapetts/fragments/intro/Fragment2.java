@@ -10,13 +10,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.listeners.VisibleItem;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Locale;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;

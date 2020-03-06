@@ -26,6 +26,7 @@ import com.bunizz.instapetts.fragments.share_post.ContainerFragmentsShare;
 import com.bunizz.instapetts.fragments.share_post.Picker.image.FragmentPickerGalery;
 import com.bunizz.instapetts.fragments.share_post.Picker.video.FragmentPickerVideo;
 import com.bunizz.instapetts.fragments.share_post.Share.FragmentSharePost;
+import com.bunizz.instapetts.fragments.share_post.cropVideo.VideoCropFragment;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.uploads;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -48,6 +49,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
     private Stack<FragmentElement> stack_picker_images;
     private Stack<FragmentElement> stack_picker_videos;
     private Stack<FragmentElement> stack_picker_camera;
+    private Stack<FragmentElement> stack_crop_video;
     RxPermissions rxPermissions ;
     ArrayList<String> paths_themp = new ArrayList<>();
     boolean is_single_selection = false;
@@ -93,6 +95,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
         stack_picker_videos = new Stack<>();
         stack_picker_images= new Stack<>();
         stack_picker_camera = new Stack<>();
+        stack_crop_video = new Stack<>();
         stack_share = new Stack<>();   Intent iin= getIntent();
         Bundle b = iin.getExtras();
         if(b!=null)
@@ -153,7 +156,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
             }
         }
         else if (intanceType == FragmentElement.INSTANCE_SHARE) {
-
+             Log.e("CHANGE_SHARE","yes");
             if (stack_share.size() == 0) {
                 change_share(new FragmentElement<>("", FragmentSharePost.newInstance(), FragmentElement.INSTANCE_SHARE),bundle);
             } else {
@@ -161,6 +164,28 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
             }
         }
 
+        else if (intanceType == FragmentElement.INSTANCE_CROP_VIDEO) {
+
+            if (stack_crop_video.size() == 0) {
+                change_to_crop_video(new FragmentElement<>("", VideoCropFragment.newInstance(), FragmentElement.INSTANCE_CROP_VIDEO),bundle);
+            } else {
+                change_to_crop_video(stack_crop_video.pop(),bundle);
+            }
+        }
+
+    }
+
+    private void change_to_crop_video(FragmentElement fragment,Bundle bundle) {
+        tabs_camera.setVisibility(View.GONE);
+        changeStatusBarColor(R.color.black);
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            mCurrentFragment.getFragment().setArguments(bundle);
+            if (stack_crop_video.size() <= 0) {
+                stack_crop_video.push(mCurrentFragment);
+            }
+        }
+        inflateFragment();
     }
 
 
@@ -206,6 +231,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
 
     private void change_picker(FragmentElement fragment,Bundle bundle) {
+        tabs_camera.setVisibility(View.VISIBLE);
         if(bundle==null){
             bundle = new Bundle();
         }
@@ -264,19 +290,12 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
             //window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), color));
-            window.setNavigationBarColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
+            window.setNavigationBarColor(ContextCompat.getColor(getApplicationContext(), color));
         }
     }
 
     @Override
     public void change_fragment_parameter(int type_fragment, Bundle data) {
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
-
         if(is_from_profile){
             String u = "";
             if(data.getStringArrayList("data_pahs").size() == 1){
@@ -371,4 +390,6 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
     public void onImageProfileUpdated() {
        finish();
     }
+
+
 }

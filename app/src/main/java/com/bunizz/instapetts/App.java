@@ -18,7 +18,6 @@ import android.util.Log;
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.utils.dilogs.DialogPermision;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -30,6 +29,9 @@ import java.util.Date;
 import java.util.Locale;
 
 import androidx.annotation.RequiresApi;
+
+import iknow.android.utils.BaseUtils;
+
 
 
 public class App extends Application {
@@ -68,6 +70,7 @@ public class App extends Application {
         String idioma = Locale.getDefault().getLanguage();
         Log.e("IDIOMA","-->" + idioma);
         write("IDIOMA",idioma);
+        BaseUtils.init(this);
     }
 
 
