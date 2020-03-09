@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sliding_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ffffff">
+    <RelativeLayout
+        android:layout_alignParentTop="true"
+        android:id="@+id/xxxy"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <TextView
+            android:fontFamily="@font/avenir_b"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:text="Ajusta tus imagenes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/crop_now_selected"
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
+            android:textSize="10dp"
+            android:textColor="@color/white"
+            android:background="@drawable/button_follow"
+            android:layout_alignParentRight="true"
+            android:text="Terminar"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"/>
+    </RelativeLayout>
+                <com.bunizz.instapetts.utils.crop.CropLayout
+                    android:layout_below="@+id/xxxy"
+                    android:layout_above="@+id/ccv"
+                    android:id="@+id/crop_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    app:cropme_background_alpha="80%"
+                    app:cropme_frame_height_percent="100%"
+                    app:cropme_frame_width_percent="100%"
+                    app:cropme_max_scale="3.0"
+                    app:cropme_overlay_shape="rectangle"
+                    app:cropme_with_border="true"
+                    />
+    <RelativeLayout
+        android:id="@+id/ccv"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="180dp">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/liste_image_selected"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+</RelativeLayout>

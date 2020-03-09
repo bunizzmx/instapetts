@@ -31,6 +31,7 @@ import com.bunizz.instapetts.utils.trimVideo.trim.VideoTrimmerUtil;
 import com.bunizz.instapetts.utils.trimVideo.utils.StorageUtil;
 import com.daasuu.mp4compose.FillMode;
 import com.daasuu.mp4compose.Rotation;
+import com.daasuu.mp4compose.VideoFormatMimeType;
 import com.daasuu.mp4compose.composer.Mp4Composer;
 import com.daasuu.mp4compose.filter.GlFilterGroup;
 import com.daasuu.mp4compose.filter.GlMonochromeFilter;
@@ -270,33 +271,8 @@ public class VideoTrimmerView extends FrameLayout implements IVideoTrimmerView {
     } else {
       mVideoView.pause();
       String file_final =StorageUtil.getCacheDir();
-      new Mp4Composer( mSourceUri.getPath(), file_final)
-              .size( 540,  960)
-              .fillMode(FillMode.PRESERVE_ASPECT_FIT)
-              .trim(mLeftProgressPos, mRightProgressPos)
-              .listener(new Mp4Composer.Listener() {
-                @Override
-                public void onProgress(double progress) {
-                  Log.e("PROGRESS_TRIM","-->" + progress * 100);
-                  mOnTrimVideoListener.onProgress(progress);
-                }
-                @Override
-                public void onCompleted() {
-                  mOnTrimVideoListener.onFinishTrim(file_final);
-                }
+      mOnTrimVideoListener.onFinishTrim(mSourceUri.getPath());
 
-                @Override
-                public void onCanceled() {
-
-                }
-
-                @Override
-                public void onFailed(Exception exception) {
-
-                }
-              })
-              .start();
-      mOnTrimVideoListener.onStartTrim();
     }
   }
 

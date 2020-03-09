@@ -26,6 +26,7 @@ import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.fragments.info.InfoPetFragment;
 import com.bunizz.instapetts.fragments.notifications.NotificationsFragment;
+import com.bunizz.instapetts.fragments.previewProfile.FragmentProfileUserPetPreview;
 import com.bunizz.instapetts.fragments.profile.FragmentEditProfileUser;
 import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.fragments.search.FragmentSearchPet;
@@ -57,6 +58,7 @@ public class Main extends AppCompatActivity implements change_instance, changue_
     private Stack<FragmentElement> stack_notifications;
     private Stack<FragmentElement> stack_tip_detail;
     private Stack<FragmentElement> stack_edit_profile;
+    private Stack<FragmentElement> stack_preview_perfil;
     private FragmentElement mCurrentFragment;
 
     private FragmentElement mCurrenSheet;
@@ -168,6 +170,7 @@ public class Main extends AppCompatActivity implements change_instance, changue_
         stack_notifications = new Stack<>();
         stack_tip_detail = new Stack<>();
         stack_edit_profile= new Stack<>();
+        stack_preview_perfil = new Stack<>();
         setupFirstFragment();
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
@@ -278,6 +281,17 @@ public class Main extends AppCompatActivity implements change_instance, changue_
     }
 
 
+    private void change_to_preview_erfil(FragmentElement fragment) {
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            if (stack_preview_perfil.size() <= 0) {
+                stack_preview_perfil.push(mCurrentFragment);
+            }
+        }
+        inflateFragment();
+    }
+
+
     private void saveFragment() {
         mOldFragment = mCurrentFragment;
     }
@@ -333,6 +347,15 @@ public class Main extends AppCompatActivity implements change_instance, changue_
             } else {
                 change_edit_profile(stack_edit_profile.pop());
             }
+        }
+
+        else if(intanceType == FragmentElement.INSTANCE_PREVIEW_PROFILE) {
+            if (stack_preview_perfil.size() == 0) {
+                change_to_preview_erfil(new FragmentElement<>("", FragmentProfileUserPetPreview.newInstance(), FragmentElement.INSTANCE_PREVIEW_PROFILE));
+            } else {
+                change_to_preview_erfil(stack_preview_perfil.pop());
+            }
+
         }
 
 

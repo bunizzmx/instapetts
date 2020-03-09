@@ -1,9 +1,11 @@
 package com.bunizz.instapetts.fragments.share_post.cropVideo;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,6 +24,7 @@ import com.bunizz.instapetts.R;
 
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.utils.dilogs.DialogProgresCrop;
 import com.bunizz.instapetts.utils.trimVideo.interfaces.VideoTrimListener;
 import com.bunizz.instapetts.utils.trimVideo.utils.ToastUtil;
 
@@ -40,9 +43,9 @@ public class VideoCropFragment extends Fragment {
 
     @BindView(R.id.trimmer_view)
     VideoTrimmerView trimmer_view;
-
+    ProgressDialog progressDialog;
     changue_fragment_parameters_listener listener;
-
+    DialogProgresCrop dialogProgresCrop;
     public static VideoCropFragment newInstance() {
         return new VideoCropFragment();
     }
@@ -73,6 +76,8 @@ public class VideoCropFragment extends Fragment {
         trimmer_view.setOnTrimVideoListener(new VideoTrimListener() {
             @Override
             public void onStartTrim() {
+                dialogProgresCrop = new DialogProgresCrop(getActivity());
+                dialogProgresCrop.show();
 
             }
 
@@ -89,6 +94,7 @@ public class VideoCropFragment extends Fragment {
                 b.putInt("is_video",0);
                 trimmer_view.onDestroy();
                 listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
+                dialogProgresCrop.dismiss();
 
             }
 
@@ -99,7 +105,8 @@ public class VideoCropFragment extends Fragment {
 
             @Override
             public void onProgress(double progress) {
-
+                Log.e("XXXX","--<" + progress * 100);
+                  dialogProgresCrop.set_progress_percentage( progress *100);
             }
         });
 

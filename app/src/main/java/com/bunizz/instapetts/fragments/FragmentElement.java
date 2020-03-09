@@ -37,7 +37,7 @@ public class FragmentElement<T extends Fragment> {
     public static final int INSTANCE_PICKER_CAMERA= 23;
 
     public static final int INSTANCE_CROP_VIDEO= 24;
-
+    public static final int INSTANCE_CROP_IMAGE= 25;
     //endregion
     private String mTitle;
     private T fragment;

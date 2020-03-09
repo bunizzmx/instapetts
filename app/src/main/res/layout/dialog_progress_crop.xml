@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    android:layout_marginTop="30dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:id="@+id/background"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@android:color/transparent">
+    <RelativeLayout
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
+        android:paddingTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="top"
+        android:background="@drawable/round_white"
+        android:clickable="true"
+        android:orientation="vertical">
+        <ImageView
+           android:layout_marginLeft="10dp"
+            android:id="@+id/close_dialog"
+            android:tint="@color/black"
+            android:src="@drawable/ic_cross"
+            android:layout_width="15dp"
+            android:layout_height="15dp"></ImageView>
+        <LinearLayout
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:id="@+id/xx_qr"
+            android:layout_marginTop="50dp"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.bunizz.instapetts.utils.ImagenCircular
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/perro_demo"
+                android:layout_width="70dp"
+                android:layout_height="70dp"/>
+            <com.bunizz.instapetts.utils.textgradient.AnimatedGradientTextView
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/animatedGradientTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:text="Procesando.."
+                android:textAllCaps="true"
+                android:textSize="30sp"
+                android:fontFamily="@font/avenir_b"
+                app:angle="45"
+                app:maxFPS="30"
+                app:colors="@array/funny_colors"
+                app:simultaneousColors="4"
+                app:speed="1000" />
+            <TextView
+                android:fontFamily="@font/avenir_b"
+               android:layout_gravity="center_horizontal"
+                android:id="@+id/percentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginTop="10dp"
+                android:text="3 Pets"
+                android:textAlignment="center"
+                android:textSize="20dp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

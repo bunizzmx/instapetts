@@ -22,10 +22,12 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.camera.CameraFragment;
+import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.fragments.share_post.ContainerFragmentsShare;
 import com.bunizz.instapetts.fragments.share_post.Picker.image.FragmentPickerGalery;
 import com.bunizz.instapetts.fragments.share_post.Picker.video.FragmentPickerVideo;
 import com.bunizz.instapetts.fragments.share_post.Share.FragmentSharePost;
+import com.bunizz.instapetts.fragments.share_post.cropImages.ImageCropFragment;
 import com.bunizz.instapetts.fragments.share_post.cropVideo.VideoCropFragment;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.uploads;
@@ -50,6 +52,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
     private Stack<FragmentElement> stack_picker_videos;
     private Stack<FragmentElement> stack_picker_camera;
     private Stack<FragmentElement> stack_crop_video;
+    private Stack<FragmentElement> stack_crop_images;
     RxPermissions rxPermissions ;
     ArrayList<String> paths_themp = new ArrayList<>();
     boolean is_single_selection = false;
@@ -96,6 +99,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
         stack_picker_images= new Stack<>();
         stack_picker_camera = new Stack<>();
         stack_crop_video = new Stack<>();
+        stack_crop_images = new Stack<>();
         stack_share = new Stack<>();   Intent iin= getIntent();
         Bundle b = iin.getExtras();
         if(b!=null)
@@ -127,7 +131,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
 
     private void setupFirstFragment() {
-        mCurrentFragment = new FragmentElement<>(null, FragmentPickerGalery.newInstance(), FragmentElement.INSTANCE_PICKER_CAMERA, true);
+        mCurrentFragment = new FragmentElement<>(null, FragmentPickerGalery.newInstance(), FragmentElement.INSTANCE_PICKER_IMAGES, true);
         change_picker(mCurrentFragment,null);
     }
 
@@ -173,6 +177,15 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
             }
         }
 
+        else if (intanceType == FragmentElement.INSTANCE_CROP_IMAGE) {
+
+            if (stack_crop_images.size() == 0) {
+                change_to_crop_image(new FragmentElement<>("", ImageCropFragment.newInstance(), FragmentElement.INSTANCE_CROP_IMAGE),bundle);
+            } else {
+                change_to_crop_image(stack_crop_images.pop(),bundle);
+            }
+        }
+
     }
 
     private void change_to_crop_video(FragmentElement fragment,Bundle bundle) {
@@ -187,6 +200,22 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
         }
         inflateFragment();
     }
+
+    private void change_to_crop_image(FragmentElement fragment,Bundle bundle) {
+        tabs_camera.setVisibility(View.GONE);
+        changeStatusBarColor(R.color.white);
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            mCurrentFragment.getFragment().setArguments(bundle);
+
+            if (stack_crop_images.size() <= 0) {
+                stack_crop_images.push(mCurrentFragment);
+            }
+        }
+        inflateFragment();
+        ((ImageCropFragment) mCurrentFragment.getFragment()).update_croper();
+    }
+
 
 
     private void change_share(FragmentElement fragment,Bundle bundle) {
@@ -315,15 +344,22 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
     @Override
     public void onBackPressed() {
         if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PICKER_IMAGES){
+            Log.e("VERIFICACION","xxxxxxxxxxxxxxxxxxxxx");
+            super.onBackPressed();
            finish();
+
+        }else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_CROP_IMAGE){
+            changeOfInstance(FragmentElement.INSTANCE_PICKER_IMAGES,null);
+        }else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_CROP_VIDEO){
+            changeOfInstance(FragmentElement.INSTANCE_PICKER_VIDEOS,null);
         }else{
+            Log.e("VERIFICACION","VERIFICO SI HAY PATHS PENDIENTES" + mCurrentFragment.getInstanceType());
             tabs_camera.setVisibility(View.VISIBLE);
             Log.e("VERIFICACION","VERIFICO SI HAY PATHS PENDIENTES");
             if(paths_themp.size()>0){
                 delete_files();
                 changeOfInstance(FragmentElement.INSTANCE_PICKER_IMAGES,null);
             }
-
         }
 
     }

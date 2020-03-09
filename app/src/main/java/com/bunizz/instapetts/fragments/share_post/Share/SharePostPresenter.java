@@ -8,8 +8,11 @@ import android.util.Log;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
+import com.bunizz.instapetts.web.responses.ResponsePost;
+import com.bunizz.instapetts.web.responses.SimpleResponse;
 import com.google.android.gms.location.LocationServices;
 
+import java.nio.charset.Charset;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -29,7 +32,7 @@ public class SharePostPresenter implements SharePostContract.Presenter {
     }
 
 
-    @Override
+   /* @Override
     public void getLocation() {
         LocationServices.getFusedLocationProviderClient(mContext).getLastLocation().addOnSuccessListener(location -> {
             if(location!=null){
@@ -37,16 +40,16 @@ public class SharePostPresenter implements SharePostContract.Presenter {
                 mView.showLocation(location.getLatitude()  + "/" + location.getLongitude());
             }
         });
-    }
+    }*/
 
     @SuppressLint("CheckResult")
     void get_algo(){
         apiService.fetchAllNotes()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSingleObserver<List<PostBean>>() {
+                .subscribeWith(new DisposableSingleObserver<ResponsePost>() {
                     @Override
-                    public void onSuccess(List<PostBean> notes) {
+                    public void onSuccess(ResponsePost notes) {
                         // Received all notes
                     }
 
@@ -55,5 +58,27 @@ public class SharePostPresenter implements SharePostContract.Presenter {
                         // Network error
                     }
                 });
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void sendPost(PostBean post) {
+
+        apiService.sendPost(post)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                    @Override
+                    public void onSuccess(SimpleResponse notes) {
+                    Log.e("POST","SUCCESS");
+                    mView.postStatus(true);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("POST","FALLO" + e.getMessage());
+                    }
+                });
+
     }
 }

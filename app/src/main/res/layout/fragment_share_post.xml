@@ -76,6 +76,10 @@
       android:layout_height="120dp"/>
 
   <EditText
+      android:id="@+id/description_post"
+      android:maxLines="5"
+      android:lines="5"
+      android:inputType="textMultiLine"
       android:padding="20dp"
       android:background="#fff"
       android:hint="Escribe algo..."

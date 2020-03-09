@@ -34,10 +34,10 @@ public class VideoTrimmerUtil {
 
   public static final int MAX_COUNT_RANGE = 10;
   private static final int SCREEN_WIDTH_FULL = DeviceUtil.getDeviceWidth();
-  public static final int RECYCLER_VIEW_PADDING = UnitConverter.dpToPx(35);
+  public static final int RECYCLER_VIEW_PADDING = UnitConverter.dpToPx(0);
   public static final int VIDEO_FRAMES_WIDTH = SCREEN_WIDTH_FULL - RECYCLER_VIEW_PADDING * 2;
-  public static  int THUMB_WIDTH = UnitConverter.dpToPx(90);
-  private static  int THUMB_HEIGHT = UnitConverter.dpToPx(90);
+  public static  int THUMB_WIDTH = UnitConverter.dpToPx(60);
+  private static  int THUMB_HEIGHT = UnitConverter.dpToPx(60);
 
 
   public static void shootVideoThumbInBackground(final Context context, final Uri videoUri, final int totalThumbsCount, final long startPosition,
@@ -56,8 +56,8 @@ public class VideoTrimmerUtil {
             if(bitmap == null) continue;
             try {
               if(totalThumbsCount <= 5){
-                THUMB_WIDTH = UnitConverter.dpToPx(100);
-                THUMB_HEIGHT = UnitConverter.dpToPx(100);
+                THUMB_WIDTH = UnitConverter.dpToPx(60);
+                THUMB_HEIGHT = UnitConverter.dpToPx(60);
               }
               bitmap = Bitmap.createScaledBitmap(bitmap, THUMB_WIDTH, THUMB_HEIGHT, false);
             } catch (final Throwable t) {

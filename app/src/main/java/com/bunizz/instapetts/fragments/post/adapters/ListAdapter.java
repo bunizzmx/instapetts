@@ -48,7 +48,7 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ListHolder h =(ListHolder)holder;
-        ViewPagerAdapter adapter = new ViewPagerAdapter(context,current_images);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(context);
         h.list_fotos.setAdapter(adapter);
         h.dots_indicator.setViewPager(h.list_fotos);
     }

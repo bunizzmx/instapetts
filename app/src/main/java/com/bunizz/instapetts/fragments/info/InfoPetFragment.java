@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PetBean;
+import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class InfoPetFragment extends Fragment implements  FeedContract.View{
 
 
     @Override
-    public void show_feed(ArrayList<PetBean> data) {
+    public void show_feed(ArrayList<PostBean> data) {
 
     }
 }

@@ -20,6 +20,7 @@ import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.login.login.FragmentLogin;
 import com.bunizz.instapetts.listeners.change_instance;
+import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 
 import java.util.ArrayList;
 
@@ -56,11 +57,10 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         data.add(new HistoriesBean());
-        data.add(new PostBean());
-        data.add(new PostBean());
-        data.add(new PostBean());
         feedAdapter = new FeedAdapter(getContext(),data);
+        feedAdapter.setListener((type_fragment, data) -> listener.change(type_fragment));
         mPresenter = new FeedPresenter(this, getContext());
+        mPresenter.get_feed();
     }
 
     @Nullable
@@ -85,8 +85,10 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     }
 
     @Override
-    public void show_feed(ArrayList<PetBean> data) {
-
+    public void show_feed(ArrayList<PostBean> data) {
+        ArrayList<Object> data_object= new ArrayList<>();
+        data_object.addAll(data);
+        feedAdapter.addData(data_object);
     }
 }
 

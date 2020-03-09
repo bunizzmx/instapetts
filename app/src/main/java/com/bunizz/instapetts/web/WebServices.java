@@ -1,21 +1,21 @@
 package com.bunizz.instapetts.web;
 
 import android.provider.ContactsContract;
-import android.provider.UserDictionary;
-
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.web.responses.ResponsePost;
+import com.bunizz.instapetts.web.responses.SimpleResponse;
 
 import java.util.List;
-
 import io.reactivex.Completable;
 import io.reactivex.Single;
-import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -28,13 +28,14 @@ public interface WebServices {
     Single<PetBean> register(@Field("user") PetBean user);
 
     // Create note
-    @FormUrlEncoded
-    @POST("notes/new")
-    Single<ContactsContract.CommonDataKinds.Note> createNote(@Field("note") String note);
+    @POST("beta_posts")
+    Single<SimpleResponse> sendPost(
+            @Body PostBean post
+    );
 
     // Fetch all notes
-    @GET("notes/all")
-    Single<List<PostBean>> fetchAllNotes();
+    @GET("beta_posts")
+    Single<ResponsePost> fetchAllNotes();
 
     // Update single note
     @FormUrlEncoded

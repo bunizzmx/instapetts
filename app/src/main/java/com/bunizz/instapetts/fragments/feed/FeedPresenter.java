@@ -8,6 +8,7 @@ import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
 import com.bunizz.instapetts.managers.FeedResponse;
+import com.bunizz.instapetts.web.responses.ResponsePost;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -41,29 +42,15 @@ public class FeedPresenter implements FeedContract.Presenter {
                 apiService.fetchAllNotes()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .map(new Function<List<PostBean>, List<PostBean>>() {
+                        .subscribeWith(new DisposableSingleObserver<ResponsePost>() {
                             @Override
-                            public List<PostBean> apply(List<PostBean> notes) throws Exception {
-                                // TODO - note about sort
-                                Collections.sort(notes, new Comparator<PostBean>() {
-                                    @Override
-                                    public int compare(PostBean n1, PostBean n2) {
-                                        return 1 - 2;
-                                    }
-                                });
-                                return notes;
+                            public void onSuccess(ResponsePost responsePost) {
+                                Log.e("NUMBER_POSTS","-->" + responsePost.getList_posts().size());
+                                mView.show_feed(responsePost.getList_posts());
                             }
-                        })
-                        .subscribeWith(new DisposableSingleObserver<List<PostBean>>() {
-                            @Override
-                            public void onSuccess(List<PostBean> notes) {
-
-                            }
-
                             @Override
                             public void onError(Throwable e) {
-                                //Log.e(TAG, "onError: " + e.getMessage());
-                               // showError(e);
+                                Log.e("NUMBER_POSTS","-->EROR : " + e.getMessage());
                             }
                         })
         );

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PetBean;
+import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.fragments.feed.FeedPresenter;
 import com.bunizz.instapetts.listeners.uploads;
@@ -41,13 +43,24 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     @BindView(R.id.location_user)
     TextView location_user;
     uploads listener;
+    @BindView(R.id.description_post)
+    EditText description_post;
+
 
     @OnClick(R.id.share_post_pet)
     void share_post_pet()
     {
        /* DialogShosePet dialogShosePet = new DialogShosePet(getActivity());
         dialogShosePet.show();*/
-        beginUploadInBackground(paths.get(0));
+       // beginUploadInBackground(paths.get(0));
+        PostBean post = new PostBean();
+        post.setName_pet("PET 1");
+        post.setDescription(description_post.getText().toString());
+        post.setName_user("lcklkd");
+        post.setUrl_photo_user("https://firebasestorage.googleapis.com/v0/b/melove-principal/o/C9%2Fthumbmini_38.png?alt=media&token=0d54c5e9-079b-4d81-9b74-9e7048d36e9f");
+        post.setUrls_posts("https://firebasestorage.googleapis.com/v0/b/melove-principal/o/C9%2F67.jpeg?alt=media&token=5c927084-53e8-4f5e-afad-dadd3a5ec252,https://firebasestorage.googleapis.com/v0/b/melove-principal/o/C9%2F67.jpeg?alt=media&token=5c927084-53e8-4f5e-afad-dadd3a5ec252");
+        post.setDate_post("hoy");
+        presenter.sendPost(post);
     }
     ArrayList<String> paths = new ArrayList<>();
     SharePostPresenter presenter;
@@ -83,7 +96,14 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         ButterKnife.bind(this, view);
         list_image_selected.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
         list_image_selected.setAdapter(adapter);
-        presenter.getLocation();
+       // presenter.getLocation();
+    }
+
+    @Override
+    public void postStatus(boolean status) {
+        if(status){
+            getActivity().finish();
+        }
     }
 
     @Override
