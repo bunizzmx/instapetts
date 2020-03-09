@@ -94,7 +94,7 @@ class CameraFragment : Fragment() {
 
 
     /** Blocking camera operations are performed using this executor */
-    private val cameraExecutor = Executors.newSingleThreadExecutor()
+    private var cameraExecutor = Executors.newSingleThreadExecutor()
 
     /** Volume down button receiver used to trigger shutter */
     private val volumeDownReceiver = object : BroadcastReceiver() {
@@ -245,6 +245,12 @@ class CameraFragment : Fragment() {
                 .build()
 
             // ImageAnalysis
+            if(cameraExecutor==null){
+                if(cameraExecutor.isShutdown) {
+                    cameraExecutor = Executors.newSingleThreadExecutor()
+                }
+            }
+
             imageAnalyzer = ImageAnalysis.Builder()
                 // We request aspect ratio but no resolution
                 .setTargetAspectRatio(screenAspectRatio)
@@ -252,15 +258,6 @@ class CameraFragment : Fragment() {
                 // during the lifecycle of this use case
                 .setTargetRotation(rotation)
                 .build()
-                // The analyzer can then be assigned to the instance
-                .also {
-                    it.setAnalyzer(cameraExecutor, LuminosityAnalyzer { luma ->
-                        // Values returned from our analyzer are passed to the attached listener
-                        // We log image analysis results here - you should do something useful
-                        // instead!
-                        Log.d(TAG, "Average luminosity: $luma")
-                    })
-                }
 
             // Must unbind the use-cases before rebinding them
             cameraProvider.unbindAll()
@@ -309,6 +306,23 @@ class CameraFragment : Fragment() {
                 val metadata = Metadata().apply {
                     isReversedHorizontal = lensFacing == CameraSelector.LENS_FACING_FRONT
                 }
+                if(cameraExecutor==null){
+                    Log.e("CAMERA_EXECUTOR"," es nulo");
+                    if(cameraExecutor.isShutdown) {
+                        Log.e("CAMERA_EXECUTOR"," es nulo y esta apagada");
+                        cameraExecutor = Executors.newSingleThreadExecutor()
+                    }else{
+                        Log.e("CAMERA_EXECUTOR"," es nulo esta prendida");
+                    }
+                }else{
+                    Log.e("CAMERA_EXECUTOR","no es nulo");
+                    if(cameraExecutor.isShutdown) {
+                        Log.e("CAMERA_EXECUTOR","no es nulo pero esta apagada");
+                        cameraExecutor = Executors.newSingleThreadExecutor()
+                    }else{
+                        Log.e("CAMERA_EXECUTOR","no es nulo y esta prendida");
+                    }
+                }
                 val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
                         .setMetadata(metadata)
                         .build()
@@ -321,16 +335,16 @@ class CameraFragment : Fragment() {
                     override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                         val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
                         val b = Bundle()
-                        paths.add(savedUri.toString());
-                        b.putStringArrayList("data_pahs", paths)
+                        paths.clear()
+                        savedUri.path?.let { it1 -> paths.add(it1) };
+                        b.putStringArrayList("PATH_SELECTED", paths)
+                        b.putInt("IS_FROM_CAMERA", 1)
                         if (listener != null) {
                             val mediaScannerIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
                             mediaScannerIntent.data = savedUri
                             context!!.sendBroadcast(mediaScannerIntent)
-                            cameraExecutor.shutdown()
-                            broadcastManager.unregisterReceiver(volumeDownReceiver)
-                            displayManager.unregisterDisplayListener(displayListener)
-                            listener!!.change_fragment_parameter(FragmentElement.INSTANCE_SHARE, b)
+                            stop_camera()
+                            listener!!.change_fragment_parameter(FragmentElement.INSTANCE_CROP_IMAGE, b)
                         }
                     }
                 })

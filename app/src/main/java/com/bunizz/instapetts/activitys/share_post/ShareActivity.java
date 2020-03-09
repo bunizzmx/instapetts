@@ -202,8 +202,8 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
     }
 
     private void change_to_crop_image(FragmentElement fragment,Bundle bundle) {
-        tabs_camera.setVisibility(View.GONE);
-        changeStatusBarColor(R.color.white);
+        //tabs_camera.setVisibility(View.GONE);
+        //changeStatusBarColor(R.color.white);
         if (fragment != null) {
             mCurrentFragment = fragment;
             mCurrentFragment.getFragment().setArguments(bundle);

@@ -37,7 +37,7 @@
                     android:layout_above="@+id/ccv"
                     android:id="@+id/crop_view"
                     android:layout_width="match_parent"
-                    android:layout_height="400dp"
+                    android:layout_height="350dp"
                     app:cropme_background_alpha="80%"
                     app:cropme_frame_height_percent="100%"
                     app:cropme_frame_width_percent="100%"

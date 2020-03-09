@@ -22,6 +22,13 @@
         <attr name="tileBackgroundColor" format="color"/>
     </declare-styleable>
 
+    <declare-styleable name="DoubleTapLikeImageView">
+        <attr name="icon" format="reference"/>
+        <attr name="disableAnimation" format="boolean"/>
+        <attr name="doubleTapIn" format="integer"/>
+        <attr name="adjustViewBounds" format="boolean"/>
+    </declare-styleable>
+
     <declare-styleable name="DotsIndicator">
         <attr name="dotsColor"/>
         <attr name="selectedDotColor"/>

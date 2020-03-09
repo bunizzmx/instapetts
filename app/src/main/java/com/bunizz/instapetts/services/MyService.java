@@ -25,9 +25,12 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.share_post.ShareActivity;
+import com.google.android.gms.common.util.Strings;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class MyService extends Service {
 
@@ -39,7 +42,7 @@ public class MyService extends Service {
 
     public final static String TRANSFER_OPERATION_UPLOAD = "upload";
     public final static String TRANSFER_OPERATION_DOWNLOAD = "download";
-
+    File file;
     private final static String TAG = MyService.class.getSimpleName();
    public static  NotificationManager notificationManager;
     int PROGRESS_MAX = 100;
@@ -55,13 +58,6 @@ public class MyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        final String key = intent.getStringExtra(INTENT_KEY_NAME);
-        final File file = (File) intent.getSerializableExtra(INTENT_FILE);
-        final String transferOperation = intent.getStringExtra(INTENT_TRANSFER_OPERATION);
-        TransferObserver transferObserver;
-         transferObserver = transferUtility.upload(key, file);
-
-         transferObserver.setTransferListener(new UploadListener());
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_ONE_SHOT);
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         String channelId = "channel-01";
@@ -99,6 +95,18 @@ public class MyService extends Service {
         mBuilder
                 .setProgress(100,1,false);
         notificationManager.notify(notificationId, mBuilder.build());
+
+        final ArrayList<String> key = intent.getStringArrayListExtra(INTENT_KEY_NAME);
+        TransferObserver transferObserver;
+        for(int i =0;i<key.size();i++){
+            file = new File(key.get(i));
+            String splits[] = key.get(i).split("/");
+            int index  = splits.length;
+            String filename = splits[index -1];
+            transferObserver = transferUtility.upload(filename, file);
+            transferObserver.setTransferListener(new UploadListener());
+        }
+
 
         return START_STICKY;
     }

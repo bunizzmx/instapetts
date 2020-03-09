@@ -3,6 +3,7 @@ package com.bunizz.instapetts.fragments.share_post.cropImages;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -50,6 +51,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.bunizz.instapetts.utils.trimVideo.utils.UIThreadUtil.runOnUiThread;
+
 public class ImageCropFragment extends Fragment implements  FeedContract.View{
 
     String PATH_TEMP="-";
@@ -62,7 +65,8 @@ public class ImageCropFragment extends Fragment implements  FeedContract.View{
     @BindView(R.id.crop_now_selected)
     Button crop_now_selected;
     ArrayList<String> array_list_cropes = new ArrayList<>();
-
+    int CURRENT_INDEX=0;
+    int IS_FROM_CAMERA = 0;
 
     ArrayAdapter albumAdapter;
     boolean IS_CROPED_IMAGE_FINISH = false;
@@ -89,6 +93,7 @@ public class ImageCropFragment extends Fragment implements  FeedContract.View{
         if(bundle!=null){
             is_from_profile = bundle.getInt("FROM_PROFILE");
             paths = bundle.getStringArrayList("PATH_SELECTED");
+            IS_FROM_CAMERA  = bundle.getInt("IS_FROM_CAMERA");
             Log.e("FROM_PROFILE","--->" + is_from_profile);
         }
         adapter = new ImageSelectedAdapter(getContext());
@@ -108,10 +113,16 @@ public class ImageCropFragment extends Fragment implements  FeedContract.View{
             paths = bundle.getStringArrayList("PATH_SELECTED");
             Log.e("FROM_PROFILE","--->" + is_from_profile);
             if(cropLayout!=null){
-                cropLayout.setUri(Uri.parse(paths.get(0)));
-                if(adapter!=null){
-                    adapter.setSeletedsnew(paths);
-                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        cropLayout.setUri(Uri.parse(paths.get(0)));
+                        if(adapter!=null){
+                            adapter.setSeletedsnew(paths);
+                        }
+                    }
+                });
+
             }
         }
     }
@@ -131,9 +142,23 @@ public class ImageCropFragment extends Fragment implements  FeedContract.View{
             @Override
             public void onSuccess(@NotNull Bitmap bitmap) {
                 if(saveImage(bitmap,"Instapetts","Instapetts_", Bitmap.CompressFormat.JPEG)){
-                    Bundle b = new Bundle();
-                    b.putStringArrayList("data_pahs",array_list_cropes);
-                    listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
+                    if(IS_FROM_CAMERA ==1){
+                        File file = new File(paths.get(0));
+                        try {
+                            if (file.delete()) {
+                                getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(paths.get(0)))));
+                            }
+                        }catch (Exception e){}
+                    }
+                    if(CURRENT_INDEX < paths.size()){
+                        execute_crop(CURRENT_INDEX);
+                    }else{
+                        Bundle b = new Bundle();
+                        b.putStringArrayList("data_pahs",array_list_cropes);
+                        listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
+                        CURRENT_INDEX =0;
+                    }
+
                 }
             }
 
@@ -149,14 +174,17 @@ public class ImageCropFragment extends Fragment implements  FeedContract.View{
                 return;
             }else{
                 array_list_cropes.clear();
-                 cropLayout.setUri(Uri.parse(paths.get(0)));
-                 cropLayout.crop();
-
+                execute_crop(CURRENT_INDEX);
             }
         });
 
     }
-
+    void execute_crop(int  index){
+        Log.e("CURRENT_CROP","-->" + index);
+        cropLayout.setUri(Uri.parse(paths.get(index)));
+        CURRENT_INDEX ++;
+        cropLayout.crop();
+    }
 
     @Override
     public void show_feed(ArrayList<PostBean> data) {

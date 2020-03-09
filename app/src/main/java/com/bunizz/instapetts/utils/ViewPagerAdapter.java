@@ -66,7 +66,7 @@ public class ViewPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         ImageView imageView = new ImageView(context);
-        Glide.with(context).load(image_urls.get(position)).centerCrop().into(imageView);
+        Glide.with(context).load(image_urls.get(position)).into(imageView);
         container.addView(imageView);
         return  imageView;
     }

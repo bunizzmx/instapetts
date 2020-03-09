@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     <RelativeLayout
+        android:background="@color/white"
         android:layout_alignParentBottom="true"
         android:id="@+id/camera_ui_container"
         android:layoutDirection="ltr"
@@ -22,10 +23,11 @@
             android:layout_width="80dp"
             android:layout_height="80dp">
             <ImageView
+                android:tint="@color/naranja"
                 android:contentDescription="nose"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/logo"
+                android:src="@drawable/ic_hand_pet"
                 android:layout_width="30dp"
                 android:layout_height="30dp"/>
         </RelativeLayout>

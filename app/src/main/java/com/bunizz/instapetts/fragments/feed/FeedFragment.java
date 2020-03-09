@@ -2,6 +2,7 @@ package com.bunizz.instapetts.fragments.feed;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
@@ -37,6 +39,10 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
 
     change_instance listener;
     FeedAdapter feedAdapter;
+
+    @BindView(R.id.refresh_feed)
+    SwipeRefreshLayout refresh_feed;
+
 
     ArrayList<Object> data = new ArrayList<>();
 
@@ -75,6 +81,9 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         ButterKnife.bind(this, view);
         feed_list.setLayoutManager(new LinearLayoutManager(getContext()));
         feed_list.setAdapter(feedAdapter);
+        refresh_feed.setOnRefreshListener(() ->{
+           mPresenter.get_feed();
+        });
     }
 
 
@@ -86,6 +95,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
 
     @Override
     public void show_feed(ArrayList<PostBean> data) {
+        refresh_feed.setRefreshing(false);
         ArrayList<Object> data_object= new ArrayList<>();
         data_object.addAll(data);
         feedAdapter.addData(data_object);

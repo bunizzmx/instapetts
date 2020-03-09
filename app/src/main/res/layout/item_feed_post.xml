@@ -17,32 +17,41 @@
             android:layout_margin="10dp"
             android:id="@+id/image_pet"
             android:src="@drawable/logo"
-            android:layout_width="50dp"
-            android:layout_height="50dp"/>
-        <TextView
-            android:layout_marginTop="10dp"
-            android:id="@+id/name_pet"
-            android:layout_marginLeft="10dp"
-            android:textColor="@color/black"
-            android:fontFamily="@font/avenir_black"
-            android:layout_toRightOf="@+id/image_pet"
-            android:text="El firulais"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:layout_marginLeft="10dp"
-            android:textSize="10dp"
-            android:layout_toRightOf="@+id/image_pet"
-            android:layout_below="@+id/name_pet"
-            android:text="Zapopan .Jal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
+            <RelativeLayout
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/image_pet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/name_pet"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/avenir_black"
+
+                    android:text="El firulais"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:layout_marginLeft="10dp"
+                    android:textSize="10dp"
+                    android:layout_below="@+id/name_pet"
+                    android:text="Zapopan .Jal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
         </RelativeLayout>
            <RelativeLayout
+               android:layout_centerVertical="true"
                android:layout_alignParentRight="true"
                android:layout_width="30dp"
                android:layout_height="40dp">
                <ImageView
+                   android:layout_centerVertical="true"
+                   android:layout_centerHorizontal="true"
                    android:layout_marginTop="5dp"
                    android:src="@drawable/ic_dots"
                    android:layout_width="15dp"
@@ -51,7 +60,16 @@
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp">
+        android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/single_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <RelativeLayout
+        android:id="@+id/root_multiple_image"
+        android:layout_width="match_parent"
+        android:layout_height="450dp">
+
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/list_fotos"
             android:layout_width="match_parent"
@@ -73,9 +91,20 @@
             app:progressMode="false"
             app:selectedDotColor="@color/amarillo"
             />
+
+    </RelativeLayout>
+        <com.bunizz.instapetts.utils.double_tap.DoubleTapLikeView
+            android:visibility="gone"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/layout_double_tap_like"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            app:icon="@drawable/ic_hand_pet"
+            app:doubleTapIn="200" />
     </RelativeLayout>
     <RelativeLayout
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:layout_width="match_parent"
@@ -85,19 +114,28 @@
             android:layout_marginRight="10dp"
            android:layout_alignParentRight="true"
             android:src="@drawable/ic_save_favorite"
-            android:layout_width="15dp"
-            android:layout_height="15dp"/>
+            android:layout_width="25dp"
+            android:layout_height="25dp"/>
         <ImageView
+            android:id="@+id/icon_like"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_alignParentLeft="true"
             android:src="@drawable/ic_corazon"
-            android:layout_width="20dp"
-            android:layout_height="20dp"/>
+            android:layout_width="25dp"
+            android:layout_height="25dp"/>
+        <TextView
+            android:textColor="@color/black"
+            android:fontFamily="@font/avenir_b"
+            android:layout_centerVertical="true"
+            android:text="A 123 pets les gusta esto"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/icon_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </RelativeLayout>
     <TextView
         android:id="@+id/description_posts"
-        android:fontFamily="@font/avenir_b"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
@@ -111,7 +149,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-
+            android:id="@+id/date_post"
             android:text="HACE 20 MIN"
             android:textSize="8dp"
             android:layout_width="wrap_content"

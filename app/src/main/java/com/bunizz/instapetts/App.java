@@ -47,7 +47,7 @@ public class App extends Application {
     private static FirebaseAnalytics mFirebaseAnalytics;
     private Vibrator vibrator;
     static long milisegundos_dia = 24 * 60 * 60 * 1000;
-    public static final String DATE_FORMAT_FOR_GET_DATE = "yyyy-MM-dd'T'HH:mm:ss";
+    public static final String DATE_FORMAT_FOR_GET_DATE = "yyyy-MM-dd HH:mm:ss";
     public static final String DATE_FORMAT_SIMPLE = "yyyy-MM-dd";
     DialogPermision dialogPermision;
     DecimalFormat dfs = new DecimalFormat("#,###,##0");
@@ -228,12 +228,18 @@ public class App extends Application {
 
 
     public static String fecha_lenguaje_humano(String fecha){
-        Date fechaInicial= StringToDate(fecha, "-", 0);
-        Calendar calFechaInicial= Calendar.getInstance();
-        Calendar calFechaFinal= Calendar.getInstance();
-        calFechaInicial.setTime(fechaInicial);
-        calFechaFinal.setTime(new Date());
-        return cantidadTotalMinutos(calFechaInicial,calFechaFinal);
+        try {
+            Date fechaInicial = StringToDate(fecha, "-", 0);
+            Calendar calFechaInicial = Calendar.getInstance();
+            Calendar calFechaFinal = Calendar.getInstance();
+            calFechaInicial.setTime(fechaInicial);
+            calFechaFinal.setTime(new Date());
+            return cantidadTotalMinutos(calFechaInicial,calFechaFinal);
+        }catch (Exception e){
+            Log.e("Exceptiocccc","-->" + e.getMessage());
+            return  "Hace un momento";
+        }
+
     }
 
     public static String diferenciaHorasDias(long horas){

@@ -3,6 +3,7 @@ package com.bunizz.instapetts.fragments.share_post.Share;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
@@ -28,10 +30,13 @@ import com.google.android.gms.location.LocationServices;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.bunizz.instapetts.web.CONST.BASE_URL_BUCKET;
 
 public class FragmentSharePost extends Fragment implements  SharePostContract.View{
 
@@ -45,6 +50,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     uploads listener;
     @BindView(R.id.description_post)
     EditText description_post;
+    String concat_paths="";
 
 
     @OnClick(R.id.share_post_pet)
@@ -52,14 +58,14 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     {
        /* DialogShosePet dialogShosePet = new DialogShosePet(getActivity());
         dialogShosePet.show();*/
-       // beginUploadInBackground(paths.get(0));
+        beginUploadInBackground(paths);
         PostBean post = new PostBean();
         post.setName_pet("PET 1");
         post.setDescription(description_post.getText().toString());
         post.setName_user("lcklkd");
         post.setUrl_photo_user("https://firebasestorage.googleapis.com/v0/b/melove-principal/o/C9%2Fthumbmini_38.png?alt=media&token=0d54c5e9-079b-4d81-9b74-9e7048d36e9f");
-        post.setUrls_posts("https://firebasestorage.googleapis.com/v0/b/melove-principal/o/C9%2F67.jpeg?alt=media&token=5c927084-53e8-4f5e-afad-dadd3a5ec252,https://firebasestorage.googleapis.com/v0/b/melove-principal/o/C9%2F67.jpeg?alt=media&token=5c927084-53e8-4f5e-afad-dadd3a5ec252");
-        post.setDate_post("hoy");
+        post.setUrls_posts(concat_paths);
+        post.setDate_post(App.formatDateGMT(new Date()));
         presenter.sendPost(post);
     }
     ArrayList<String> paths = new ArrayList<>();
@@ -80,6 +86,17 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         if(bundle!=null){
             paths.addAll(bundle.getStringArrayList("data_pahs"));
             is_video = bundle.getInt("is_video");
+            for (int i =0;i< paths.size();i++){
+                String splits[] = paths.get(i).split("/");
+                int index = splits.length;
+                if(i==0)
+                    concat_paths = BASE_URL_BUCKET + "" + splits[index-1];
+                else
+                    concat_paths += "," + BASE_URL_BUCKET +"" +  splits[index-1];
+
+                Log.e("URL_SIMPLE","-->" + splits[index-1]);
+            }
+            Log.e("URL_SIMPLE","FInal : " + concat_paths);
         }
         adapter.setData(paths);
     }
@@ -111,18 +128,16 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         location_user.setText(corrdenadas);
     }
 
-    private void beginUploadInBackground(String filePath) {
-        if (filePath == null) {
+    private void beginUploadInBackground(ArrayList<String> filePaths) {
+        if (filePaths == null) {
             Toast.makeText(getContext(), "Could not find the filepath of the selected file",
                     Toast.LENGTH_LONG).show();
             return;
         }
-        File file = new File(filePath);
         Context context = getContext().getApplicationContext();
         Intent intent = new Intent(context, MyService.class);
-        intent.putExtra(MyService.INTENT_KEY_NAME, file.getName());
+        intent.putStringArrayListExtra(MyService.INTENT_KEY_NAME, filePaths);
         intent.putExtra(MyService.INTENT_TRANSFER_OPERATION, MyService.TRANSFER_OPERATION_UPLOAD);
-        intent.putExtra(MyService.INTENT_FILE, file);
         context.startService(intent);
         listener.onImageProfileUpdated();
     }
