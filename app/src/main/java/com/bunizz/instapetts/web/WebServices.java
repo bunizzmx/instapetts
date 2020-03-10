@@ -4,6 +4,7 @@ import android.provider.ContactsContract;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.web.responses.ResponsePost;
+import com.bunizz.instapetts.web.responses.ResponseTips;
 import com.bunizz.instapetts.web.responses.SimpleResponse;
 
 import java.util.List;
@@ -45,4 +46,8 @@ public interface WebServices {
     // Delete note
     @DELETE("notes/{id}")
     Completable deleteNote(@Path("id") int noteId);
+
+
+    @GET("beta_posts/tips")
+    Single<ResponseTips> getTips();
 }

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.beans.TipsBean;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
 import com.bunizz.instapetts.fragments.post.adapters.GaleryAdapter;
 import com.bunizz.instapetts.fragments.tips.adapters.TipsAdapter;
@@ -27,14 +28,14 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FragmentTips extends Fragment {
+public class FragmentTips extends Fragment implements  TipsContract.View {
     @BindView(R.id.list_tips)
     RecyclerView list_tips;
 
     change_instance listener;
     changue_fragment_parameters_listener listener_change;
     TipsAdapter adapter;
-
+    TipsPresenter presenter;
     ArrayList<Object> data = new ArrayList<>();
 
     public static FragmentTips newInstance() {
@@ -44,12 +45,9 @@ public class FragmentTips extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        data.add(new HistoriesBean());
-        data.add(new PostBean());
-        data.add(new PostBean());
-        data.add(new PostBean());
         adapter = new TipsAdapter(getContext());
         adapter.setListener((type_fragment, data) -> listener_change.change_fragment_parameter(type_fragment,data));
+        presenter = new TipsPresenter(this,getContext());
     }
 
     @Nullable
@@ -64,6 +62,8 @@ public class FragmentTips extends Fragment {
         ButterKnife.bind(this, view);
         list_tips.setLayoutManager(new LinearLayoutManager(getContext()));
         list_tips.setAdapter(adapter);
+        presenter.getTips();
+
     }
 
 
@@ -72,6 +72,13 @@ public class FragmentTips extends Fragment {
         super.onAttach(context);
         listener= (change_instance) context;
         listener_change= (changue_fragment_parameters_listener) context;
+    }
+
+    @Override
+    public void showTips(ArrayList<TipsBean> tips_list) {
+        ArrayList<Object> to_object_data = new ArrayList<>();
+        to_object_data.addAll(tips_list);
+        adapter.setData(to_object_data);
     }
 }
 
