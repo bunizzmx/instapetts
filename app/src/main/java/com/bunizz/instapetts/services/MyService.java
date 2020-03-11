@@ -37,18 +37,18 @@ public class MyService extends Service {
     private TransferUtility transferUtility;
 
     public final static String INTENT_KEY_NAME = "key";
-    public  final static String INTENT_FILE = "file";
     public final static String INTENT_TRANSFER_OPERATION = "transferOperation";
-
     public final static String TRANSFER_OPERATION_UPLOAD = "upload";
-    public final static String TRANSFER_OPERATION_DOWNLOAD = "download";
     File file;
     private final static String TAG = MyService.class.getSimpleName();
-   public static  NotificationManager notificationManager;
-    int PROGRESS_MAX = 100;
+    public static  NotificationManager notificationManager;
+    public static int TOTAL_LENGTH_ARCHIVES = 0;
+    public static int TOTAL_PERCENTAGE= 0;
     int PROGRESS_CURRENT = 0;
     public  static int notificationId = 1;
     public  static  NotificationCompat.Builder mBuilder=null;
+    public static int INDEX_OF_COMPLETE=0;
+    public static int SIZE_OF_FILES=0;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -98,6 +98,7 @@ public class MyService extends Service {
 
         final ArrayList<String> key = intent.getStringArrayListExtra(INTENT_KEY_NAME);
         TransferObserver transferObserver;
+        SIZE_OF_FILES = key.size();
         for(int i =0;i<key.size();i++){
             file = new File(key.get(i));
             String splits[] = key.get(i).split("/");
@@ -105,6 +106,7 @@ public class MyService extends Service {
             String filename = splits[index -1];
             transferObserver = transferUtility.upload(filename, file);
             transferObserver.setTransferListener(new UploadListener());
+            TOTAL_LENGTH_ARCHIVES+= transferObserver.getBytesTotal() *2;
         }
 
 
@@ -138,9 +140,10 @@ public class MyService extends Service {
 
         @Override
         public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
-            float total = ((float) bytesCurrent / (float) bytesTotal) * 100;
+            TOTAL_PERCENTAGE +=bytesCurrent;
+            Log.e("PROGRESO_SUBIDA","-->" + TOTAL_PERCENTAGE + "/"  + TOTAL_LENGTH_ARCHIVES);
+            float total = ((float) TOTAL_PERCENTAGE / (float) TOTAL_LENGTH_ARCHIVES) * 100;
             int porcentaje = (int) total;
-            Log.e("PROGRESO_SUBIDA","-->" + porcentaje);
             mBuilder.setContentText("Progreso " + porcentaje + "%")
                     .setProgress(100,porcentaje,false);
             notificationManager.notify(notificationId, mBuilder.build());
@@ -148,9 +151,17 @@ public class MyService extends Service {
 
         @Override
         public void onStateChanged(int id, TransferState state) {
-            mBuilder.setContentText("COMPLETADO");
-            notificationManager.notify(notificationId, mBuilder.build());
-            App.getInstance().vibrate();
+            if(state == TransferState.COMPLETED){
+                INDEX_OF_COMPLETE ++;
+                if(INDEX_OF_COMPLETE == SIZE_OF_FILES){
+                    mBuilder.setProgress(100,100,false);
+                    mBuilder.setContentText("COMPLETADO");
+                    notificationManager.notify(notificationId, mBuilder.build());
+                    App.getInstance().vibrate();
+                }
+            }
+
+
         }
     }
 

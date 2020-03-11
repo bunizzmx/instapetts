@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.FragmentElement;
@@ -138,7 +139,7 @@ public class FragmentPickerVideo extends Fragment implements  FeedContract.View,
 
 
     @Override
-    public void show_feed(ArrayList<PostBean> data) {
+    public void show_feed(ArrayList<PostBean> data,ArrayList<HistoriesBean> historiesBeans) {
 
     }
 

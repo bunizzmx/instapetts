@@ -15,13 +15,29 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.camera_history.CameraHistoryActivity;
+import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.utils.HistoryView.StoryPlayer;
 import com.bunizz.instapetts.utils.ImagenCircular;
+
+import java.util.ArrayList;
 
 
 public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     Context context;
+    ArrayList<HistoriesBean> historiesBeans = new ArrayList<>();
+
+    public ArrayList<HistoriesBean> getHistoriesBeans() {
+        return historiesBeans;
+    }
+
+    public void setHistoriesBeans(ArrayList<HistoriesBean> historiesBeans) {
+        if(historiesBeans!=null) {
+            this.historiesBeans.add(new HistoriesBean());
+            this.historiesBeans.addAll(historiesBeans);
+            notifyDataSetChanged();
+        }
+    }
 
     public FeedAdapterHistories(Context context) {
         this.context = context;
@@ -37,8 +53,8 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         FeedHistoriesHolder h =(FeedHistoriesHolder)holder;
-        //Glide.with(context).load("https://firebasestorage.googleapis.com/v0/b/melove-principal/o/C18%2F15cb3831f0b9426c484d380f0ab1afac.jpg?alt=media&token=042d5974-e96c-4bcc-9fa2-f657fe2167af").into(h.image_pet_history);
-
+        if(position!=0)
+        Glide.with(context).load(historiesBeans.get(position).getUrl_photo_pet()).into(h.image_pet_history);
         if(position == 0){
             h.image_pet_history.setStroke_separate(false);
             h.image_pet_history.setBorderColor(Color.WHITE);
@@ -62,7 +78,7 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
-        return 10;
+        return historiesBeans.size();
     }
 
     public class FeedHistoriesHolder extends RecyclerView.ViewHolder{

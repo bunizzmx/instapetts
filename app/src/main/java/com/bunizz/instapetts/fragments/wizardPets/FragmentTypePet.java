@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.beans.RazaBean;
 import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.fragments.wizardPets.adapters.TypePetsAdapter;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FragmentTypePet extends Fragment {
+public class FragmentTypePet extends Fragment{
 
     @BindView(R.id.list_types_pet)
     RecyclerView list_types_pet;
@@ -88,4 +89,6 @@ public class FragmentTypePet extends Fragment {
         super.onAttach(context);
         listener= (change_instance_wizard) context;
     }
+
+
 }

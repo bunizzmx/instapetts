@@ -94,10 +94,11 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     }
 
     @Override
-    public void show_feed(ArrayList<PostBean> data) {
+    public void show_feed(ArrayList<PostBean> data,ArrayList<HistoriesBean> data_stories) {
         refresh_feed.setRefreshing(false);
         ArrayList<Object> data_object= new ArrayList<>();
         data_object.addAll(data);
+        feedAdapter.setHistoriesBeans(data_stories);
         feedAdapter.addData(data_object);
     }
 }

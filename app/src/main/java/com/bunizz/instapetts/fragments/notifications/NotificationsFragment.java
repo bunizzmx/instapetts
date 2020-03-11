@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
@@ -53,7 +54,7 @@ public class NotificationsFragment extends Fragment implements  FeedContract.Vie
 
 
     @Override
-    public void show_feed(ArrayList<PostBean> data) {
+    public void show_feed(ArrayList<PostBean> data,ArrayList<HistoriesBean> historiesBeans) {
 
     }
 }

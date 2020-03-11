@@ -454,7 +454,7 @@ public class Main extends AppCompatActivity implements change_instance, changue_
 
     private void repaint_nav(int id ){
         icon_tips.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_food_pet));
-        icon_profile_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_hand_pet));
+        icon_profile_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_hand_pet_white));
         icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_add_image));
         icon_feed_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_home_pet));
         icon_search_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_search));

@@ -3,6 +3,7 @@ package com.bunizz.instapetts.fragments.tips;
 import android.content.Context;
 import android.util.Log;
 
+import com.bunizz.instapetts.beans.AutenticateBean;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
@@ -30,8 +31,11 @@ public class TipsPresenter implements TipsContract.Presenter {
 
     @Override
     public void getTips() {
+        AutenticateBean autenticateBean = new AutenticateBean();
+        autenticateBean.setName_user("DEMO");
+        autenticateBean.setToken("xxxx");
         disposable.add(
-                apiService.getTips()
+                apiService.getTips(autenticateBean)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableSingleObserver<ResponseTips>() {

@@ -59,9 +59,11 @@
            </RelativeLayout>
     </RelativeLayout>
     <RelativeLayout
+        android:minHeight="300dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <ImageView
+        android:src="@drawable/ic_hand_pet_preload"
         android:id="@+id/single_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
@@ -69,7 +71,6 @@
         android:id="@+id/root_multiple_image"
         android:layout_width="match_parent"
         android:layout_height="450dp">
-
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/list_fotos"
             android:layout_width="match_parent"

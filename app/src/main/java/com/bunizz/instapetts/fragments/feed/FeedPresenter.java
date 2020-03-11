@@ -4,6 +4,7 @@ import android.content.Context;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import com.bunizz.instapetts.beans.AutenticateBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
@@ -38,15 +39,18 @@ public class FeedPresenter implements FeedContract.Presenter {
 
     @Override
     public void get_feed() {
+        AutenticateBean autenticateBean = new AutenticateBean();
+        autenticateBean.setName_user("DEMO");
+        autenticateBean.setToken("xxxx");
         disposable.add(
-                apiService.fetchAllNotes()
+                apiService.getPosts(autenticateBean)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableSingleObserver<ResponsePost>() {
                             @Override
                             public void onSuccess(ResponsePost responsePost) {
                                 Log.e("NUMBER_POSTS","-->" + responsePost.getList_posts().size());
-                                mView.show_feed(responsePost.getList_posts());
+                                mView.show_feed(responsePost.getList_posts(),responsePost.getList_stories());
                             }
                             @Override
                             public void onError(Throwable e) {

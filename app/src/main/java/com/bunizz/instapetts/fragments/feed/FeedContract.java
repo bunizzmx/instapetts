@@ -1,5 +1,6 @@
 package com.bunizz.instapetts.fragments.feed;
 
+import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 
@@ -13,6 +14,6 @@ public interface FeedContract {
     }
 
     interface View{
-        void show_feed(ArrayList<PostBean> data);
+        void show_feed(ArrayList<PostBean> data, ArrayList<HistoriesBean> data_stories);
     }
 }

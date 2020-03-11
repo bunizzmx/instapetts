@@ -39,6 +39,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Context context;
     ArrayList<String> current_images = new ArrayList<>();
     ArrayList<Object> data = new ArrayList<>();
+    ArrayList<HistoriesBean> historiesBeans = new ArrayList<>();
     changue_fragment_parameters_listener listener;
     long timeWhenDown =0;
     public changue_fragment_parameters_listener getListener() {
@@ -57,6 +58,13 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.data.addAll(data);
     }
 
+    public ArrayList<HistoriesBean> getHistoriesBeans() {
+        return historiesBeans;
+    }
+
+    public void setHistoriesBeans(ArrayList<HistoriesBean> historiesBeans) {
+        this.historiesBeans = historiesBeans;
+    }
 
     public ArrayList<Object> getData() {
         return data;
@@ -67,6 +75,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void addData(ArrayList<Object> data){
+        this.data.clear();
+        this.data.add(new HistoriesBean());
         this.data.addAll(data);
         notifyDataSetChanged();
     }
@@ -118,6 +128,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 FeedAdapterHistories adapterHistories = new FeedAdapterHistories(context);
                 h.list_histories.setAdapter(adapterHistories);
                 h.list_histories.setLayoutManager(new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false));
+                adapterHistories.setHistoriesBeans(historiesBeans);
                 break;
             default:
                 FeedHolder f = (FeedHolder)holder;

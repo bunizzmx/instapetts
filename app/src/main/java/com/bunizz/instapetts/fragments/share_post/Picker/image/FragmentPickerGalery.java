@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.FragmentElement;
@@ -158,10 +159,7 @@ public class FragmentPickerGalery  extends Fragment implements  FeedContract.Vie
     }
 
 
-    @Override
-    public void show_feed(ArrayList<PostBean> data) {
 
-    }
 
     @Override
     public void onClick(View view) {
@@ -273,4 +271,8 @@ public class FragmentPickerGalery  extends Fragment implements  FeedContract.Vie
         listener= (changue_fragment_parameters_listener) context;
     }
 
+    @Override
+    public void show_feed(ArrayList<PostBean> data, ArrayList<HistoriesBean> data_stories) {
+
+    }
 }

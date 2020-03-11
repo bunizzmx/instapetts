@@ -41,7 +41,7 @@ public class MainLoginPresenter implements  MainLoginContract.Presenter {
 
     @Override
     public void registerUser(PetBean user) {
-        disposable.add(
+        /*disposable.add(
                 apiService
                         .register(user)
                         .subscribeOn(Schedulers.io())
@@ -55,7 +55,7 @@ public class MainLoginPresenter implements  MainLoginContract.Presenter {
                             public void onError(Throwable e) {
                                 mView.loginError();
                             }
-                        }));
+                        }));*/
     }
 
     @Override

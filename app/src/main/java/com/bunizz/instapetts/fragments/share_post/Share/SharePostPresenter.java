@@ -5,6 +5,7 @@ import android.content.Context;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import com.bunizz.instapetts.beans.AutenticateBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
@@ -44,7 +45,10 @@ public class SharePostPresenter implements SharePostContract.Presenter {
 
     @SuppressLint("CheckResult")
     void get_algo(){
-        apiService.fetchAllNotes()
+        AutenticateBean autenticateBean = new AutenticateBean();
+        autenticateBean.setName_user("DEMO");
+        autenticateBean.setToken("xxxx");
+        apiService.getPosts(autenticateBean)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<ResponsePost>() {
