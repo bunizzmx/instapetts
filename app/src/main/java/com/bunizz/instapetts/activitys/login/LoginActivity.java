@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 
 import com.bunizz.instapetts.App;
@@ -19,9 +21,25 @@ import com.bunizz.instapetts.fragments.login.login.FragmentLogin;
 import com.bunizz.instapetts.fragments.login.sigin.FragmentSigin;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.login_listener;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Stack;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -38,6 +56,9 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     private FragmentElement mCurrentFragment;
     private FragmentElement mOldFragment;
 
+    private GoogleSignInClient mGoogleSignInClient;
+    private FirebaseAuth mAuth;
+    private static final int RC_SIGN_IN = 9001;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +67,13 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         stack_sigin = new Stack<>();
         stack_main_login = new Stack<>();
         stack_login = new Stack<>();
+        mAuth = FirebaseAuth.getInstance();
         setupFirstFragment();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
     public void changeStatusBarColor(int color) {
@@ -183,6 +210,106 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         }
     }
 
+    @Override
+    public void loginWithGmail() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
 
+    @Override
+    public void loginWithFacebook() {
+
+    }
+
+    @Override
+    public void loginWithEmail(String correo, String password) {
+
+        mAuth.createUserWithEmailAndPassword(correo, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            //Log.d(TAG, "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            user.sendEmailVerification()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Log.d("LOG_IDENTITY", "Email sent.");
+                                            }
+                                        }
+                                    });
+                            //updateUI(user);
+                        } else {
+                            Log.d("AUJHFKJH", "createUserWithEmail:success" + task.getException().getMessage());
+                            // If sign in fails, display a message to the user.
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            //updateUI(null);
+                        }
+
+                        // ...
+                    }
+                });
+
+       /* FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user.updateEmail(correo)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("LOG_IDENTITY", "User email address updated.");
+                        }
+                    }
+                });
+        */
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
+    }
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            firebaseAuthWithGoogle(account);
+
+            Log.e("ERROR_LOGIN","-->TODO BIEN"  );
+        } catch (ApiException e) {
+            Log.e("ERROR_LOGIN","-->" + e.getMessage());
+            // updateUI(null);
+        }
+    }
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        App.write("UUID",user.getUid());
+                        Log.e("ERROR_LOGIN","-->TODO BIEN" +user.getUid());
+                        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
+                            String token = instanceIdResult.getToken();
+                            App.write("TOKEN",token);
+                            Log.e("ERROR_LOGIN","-->TODO BIEN" +token);
+                        });
+                    } else {
+                        App.sonar(3);
+                        Toast.makeText(LoginActivity.this, "Intente de nuevo", Toast.LENGTH_LONG).show();
+
+                    }
+                });
+    }
 
 }

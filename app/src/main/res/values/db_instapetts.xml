@@ -8,5 +8,6 @@
     <string name="propietary" translatable="false">CREATE TABLE IF NOT EXISTS propietary (id INTEGER AUTO INCREMENT PRIMARY KEY ,id_propietary TEXT,name_propietary TEXT,
     descripcion TEXT,url_photo TEXT,rating REAL,followers INT,posts INT)</string>
     <string name="table_razas" translatable="false">CREATE TABLE IF NOT EXISTS razas (id INTEGER AUTO INCREMENT PRIMARY KEY , name_eng TEXT, nam_esp TEXT,id_type_pet INT)</string>
-
+    <string name="table_saved_posts">CREATE TABLE saved_posts(id INT INTEGER AUTO INCREMENT PRIMARY KEY,id_from_web INT, name_pet TEXT,name_user TEXT,urls_posts TEXT, url_photo_user TEXT, description TEXT,date_post TEXT)</string>
+    <string name="table_liked_post">CREATE TABLE liked_posts(id_from_web INT)</string>
 </resources>

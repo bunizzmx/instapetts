@@ -111,10 +111,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
+            android:id="@+id/save_posts"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-           android:layout_alignParentRight="true"
-            android:src="@drawable/ic_save_favorite"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_estrella"
             android:layout_width="25dp"
             android:layout_height="25dp"/>
         <ImageView

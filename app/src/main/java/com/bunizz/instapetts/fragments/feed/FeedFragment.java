@@ -23,6 +23,8 @@ import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.login.login.FragmentLogin;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.postsListener;
+import com.bunizz.instapetts.web.parameters.PostActions;
 
 import java.util.ArrayList;
 
@@ -65,6 +67,32 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         data.add(new HistoriesBean());
         feedAdapter = new FeedAdapter(getContext(),data);
         feedAdapter.setListener((type_fragment, data) -> listener.change(type_fragment));
+        feedAdapter.setListener_post(new postsListener() {
+            @Override
+            public void onLike(int id_post) {
+                PostActions postActions = new PostActions();
+                postActions.setId_post(id_post);
+                postActions.setAcccion("LIKE");
+                postActions.setId_usuario("MYIDXXXX");
+                postActions.setValor("1");
+                mPresenter.likePost(postActions);
+            }
+
+            @Override
+            public void onFavorite(int id_post,PostBean postBean) {
+                PostActions postActions = new PostActions();
+                postActions.setId_post(id_post);
+                postActions.setAcccion("FAVORITE");
+                postActions.setId_usuario("MYIDXXXX");
+                postActions.setValor("1");
+                mPresenter.saveFavorite(postActions,postBean);
+            }
+
+            @Override
+            public void onDisfavorite(int id_post) {
+
+            }
+        });
         mPresenter = new FeedPresenter(this, getContext());
         mPresenter.get_feed();
     }

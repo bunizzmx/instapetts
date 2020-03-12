@@ -69,7 +69,7 @@
         android:textColor="@color/white"
         android:layout_marginBottom="20dp"
         android:background="@drawable/button_facebook"
-        android:id="@+id/change_to_login"
+        android:id="@+id/login_with_facebook"
         android:text="Continar con Facebook"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
@@ -77,7 +77,7 @@
         android:elevation="4dp"
         android:textColor="#f00"
         android:background="@drawable/button_gmail"
-        android:id="@+id/change_to_signin"
+        android:id="@+id/login_with_gmail"
         android:text="Continuar con Gmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
@@ -92,6 +92,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/change_to_login"
         android:padding="10dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"

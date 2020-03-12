@@ -30,6 +30,13 @@ public class PostBean {
     @Expose
     String date_post;
 
+    boolean saved;
+    boolean liked;
+
+    @SerializedName("id_post")
+    @Expose
+    int id_post_from_web;
+
 
     public PostBean() {
     }
@@ -40,6 +47,30 @@ public class PostBean {
         this.name_user = name_user;
         this.url_photo_user = url_photo_user;
         this.description = description;
+    }
+    public PostBean(String urls_posts, String name_pet, String name_user, String url_photo_user, String description,int id_post_from_web) {
+        this.urls_posts = urls_posts;
+        this.name_pet = name_pet;
+        this.name_user = name_user;
+        this.url_photo_user = url_photo_user;
+        this.description = description;
+        this.id_post_from_web =id_post_from_web;
+    }
+
+    public int getId_post_from_web() {
+        return id_post_from_web;
+    }
+
+    public void setId_post_from_web(int id_post_from_web) {
+        this.id_post_from_web = id_post_from_web;
+    }
+
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
     }
 
     public String getDate_post() {
@@ -88,6 +119,14 @@ public class PostBean {
 
     public void setName_user(String name_user) {
         this.name_user = name_user;
+    }
+
+    public boolean isSaved() {
+        return saved;
+    }
+
+    public void setSaved(boolean saved) {
+        this.saved = saved;
     }
 }
 

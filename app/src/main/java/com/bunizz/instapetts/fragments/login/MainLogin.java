@@ -10,6 +10,7 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.login.sigin.FragmentSigin;
 import com.bunizz.instapetts.listeners.change_instance;
+import com.bunizz.instapetts.listeners.login_listener;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,17 +22,32 @@ public class MainLogin extends Fragment implements  MainLoginContract.View{
 
     change_instance listener;
     MainLoginPresenter presenter;
+    login_listener listener_login;
+
+    @OnClick(R.id.login_with_facebook)
+    void login_with_facebook()
+    {
+        listener_login.loginWithFacebook();
+       // listener.change(FragmentElement.INSTANCE_LOGIN);
+    }
+
+    @OnClick(R.id.login_with_gmail)
+    void login_with_gmail()
+    {
+        listener_login.loginWithGmail();
+       // listener.change(FragmentElement.INSTANCE_SIGIN);
+    }
+
+    @OnClick(R.id.change_to_create_account)
+    void change_to_create_account()
+    {
+       listener.change(FragmentElement.INSTANCE_SIGIN);
+    }
 
     @OnClick(R.id.change_to_login)
     void change_to_login()
     {
         listener.change(FragmentElement.INSTANCE_LOGIN);
-    }
-
-    @OnClick(R.id.change_to_signin)
-    void change_to_signin()
-    {
-        listener.change(FragmentElement.INSTANCE_SIGIN);
     }
 
     public static MainLogin newInstance() {
@@ -61,6 +77,7 @@ public class MainLogin extends Fragment implements  MainLoginContract.View{
     public void onAttach(Context context) {
         super.onAttach(context);
         listener= (change_instance) context;
+        listener_login =(login_listener)context;
     }
 
     @Override
@@ -82,5 +99,6 @@ public class MainLogin extends Fragment implements  MainLoginContract.View{
     public void loginError() {
 
     }
+
 }
 

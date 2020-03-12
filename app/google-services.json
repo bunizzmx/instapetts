@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "216060286955",
+    "firebase_url": "https://instapetts.firebaseio.com",
+    "project_id": "instapetts",
+    "storage_bucket": "instapetts.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216060286955:android:e848983a0116446ec0ebae",
+        "android_client_info": {
+          "package_name": "com.bunizz.instapetts"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "216060286955-674macuhpb903qh9ahjlbjrujpmc24i1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bunizz.instapetts",
+            "certificate_hash": "9d3b11293a488a545e79f9c9e50e7b7b5b379e72"
+          }
+        },
+        {
+          "client_id": "216060286955-lid1lii4et6u4uudt8bv6esdeq0gnnas.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqH-bI5Zpi8NaYETkIjuCAqO70xJ9wMqQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "216060286955-lid1lii4et6u4uudt8bv6esdeq0gnnas.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

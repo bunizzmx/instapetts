@@ -47,6 +47,8 @@ public class DataSQLite extends SQLiteOpenHelper {
         db.execSQL(context.getString(R.string.pets));
         db.execSQL(context.getString(R.string.propietary));
         db.execSQL(context.getString(R.string.table_razas));
+        db.execSQL(context.getString(R.string.table_saved_posts));
+        db.execSQL(context.getString(R.string.table_liked_post));
 
     }
 
