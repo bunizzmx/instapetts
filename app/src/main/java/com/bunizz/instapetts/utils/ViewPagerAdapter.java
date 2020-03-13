@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
+import com.bunizz.instapetts.R;
 
 import java.util.ArrayList;
 
@@ -66,7 +67,7 @@ public class ViewPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         ImageView imageView = new ImageView(context);
-        Glide.with(context).load(image_urls.get(position)).into(imageView);
+        Glide.with(context).load(image_urls.get(position)).placeholder(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(imageView);
         container.addView(imageView);
         return  imageView;
     }

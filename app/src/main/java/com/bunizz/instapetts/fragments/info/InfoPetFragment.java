@@ -50,5 +50,10 @@ public class InfoPetFragment extends Fragment implements  FeedContract.View{
     public void show_feed(ArrayList<PostBean> data,ArrayList<HistoriesBean> historiesBeans) {
 
     }
+
+    @Override
+    public void peticion_error() {
+
+    }
 }
 

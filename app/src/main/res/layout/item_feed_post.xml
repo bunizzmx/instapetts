@@ -62,11 +62,11 @@
         android:minHeight="300dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
     <ImageView
-        android:src="@drawable/ic_hand_pet_preload"
         android:id="@+id/single_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="450dp"/>
     <RelativeLayout
         android:id="@+id/root_multiple_image"
         android:layout_width="match_parent"
@@ -103,6 +103,12 @@
             android:layout_height="90dp"
             app:icon="@drawable/ic_hand_pet"
             app:doubleTapIn="200" />
+        <ProgressBar
+            android:id="@+id/progres_image"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_width="25dp"
+            android:layout_height="25dp"/>
     </RelativeLayout>
     <RelativeLayout
         android:layout_marginTop="10dp"

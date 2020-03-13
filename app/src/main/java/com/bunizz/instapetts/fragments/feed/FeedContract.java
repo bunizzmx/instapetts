@@ -18,5 +18,6 @@ public interface FeedContract {
 
     interface View{
         void show_feed(ArrayList<PostBean> data, ArrayList<HistoriesBean> data_stories);
+        void peticion_error();
     }
 }

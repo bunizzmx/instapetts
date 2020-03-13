@@ -10,35 +10,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <com.bunizz.instapetts.utils.ImagenCircular
-            android:id="@+id/image_userd_edit"
+            android:id="@+id/image_pet_edit"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_hand_pet_preload"
+            android:src="@drawable/perro_demo"
             android:layout_width="120dp"
             android:layout_height="120dp"/>
         <TextView
-            android:id="@+id/change_photo"
+            android:id="@+id/change_photo_pet"
             android:fontFamily="@font/avenir_b"
             android:padding="20dp"
             android:layout_gravity="center_horizontal"
-            android:text="Cambiar foto "
+            android:text="Elegir foto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <TextView
-                android:id="@+id/name_user"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/avenir_b"
-                android:textColor="@color/black"
-                android:text="NAME USER"
-                android:textSize="24dp"
-                android:layout_centerHorizontal="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
             <androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView
-                android:id="@+id/configure_name"
+                android:id="@+id/configure_name_pet"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
                 android:lines="2"
@@ -47,7 +36,7 @@
                 android:layout_marginLeft="20dp"
                 android:inputType="textMultiLine"
                 android:fontFamily="@font/avenir_b"
-                android:hint="Escribe tu nombre.."
+                android:hint="Nombre de tu mascota..."
                 android:textAlignment="center"
                 android:paddingRight="20dp"
                 android:paddingLeft="20dp"
@@ -62,7 +51,7 @@
 
 
         <androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView
-            android:id="@+id/descripcion_user"
+            android:id="@+id/descripcion_pet"
             android:lines="5"
             android:maxLines="5"
             android:layout_marginRight="20dp"
@@ -70,7 +59,7 @@
             android:inputType="textMultiLine"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/avenir_b"
-            android:hint="Escribe algo sobre ti..."
+            android:hint="Que le gusta a tu mascota?"
             android:paddingRight="20dp"
             android:paddingLeft="20dp"
             android:paddingBottom="5dp"
@@ -79,20 +68,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <Button
-            android:id="@+id/save_info_perfil"
-            android:textAllCaps="false"
-            android:paddingLeft="40dp"
-            android:paddingRight="40dp"
-            android:textColor="@color/white"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/button_follow"
-            android:layout_gravity="center_horizontal"
-            android:text="Guardar"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
-    </LinearLayout>
 
+    </LinearLayout>
+    <Button
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/finalice_pet"
+        android:textAllCaps="false"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:textColor="@color/white"
+       android:layout_marginBottom="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/button_follow"
+        android:layout_gravity="center_horizontal"
+        android:text="Finalizar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/back_to_main"

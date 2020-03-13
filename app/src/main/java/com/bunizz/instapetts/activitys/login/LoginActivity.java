@@ -1,5 +1,6 @@
 package com.bunizz.instapetts.activitys.login;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
@@ -15,6 +16,9 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.Splash;
 import com.bunizz.instapetts.activitys.main.Main;
+import com.bunizz.instapetts.activitys.share_post.ShareActivity;
+import com.bunizz.instapetts.beans.UserBean;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.login.MainLogin;
 import com.bunizz.instapetts.fragments.login.login.FragmentLogin;
@@ -28,6 +32,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -36,6 +41,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.Stack;
 
@@ -47,7 +53,7 @@ import androidx.fragment.app.FragmentManager;
 
 import static com.bunizz.instapetts.constantes.PREFERENCES.IS_LOGUEDD;
 
-public class LoginActivity extends AppCompatActivity implements change_instance, login_listener {
+public class LoginActivity extends AppCompatActivity implements change_instance, login_listener,LoginContract.View {
 
     private Stack<FragmentElement> stack_login;
     private Stack<FragmentElement> stack_sigin;
@@ -55,10 +61,12 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     private FragmentElement mCurrentFragment;
     private FragmentElement mOldFragment;
-
+    LoginPresenter presenter;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
     private static final int RC_SIGN_IN = 9001;
+    RxPermissions rxPermissions ;
+    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +82,8 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        rxPermissions = new RxPermissions(this);
+        presenter = new LoginPresenter(this,this);
     }
 
     public void changeStatusBarColor(int color) {
@@ -200,27 +210,33 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     @Override
     public void onLoginSuccess(boolean success) {
-        if(App.read("IS_NEW_USER",false)){
 
-        }else{
-            App.write(IS_LOGUEDD,true);
-            Intent i ;
-            i = new Intent(LoginActivity.this, Main.class);
-            startActivity(i);
-        }
     }
 
     @Override
     public void loginWithGmail() {
+        permision_location();
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     @Override
     public void loginWithFacebook() {
-
+        permision_location();
     }
 
+
+    @SuppressLint("CheckResult")
+    void permision_location(){
+        rxPermissions
+                .request(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                .subscribe(granted -> {
+                    if (granted) {
+                        getLocation();
+                    }
+                });
+    }
     @Override
     public void loginWithEmail(String correo, String password) {
 
@@ -254,6 +270,8 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                     }
                 });
 
+        permision_location();
+
        /* FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         user.updateEmail(correo)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -281,9 +299,9 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
+            permision_location();
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             firebaseAuthWithGoogle(account);
-
             Log.e("ERROR_LOGIN","-->TODO BIEN"  );
         } catch (ApiException e) {
             Log.e("ERROR_LOGIN","-->" + e.getMessage());
@@ -297,12 +315,13 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
-                        App.write("UUID",user.getUid());
+                        App.write(PREFERENCES.UUID,user.getUid());
                         Log.e("ERROR_LOGIN","-->TODO BIEN" +user.getUid());
                         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
                             String token = instanceIdResult.getToken();
-                            App.write("TOKEN",token);
+                            App.write(PREFERENCES.TOKEN,token);
                             Log.e("ERROR_LOGIN","-->TODO BIEN" +token);
+                            generate_user_bean();
                         });
                     } else {
                         App.sonar(3);
@@ -312,4 +331,46 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                 });
     }
 
+    void generate_user_bean(){
+        UserBean userBean = new UserBean();
+        userBean.setDescripcion("");
+        userBean.setIds_pets("");
+        userBean.setName_user("");
+        userBean.setLat(App.read(PREFERENCES.LAT,(float)0));
+        userBean.setLon(App.read(PREFERENCES.LON,(float)0));
+        userBean.setToken(App.read(PREFERENCES.TOKEN,"INVALID"));
+        userBean.setTarget("LOGIN");
+        userBean.setUuid(App.read(PREFERENCES.UUID,"INVALID"));
+        presenter.RegisterUser(userBean);
+    }
+
+
+    void getLocation(){
+        LocationServices.getFusedLocationProviderClient(LoginActivity.this).getLastLocation().addOnSuccessListener(location -> {
+            if(location!=null){
+                Log.e("LOCALIZACION","-->" + location.getLatitude()  + "/" + location.getLongitude());
+                if(location!=null){
+                    App.write(PREFERENCES.LAT,(float)location.getLatitude());
+                    App.write(PREFERENCES.LON,(float)location.getLongitude());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void registerCompleted() {
+        if(App.read("IS_NEW_USER",false)){
+
+        }else{
+            App.write(IS_LOGUEDD,true);
+            Intent i ;
+            i = new Intent(LoginActivity.this, Main.class);
+            startActivity(i);
+        }
+    }
+
+    @Override
+    public void registerError() {
+
+    }
 }

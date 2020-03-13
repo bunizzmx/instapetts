@@ -2,27 +2,35 @@ package com.bunizz.instapetts.fragments.feed;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.postsListener;
 import com.bunizz.instapetts.utils.Dots.DotsIndicator;
 import com.bunizz.instapetts.utils.ImagenCircular;
@@ -43,6 +51,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     ArrayList<HistoriesBean> historiesBeans = new ArrayList<>();
     changue_fragment_parameters_listener listener;
     postsListener listener_post;
+    open_camera_histories_listener listener_open_h;
 
     public postsListener getListener_post() {
         return listener_post;
@@ -50,6 +59,14 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void setListener_post(postsListener listener_post) {
         this.listener_post = listener_post;
+    }
+
+    public open_camera_histories_listener getListener_open_h() {
+        return listener_open_h;
+    }
+
+    public void setListener_open_h(open_camera_histories_listener listener_open_h) {
+        this.listener_open_h = listener_open_h;
     }
 
     public changue_fragment_parameters_listener getListener() {
@@ -136,6 +153,11 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case TYPE_HISTORI:
                 HistoriesHolder h = (HistoriesHolder)holder;
                 FeedAdapterHistories adapterHistories = new FeedAdapterHistories(context);
+                adapterHistories.setListener(() -> {
+                    if(listener_open_h!=null){
+                        listener_open_h.open();
+                    }
+                });
                 h.list_histories.setAdapter(adapterHistories);
                 h.list_histories.setLayoutManager(new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false));
                 adapterHistories.setHistoriesBeans(historiesBeans);
@@ -144,6 +166,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 FeedHolder f = (FeedHolder)holder;
                 PostBean data_parsed = (PostBean) data.get(position);
                 if(is_multiple(data_parsed.getUrls_posts())) {
+                    f.progres_image.setVisibility(View.GONE);
                     f.root_multiple_image.setVisibility(View.VISIBLE);
                     f.single_image.setVisibility(View.GONE);
                     ViewPagerAdapter adapter = new ViewPagerAdapter(context);
@@ -155,7 +178,20 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }else{
                     f.root_multiple_image.setVisibility(View.GONE);
                     f.single_image.setVisibility(View.VISIBLE);
-                    Glide.with(context).load(data_parsed.getUrls_posts()).into(f.single_image);
+                    Glide.with(context).load(data_parsed.getUrls_posts()).addListener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            f.progres_image.setVisibility(View.GONE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            f.progres_image.setVisibility(View.GONE);
+                            return false;
+                        }
+                    }).into(f.single_image);
+
                 }
                 f.icon_like.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -225,6 +261,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         TextView date_post;
         DoubleTapLikeView layout_double_tap_like;
         ImageView save_posts;
+        ProgressBar progres_image;
         public FeedHolder(@NonNull View itemView) {
             super(itemView);
             root_preview_perfil_click = itemView.findViewById(R.id.root_preview_perfil_click);
@@ -239,6 +276,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             layout_double_tap_like = itemView.findViewById(R.id.layout_double_tap_like);
             icon_like = itemView.findViewById(R.id.icon_like);
             save_posts = itemView.findViewById(R.id.save_posts);
+            progres_image = itemView.findViewById(R.id.progres_image);
         }
     }
 

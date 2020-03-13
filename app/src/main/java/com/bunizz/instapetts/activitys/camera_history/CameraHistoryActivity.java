@@ -14,15 +14,18 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.login.LoginActivity;
 import com.bunizz.instapetts.activitys.main.Main;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.camera.CameraPreviewStoryFragment;
 import com.bunizz.instapetts.fragments.camera.CameraStoryt;
 import com.bunizz.instapetts.fragments.login.MainLogin;
 import com.bunizz.instapetts.fragments.login.login.FragmentLogin;
 import com.bunizz.instapetts.fragments.login.sigin.FragmentSigin;
+import com.bunizz.instapetts.fragments.share_post.Picker.image.FragmentPickerGalery;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.login_listener;
+import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.utils.ViewExtensionsKt;
 
 import java.util.Stack;
@@ -37,10 +40,11 @@ import butterknife.ButterKnife;
 import static com.bunizz.instapetts.constantes.PREFERENCES.IS_LOGUEDD;
 import static com.bunizz.instapetts.utils.ViewExtensionsKt.FLAGS_FULLSCREEN;
 
-public class CameraHistoryActivity extends AppCompatActivity implements  changue_fragment_parameters_listener {
+public class CameraHistoryActivity extends AppCompatActivity implements  changue_fragment_parameters_listener, uploads {
 
     private Stack<FragmentElement> stack_history_camera;
     private Stack<FragmentElement> stack_history_foto;
+    private Stack<FragmentElement> stack_history_picker_foto;
 
 
     private FragmentElement mCurrentFragment;
@@ -58,6 +62,7 @@ public class CameraHistoryActivity extends AppCompatActivity implements  changue
         changeStatusBarColor(R.color.white);
         stack_history_foto = new Stack<>();
         stack_history_camera = new Stack<>();
+        stack_history_picker_foto = new Stack<>();
         setupFirstFragment();
     }
 
@@ -92,6 +97,14 @@ public class CameraHistoryActivity extends AppCompatActivity implements  changue
         inflateFragment();
     }
 
+    private void change_to_picker(FragmentElement fragment) {
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            if(stack_history_picker_foto.size()<=0){stack_history_picker_foto.push(mCurrentFragment);}
+        }
+        inflateFragment();
+    }
+
 
     private void saveFragment() {
         mOldFragment = mCurrentFragment;
@@ -110,6 +123,13 @@ public class CameraHistoryActivity extends AppCompatActivity implements  changue
                 change_foto(new FragmentElement<>("", CameraPreviewStoryFragment.newInstance(), FragmentElement.INSTANCE_HISTORY_FOTO_PICKED),data);
             } else {
                 change_foto(stack_history_foto.pop(),data);
+            }
+
+        }else if(intanceType == FragmentElement.INSTANCE_PICKER_IMAGES) {
+            if (stack_history_picker_foto.size() == 0) {
+                change_to_picker(new FragmentElement<>("", FragmentPickerGalery.newInstance(), FragmentElement.INSTANCE_PICKER_IMAGES));
+            } else {
+                change_to_picker(stack_history_picker_foto.pop());
             }
 
         }
@@ -201,4 +221,21 @@ public class CameraHistoryActivity extends AppCompatActivity implements  changue
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
+    @Override
+    public void onImageProfileUpdated() {
+
+    }
+
+    @Override
+    public void setResultForOtherChanges(String url) {
+        Intent data = new Intent();
+        data.putExtra(BUNDLES.URI_FOTO,url);
+        setResult(RESULT_OK,data);
+        finish();
+    }
+
+    @Override
+    public void UpdateProfile(Bundle bundle) {
+
+    }
 }

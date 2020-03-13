@@ -49,6 +49,10 @@ public class MyService extends Service {
     public  static  NotificationCompat.Builder mBuilder=null;
     public static int INDEX_OF_COMPLETE=0;
     public static int SIZE_OF_FILES=0;
+    public static int TYPE_NOTIFICATION=0;
+    public static String TITLE="";
+    public static String TITLE_SUCCESS="";
+    public static String BODY="";
     @Override
     public void onCreate() {
         super.onCreate();
@@ -58,6 +62,20 @@ public class MyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        TYPE_NOTIFICATION = intent.getIntExtra("NOTIFICATION_TIPE",0);
+        if(TYPE_NOTIFICATION == 0) {
+            TITLE = "SUBIENDO POST";
+            TITLE_SUCCESS = "COMPLETADO";
+        }
+        else if(TYPE_NOTIFICATION == 1) {
+            TITLE_SUCCESS ="PERFIL ACTUALIZADO";
+            TITLE = "ACTUALIZANDO PERFIL";
+        }
+        else if(TYPE_NOTIFICATION == 1) {
+            TITLE_SUCCESS ="HISTORIA SUBIDA";
+            TITLE = "SUBIENDO HISTORIAS";
+        }
+
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_ONE_SHOT);
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         String channelId = "channel-01";
@@ -72,13 +90,13 @@ public class MyService extends Service {
         mBuilder = new NotificationCompat.Builder(getApplicationContext(), channelId);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mBuilder.setSmallIcon(R.mipmap.ic_launcher_foreground)
-                    .setContentTitle("Subiendo Post")
+                    .setContentTitle(TITLE)
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)
                     .setContentIntent(pendingIntent);
         }else {
             mBuilder.setSmallIcon(R.mipmap.ic_launcher_foreground)
-                    .setContentTitle("Subiendo Post")
+                    .setContentTitle(TITLE)
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)
                     .setContentIntent(pendingIntent);
@@ -155,7 +173,7 @@ public class MyService extends Service {
                 INDEX_OF_COMPLETE ++;
                 if(INDEX_OF_COMPLETE == SIZE_OF_FILES){
                     mBuilder.setProgress(100,100,false);
-                    mBuilder.setContentText("COMPLETADO");
+                    mBuilder.setContentTitle(TITLE_SUCCESS);
                     notificationManager.notify(notificationId, mBuilder.build());
                     App.getInstance().vibrate();
                 }

@@ -187,6 +187,10 @@ class CameraStoryt : Fragment() {
             bindCameraUseCases()
         }
         load_first_image()
+
+        open_galery_story.setOnClickListener {
+                listener!!.change_fragment_parameter(FragmentElement.INSTANCE_PICKER_IMAGES, null)
+        }
     }
 
     /**

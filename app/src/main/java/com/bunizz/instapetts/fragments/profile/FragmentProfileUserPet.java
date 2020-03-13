@@ -8,6 +8,7 @@ import android.text.GetChars;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,10 +22,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
@@ -32,6 +36,7 @@ import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
 import com.bunizz.instapetts.fragments.post.FragmentPostList;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.open_sheet_listener;
+import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.tabs.SlidingFragmentPagerAdapter;
 import com.bunizz.instapetts.utils.tabs.SlidingTabLayout;
 import com.bunizz.instapetts.utils.tabs.TabType;
@@ -52,6 +57,9 @@ public class FragmentProfileUserPet extends Fragment {
     @BindView(R.id.list_pets_propietary)
     RecyclerView list_pets_propietary;
 
+    @BindView(R.id.image_profile_property_pet)
+    ImagenCircular image_profile_property_pet;
+
     @BindView(R.id.tabs_profile_propietary)
     SlidingTabLayout tabs_profile_propietary;
 
@@ -67,6 +75,11 @@ public class FragmentProfileUserPet extends Fragment {
     @BindView(R.id.follow_edit)
     Button follow_edit;
 
+    @BindView(R.id.descripcion_perfil_user)
+    TextView descripcion_perfil_user;
+
+
+    String URL_UPDATED="INVALID";
     ArrayList<PetBean> pets = new ArrayList<>();
 
     private TabAdapter adapter;
@@ -126,7 +139,9 @@ public class FragmentProfileUserPet extends Fragment {
             follow_edit.setTextColor(Color.BLACK);
             follow_edit.setOnClickListener(view1 -> listener.change(FragmentElement.INSTANCE_EDIT_PROFILE_USER));
         }
-
+        descripcion_perfil_user.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
+        URL_UPDATED = App.read(PREFERENCES.FOTO_PROFILE_USER,"INVALID");
+        Glide.with(getContext()).load(URL_UPDATED).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);
     }
 
 
@@ -134,6 +149,12 @@ public class FragmentProfileUserPet extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         listener= (change_instance) context;
+    }
+
+
+    public void change_image_profile(String url){
+        if(image_profile_property_pet!=null)
+        Glide.with(getContext()).load(url).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);
     }
 
     public void refresh_list_pets(){

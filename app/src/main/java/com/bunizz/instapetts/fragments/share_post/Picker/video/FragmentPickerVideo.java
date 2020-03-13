@@ -144,6 +144,11 @@ public class FragmentPickerVideo extends Fragment implements  FeedContract.View,
     }
 
     @Override
+    public void peticion_error() {
+
+    }
+
+    @Override
     public void onClick(View view) {
 
     }

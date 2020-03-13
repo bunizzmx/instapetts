@@ -21,6 +21,7 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.fragments.feed.FeedPresenter;
 import com.bunizz.instapetts.listeners.uploads;
@@ -137,6 +138,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         Context context = getContext().getApplicationContext();
         Intent intent = new Intent(context, MyService.class);
         intent.putStringArrayListExtra(MyService.INTENT_KEY_NAME, filePaths);
+        intent.putExtra(BUNDLES.NOTIFICATION_TIPE,0);
         intent.putExtra(MyService.INTENT_TRANSFER_OPERATION, MyService.TRANSFER_OPERATION_UPLOAD);
         context.startService(intent);
         listener.onImageProfileUpdated();

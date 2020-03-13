@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +21,8 @@ import androidx.fragment.app.FragmentManager;
 
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.constantes.BUNDLES;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.camera.CameraFragment;
 import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
@@ -60,6 +63,11 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
     @BindView(R.id.tabs_camera)
     LinearLayout tabs_camera;
+
+    @BindView(R.id.changue_to_videos)
+    RelativeLayout changue_to_videos;
+
+
 
 
 
@@ -124,11 +132,11 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
                     }
                 });
 
+        if(is_from_profile){
+            changue_to_videos.setVisibility(View.GONE);
+        }
+
     }
-
-
-
-
 
     private void setupFirstFragment() {
         mCurrentFragment = new FragmentElement<>(null, FragmentPickerGalery.newInstance(), FragmentElement.INSTANCE_PICKER_IMAGES, true);
@@ -325,19 +333,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
     @Override
     public void change_fragment_parameter(int type_fragment, Bundle data) {
-        if(is_from_profile){
-            String u = "";
-            if(data.getStringArrayList("data_pahs").size() == 1){
-                u = data.getStringArrayList("data_pahs").get(0);
-            }
-            Intent intent = new Intent();
-            intent.putExtra("URI_URL",u);
-            setResult(RESULT_OK,intent);
-            finish();
-        }else{
             changeOfInstance(type_fragment,data);
-        }
-
     }
 
 
@@ -425,6 +421,19 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
     @Override
     public void onImageProfileUpdated() {
        finish();
+    }
+
+    @Override
+    public void setResultForOtherChanges(String url) {
+        Intent intent = new Intent();
+        intent.putExtra(BUNDLES.URI_FOTO,url);
+        setResult(RESULT_OK,intent);
+        finish();
+    }
+
+    @Override
+    public void UpdateProfile(Bundle bundle) {
+
     }
 
 

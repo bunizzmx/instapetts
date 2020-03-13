@@ -23,13 +23,16 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.utils.crop.CropLayout;
 import com.bunizz.instapetts.utils.crop.OnCropListener;
 import com.bunizz.instapetts.utils.imagePicker.data.Album;
@@ -75,9 +78,7 @@ public class FragmentPickerGalery  extends Fragment implements  FeedContract.Vie
     ImagePickerPresenter presenter;
     ArrayAdapter albumAdapter;
     Config config;
-    boolean IS_CROPED_IMAGE_FINISH = false;
-
-    String PATH_after ="";
+    uploads uploas_listener;
 
     ArrayList<String> paths = new ArrayList<>();
 
@@ -247,7 +248,12 @@ public class FragmentPickerGalery  extends Fragment implements  FeedContract.Vie
            uri.add(item.getPath());
            b.putStringArrayList("PATH_SELECTED",uri);
            if(listener!=null){
-               listener.change_fragment_parameter(FragmentElement.INSTANCE_CROP_IMAGE,b);
+               if(App.read(PREFERENCES.FROM_PICKER,"PROFILE").equals("PROFILE")){
+                   uploas_listener.setResultForOtherChanges(uri.get(0));
+               }else{
+                   listener.change_fragment_parameter(FragmentElement.INSTANCE_CROP_IMAGE,b);
+               }
+
            }
        }
       return  ;
@@ -269,10 +275,16 @@ public class FragmentPickerGalery  extends Fragment implements  FeedContract.Vie
     public void onAttach(Context context) {
         super.onAttach(context);
         listener= (changue_fragment_parameters_listener) context;
+        uploas_listener =(uploads)context;
     }
 
     @Override
     public void show_feed(ArrayList<PostBean> data, ArrayList<HistoriesBean> data_stories) {
+
+    }
+
+    @Override
+    public void peticion_error() {
 
     }
 }

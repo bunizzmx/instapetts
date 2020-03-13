@@ -43,10 +43,13 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.bunizz.instapetts.App
 import com.bunizz.instapetts.R
 import com.bunizz.instapetts.activitys.share_post.ShareActivity
+import com.bunizz.instapetts.constantes.PREFERENCES
 import com.bunizz.instapetts.fragments.FragmentElement
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener
+import com.bunizz.instapetts.listeners.uploads
 import com.bunizz.instapetts.utils.simulateClick
 import java.io.File
 import java.nio.ByteBuffer
@@ -87,6 +90,7 @@ class CameraFragment : Fragment() {
     val EXTENSION_WHITELIST = arrayOf("JPG")
     var paths = java.util.ArrayList<String>()
     var listener: changue_fragment_parameters_listener? = null
+    var listener_uploads: uploads? = null
     private val displayManager by lazy {
         requireContext().getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
     }
@@ -114,6 +118,7 @@ class CameraFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = context as changue_fragment_parameters_listener
+        listener_uploads = context as uploads
     }
     /**
      * We need a display listener for orientation changes that do not trigger a configuration
@@ -334,9 +339,10 @@ class CameraFragment : Fragment() {
 
                     override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                         val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
+                        Log.e("PHOTO_URI_CAMERA","-->" + savedUri.path);
                         val b = Bundle()
                         paths.clear()
-                        savedUri.path?.let { it1 -> paths.add(it1) };
+                        paths.add(savedUri.path!!)
                         b.putStringArrayList("PATH_SELECTED", paths)
                         b.putInt("IS_FROM_CAMERA", 1)
                         if (listener != null) {
@@ -346,6 +352,7 @@ class CameraFragment : Fragment() {
                             stop_camera()
                             listener!!.change_fragment_parameter(FragmentElement.INSTANCE_CROP_IMAGE, b)
                         }
+
                     }
                 })
 

@@ -69,13 +69,13 @@ public class FragmentDataPet extends Fragment {
     ImageView icon_macho;
 
     @SuppressLint("MissingPermission")
-    @OnClick(R.id.finalice_pet)
+    @OnClick(R.id.next_finalize)
     void finalice_pet()
     {
         Log.e("PET_FINALICE","xxx");
         if(listener!=null){
             Log.e("PET_FINALICE",":)");
-           listener.onpetFinish(true);
+           listener.onchange(FragmentElement.INSTANCE_FINAL_CONFIG_PET,null);
         }
     }
 

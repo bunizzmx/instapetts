@@ -1,6 +1,7 @@
 package com.bunizz.instapetts.fragments.feed;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.camera_history.CameraHistoryActivity;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
@@ -23,6 +25,7 @@ import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.login.login.FragmentLogin;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.postsListener;
 import com.bunizz.instapetts.web.parameters.PostActions;
 
@@ -44,7 +47,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
 
     @BindView(R.id.refresh_feed)
     SwipeRefreshLayout refresh_feed;
-
+    open_camera_histories_listener listener_open_camera_h;
 
     ArrayList<Object> data = new ArrayList<>();
 
@@ -67,6 +70,12 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         data.add(new HistoriesBean());
         feedAdapter = new FeedAdapter(getContext(),data);
         feedAdapter.setListener((type_fragment, data) -> listener.change(type_fragment));
+        feedAdapter.setListener_open_h(() -> {
+            if(listener_open_camera_h!=null){
+                listener_open_camera_h.open();
+            }
+
+        });
         feedAdapter.setListener_post(new postsListener() {
             @Override
             public void onLike(int id_post) {
@@ -119,6 +128,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     public void onAttach(Context context) {
         super.onAttach(context);
         listener= (change_instance) context;
+        listener_open_camera_h =(open_camera_histories_listener)context;
     }
 
     @Override
@@ -128,6 +138,11 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         data_object.addAll(data);
         feedAdapter.setHistoriesBeans(data_stories);
         feedAdapter.addData(data_object);
+    }
+
+    @Override
+    public void peticion_error() {
+        mPresenter.get_feed();
     }
 }
 

@@ -24,6 +24,7 @@
 
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/publish_stories"
         android:layout_margin="20dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"

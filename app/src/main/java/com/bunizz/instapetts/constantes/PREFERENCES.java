@@ -7,5 +7,13 @@ public interface PREFERENCES {
     String IS_INTRO_COMPLETED = "IS_INTRO_COMPLETED";
     String FOTO_PROFILE_USER = "FOTO_PROFILE_USER";
     String IS_NEW_USER = "IS_NEW_USER";
+    String UUID = "UUID";
+    String TOKEN = "TOKEN";
+    String LAT ="LAT";
+    String LON = "LON";
+    String DESCRIPCCION = "DESCRIPCCION";
+    String FROM_PICKER ="FROM_PICKER";
+
+
 
 }

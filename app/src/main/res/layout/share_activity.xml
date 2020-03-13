@@ -9,7 +9,7 @@
         android:layout_height="match_parent">
     </FrameLayout>
     <LinearLayout
-        android:weightSum="3"
+
         android:layout_alignParentBottom="true"
         android:id="@+id/tabs_camera"
         android:layout_width="match_parent"

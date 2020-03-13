@@ -35,6 +35,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
+                    android:id="@+id/descripcion_perfil_user"
                     android:layout_marginTop="5dp"
                     android:text="holi amo a los perritos y gatitps"
                     android:layout_below="@+id/name_property_pet"

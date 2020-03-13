@@ -1,5 +1,6 @@
 package com.bunizz.instapetts.activitys.wizardPets;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
@@ -14,34 +15,45 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.main.Main;
+import com.bunizz.instapetts.activitys.share_post.ShareActivity;
 import com.bunizz.instapetts.beans.PetBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
+import com.bunizz.instapetts.fragments.profile.FragmentEditProfileUser;
 import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.fragments.wizardPets.FragmentDataPet;
+import com.bunizz.instapetts.fragments.wizardPets.FragmentFinalConfigPet;
 import com.bunizz.instapetts.fragments.wizardPets.FragmentSearchPet;
 import com.bunizz.instapetts.fragments.wizardPets.FragmentTypePet;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.change_instance_wizard;
 import com.bunizz.instapetts.listeners.process_save_pet_listener;
+import com.bunizz.instapetts.listeners.uploads;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.Stack;
 
 import butterknife.ButterKnife;
 
-public class WizardPetActivity extends AppCompatActivity implements change_instance_wizard, process_save_pet_listener {
+public class WizardPetActivity extends AppCompatActivity implements change_instance_wizard, process_save_pet_listener, uploads {
 
     private Stack<FragmentElement> stack_type_pet;
     private Stack<FragmentElement> stack_search_raza_pet;
     private Stack<FragmentElement> stack_data_pet;
-
+    private Stack<FragmentElement> final_config_pet;
 
     private FragmentElement mCurrentFragment;
     private FragmentElement mOldFragment;
     PetHelper petHelper;
     PetBean infoPet = new PetBean();
+    RxPermissions rxPermissions;
+    static final int NEW_PHOTO_UPLOADED= 3;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,8 +63,10 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
         stack_data_pet = new Stack<>();
         stack_type_pet = new Stack<>();
         stack_search_raza_pet = new Stack<>();
+        final_config_pet = new Stack<>();
         setupFirstFragment();
         petHelper = PetHelper.getInstance(this);
+        rxPermissions = new RxPermissions(this);
 
 
     }
@@ -96,6 +110,14 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
         inflateFragment();
     }
 
+    private void change_final_config_pet(FragmentElement fragment) {
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            if(final_config_pet.size()<=0){final_config_pet.push(mCurrentFragment);}
+        }
+        inflateFragment();
+    }
+
 
     private void saveFragment() {
         mOldFragment = mCurrentFragment;
@@ -123,6 +145,14 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
                 change_data_pet(new FragmentElement<>("", FragmentDataPet.newInstance(), FragmentElement.INSTANCE_DATA_PET));
             } else {
                 change_data_pet(stack_data_pet.pop());
+            }
+        }
+
+        else if (intanceType == FragmentElement.INSTANCE_FINAL_CONFIG_PET) {
+            if (final_config_pet.size() == 0) {
+                change_final_config_pet(new FragmentElement<>("", FragmentFinalConfigPet.newInstance(), FragmentElement.INSTANCE_FINAL_CONFIG_PET));
+            } else {
+                change_final_config_pet(final_config_pet.pop());
             }
         }
 
@@ -175,6 +205,9 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
                setResult(RESULT_OK,data);
                finish();
         }
+           else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_FINAL_CONFIG_PET){
+               changeOfInstance(FragmentElement.INSTANCE_DATA_PET,null);
+           }
     }
 
     @Override
@@ -210,5 +243,50 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
                 break;
             default:break;
         }
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void onImageProfileUpdated() {
+        rxPermissions
+                .request(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA)
+                .subscribe(granted -> {
+                    if (granted) {
+                        App.write(PREFERENCES.FROM_PICKER,"PROFILE");
+                        Intent i = new Intent(WizardPetActivity.this, ShareActivity.class);
+                        i.putExtra("FROM","PROFILE_PHOTO");
+                        startActivityForResult(i,NEW_PHOTO_UPLOADED);
+                    } else {
+                        App.getInstance().show_dialog_permision(WizardPetActivity.this,getResources().getString(R.string.permision_storage),
+                                getResources().getString(R.string.permision_storage_body),0);
+                    }
+                });
+    }
+
+    @Override
+    public void setResultForOtherChanges(String url) {
+
+    }
+
+    @Override
+    public void UpdateProfile(Bundle bundle) {
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        super.onActivityResult(requestCode, resultCode, data);
+         if(requestCode == NEW_PHOTO_UPLOADED){
+            if(data!=null) {
+                String url =  data.getStringExtra(BUNDLES.URI_FOTO);
+                if (mCurrentFragment.getFragment() instanceof FragmentFinalConfigPet) {
+                    ((FragmentFinalConfigPet) mCurrentFragment.getFragment()).change_image_profile(url);
+                }
+            }
+        }
+
     }
 }

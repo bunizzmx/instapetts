@@ -38,6 +38,8 @@ public class FragmentElement<T extends Fragment> {
 
     public static final int INSTANCE_CROP_VIDEO= 24;
     public static final int INSTANCE_CROP_IMAGE= 25;
+    public static final int INSTANCE_FINAL_CONFIG_PET= 26;
+
     //endregion
     private String mTitle;
     private T fragment;

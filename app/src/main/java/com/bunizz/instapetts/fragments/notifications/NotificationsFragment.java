@@ -57,5 +57,10 @@ public class NotificationsFragment extends Fragment implements  FeedContract.Vie
     public void show_feed(ArrayList<PostBean> data,ArrayList<HistoriesBean> historiesBeans) {
 
     }
+
+    @Override
+    public void peticion_error() {
+
+    }
 }
 

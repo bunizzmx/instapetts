@@ -20,11 +20,13 @@ import com.bunizz.instapetts.fragments.feed.FeedPresenter;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.change_instance_wizard;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.uploads;
 
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,9 +40,14 @@ public class CameraPreviewStoryFragment extends Fragment {
     @BindView(R.id.preview_story)
     ImageView preview_story;
 
+    @BindView(R.id.publish_stories)
+    CardView publish_stories;
+
 
     changue_fragment_parameters_listener listener;
     FeedAdapter feedAdapter;
+
+    uploads listenr_uploads;
 
     ArrayList<Object> data = new ArrayList<>();
 
@@ -69,6 +76,12 @@ public class CameraPreviewStoryFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         Glide.with(getContext()).load(path).into(preview_story);
+        publish_stories.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listenr_uploads.setResultForOtherChanges(path.replace("file:",""));
+            }
+        });
     }
 
 
@@ -76,6 +89,7 @@ public class CameraPreviewStoryFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         listener= (changue_fragment_parameters_listener) context;
+        listenr_uploads = (uploads)context;
     }
 
 }

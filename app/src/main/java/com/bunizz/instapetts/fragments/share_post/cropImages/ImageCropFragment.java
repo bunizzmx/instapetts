@@ -17,16 +17,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.fragments.share_post.Picker.image.ImageListRecyclerViewAdapter;
 import com.bunizz.instapetts.fragments.share_post.Picker.image.ImagePickerContract;
 import com.bunizz.instapetts.fragments.share_post.Picker.image.ImagePickerPresenter;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.utils.crop.CropLayout;
 import com.bunizz.instapetts.utils.crop.OnCropListener;
 import com.bunizz.instapetts.utils.imagePicker.data.Album;
@@ -68,6 +71,8 @@ public class ImageCropFragment extends Fragment implements  FeedContract.View{
     ArrayList<String> array_list_cropes = new ArrayList<>();
     int CURRENT_INDEX=0;
     int IS_FROM_CAMERA = 0;
+
+    uploads listener_uploads;
 
     ArrayAdapter albumAdapter;
     boolean IS_CROPED_IMAGE_FINISH = false;
@@ -154,10 +159,14 @@ public class ImageCropFragment extends Fragment implements  FeedContract.View{
                     if(CURRENT_INDEX < paths.size()){
                         execute_crop(CURRENT_INDEX);
                     }else{
-                        Bundle b = new Bundle();
-                        b.putStringArrayList("data_pahs",array_list_cropes);
-                        listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
-                        CURRENT_INDEX =0;
+                        if (App.read(PREFERENCES.FROM_PICKER, "PROFILE").equals("PROFILE")) {
+                            listener_uploads.setResultForOtherChanges(array_list_cropes.get(0));
+                        }else{
+                            Bundle b = new Bundle();
+                            b.putStringArrayList("data_pahs",array_list_cropes);
+                            listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
+                            CURRENT_INDEX =0;
+                        }
                     }
 
                 }
@@ -192,6 +201,10 @@ public class ImageCropFragment extends Fragment implements  FeedContract.View{
 
     }
 
+    @Override
+    public void peticion_error() {
+
+    }
 
 
     public  boolean saveImage(Bitmap bitmap, String folderName, String filename, Bitmap.CompressFormat compressFormat) {
@@ -233,6 +246,7 @@ public class ImageCropFragment extends Fragment implements  FeedContract.View{
     public void onAttach(Context context) {
         super.onAttach(context);
         listener= (changue_fragment_parameters_listener) context;
+            listener_uploads =(uploads)context;
     }
 
 

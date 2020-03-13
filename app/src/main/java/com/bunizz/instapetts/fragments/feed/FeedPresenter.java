@@ -35,6 +35,7 @@ public class FeedPresenter implements FeedContract.Presenter {
     private WebServices apiService;
     SavedPostHelper savedPostHelper ;
     LikePostHelper likePostHelper;
+    int RETRY =0;
 
     FeedPresenter(FeedContract.View view, Context context) {
         this.mView = view;
@@ -75,7 +76,13 @@ public class FeedPresenter implements FeedContract.Presenter {
                             }
                             @Override
                             public void onError(Throwable e) {
-                                Log.e("NUMBER_POSTS","-->EROR : " + e.getMessage());
+                                RETRY ++;
+                                if(RETRY < 3) {
+                                    mView.peticion_error();
+                                }else{
+                                    Log.e("NUMBER_POSTS","-->EROR : " + e.getMessage());
+                                }
+
                             }
                         })
         );
