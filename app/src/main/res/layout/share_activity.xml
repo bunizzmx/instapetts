@@ -29,6 +29,7 @@
                 android:layout_height="20dp"/>
         </RelativeLayout>
         <RelativeLayout
+            android:visibility="gone"
             android:background="?attr/selectableItemBackground"
             android:id="@+id/changue_to_videos"
             android:layout_weight="1"

@@ -1,6 +1,12 @@
 package com.bunizz.instapetts.beans;
 
-public class HistoriesBean {
+import org.parceler.Parcel;
+
+import java.io.Serializable;
+
+@Parcel
+public class HistoriesBean   implements Serializable {
+    private static final long serialVersionUID = -9105714679573086020L;
     String name_pet;
     String name_user;
     int id_pet;

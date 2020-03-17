@@ -15,6 +15,7 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.login.LoginActivity;
 import com.bunizz.instapetts.activitys.main.Main;
 import com.bunizz.instapetts.constantes.BUNDLES;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.camera.CameraPreviewStoryFragment;
 import com.bunizz.instapetts.fragments.camera.CameraStoryt;
@@ -60,6 +61,8 @@ public class CameraHistoryActivity extends AppCompatActivity implements  changue
         setContentView(R.layout.login);
         ButterKnife.bind(this);
         changeStatusBarColor(R.color.white);
+        App.write(PREFERENCES.FROM_PICKER,"PROFILE");
+
         stack_history_foto = new Stack<>();
         stack_history_camera = new Stack<>();
         stack_history_picker_foto = new Stack<>();
@@ -100,6 +103,9 @@ public class CameraHistoryActivity extends AppCompatActivity implements  changue
     private void change_to_picker(FragmentElement fragment) {
         if (fragment != null) {
             mCurrentFragment = fragment;
+            Bundle b = new Bundle();
+            b.putInt("FROM_PROFILE",2);
+            mCurrentFragment.getFragment().setArguments(b);
             if(stack_history_picker_foto.size()<=0){stack_history_picker_foto.push(mCurrentFragment);}
         }
         inflateFragment();

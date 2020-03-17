@@ -41,6 +41,7 @@ public class FragmentEditProfileUser extends Fragment {
     @OnClick(R.id.change_photo)
     void change_photo()
     {
+        App.write(PREFERENCES.FROM_PICKER,"PROFILE");
        listener.onImageProfileUpdated();
     }
 

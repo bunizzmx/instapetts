@@ -5,8 +5,10 @@ import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.bunizz.instapetts.beans.AutenticateBean;
+import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.db.helpers.LikePostHelper;
+import com.bunizz.instapetts.db.helpers.MyStoryHelper;
 import com.bunizz.instapetts.db.helpers.SavedPostHelper;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
@@ -35,6 +37,7 @@ public class FeedPresenter implements FeedContract.Presenter {
     private WebServices apiService;
     SavedPostHelper savedPostHelper ;
     LikePostHelper likePostHelper;
+    MyStoryHelper myStoryHelper;
     int RETRY =0;
 
     FeedPresenter(FeedContract.View view, Context context) {
@@ -44,6 +47,7 @@ public class FeedPresenter implements FeedContract.Presenter {
                 .create(WebServices.class);
         savedPostHelper = new SavedPostHelper(context);
         likePostHelper = new LikePostHelper(context);
+        myStoryHelper = new MyStoryHelper(context);
     }
 
     @Override
@@ -58,21 +62,26 @@ public class FeedPresenter implements FeedContract.Presenter {
                         .subscribeWith(new DisposableSingleObserver<ResponsePost>() {
                             @Override
                             public void onSuccess(ResponsePost responsePost) {
-                                Log.e("NUMBER_POSTS","-->" + responsePost.getList_posts().size());
-                                ArrayList<PostBean> post = new ArrayList<>();
-                                post.addAll(responsePost.getList_posts());
-                                for (int i=0; i<post.size();i++){
-                                    if(savedPostHelper.searchPostById(post.get(i).getId_post_from_web()))
-                                        post.get(i).setSaved(true);
-                                    else
-                                        post.get(i).setSaved(false);
+                                if(responsePost.getList_posts()!=null) {
+                                    if(responsePost.getList_posts()!=null)
+                                    Log.e("NUMBER_POSTS", "-->" + responsePost.getList_posts().size());
+                                    ArrayList<PostBean> post = new ArrayList<>();
+                                    post.addAll(responsePost.getList_posts());
+                                    for (int i = 0; i < post.size(); i++) {
+                                        if (savedPostHelper.searchPostById(post.get(i).getId_post_from_web()))
+                                            post.get(i).setSaved(true);
+                                        else
+                                            post.get(i).setSaved(false);
 
-                                    if(likePostHelper.searchPostById(post.get(i).getId_post_from_web()))
-                                        post.get(i).setLiked(true);
-                                    else
-                                        post.get(i).setLiked(false);
-                                }
-                                mView.show_feed(post,responsePost.getList_stories());
+                                        if (likePostHelper.searchPostById(post.get(i).getId_post_from_web()))
+                                            post.get(i).setLiked(true);
+                                        else
+                                            post.get(i).setLiked(false);
+                                    }
+                                    mView.show_feed(post, responsePost.getList_stories());
+                                }  else{
+
+                                    }
                             }
                             @Override
                             public void onError(Throwable e) {
@@ -101,5 +110,10 @@ public class FeedPresenter implements FeedContract.Presenter {
     @Override
     public void deleteFavorite(int id_post) {
         savedPostHelper.deleteSavedPost(id_post);
+    }
+
+    @Override
+    public ArrayList<HistoriesBean> getMyStories() {
+      return  myStoryHelper.getMyStories();
     }
 }

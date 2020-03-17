@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "216060286955-anra38rhvgajjgj9da6d33n0g965p1cj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bunizz.instapetts",
+            "certificate_hash": "2fba6b80240446d36f2bd1a4eb20cfa04cfadeb0"
+          }
+        },
+        {
           "client_id": "216060286955-674macuhpb903qh9ahjlbjrujpmc24i1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -90,6 +90,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void setHistoriesBeans(ArrayList<HistoriesBean> historiesBeans) {
+        Log.e("DATA_HISTORIES","xxxx" + historiesBeans.size());
         this.historiesBeans = historiesBeans;
     }
 
@@ -103,7 +104,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void addData(ArrayList<Object> data){
         this.data.clear();
-        this.data.add(new HistoriesBean());
         this.data.addAll(data);
         notifyDataSetChanged();
     }
@@ -158,9 +158,10 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         listener_open_h.open();
                     }
                 });
+                adapterHistories.setHistoriesBeans(historiesBeans);
                 h.list_histories.setAdapter(adapterHistories);
                 h.list_histories.setLayoutManager(new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false));
-                adapterHistories.setHistoriesBeans(historiesBeans);
+
                 break;
             default:
                 FeedHolder f = (FeedHolder)holder;

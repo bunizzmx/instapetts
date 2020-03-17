@@ -25,6 +25,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.share_post.ShareActivity;
+import com.bunizz.instapetts.utils.compresor.Compressor;
 import com.google.android.gms.common.util.Strings;
 
 import java.io.File;
@@ -71,7 +72,7 @@ public class MyService extends Service {
             TITLE_SUCCESS ="PERFIL ACTUALIZADO";
             TITLE = "ACTUALIZANDO PERFIL";
         }
-        else if(TYPE_NOTIFICATION == 1) {
+        else if(TYPE_NOTIFICATION == 2) {
             TITLE_SUCCESS ="HISTORIA SUBIDA";
             TITLE = "SUBIENDO HISTORIAS";
         }
@@ -118,7 +119,13 @@ public class MyService extends Service {
         TransferObserver transferObserver;
         SIZE_OF_FILES = key.size();
         for(int i =0;i<key.size();i++){
-            file = new File(key.get(i));
+            if(TYPE_NOTIFICATION == 2){
+                Log.e("COMPRESION_IMAGEN","HISTORIA");
+                file = new Compressor(this).compressToFile(new File(key.get(i)));
+            }else{
+                file = new File(key.get(i));
+            }
+
             String splits[] = key.get(i).split("/");
             int index  = splits.length;
             String filename = splits[index -1];

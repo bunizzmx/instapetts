@@ -21,10 +21,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.fragments.story.FragmentStoriView;
 import com.bunizz.instapetts.listeners.story_finished_listener;
 import com.bunizz.instapetts.utils.ViewPagerHistory.DepthPageTransformer;
 import com.bunizz.instapetts.utils.tabs.SlidingFragmentPagerAdapter;
+
+import org.parceler.Parcels;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +40,8 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
     ViewPager view_pager_stories;
     private TabAdapter adapter;
     int CURRENT_ITEM =0;
+    int SELECTED_POSITION =0;
+    ArrayList<HistoriesBean> historiesBeans = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +49,11 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
         setContentView(R.layout.story_activity);
         ButterKnife.bind(this);
         changeStatusBarColor(R.color.black);
-        adapter = new TabAdapter(getSupportFragmentManager(), this);
+        if (getIntent() != null) {
+            historiesBeans = Parcels.unwrap(getIntent().getParcelableExtra("sliders"));
+            SELECTED_POSITION = getIntent().getIntExtra("SELECTED_POSITION",0);
+        }
+        adapter = new TabAdapter(getSupportFragmentManager(), this,historiesBeans);
         view_pager_stories.setAdapter(adapter);
         view_pager_stories.setOffscreenPageLimit(0);
         view_pager_stories.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -62,6 +73,7 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
             }
         });
         view_pager_stories.setPageTransformer(true, new DepthPageTransformer());
+        view_pager_stories.setCurrentItem(SELECTED_POSITION);
     }
 
 
@@ -96,7 +108,7 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
 
 
     public class TabAdapter extends SlidingFragmentPagerAdapter {
-
+      ArrayList<HistoriesBean> historiesBeans = new ArrayList<>();
 
         private int[] icons = {
                 R.drawable.ic_menu,
@@ -105,15 +117,17 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
         };
         private Context context;
 
-        public TabAdapter(FragmentManager fm, Context context) {
+        public TabAdapter(FragmentManager fm, Context context,ArrayList<HistoriesBean> historiesBeans) {
             super(fm);
             this.context = context;
+            this.historiesBeans = historiesBeans;
         }
 
         @Override
         public Fragment getItem(int position) {
             Bundle bundle = new Bundle();
             bundle.putInt("x", position + 1);
+            bundle.putString("IMAGS",this.historiesBeans.get(position).getUris_stories());
             Fragment fragment;
             fragment = new FragmentStoriView();
             fragment.setArguments(bundle);
@@ -122,7 +136,7 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
 
         @Override
         public int getCount() {
-            return 10;
+            return  this.historiesBeans.size();
         }
 
 
@@ -133,39 +147,6 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
 
     }
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            hideSystemUI();
-        }
-    }
 
-    private void hideSystemUI() {
-        // Enables regular immersive mode.
-        // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
-        // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_IMMERSIVE
-                        // Set the content to appear under the system bars so that the
-                        // content doesn't resize when the system bars hide and show.
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        // Hide the nav bar and status bar
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
-    }
-
-    // Shows the system bars by removing all the flags
-    // except for the ones that make the content appear under the system bars.
-    private void showSystemUI() {
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-    }
 
 }

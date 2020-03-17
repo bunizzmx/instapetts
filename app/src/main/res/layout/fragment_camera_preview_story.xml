@@ -3,12 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-<ImageView
-    android:id="@+id/preview_story"
-    android:scaleType="centerCrop"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
 
+    <com.bunizz.instapetts.utils.crop.CropLayout
+        android:id="@+id/crop_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cropme_background_alpha="80%"
+        app:cropme_frame_height_percent="100%"
+        app:cropme_frame_width_percent="100%"
+        app:cropme_max_scale="3.0"
+        app:cropme_overlay_shape="rectangle"
+        app:cropme_with_border="true"
+        />
     <RelativeLayout
         android:layout_margin="10dp"
         android:layout_width="50dp"
@@ -22,6 +28,60 @@
             android:layout_height="20dp"/>
     </RelativeLayout>
 
+    <LinearLayout
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/crop_9_16"
+            android:layout_marginLeft="10dp"
+            app:cardCornerRadius="5dp"
+         app:contentPadding="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="18dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/avenir_b"
+                android:text="9:16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/crop_cuadrada"
+            android:layout_marginLeft="10dp"
+            app:cardCornerRadius="5dp"
+            app:contentPadding="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="18dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/avenir_b"
+                android:text="1:1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/crop_3_4"
+            android:layout_marginLeft="10dp"
+            app:cardCornerRadius="5dp"
+            app:contentPadding="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="18dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/avenir_b"
+                android:text="3:4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+
 
     <androidx.cardview.widget.CardView
         android:id="@+id/publish_stories"
@@ -29,8 +89,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         app:cardElevation="3dp"
-        app:contentPadding="10dp"
-        app:cardCornerRadius="20dp"
+        app:contentPadding="15dp"
+        app:cardCornerRadius="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <LinearLayout
@@ -38,6 +98,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <TextView
+                android:textColor="@color/black"
+                android:fontFamily="@font/avenir_b"
                 android:layout_marginRight="10dp"
                 android:text="Compartir"
                 android:layout_width="wrap_content"

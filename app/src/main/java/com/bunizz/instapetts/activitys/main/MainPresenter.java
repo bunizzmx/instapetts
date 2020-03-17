@@ -3,7 +3,9 @@ package com.bunizz.instapetts.activitys.main;
 import android.content.Context;
 import android.util.Log;
 
+import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.UserBean;
+import com.bunizz.instapetts.db.helpers.MyStoryHelper;
 import com.bunizz.instapetts.fragments.share_post.Share.SharePostContract;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
@@ -19,6 +21,7 @@ public class MainPresenter implements MainContract.Presenter {
     private MainContract.View mView;
     private Context mContext;
     WebServices apiService;
+    MyStoryHelper myStoryHelper;
     private CompositeDisposable disposable = new CompositeDisposable();
 
     MainPresenter(MainContract.View view, Context context) {
@@ -26,6 +29,7 @@ public class MainPresenter implements MainContract.Presenter {
         this.mContext = context;
         apiService = ApiClient.getClient(context)
                 .create(WebServices.class);
+        myStoryHelper = new MyStoryHelper(context);
     }
 
     @Override
@@ -45,5 +49,10 @@ public class MainPresenter implements MainContract.Presenter {
                                 Log.e("ERROR","UPDATED PROFILE");
                             }
                         }));
+    }
+
+    @Override
+    public void saveMyStory(HistoriesBean historiesBean) {
+        myStoryHelper.saveMyStory(historiesBean);
     }
 }

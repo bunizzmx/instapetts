@@ -67,7 +67,14 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        data.add(new HistoriesBean());
+        mPresenter = new FeedPresenter(this, getContext());
+        HistoriesBean my_storie_bean = new HistoriesBean();
+        if(mPresenter.getMyStories().size()>0) {
+            my_storie_bean = mPresenter.getMyStories().get(0);
+            data.add(my_storie_bean);
+        }else {
+            data.add(new HistoriesBean());
+        }
         feedAdapter = new FeedAdapter(getContext(),data);
         feedAdapter.setListener((type_fragment, data) -> listener.change(type_fragment));
         feedAdapter.setListener_open_h(() -> {
@@ -102,7 +109,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
 
             }
         });
-        mPresenter = new FeedPresenter(this, getContext());
+
         mPresenter.get_feed();
     }
 
@@ -134,9 +141,17 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     @Override
     public void show_feed(ArrayList<PostBean> data,ArrayList<HistoriesBean> data_stories) {
         refresh_feed.setRefreshing(false);
+        ArrayList<HistoriesBean> historiesBeans = new ArrayList<>();
         ArrayList<Object> data_object= new ArrayList<>();
+        if(mPresenter.getMyStories().size()>0){
+            historiesBeans.add(mPresenter.getMyStories().get(0));
+        }else{
+            historiesBeans.add(new HistoriesBean());
+        }
+        historiesBeans.addAll(data_stories);
+        data_object.add(new HistoriesBean());
         data_object.addAll(data);
-        feedAdapter.setHistoriesBeans(data_stories);
+        feedAdapter.setHistoriesBeans(historiesBeans);
         feedAdapter.addData(data_object);
     }
 

@@ -8,11 +8,11 @@ import java.util.ArrayList;
 
 public interface FeedContract {
     interface Presenter {
-
         public void get_feed();
         void likePost(PostActions postActions);
         void saveFavorite(PostActions postActions,PostBean postBean);
         void deleteFavorite(int id_post);
+        ArrayList<HistoriesBean> getMyStories();
 
     }
 

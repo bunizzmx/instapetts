@@ -248,12 +248,20 @@ public class FragmentPickerGalery  extends Fragment implements  FeedContract.Vie
            uri.add(item.getPath());
            b.putStringArrayList("PATH_SELECTED",uri);
            if(listener!=null){
+               Log.e("RESULT_CLIXK","!=null");
                if(App.read(PREFERENCES.FROM_PICKER,"PROFILE").equals("PROFILE")){
-                   uploas_listener.setResultForOtherChanges(uri.get(0));
+                   Log.e("RESULT_CLIXK","profile");
+                   if(is_from_profile ==2)
+                       listener.change_fragment_parameter(FragmentElement.INSTANCE_HISTORY_FOTO_PICKED,b);
+                   else
+                      uploas_listener.setResultForOtherChanges(uri.get(0));
                }else{
-                   listener.change_fragment_parameter(FragmentElement.INSTANCE_CROP_IMAGE,b);
+                   Log.e("RESULT_CLIXK","posts");
+                   listener.change_fragment_parameter(FragmentElement.INSTANCE_HISTORY_FOTO_PICKED,b);
                }
 
+           }else{
+               Log.e("RESULT_CLIXK","listener_nulo");
            }
        }
       return  ;

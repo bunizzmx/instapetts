@@ -24,6 +24,7 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.camera_history.CameraHistoryActivity;
 import com.bunizz.instapetts.activitys.share_post.ShareActivity;
 import com.bunizz.instapetts.activitys.wizardPets.WizardPetActivity;
+import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
@@ -43,9 +44,11 @@ import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.services.MyService;
 import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
+import com.bunizz.instapetts.web.CONST;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Stack;
 
@@ -135,6 +138,7 @@ public class Main extends AppCompatActivity implements change_instance, changue_
                         Manifest.permission.CAMERA)
                 .subscribe(granted -> {
                     if (granted) {
+                        App.write(PREFERENCES.FROM_PICKER,"POST");
                         Intent i = new Intent(Main.this, ShareActivity.class);
                         startActivityForResult(i,NEW_POST_REQUEST);
                     } else {
@@ -459,7 +463,7 @@ public class Main extends AppCompatActivity implements change_instance, changue_
             }
         }else if(requestCode == NEW_POST_REQUEST){
             if(data!=null) {
-                data.getStringArrayListExtra("URIS_PATHS");
+                data.getStringArrayListExtra(BUNDLES.URI_FOTO);
             }
         }
 
@@ -595,5 +599,19 @@ public class Main extends AppCompatActivity implements change_instance, changue_
        intent.putExtra(BUNDLES.NOTIFICATION_TIPE,2);
        intent.putExtra(MyService.INTENT_TRANSFER_OPERATION, MyService.TRANSFER_OPERATION_UPLOAD);
        startService(intent);
+
+       String splits[] =url.split("/");
+       int index  = splits.length;
+       String filename = splits[index -1];
+
+
+       HistoriesBean historiesBean = new HistoriesBean();
+       historiesBean.setUris_stories(CONST.BASE_URL_BUCKET + filename);
+       historiesBean.setName_pet("FIRULAIS");
+       historiesBean.setName_user("ADOLFIN CANALLIN");
+       historiesBean.setDate_story(App.formatDateGMT(new Date()));
+       historiesBean.setId_user(1);
+       historiesBean.setId_pet(1);
+       presenter.saveMyStory(historiesBean);
     }
 }

@@ -60,7 +60,13 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
     @BindView(R.id.progressBarView)
     StoryPlayerProgressView storyPlayerProgressView;
 
+    @BindView(R.id.progress_top)
+    ProgressBar progress_top;
+
     story_finished_listener listener;
+    String splits_uris="";
+
+    ArrayList<String> uris_fotos = new ArrayList<>();
 
 
     public static FragmentStoriView newInstance() {
@@ -70,6 +76,18 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bundle=getArguments();
+        if(bundle!=null) {
+            splits_uris = bundle.getString("IMAGS");
+            String uris[] = splits_uris.split(",");
+            if(uris.length == 1){
+                uris_fotos.add(uris[0]);
+            }else{
+                for(int i =0;i < uris.length;i++){
+                    uris_fotos.add(uris[i]);
+                }
+            }
+        }
     }
 
     @Nullable
@@ -83,13 +101,14 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         storyPlayerProgressView.setSingleStoryDisplayTime(6000);
-        PROGRESS_COUNT=4;
+        PROGRESS_COUNT=uris_fotos.size();
         initStoryProgressView();
+
     }
 
     private void initStoryProgressView() {
         storyPlayerProgressView.setStoryPlayerListener(this);
-        storyPlayerProgressView.setProgressBarsCount(4);
+        storyPlayerProgressView.setProgressBarsCount(PROGRESS_COUNT);
         setTouchListener();
     }
 
@@ -127,11 +146,18 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
             Log.e("AQUI_TOMNE","si");
             return;
         }
-        Glide.with(getContext()).asBitmap().load("")
+        Glide.with(getContext()).asBitmap().load(uris_fotos.get(index))
                 .into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         try {
+                            progress_top.setVisibility(View.GONE);
+                            Log.e("SCALE_HEIGHT","-->" +resource.getHeight() );
+                            if(resource.getHeight() > 1200){
+                                image_story.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                            }else{
+                                image_story.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                            }
                             image_story.setImageBitmap(resource);
                         }catch (Exception e){
                             Log.e("EEROR_GLIDE","-->" + e.getMessage());

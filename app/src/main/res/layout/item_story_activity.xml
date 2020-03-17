@@ -10,11 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     <ImageView
-        android:scaleType="centerCrop"
-        android:src="@drawable/story_demo"
+      android:scaleType="centerCrop"
         android:id="@+id/image_story"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ImageView>
+        android:layout_height="match_parent"/>
     <ProgressBar
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"

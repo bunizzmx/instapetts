@@ -39,7 +39,7 @@ class CropLayout @JvmOverloads constructor(
   private val cropOverlay: CropOverlay
 
   private var frameCache: RectF? = null
-
+  val scale: Float
   private val listeners = CopyOnWriteArrayList<OnCropListener>()
 
   init {
@@ -47,7 +47,7 @@ class CropLayout @JvmOverloads constructor(
 
     val percentWidth: Float
     val percentHeight: Float
-    val scale: Float
+
 
     try {
       val defaultCropImageView = CropImageView(context, null, 0)
@@ -99,6 +99,8 @@ class CropLayout @JvmOverloads constructor(
       a.recycle()
     }
 
+
+
     val vto = viewTreeObserver
     vto.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
 
@@ -136,6 +138,29 @@ class CropLayout @JvmOverloads constructor(
   fun setUri(uri: Uri) {
     cropImageView.setImageURI(uri)
     cropImageView.requestLayout()
+  }
+
+  fun modify_cropper(aspecto : Float){
+    val totalWidth = measuredWidth.toFloat()
+    val totalHeight = measuredHeight.toFloat()
+    val frameWidth = measuredWidth * 1f
+    val frameHeight = measuredHeight * aspecto
+    val frame = RectF(
+            (totalWidth - frameWidth) / 2f,
+            (totalHeight - frameHeight) / 2f,
+            (totalWidth + frameWidth) / 2f,
+            (totalHeight + frameHeight) / 2f
+    )
+
+    cropImageView.setFrame(frame)
+    cropImageView.requestLayout()
+    cropOverlay.setFrame(frame)
+    cropOverlay.requestLayout()
+    frameCache = frame
+
+    val animator = GestureAnimator.of(cropImageView, frame, scale)
+    val animation = GestureAnimation(cropOverlay, animator)
+    animation.start()
   }
 
   fun setBitmap(bitmap: Bitmap) {
