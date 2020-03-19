@@ -109,6 +109,7 @@ public class FragmentEditProfileUser extends Fragment {
         }else{
             configure_name.setVisibility(View.GONE);
             name_user.setVisibility(View.VISIBLE);
+            name_user.setText(App.read(PREFERENCES.NAME_USER,"USUARIO"));
         }
         if(!App.read(PREFERENCES.DESCRIPCCION,"INVALID").equals("INVALID")){
             descripcion_user.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));

@@ -76,9 +76,11 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
 
     @Override
     public void showTips(ArrayList<TipsBean> tips_list) {
-        ArrayList<Object> to_object_data = new ArrayList<>();
-        to_object_data.addAll(tips_list);
-        adapter.setData(to_object_data);
+        if(tips_list!=null) {
+            ArrayList<Object> to_object_data = new ArrayList<>();
+            to_object_data.addAll(tips_list);
+            adapter.setData(to_object_data);
+        }
     }
 }
 

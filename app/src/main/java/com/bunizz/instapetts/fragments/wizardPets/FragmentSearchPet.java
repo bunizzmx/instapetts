@@ -26,6 +26,7 @@ import com.bunizz.instapetts.beans.RazaBean;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.wizardPets.adapters.SearchRazaAdapter;
 import com.bunizz.instapetts.listeners.change_instance_wizard;
+import com.bunizz.instapetts.listeners.process_save_pet_listener;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,7 +45,7 @@ public class FragmentSearchPet extends Fragment  implements SearchPetContract.Vi
     @BindView(R.id.serach_raza)
     EditText serach_raza;
     String texto_buscado="";
-
+    process_save_pet_listener listener_pet_config;
 
 
     @SuppressLint("MissingPermission")
@@ -85,6 +86,18 @@ public class FragmentSearchPet extends Fragment  implements SearchPetContract.Vi
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         list_words_search.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter.setListener(new change_instance_wizard() {
+            @Override
+            public void onchange(int type_fragment, Bundle data) {
+                listener_pet_config.SaveDataPet(data,2);
+                listener.onchange(type_fragment,data);
+            }
+
+            @Override
+            public void onpetFinish(boolean pet_saved) {
+
+            }
+        });
         list_words_search.setAdapter(adapter);
         presenter.downloadCatalogo(1);
         serach_raza.addTextChangedListener(new TextWatcher() {
@@ -117,6 +130,7 @@ public class FragmentSearchPet extends Fragment  implements SearchPetContract.Vi
     public void onAttach(Context context) {
         super.onAttach(context);
         listener= (change_instance_wizard) context;
+        listener_pet_config  =(process_save_pet_listener )context;
     }
 
     @Override

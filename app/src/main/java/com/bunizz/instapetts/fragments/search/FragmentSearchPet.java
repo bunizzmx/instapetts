@@ -1,5 +1,7 @@
 package com.bunizz.instapetts.fragments.search;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -17,8 +19,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.main.Main;
 import com.bunizz.instapetts.activitys.searchqr.QrSearchActivity;
+import com.bunizz.instapetts.activitys.share_post.ShareActivity;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
 import com.bunizz.instapetts.fragments.post.FragmentPostList;
 import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
@@ -28,6 +34,7 @@ import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.utils.tabs.SlidingFragmentPagerAdapter;
 import com.bunizz.instapetts.utils.tabs.SlidingTabLayout;
 import com.bunizz.instapetts.utils.tabs.TabType;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,7 +61,7 @@ public class FragmentSearchPet extends Fragment {
     RelativeLayout search_by_qr;
     private static final int REQUEST_CODE_QR_SCAN = 101;
 
-
+ RxPermissions rxPermissions;
     public static FragmentSearchPet newInstance() {
         return new FragmentSearchPet();
     }
@@ -63,6 +70,7 @@ public class FragmentSearchPet extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         tabAdapter = new TabAdapter(getFragmentManager(), getContext());
+        rxPermissions = new RxPermissions(getActivity());
     }
 
     @Nullable
@@ -71,6 +79,7 @@ public class FragmentSearchPet extends Fragment {
         return inflater.inflate(R.layout.fragment_searching_pet, container, false);
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -85,8 +94,20 @@ public class FragmentSearchPet extends Fragment {
         tabs_search.setCustomUnfocusedColor(R.color.black);
         tabs_search.setSelectedIndicatorColors(getResources().getColor(R.color.amarillo));
         search_by_qr.setOnClickListener(view1 -> {
-            Intent i = new Intent(getContext() , QrSearchActivity.class);
-            startActivityForResult( i,REQUEST_CODE_QR_SCAN);
+            rxPermissions
+                    .request(Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.CAMERA)
+                    .subscribe(granted -> {
+                        if (granted) {
+                            Intent i = new Intent(getContext() , QrSearchActivity.class);
+                            startActivityForResult( i,REQUEST_CODE_QR_SCAN);
+                        } else {
+                            App.getInstance().show_dialog_permision(getActivity(),getActivity().getResources().getString(R.string.permision_storage),
+                                    getResources().getString(R.string.permision_storage_body),0);
+                        }
+                    });
+
         });
     }
 

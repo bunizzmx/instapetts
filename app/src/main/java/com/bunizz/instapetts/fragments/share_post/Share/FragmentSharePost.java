@@ -19,17 +19,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
-import com.bunizz.instapetts.fragments.feed.FeedContract;
-import com.bunizz.instapetts.fragments.feed.FeedPresenter;
 import com.bunizz.instapetts.listeners.uploads;
-import com.bunizz.instapetts.services.MyService;
-import com.bunizz.instapetts.utils.dilogs.DialogShosePet;
-import com.google.android.gms.location.LocationServices;
+import com.bunizz.instapetts.services.UploadsService;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -136,10 +130,10 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             return;
         }
         Context context = getContext().getApplicationContext();
-        Intent intent = new Intent(context, MyService.class);
-        intent.putStringArrayListExtra(MyService.INTENT_KEY_NAME, filePaths);
+        Intent intent = new Intent(context, UploadsService.class);
+        intent.putStringArrayListExtra(UploadsService.INTENT_KEY_NAME, filePaths);
         intent.putExtra(BUNDLES.NOTIFICATION_TIPE,0);
-        intent.putExtra(MyService.INTENT_TRANSFER_OPERATION, MyService.TRANSFER_OPERATION_UPLOAD);
+        intent.putExtra(UploadsService.INTENT_TRANSFER_OPERATION, UploadsService.TRANSFER_OPERATION_UPLOAD);
         context.startService(intent);
         listener.onImageProfileUpdated();
     }

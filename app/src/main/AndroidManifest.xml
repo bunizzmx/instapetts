@@ -17,6 +17,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:requestLegacyExternalStorage="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
         <meta-data
@@ -49,9 +50,15 @@
         <activity android:name=".activitys.camera_history.CameraHistoryActivity"    android:screenOrientation="fullUser"
             android:rotationAnimation="seamless"/>
         <activity android:name=".activitys.searchqr.QrSearchActivity"/>
-        <service android:name=".services.MyService"
+        <service android:name=".services.UploadsService"
             android:enabled="true"/>
-
+        <service android:name=".services.NotificationsService"
+            android:enabled="true"/>
+        <service android:name=".notifications.NotificationsManagers">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
         <!-- ACTIVIDADES  -->
     </application>
 

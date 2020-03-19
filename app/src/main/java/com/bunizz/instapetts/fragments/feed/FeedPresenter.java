@@ -4,9 +4,14 @@ import android.content.Context;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.beans.AutenticateBean;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.constantes.FIRESTORE;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.LikePostHelper;
 import com.bunizz.instapetts.db.helpers.MyStoryHelper;
 import com.bunizz.instapetts.db.helpers.SavedPostHelper;
@@ -15,11 +20,20 @@ import com.bunizz.instapetts.web.WebServices;
 import com.bunizz.instapetts.managers.FeedResponse;
 import com.bunizz.instapetts.web.parameters.PostActions;
 import com.bunizz.instapetts.web.responses.ResponsePost;
+import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -39,6 +53,7 @@ public class FeedPresenter implements FeedContract.Presenter {
     LikePostHelper likePostHelper;
     MyStoryHelper myStoryHelper;
     int RETRY =0;
+    FirebaseFirestore db;
 
     FeedPresenter(FeedContract.View view, Context context) {
         this.mView = view;
@@ -48,6 +63,7 @@ public class FeedPresenter implements FeedContract.Presenter {
         savedPostHelper = new SavedPostHelper(context);
         likePostHelper = new LikePostHelper(context);
         myStoryHelper = new MyStoryHelper(context);
+        db = App.getIntanceFirestore();
     }
 
     @Override
@@ -105,6 +121,39 @@ public class FeedPresenter implements FeedContract.Presenter {
     @Override
     public void saveFavorite(PostActions postActions,PostBean postBean) {
         savedPostHelper.savePost(postBean);
+        Map<String,Object> data_post_saved = new HashMap<>();
+        data_post_saved.put("urls_posts",postBean.getUrls_posts());
+        data_post_saved.put("name_pet",postBean.getName_pet());
+        data_post_saved.put("name_user",postBean.getName_user());
+        data_post_saved.put("url_photo_user",postBean.getUrl_photo_user());
+        data_post_saved.put("description",postBean.getDescription());
+        data_post_saved.put("date_post",postBean.getDate_post());
+        data_post_saved.put("uuid",postBean.getUuid());
+        data_post_saved.put("id_usuario",postBean.getId_usuario());
+        data_post_saved.put("id_post_from_web",postBean.getId_post_from_web());
+        data_post_saved.put("saved",postBean.isSaved());
+        data_post_saved.put("liked",postBean.isLiked());
+        db.collection(FIRESTORE.R_POSTS_SAVED).document(App.read(PREFERENCES.UUID,"INVALID")).collection(FIRESTORE.POSTS)
+                .document(String.valueOf(postBean.getId_post_from_web()))
+                .set(data_post_saved)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                    }
+                });
     }
 
     @Override

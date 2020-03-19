@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.GetChars;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedAdapter;
@@ -35,6 +37,7 @@ import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
 import com.bunizz.instapetts.fragments.post.FragmentPostList;
 import com.bunizz.instapetts.listeners.change_instance;
+import com.bunizz.instapetts.listeners.folowFavoriteListener;
 import com.bunizz.instapetts.listeners.open_sheet_listener;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.tabs.SlidingFragmentPagerAdapter;
@@ -47,7 +50,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FragmentProfileUserPet extends Fragment {
+public class FragmentProfileUserPet extends Fragment implements  ProfileUserContract.View {
 
     change_instance listener;
     FeedAdapter feedAdapter;
@@ -78,9 +81,15 @@ public class FragmentProfileUserPet extends Fragment {
     @BindView(R.id.descripcion_perfil_user)
     TextView descripcion_perfil_user;
 
+    @BindView(R.id.name_property_pet)
+    TextView name_property_pet;
+    folowFavoriteListener listener_follow;
 
     String URL_UPDATED="INVALID";
-    ArrayList<PetBean> pets = new ArrayList<>();
+
+    ArrayList<PetBean> PETS = new ArrayList<>();
+    UserBean USERBEAN = new UserBean();
+    ArrayList<PostBean> POSTS = new ArrayList<>();
 
     private TabAdapter adapter;
 
@@ -95,9 +104,9 @@ public class FragmentProfileUserPet extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         petsPropietaryAdapter = new PetsPropietaryAdapter(getContext());
-        adapter = new TabAdapter(getFragmentManager(), getContext());
-        pets.add(new PetBean());
-        petsPropietaryAdapter.setPets(pets);
+        adapter = new TabAdapter(getActivity().getSupportFragmentManager(), getContext());
+        PETS.add(new PetBean());
+        petsPropietaryAdapter.setPets(PETS);
     }
 
     @Nullable
@@ -131,13 +140,25 @@ public class FragmentProfileUserPet extends Fragment {
         tabs_profile_propietary.setDistributeEvenly(true);
         tabs_profile_propietary.setCustomUnfocusedColor(R.color.black);
         tabs_profile_propietary.setSelectedIndicatorColors(getResources().getColor(R.color.naranja));
-        title_toolbar.setText("Louis Bardaley");
-
-        if(true){
+        Log.e("NAME_USUARIOS","-->" +App.read(PREFERENCES.NAME_USER,"USUARIO") );
+        title_toolbar.setText(App.read(PREFERENCES.NAME_USER,"USUARIO"));
+        name_property_pet.setText("@" + App.read(PREFERENCES.NAME_USER,"USUARIO"));
+        if(false){
             follow_edit.setText(R.string.edit_profile);
             follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_edit_profile));
             follow_edit.setTextColor(Color.BLACK);
             follow_edit.setOnClickListener(view1 -> listener.change(FragmentElement.INSTANCE_EDIT_PROFILE_USER));
+        }else{
+            follow_edit.setText("Sueguir");
+            follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_follow));
+            follow_edit.setTextColor(Color.WHITE);
+            follow_edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UserBean userBean = new UserBean();
+                    listener_follow.followUser(userBean);
+                }
+            });
         }
         descripcion_perfil_user.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
         URL_UPDATED = App.read(PREFERENCES.FOTO_PROFILE_USER,"INVALID");
@@ -149,6 +170,7 @@ public class FragmentProfileUserPet extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         listener= (change_instance) context;
+        listener_follow =(folowFavoriteListener)context;
     }
 
 
@@ -159,6 +181,20 @@ public class FragmentProfileUserPet extends Fragment {
 
     public void refresh_list_pets(){
         petsPropietaryAdapter.add_new_pet(new PetBean("El pochilais","","","","","","","","","",1));
+    }
+
+    @Override
+    public void showInfoUser(UserBean userBean, ArrayList<PetBean> pets, ArrayList<PostBean> posts) {
+        PETS.addAll(pets);
+        USERBEAN = userBean;
+        POSTS.addAll(posts);
+
+        title_toolbar.setText(USERBEAN.getName_user());
+        name_property_pet.setText("@" + USERBEAN.getName_user());
+        descripcion_perfil_user.setText(USERBEAN.getDescripcion());
+        Glide.with(getContext()).load(USERBEAN.getPhoto_user()).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);
+        petsPropietaryAdapter.setPets(PETS);
+
     }
 
     public class TabAdapter extends SlidingFragmentPagerAdapter {

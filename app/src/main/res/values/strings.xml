@@ -31,7 +31,7 @@ Hay que ser siempre respetuoso y cortés y no discutir nunca con quienes lo exam
 <string name="pet_type_hamster">Hamster</string>
 <string name="pet_type_otro">Otro</string>
 
-    <string name="edit_profile">Editar</string>
+    <string name="edit_profile">Editar Perfil</string>
 
     <array name="funny_colors">
         <item>#E63131</item>

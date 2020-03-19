@@ -4,6 +4,7 @@
     android:id="@+id/root_bottom_nav"
     android:layout_width="match_parent"
     android:layout_height="50dp"
+    android:elevation="5dp"
     android:layout_alignParentBottom="true"
     android:background="#fff">
     <LinearLayout
@@ -68,6 +69,7 @@
                 android:layout_height="9dp"/>
         </RelativeLayout>
         <RelativeLayout
+            android:background="?attr/selectableItemBackground"
             android:padding="10dp"
             android:id="@+id/tab_add_image"
             android:layout_width="match_parent"

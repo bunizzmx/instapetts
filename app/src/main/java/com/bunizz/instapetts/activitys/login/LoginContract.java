@@ -11,6 +11,7 @@ public interface LoginContract {
 
     interface View{
         void registerCompleted();
+        void loginCompleted(UserBean userBean);
         void registerError();
     }
 }

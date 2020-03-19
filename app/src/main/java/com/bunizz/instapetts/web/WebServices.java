@@ -8,8 +8,10 @@ import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.web.responses.ResponseCatalogo;
 import com.bunizz.instapetts.web.responses.ResponsePost;
+import com.bunizz.instapetts.web.responses.ResponseProfileUser;
 import com.bunizz.instapetts.web.responses.ResponseTips;
 import com.bunizz.instapetts.web.responses.SimpleResponse;
+import com.bunizz.instapetts.web.responses.SimpleResponseLogin;
 
 import java.util.List;
 import io.reactivex.Completable;
@@ -29,10 +31,10 @@ public interface WebServices {
 
     //USERS //////////////////////////////////////////////////////////
     @POST("test/newusers")
-    Single<SimpleResponse> newUser(@Body UserBean user);
+    Single<SimpleResponseLogin> newUser(@Body UserBean user);
 
     @POST("test/getusers")
-    Single<SimpleResponse> getUser(@Body UserBean user);
+    Single<ResponseProfileUser> getInfoUser(@Body UserBean user);
 
 
     //////////////////////////////////////////////////////////////////
@@ -56,4 +58,9 @@ public interface WebServices {
 
     @POST("test/catalogo")
     Single<ResponseCatalogo> getCatalogos(@Body int idPet );
+
+    // PETS //////////////////////////////////////////////////////////
+    @POST("test/newpets")
+    Single<SimpleResponse> newPet( @Body PetBean pet );
+    ////////////////////////////////////////////////////////////////////
 }

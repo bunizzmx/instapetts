@@ -15,25 +15,20 @@ import android.os.IBinder;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
-import com.amazonaws.mobileconnectors.s3.transferutility.TransferType;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.share_post.ShareActivity;
 import com.bunizz.instapetts.utils.compresor.Compressor;
-import com.google.android.gms.common.util.Strings;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
 
-public class MyService extends Service {
+public class UploadsService extends Service {
 
     private TransferUtility transferUtility;
 
@@ -41,7 +36,7 @@ public class MyService extends Service {
     public final static String INTENT_TRANSFER_OPERATION = "transferOperation";
     public final static String TRANSFER_OPERATION_UPLOAD = "upload";
     File file;
-    private final static String TAG = MyService.class.getSimpleName();
+    private final static String TAG = UploadsService.class.getSimpleName();
     public static  NotificationManager notificationManager;
     public static int TOTAL_LENGTH_ARCHIVES = 0;
     public static int TOTAL_PERCENTAGE= 0;
@@ -75,6 +70,10 @@ public class MyService extends Service {
         else if(TYPE_NOTIFICATION == 2) {
             TITLE_SUCCESS ="HISTORIA SUBIDA";
             TITLE = "SUBIENDO HISTORIAS";
+        }
+        else if(TYPE_NOTIFICATION == 3) {
+            TITLE_SUCCESS ="MASCOTA CREADA";
+            TITLE = "CONFIGURANDO TU MASCOTA";
         }
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_ONE_SHOT);

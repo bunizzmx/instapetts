@@ -1,23 +1,69 @@
 package com.bunizz.instapetts.beans;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class UserBean {
+
+    @SerializedName("id")
+    @Expose
     int id;
+    @SerializedName("name_user")
+    @Expose
     String name_user;
+    @SerializedName("ids_pets")
+    @Expose
     String ids_pets;
+    @SerializedName("descripcion")
+    @Expose
     String descripcion;
+
+    @SerializedName("num_pets")
+    @Expose
     int num_pets;
+
+    @SerializedName("photo_user")
+    @Expose
     String photo_user;
+
+    @SerializedName("phone_user")
+    @Expose
     String phone_user;
+
+    @SerializedName("lat")
+    @Expose
     double lat;
+
+    @SerializedName("lon")
+    @Expose
     double lon;
+
+    @SerializedName("token")
+    @Expose
     String token;
+
+    @SerializedName("uuid")
+    @Expose
     String uuid;
+
+    @SerializedName("posts")
+    @Expose
+    int posts;
+
+    @SerializedName("rate_pets")
+    @Expose
+    double rate_pets;
+
+    @SerializedName("folowers")
+    @Expose
+    int folowers;
+
     String target;
 
     public UserBean() {
     }
 
-    public UserBean(int id, String name_user, String ids_pets, String descripcion, int num_pets, String photo_user, String phone_user, double lat, double lon, String token, String uuid) {
+    public UserBean(int id, String name_user, String ids_pets, String descripcion, int num_pets, String photo_user, String phone_user, double lat, double lon, String token, String uuid, int posts, double rate_pets, int folowers) {
         this.id = id;
         this.name_user = name_user;
         this.ids_pets = ids_pets;
@@ -29,6 +75,9 @@ public class UserBean {
         this.lon = lon;
         this.token = token;
         this.uuid = uuid;
+        this.posts = posts;
+        this.rate_pets = rate_pets;
+        this.folowers = folowers;
     }
 
     public String getTarget() {
@@ -125,5 +174,30 @@ public class UserBean {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+
+    public int getPosts() {
+        return posts;
+    }
+
+    public void setPosts(int posts) {
+        this.posts = posts;
+    }
+
+    public double getRate_pets() {
+        return rate_pets;
+    }
+
+    public void setRate_pets(double rate_pets) {
+        this.rate_pets = rate_pets;
+    }
+
+    public int getFolowers() {
+        return folowers;
+    }
+
+    public void setFolowers(int folowers) {
+        this.folowers = folowers;
     }
 }

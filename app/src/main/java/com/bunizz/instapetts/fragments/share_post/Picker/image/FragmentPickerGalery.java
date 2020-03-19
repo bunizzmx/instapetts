@@ -257,7 +257,7 @@ public class FragmentPickerGalery  extends Fragment implements  FeedContract.Vie
                       uploas_listener.setResultForOtherChanges(uri.get(0));
                }else{
                    Log.e("RESULT_CLIXK","posts");
-                   listener.change_fragment_parameter(FragmentElement.INSTANCE_HISTORY_FOTO_PICKED,b);
+                   listener.change_fragment_parameter(FragmentElement.INSTANCE_CROP_IMAGE,b);
                }
 
            }else{

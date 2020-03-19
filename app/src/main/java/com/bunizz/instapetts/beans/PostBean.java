@@ -30,13 +30,19 @@ public class PostBean {
     @Expose
     String date_post;
 
-    boolean saved;
-    boolean liked;
+    @SerializedName("uuid")
+    @Expose
+    String uuid;
+
+    @SerializedName("id_usuario")
+    @Expose
+    int id_usuario;
 
     @SerializedName("id_post")
     @Expose
     int id_post_from_web;
-
+    boolean saved;
+    boolean liked;
 
     public PostBean() {
     }
@@ -127,6 +133,22 @@ public class PostBean {
 
     public void setSaved(boolean saved) {
         this.saved = saved;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public int getId_usuario() {
+        return id_usuario;
+    }
+
+    public void setId_usuario(int id_usuario) {
+        this.id_usuario = id_usuario;
     }
 }
 

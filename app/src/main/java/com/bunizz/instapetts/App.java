@@ -6,7 +6,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -18,7 +17,7 @@ import android.util.Log;
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.utils.dilogs.DialogPermision;
 import com.google.firebase.analytics.FirebaseAnalytics;
-
+import com.google.firebase.firestore.FirebaseFirestore;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import java.text.DecimalFormat;
@@ -39,8 +38,6 @@ public class App extends Application {
     private static final String AVENIR_BLACK = "avenir_black.otf";
     public static SoundPool soundPool, refresh_sound, chat, cuack;
     public static int idsend, id_refresh, id_chat, id_cuack;
-    public static Typeface roboto;
-    public static Typeface popin_subs,monserrat_black,monserrat_medium;
     String PREF = "com.bunizz.instapetts";
     private static SharedPreferences pref;
     private static App application;
@@ -52,6 +49,7 @@ public class App extends Application {
     DialogPermision dialogPermision;
     DecimalFormat dfs = new DecimalFormat("#,###,##0");
     public static Typeface fuente,avenir_black;
+    private static FirebaseFirestore db;
 
 
     @Override
@@ -61,11 +59,9 @@ public class App extends Application {
         SQLiteDatabase.loadLibs(getApplicationContext());
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        if(pref == null){
+        db = FirebaseFirestore.getInstance();
+        if(pref == null)
             pref = this.getSharedPreferences(PREF, Activity.MODE_PRIVATE);
-        }else{
-
-        }
         application = this;
         String idioma = Locale.getDefault().getLanguage();
         Log.e("IDIOMA","-->" + idioma);
@@ -88,7 +84,12 @@ public class App extends Application {
         dialogPermision.show();
     }
 
-
+    public static FirebaseFirestore getIntanceFirestore(){
+        if(db!=null)
+            return db;
+        else
+            return db = FirebaseFirestore.getInstance();
+    }
 
     private void initTypeface() {
 
@@ -131,6 +132,8 @@ public class App extends Application {
             //if (!BuildConfig.DEBUG)
                 mFirebaseAnalytics.logEvent(event, bundle);
     }
+
+
 
 
     public void vibrate(){

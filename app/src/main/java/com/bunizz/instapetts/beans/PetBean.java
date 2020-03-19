@@ -4,22 +4,63 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.bunizz.instapetts.db.helpers.PetHelper;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class PetBean {
 
+    @SerializedName("name_pet")
+    @Expose
     String name_pet;
+
+    @SerializedName("raza_pet")
+    @Expose
     String raza_pet;
+
+
+    @SerializedName("peso_pet")
+    @Expose
     String peso_pet;
+    @SerializedName("color_pet")
+    @Expose
     String color_pet;
+
+    @SerializedName("descripcion_pet")
+    @Expose
     String descripcion_pet;
+
+    @SerializedName("genero_pet")
+    @Expose
     String genero_pet;
+
+    @SerializedName("rate_pet")
+    @Expose
     String rate_pet;
+
+    @SerializedName("name_propietary")
+    @Expose
     String name_propietary;
+
+    @SerializedName("id_propietary")
+    @Expose
     String id_propietary;
+
+    @SerializedName("id_pet")
+    @Expose
     String id_pet;
+
+    @SerializedName("edad_pet")
+    @Expose
     String edad_pet;
+
+    @SerializedName("url_photo")
+    @Expose
     String url_photo;
+
+    @SerializedName("type_pet")
+    @Expose
     int type_pet;
+
 
 
     public PetBean() {

@@ -1,10 +1,12 @@
-package com.bunizz.instapetts.activitys.login;
+package com.bunizz.instapetts.activitys.wizardPets;
 
 import android.content.Context;
 
-import com.bunizz.instapetts.beans.UserBean;
-import com.bunizz.instapetts.fragments.login.MainLogin;
-import com.bunizz.instapetts.fragments.login.MainLoginContract;
+import com.bunizz.instapetts.beans.PetBean;
+import com.bunizz.instapetts.db.helpers.LikePostHelper;
+import com.bunizz.instapetts.db.helpers.MyStoryHelper;
+import com.bunizz.instapetts.db.helpers.SavedPostHelper;
+import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
 import com.bunizz.instapetts.web.responses.SimpleResponse;
@@ -15,39 +17,40 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
-public class LoginPresenter implements LoginContract.Presenter {
+public class WizardPetPresenter implements WizardPetContract.Presenter {
 
-    LoginContract.View mView;
-    Context mContext;
+    private WizardPetContract.View mView;
+    private Context mContext;
     private CompositeDisposable disposable = new CompositeDisposable();
     private WebServices apiService;
-    private static final String TAG = MainLogin.class.getSimpleName();
+    int RETRY =0;
 
-    LoginPresenter(LoginContract.View view, Context context) {
+    WizardPetPresenter(WizardPetContract.View view, Context context) {
         this.mView = view;
         this.mContext = context;
         apiService = ApiClient.getClient(context)
                 .create(WebServices.class);
     }
+
     @Override
-    public void RegisterUser(UserBean userBean) {
-            disposable.add(
+    public void newPet(PetBean petBean) {
+        disposable.add(
                 apiService
-                        .newUser(userBean)
+                        .newPet(petBean)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(new DisposableSingleObserver<SimpleResponseLogin>() {
+                        .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
                             @Override
-                            public void onSuccess(SimpleResponseLogin user) {
+                            public void onSuccess(SimpleResponse user) {
                                 if(user.getCode_response() ==1)
-                                   mView.loginCompleted(user.getData_user());
+                                    mView.petSaved();
                                 else
-                                    mView.registerCompleted();
+                                    mView.petSaved();
 
                             }
                             @Override
                             public void onError(Throwable e) {
-                                mView.registerError();
+                                mView.petSaved();
                             }
                         }));
     }

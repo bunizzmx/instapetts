@@ -1,4 +1,4 @@
-package com.bunizz.instapetts.activitys.login;
+package com.bunizz.instapetts.fragments.profile;
 
 import android.content.Context;
 
@@ -7,47 +7,43 @@ import com.bunizz.instapetts.fragments.login.MainLogin;
 import com.bunizz.instapetts.fragments.login.MainLoginContract;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
-import com.bunizz.instapetts.web.responses.SimpleResponse;
-import com.bunizz.instapetts.web.responses.SimpleResponseLogin;
+import com.bunizz.instapetts.web.responses.ResponseProfileUser;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
-public class LoginPresenter implements LoginContract.Presenter {
+public class ProfileUserPresenter implements   ProfileUserContract.Presenter {
 
-    LoginContract.View mView;
+    ProfileUserContract.View mView;
     Context mContext;
     private CompositeDisposable disposable = new CompositeDisposable();
     private WebServices apiService;
     private static final String TAG = MainLogin.class.getSimpleName();
 
-    LoginPresenter(LoginContract.View view, Context context) {
+    ProfileUserPresenter(ProfileUserContract.View view, Context context) {
         this.mView = view;
         this.mContext = context;
         apiService = ApiClient.getClient(context)
                 .create(WebServices.class);
     }
+
     @Override
-    public void RegisterUser(UserBean userBean) {
-            disposable.add(
+    public void getInfoUser(UserBean user) {
+    disposable.add(
                 apiService
-                        .newUser(userBean)
+                        .getInfoUser(user)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(new DisposableSingleObserver<SimpleResponseLogin>() {
+                        .subscribeWith(new DisposableSingleObserver<ResponseProfileUser>() {
                             @Override
-                            public void onSuccess(SimpleResponseLogin user) {
-                                if(user.getCode_response() ==1)
-                                   mView.loginCompleted(user.getData_user());
-                                else
-                                    mView.registerCompleted();
-
+                            public void onSuccess(ResponseProfileUser info) {
+                                mView.showInfoUser(info.getData_user(),info.getPetsUser(),info.getPostsUser());
                             }
                             @Override
                             public void onError(Throwable e) {
-                                mView.registerError();
+                                //mView.showInfoUser(info.getData_user(),info.getPetsUser(),info.getPostsUser());
                             }
                         }));
     }

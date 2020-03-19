@@ -23,6 +23,7 @@ import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.fragments.wizardPets.adapters.TypePetsAdapter;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.change_instance_wizard;
+import com.bunizz.instapetts.listeners.process_save_pet_listener;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,7 @@ public class FragmentTypePet extends Fragment{
     RecyclerView list_types_pet;
 
     change_instance_wizard listener;
+    process_save_pet_listener listener_pet_config;
 
     TypePetsAdapter adapter;
     ArrayList<PetTtype> petTtypes = new ArrayList<>();
@@ -50,6 +52,7 @@ public class FragmentTypePet extends Fragment{
             @Override
             public void onchange(int type_fragment, Bundle data) {
                 if(listener!=null){
+                    listener_pet_config.SaveDataPet(data,1);
                     listener.onchange(type_fragment,data);
                 }
             }
@@ -88,6 +91,7 @@ public class FragmentTypePet extends Fragment{
     public void onAttach(Context context) {
         super.onAttach(context);
         listener= (change_instance_wizard) context;
+        listener_pet_config = (process_save_pet_listener) context;
     }
 
 

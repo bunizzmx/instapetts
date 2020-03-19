@@ -3,6 +3,7 @@ package com.bunizz.instapetts.fragments.feed;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -29,6 +30,7 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.postsListener;
@@ -207,9 +209,20 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         }
                     }
                 });
-                f.root_preview_perfil_click.setOnClickListener(view -> listener.change_fragment_parameter(INSTANCE_PREVIEW_PROFILE,null));
+                f.root_preview_perfil_click.setOnClickListener(view ->{
+                    Bundle b = new Bundle();
+                    b.putString(BUNDLES.UUID,data_parsed.getUuid());
+                    b.putInt(BUNDLES.ID_USUARIO,data_parsed.getId_usuario());
+                    listener.change_fragment_parameter(INSTANCE_PREVIEW_PROFILE,b);
+                });
                 f.name_pet.setText(data_parsed.getName_user());
-                f.description_posts.setText(data_parsed.getDescription());
+                if(data_parsed.getDescription().isEmpty()){
+                    f.description_posts.setVisibility(View.GONE);
+                }else{
+                    f.description_posts.setVisibility(View.VISIBLE);
+                    f.description_posts.setText(data_parsed.getDescription());
+                }
+
                 Glide.with(context).load(data_parsed.getUrl_photo_user()).into(f.image_pet);
 
                 f.date_post.setText(App.fecha_lenguaje_humano(data_parsed.getDate_post()));

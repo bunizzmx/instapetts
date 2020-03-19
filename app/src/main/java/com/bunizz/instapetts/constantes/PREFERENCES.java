@@ -13,7 +13,7 @@ public interface PREFERENCES {
     String LON = "LON";
     String DESCRIPCCION = "DESCRIPCCION";
     String FROM_PICKER ="FROM_PICKER";
-
+    String NAME_USER ="NAME_USER";
 
 
 }

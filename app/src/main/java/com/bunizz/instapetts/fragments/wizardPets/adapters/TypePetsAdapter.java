@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.wizardPets.PetTtype;
 import com.bunizz.instapetts.listeners.change_instance_wizard;
@@ -78,6 +79,7 @@ public class TypePetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             h.type_pet_image.setOnClickListener(view -> {
                 if(listener!=null){
                     Bundle b = new Bundle();
+                    b.putInt(BUNDLES.TYPE_PET,petTtypes.get(position).getId());
                     listener.onchange(FragmentElement.INSTANCE_TYPE_SEARCH_RAZA,b);
                 }
             });

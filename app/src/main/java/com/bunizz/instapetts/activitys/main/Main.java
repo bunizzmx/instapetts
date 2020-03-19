@@ -3,11 +3,8 @@ package com.bunizz.instapetts.activitys.main;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -25,6 +22,7 @@ import com.bunizz.instapetts.activitys.camera_history.CameraHistoryActivity;
 import com.bunizz.instapetts.activitys.share_post.ShareActivity;
 import com.bunizz.instapetts.activitys.wizardPets.WizardPetActivity;
 import com.bunizz.instapetts.beans.HistoriesBean;
+import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
@@ -40,26 +38,27 @@ import com.bunizz.instapetts.fragments.tips.FragmentTipDetail;
 import com.bunizz.instapetts.fragments.tips.FragmentTips;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.folowFavoriteListener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.uploads;
-import com.bunizz.instapetts.services.MyService;
+import com.bunizz.instapetts.services.UploadsService;
 import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
 import com.bunizz.instapetts.web.CONST;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Stack;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-
-public class Main extends AppCompatActivity implements change_instance, changue_fragment_parameters_listener, uploads,MainContract.View , open_camera_histories_listener {
+public class Main extends AppCompatActivity implements change_instance,
+        changue_fragment_parameters_listener,
+        uploads,MainContract.View ,
+        open_camera_histories_listener,
+        folowFavoriteListener {
 
 
     private Stack<FragmentElement> stack_feed;
@@ -209,7 +208,7 @@ public class Main extends AppCompatActivity implements change_instance, changue_
         presenter = new MainPresenter(this,this);
     }
 
-    public void changeStatusBarColor(int color) {
+    public void changeStatusBarCNAME_USUARIOSolor(int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
@@ -566,10 +565,10 @@ public class Main extends AppCompatActivity implements change_instance, changue_
     public void UpdateProfile(Bundle bundle) {
         ArrayList<String> uri_profile = new ArrayList<>();
         uri_profile.add(bundle.getString(BUNDLES.PHOTO_LOCAL));
-        Intent intent = new Intent(Main.this, MyService.class);
-        intent.putStringArrayListExtra(MyService.INTENT_KEY_NAME, uri_profile);
+        Intent intent = new Intent(Main.this, UploadsService.class);
+        intent.putStringArrayListExtra(UploadsService.INTENT_KEY_NAME, uri_profile);
         intent.putExtra(BUNDLES.NOTIFICATION_TIPE,1);
-        intent.putExtra(MyService.INTENT_TRANSFER_OPERATION, MyService.TRANSFER_OPERATION_UPLOAD);
+        intent.putExtra(UploadsService.INTENT_TRANSFER_OPERATION, UploadsService.TRANSFER_OPERATION_UPLOAD);
         startService(intent);
         UserBean userBean = new UserBean();
         userBean.setDescripcion(bundle.getString(BUNDLES.DESCRIPCION));
@@ -594,10 +593,10 @@ public class Main extends AppCompatActivity implements change_instance, changue_
    void  upload_story(String url){
        ArrayList<String> uri_profile = new ArrayList<>();
        uri_profile.add(url);
-       Intent intent = new Intent(Main.this, MyService.class);
-       intent.putStringArrayListExtra(MyService.INTENT_KEY_NAME, uri_profile);
+       Intent intent = new Intent(Main.this, UploadsService.class);
+       intent.putStringArrayListExtra(UploadsService.INTENT_KEY_NAME, uri_profile);
        intent.putExtra(BUNDLES.NOTIFICATION_TIPE,2);
-       intent.putExtra(MyService.INTENT_TRANSFER_OPERATION, MyService.TRANSFER_OPERATION_UPLOAD);
+       intent.putExtra(UploadsService.INTENT_TRANSFER_OPERATION, UploadsService.TRANSFER_OPERATION_UPLOAD);
        startService(intent);
 
        String splits[] =url.split("/");
@@ -613,5 +612,27 @@ public class Main extends AppCompatActivity implements change_instance, changue_
        historiesBean.setId_user(1);
        historiesBean.setId_pet(1);
        presenter.saveMyStory(historiesBean);
+    }
+
+
+    public void changeStatusBarColor(int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            //window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), color));
+            window.setNavigationBarColor(ContextCompat.getColor(getApplicationContext(), color));
+        }
+    }
+
+    @Override
+    public void followUser(UserBean userBean) {
+       presenter.followUser(userBean);
+    }
+
+    @Override
+    public void favoritePet(UserBean userBean, PetBean petBean) {
+      presenter.favoritePet(userBean,petBean);
     }
 }

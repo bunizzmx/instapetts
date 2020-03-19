@@ -17,7 +17,9 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.listeners.change_instance_wizard;
+import com.bunizz.instapetts.listeners.process_save_pet_listener;
 import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.utils.ImagenCircular;
 
@@ -29,16 +31,24 @@ public class FragmentFinalConfigPet extends Fragment {
 
     change_instance_wizard listener;
     uploads uploads_listener;
-
+    process_save_pet_listener listener_pet_config;
+    String URL_PET="";
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.finalice_pet)
     void finalice_pet()
     {
-       if(!configure_name_pet.getText().toString().isEmpty() &&  descripcion_pet.getText().toString().isEmpty()){
+       if(!configure_name_pet.getText().toString().isEmpty() &&  !descripcion_pet.getText().toString().isEmpty()){
            if(listener!=null){
                Log.e("PET_FINALICE",":)");
+               Bundle b = new Bundle();
+               b.putString(BUNDLES.NAME_PET,configure_name_pet.getText().toString());
+               b.putString(BUNDLES.DESCRIPCION_PET,descripcion_pet.getText().toString());
+               b.putString(BUNDLES.URL_PHOTO_PET,URL_PET);
+               listener_pet_config.SaveDataPet(b,4);
                listener.onpetFinish(true);
+           }else{
+               Log.e("PET_FINALICE","nulo");
            }
        }else{
          if(configure_name_pet.getText().toString().isEmpty())
@@ -56,9 +66,6 @@ public class FragmentFinalConfigPet extends Fragment {
     {
         uploads_listener.onImageProfileUpdated();
     }
-
-
-
 
     @BindView(R.id.configure_name_pet)
     AutoCompleteTextView configure_name_pet;
@@ -99,9 +106,11 @@ public class FragmentFinalConfigPet extends Fragment {
         super.onAttach(context);
         listener= (change_instance_wizard) context;
         uploads_listener =(uploads)context;
+        listener_pet_config =(process_save_pet_listener)context;
     }
 
     public void change_image_profile(String url){
+        URL_PET = url;
         Glide.with(getContext()).load(url).into(image_pet_edit);
     }
 

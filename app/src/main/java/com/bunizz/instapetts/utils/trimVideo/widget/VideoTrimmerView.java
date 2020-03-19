@@ -29,13 +29,7 @@ import com.bunizz.instapetts.utils.trimVideo.interfaces.VideoTrimListener;
 import com.bunizz.instapetts.utils.trimVideo.trim.VideoTrimmerAdapter;
 import com.bunizz.instapetts.utils.trimVideo.trim.VideoTrimmerUtil;
 import com.bunizz.instapetts.utils.trimVideo.utils.StorageUtil;
-import com.daasuu.mp4compose.FillMode;
-import com.daasuu.mp4compose.Rotation;
-import com.daasuu.mp4compose.VideoFormatMimeType;
-import com.daasuu.mp4compose.composer.Mp4Composer;
-import com.daasuu.mp4compose.filter.GlFilterGroup;
-import com.daasuu.mp4compose.filter.GlMonochromeFilter;
-import com.daasuu.mp4compose.filter.GlVignetteFilter;
+
 
 import iknow.android.utils.callback.SingleCallback;
 import iknow.android.utils.thread.BackgroundExecutor;

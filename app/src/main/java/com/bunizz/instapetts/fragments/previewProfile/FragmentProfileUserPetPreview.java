@@ -19,8 +19,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PetBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
 import com.bunizz.instapetts.fragments.post.FragmentPostList;
@@ -59,7 +62,8 @@ public class FragmentProfileUserPetPreview extends Fragment {
 
     ArrayList<PetBean> pets = new ArrayList<>();
     private TabAdapter adapter;
-
+    String UUID="";
+    int ID_USUSARIO=0;
 
     PetsPropietaryAdapter petsPropietaryAdapter;
 
@@ -74,6 +78,12 @@ public class FragmentProfileUserPetPreview extends Fragment {
         adapter = new TabAdapter(getFragmentManager(), getContext());
         pets.add(new PetBean());
         petsPropietaryAdapter.setPets(pets);
+        Bundle bundle=getArguments();
+        if(bundle!=null){
+            UUID  = bundle.getString(BUNDLES.UUID,"INVALID");
+            ID_USUSARIO = bundle.getInt(BUNDLES.ID_USUARIO,0);
+        }
+
     }
 
     @Nullable
@@ -105,10 +115,14 @@ public class FragmentProfileUserPetPreview extends Fragment {
         tabs_profile_propietary.setDistributeEvenly(true);
         tabs_profile_propietary.setCustomUnfocusedColor(R.color.black);
         tabs_profile_propietary.setSelectedIndicatorColors(getResources().getColor(R.color.naranja));
-        if(true){
+        if(UUID.equals(App.read(PREFERENCES.UUID,"INVALID"))){
             follow_edit.setText(R.string.edit_profile);
             follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_edit_profile));
             follow_edit.setTextColor(Color.BLACK);
+        }else{
+            follow_edit.setText("Seguir");
+            follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_follow));
+            follow_edit.setTextColor(Color.WHITE);
         }
 
     }
@@ -120,6 +134,13 @@ public class FragmentProfileUserPetPreview extends Fragment {
         listener= (changue_fragment_parameters_listener) context;
         listener_simple= (change_instance) context;
 
+    }
+
+    public void refresh_preview(Bundle bundle){
+        if(bundle!=null){
+            UUID  = bundle.getString(BUNDLES.UUID,"INVALID");
+            ID_USUSARIO = bundle.getInt(BUNDLES.ID_USUARIO,0);
+        }
     }
 
     public void refresh_list_pets(){

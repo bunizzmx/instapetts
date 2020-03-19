@@ -19,8 +19,10 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.listeners.change_instance_wizard;
+import com.bunizz.instapetts.listeners.process_save_pet_listener;
 import com.bunizz.instapetts.utils.datepicker.date.DatePickerDialogFragment;
 import com.bunizz.instapetts.utils.rulepicker.RulerValuePicker;
 import com.bunizz.instapetts.utils.rulepicker.RulerValuePickerListener;
@@ -67,6 +69,7 @@ public class FragmentDataPet extends Fragment {
 
     @BindView(R.id.icon_macho)
     ImageView icon_macho;
+    int GENERO =0;
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.next_finalize)
@@ -75,7 +78,25 @@ public class FragmentDataPet extends Fragment {
         Log.e("PET_FINALICE","xxx");
         if(listener!=null){
             Log.e("PET_FINALICE",":)");
-           listener.onchange(FragmentElement.INSTANCE_FINAL_CONFIG_PET,null);
+            Bundle b = new Bundle();
+            b.putString(BUNDLES.PESO_PET,String.valueOf(height_ruler_picker.getCurrentValue()));
+            if(GENERO == 1)
+            b.putString(BUNDLES.GENERO_PET,"MACHO");
+            else if(GENERO == 2)
+              b.putString(BUNDLES.GENERO_PET,"HEMBRA");
+
+            b.putString(BUNDLES.EDAD_PET,"12/12/12");
+            listener_pet_config.SaveDataPet(b,3);
+            if(GENERO == 0){
+                Toast.makeText(getContext(),"SELECIONA GENERO",Toast.LENGTH_LONG).show();
+            }else{
+                if(date_selected.getText().toString().isEmpty())
+                    Toast.makeText(getContext(),"SELECIONA FECHA",Toast.LENGTH_LONG).show();
+                else {
+                    listener_pet_config.SaveDataPet(b,3);
+                    listener.onchange(FragmentElement.INSTANCE_FINAL_CONFIG_PET, null);
+                }
+            }
         }
     }
 
@@ -85,7 +106,7 @@ public class FragmentDataPet extends Fragment {
 
     int tipe_pet=0;
     String FACTOR = "kg";
-
+    process_save_pet_listener listener_pet_config;
     change_instance_wizard listener;
 
 
@@ -166,6 +187,7 @@ public class FragmentDataPet extends Fragment {
         });
 
         card_hembra.setOnClickListener(view13 -> {
+            GENERO = 2;
             card_hembra.setCardBackgroundColor(getContext().getResources().getColor(R.color.naranja));
             card_macho.setCardBackgroundColor(getContext().getResources().getColor(R.color.white));
             icon_hembra.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_hembra_white));
@@ -173,6 +195,7 @@ public class FragmentDataPet extends Fragment {
         });
 
         card_macho.setOnClickListener(view12 -> {
+            GENERO = 1;
             card_macho.setCardBackgroundColor(getContext().getResources().getColor(R.color.naranja));
             card_hembra.setCardBackgroundColor(getContext().getResources().getColor(R.color.white));
             icon_hembra.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_hembra));
@@ -185,5 +208,6 @@ public class FragmentDataPet extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         listener= (change_instance_wizard) context;
+        listener_pet_config =(process_save_pet_listener)context;
     }
 }

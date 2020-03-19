@@ -370,6 +370,19 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     }
 
     @Override
+    public void loginCompleted(UserBean userBean) {
+        App.write(PREFERENCES.FOTO_PROFILE_USER,userBean.getPhoto_user());
+        App.write(PREFERENCES.DESCRIPCCION,userBean.getDescripcion());
+        App.write(PREFERENCES.NAME_USER,userBean.getName_user());
+        Log.e("NAME_USUARIOS","-->" +userBean.getName_user());
+        Log.e("NAME_USUARIOS","xx-->" +userBean.getDescripcion());
+        App.write(IS_LOGUEDD,true);
+        Intent i ;
+        i = new Intent(LoginActivity.this, Main.class);
+        startActivity(i);
+    }
+
+    @Override
     public void registerError() {
 
     }
