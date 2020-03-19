@@ -114,7 +114,7 @@ public class FragmentProfileUserPetPreview extends Fragment {
         tabs_profile_propietary.setTextSize(18);
         tabs_profile_propietary.setDistributeEvenly(true);
         tabs_profile_propietary.setCustomUnfocusedColor(R.color.black);
-        tabs_profile_propietary.setSelectedIndicatorColors(getResources().getColor(R.color.naranja));
+        tabs_profile_propietary.setSelectedIndicatorColors(getResources().getColor(R.color.primary));
         if(UUID.equals(App.read(PREFERENCES.UUID,"INVALID"))){
             follow_edit.setText(R.string.edit_profile);
             follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_edit_profile));

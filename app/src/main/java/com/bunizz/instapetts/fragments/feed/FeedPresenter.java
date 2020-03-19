@@ -96,7 +96,7 @@ public class FeedPresenter implements FeedContract.Presenter {
                                     }
                                     mView.show_feed(post, responsePost.getList_stories());
                                 }  else{
-
+                                    mView.peticion_error();
                                     }
                             }
                             @Override

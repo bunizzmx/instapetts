@@ -188,7 +188,7 @@ public class FragmentDataPet extends Fragment {
 
         card_hembra.setOnClickListener(view13 -> {
             GENERO = 2;
-            card_hembra.setCardBackgroundColor(getContext().getResources().getColor(R.color.naranja));
+            card_hembra.setCardBackgroundColor(getContext().getResources().getColor(R.color.primary));
             card_macho.setCardBackgroundColor(getContext().getResources().getColor(R.color.white));
             icon_hembra.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_hembra_white));
             icon_macho.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_macho));
@@ -196,7 +196,7 @@ public class FragmentDataPet extends Fragment {
 
         card_macho.setOnClickListener(view12 -> {
             GENERO = 1;
-            card_macho.setCardBackgroundColor(getContext().getResources().getColor(R.color.naranja));
+            card_macho.setCardBackgroundColor(getContext().getResources().getColor(R.color.primary));
             card_hembra.setCardBackgroundColor(getContext().getResources().getColor(R.color.white));
             icon_hembra.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_hembra));
             icon_macho.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_macho_white));

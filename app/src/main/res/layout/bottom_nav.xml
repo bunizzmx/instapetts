@@ -29,7 +29,7 @@
                 android:layout_toRightOf="@+id/icon_feed_pet"
                 android:layout_marginTop="12dp"
                 android:layout_marginLeft="-5dp"
-                app:cardBackgroundColor="#FF5722"
+                app:cardBackgroundColor="@color/primary"
                 android:layout_width="9dp"
                 android:layout_height="9dp"/>
             <ImageView
@@ -64,7 +64,7 @@
                 android:layout_toRightOf="@+id/icon_tips"
                 android:layout_marginTop="12dp"
                 android:layout_marginLeft="-5dp"
-                app:cardBackgroundColor="#FF5722"
+                app:cardBackgroundColor="@color/primary"
                 android:layout_width="9dp"
                 android:layout_height="9dp"/>
         </RelativeLayout>

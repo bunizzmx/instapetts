@@ -139,7 +139,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         tabs_profile_propietary.setTextSize(18);
         tabs_profile_propietary.setDistributeEvenly(true);
         tabs_profile_propietary.setCustomUnfocusedColor(R.color.black);
-        tabs_profile_propietary.setSelectedIndicatorColors(getResources().getColor(R.color.naranja));
+        tabs_profile_propietary.setSelectedIndicatorColors(getResources().getColor(R.color.primary));
         Log.e("NAME_USUARIOS","-->" +App.read(PREFERENCES.NAME_USER,"USUARIO") );
         title_toolbar.setText(App.read(PREFERENCES.NAME_USER,"USUARIO"));
         name_property_pet.setText("@" + App.read(PREFERENCES.NAME_USER,"USUARIO"));

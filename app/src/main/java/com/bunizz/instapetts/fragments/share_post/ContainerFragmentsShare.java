@@ -70,7 +70,7 @@ public class ContainerFragmentsShare extends Fragment{
         tabs_camera.setTextSize(18);
         tabs_camera.setDistributeEvenly(true);
         tabs_camera.setCustomUnfocusedColor(R.color.black);
-        tabs_camera.setSelectedIndicatorColors(getResources().getColor(R.color.naranja));
+        tabs_camera.setSelectedIndicatorColors(getResources().getColor(R.color.primary));
     }
 
     public class TabAdapter extends SlidingFragmentPagerAdapter {

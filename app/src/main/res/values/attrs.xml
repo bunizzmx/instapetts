@@ -322,7 +322,7 @@
     <array name="default_gradient_colors">
         <item>@color/A400red</item>
         <item>@color/amarillo</item>
-        <item>@color/naranja</item>
+        <item>@color/primary</item>
         <item>@color/azul_facebook</item>
         <item>@color/amarillo</item>
         <item>@color/A400red</item>

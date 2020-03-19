@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
@@ -38,6 +39,9 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
     TipsPresenter presenter;
     ArrayList<Object> data = new ArrayList<>();
 
+    @BindView(R.id.refresh_tips)
+    SwipeRefreshLayout refresh_tips;
+
     public static FragmentTips newInstance() {
         return new FragmentTips();
     }
@@ -63,6 +67,9 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
         list_tips.setLayoutManager(new LinearLayoutManager(getContext()));
         list_tips.setAdapter(adapter);
         presenter.getTips();
+        refresh_tips.setOnRefreshListener(() ->{
+            presenter.getTips();
+        });
 
     }
 

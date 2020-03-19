@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#EFEFEF"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <ImageView
         android:layout_alignParentRight="true"
@@ -18,14 +19,6 @@
         android:layout_alignParentTop="true"
         android:tint="#61E91E63"
         android:src="@drawable/ic_hand_1"
-        android:layout_width="150dp"
-        android:layout_height="150dp"/>
-
-    <ImageView
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:tint="#F44336"
-        android:src="@drawable/ic_hand_5"
         android:layout_width="150dp"
         android:layout_height="150dp"/>
     <RelativeLayout
@@ -97,7 +90,7 @@
             android:id="@+id/button_signin"
             android:layout_marginTop="30dp"
             android:textColor="@color/white"
-            android:background="@color/amarillo"
+            android:background="@drawable/button_follow"
             android:fontFamily="@font/avenir_black"
             android:textAllCaps="false"
             android:text="Sigin"

@@ -74,20 +74,20 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
                 Log.e("MY_STORIE","!=null");
                 if(historiesBeans.get(position).getUris_stories()!=null){
                     Log.e("MY_STORIE","!=null uris");
-                    h.image_pet_history.setStroke_separate(true);
-                    h.image_pet_history.setBorderColor(context.getResources().getColor(R.color.naranja));
-                    h.image_pet_history.setOnClickListener(view -> {
+                    h.image_pet_history.setBorderColor(context.getResources().getColor(R.color.primary));
+                    h.profile_background.setOnClickListener(view -> {
                             Intent i = new Intent(context, StoryPlayer.class);
                             i.putExtra("sliders", Parcels.wrap(historiesBeans));
                             i.putExtra("SELECTED_POSITION", position);
                             context.startActivity(i);
                     });
                     h.icon_add_story_user.setVisibility(View.GONE);
+                    Glide.with(context).load(historiesBeans.get(position).getUris_stories()).into(h.profile_background);
                 }else{
                     Log.e("MY_STORIE","null  uris");
                     h.image_pet_history.setStroke_separate(false);
                     h.image_pet_history.setBorderColor(Color.WHITE);
-                    h.image_pet_history.setOnClickListener(view -> {
+                    h.profile_background.setOnClickListener(view -> {
                         if(listener!=null){
                             listener.open();
                         }
@@ -102,10 +102,10 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
         }else{
             Log.e("GLIDE_DE_LA","-->" + historiesBeans.get(position).getUrl_photo_user());
             Glide.with(context).load(historiesBeans.get(position).getUrl_photo_user()).into(h.image_pet_history);
-            h.image_pet_history.setBorderColor(context.getResources().getColor(R.color.naranja));
-            h.image_pet_history.setStroke_separate(true);
+            Glide.with(context).load(historiesBeans.get(position).getUris_stories()).into(h.profile_background);
+            h.image_pet_history.setBorderColor(context.getResources().getColor(R.color.primary));
             h.icon_add_story_user.setVisibility(View.GONE);
-            h.image_pet_history.setOnClickListener(view -> {
+            h.profile_background.setOnClickListener(view -> {
                 Intent i = new Intent(context, StoryPlayer.class);
                 i.putExtra("sliders", Parcels.wrap(historiesBeans));
                 i.putExtra("SELECTED_POSITION", position);
@@ -124,11 +124,13 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
      ImagenCircular image_pet_history;
      RelativeLayout icon_add_story_user;
      TextView name_pet_item;
+     ImageView profile_background;
         public FeedHistoriesHolder(@NonNull View itemView) {
             super(itemView);
             image_pet_history = itemView.findViewById(R.id.image_pet_history);
             icon_add_story_user = itemView.findViewById(R.id.icon_add_story_user);
             name_pet_item = itemView.findViewById(R.id.name_pet_item);
+            profile_background = itemView.findViewById(R.id.profile_background);
         }
     }
 
