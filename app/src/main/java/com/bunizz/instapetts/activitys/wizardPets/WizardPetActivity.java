@@ -37,7 +37,10 @@ import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.change_instance_wizard;
 import com.bunizz.instapetts.listeners.process_save_pet_listener;
 import com.bunizz.instapetts.listeners.uploads;
+import com.bunizz.instapetts.services.ImagePostsService;
+import com.bunizz.instapetts.services.ImageService;
 import com.bunizz.instapetts.services.UploadsService;
+import com.bunizz.instapetts.web.CONST;
 import com.bunizz.instapetts.web.responses.SimpleResponse;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -226,7 +229,10 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
 
     @Override
     public void onpetFinish(boolean pet_saved) {
-        NEW_PET.setId_propietary(App.read(PREFERENCES.UUID,"INVALID"));
+        NEW_PET.setId_propietary(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        NEW_PET.setUuid(App.read(PREFERENCES.UUID,"INVALID"));
+        NEW_PET.setName_propietary(App.read(PREFERENCES.NAME_USER,"INVALID"));
+        petHelper.savePet(NEW_PET);
         presenter.newPet(NEW_PET);
     }
 
@@ -247,10 +253,11 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
                 NEW_PET.setPeso_pet(b.getString(BUNDLES.PESO_PET));
                 break;
             case 4:
-                NEW_PET.setUrl_photo(return_url_bucket(b.getString(BUNDLES.URL_PHOTO_PET)));
+                NEW_PET.setUrl_photo(App.getInstance().make_uri_bucket_for_pet(b.getString(BUNDLES.NAME_PET)));
+                NEW_PET.setUrl_photo_tumbh(App.getInstance().make_uri_bucket_for_pet_thumbh(b.getString(BUNDLES.NAME_PET)));
                 NEW_PET.setName_pet(b.getString(BUNDLES.NAME_PET));
                 NEW_PET.setDescripcion_pet(b.getString(BUNDLES.DESCRIPCION_PET));
-                UploadImagePet(b.getString(BUNDLES.URL_PHOTO_PET));
+                UploadImagePet(b.getString(BUNDLES.URL_PHOTO_PET),b.getString(BUNDLES.NAME_PET));
                 break;
             default:break;
         }
@@ -276,22 +283,15 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
                 });
     }
 
-    void UploadImagePet(String url){
+    void UploadImagePet(String url,String name_pet){
         ArrayList<String> uri_profile = new ArrayList<>();
         uri_profile.add(url);
-        Intent intent = new Intent(WizardPetActivity.this, UploadsService.class);
-        intent.putStringArrayListExtra(UploadsService.INTENT_KEY_NAME, uri_profile);
+        Intent intent = new Intent(WizardPetActivity.this, ImageService.class);
+        intent.putStringArrayListExtra(ImageService.INTENT_KEY_NAME, uri_profile);
         intent.putExtra(BUNDLES.NOTIFICATION_TIPE,3);
-        intent.putExtra(UploadsService.INTENT_TRANSFER_OPERATION, UploadsService.TRANSFER_OPERATION_UPLOAD);
+        intent.putExtra(BUNDLES.NAME_PET,name_pet);
+        intent.putExtra(ImageService.INTENT_TRANSFER_OPERATION, ImageService.TRANSFER_OPERATION_UPLOAD);
         startService(intent);
-    }
-
-    String return_url_bucket(String url){
-        String concat_paths="";
-        String splits[] = url.split("/");
-        int index = splits.length;
-        concat_paths = BASE_URL_BUCKET + "" + splits[index-1];
-        return concat_paths;
     }
 
     @Override

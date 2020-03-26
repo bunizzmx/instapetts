@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,9 +17,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.beans.PetBean;
+import com.bunizz.instapetts.beans.SearchPetBean;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
+import com.bunizz.instapetts.listeners.chose_pet_listener;
+import com.bunizz.instapetts.utils.ImagenCircular;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DialogShosePet extends BaseAlertDialog{
@@ -30,8 +37,16 @@ public class DialogShosePet extends BaseAlertDialog{
     String title_permision;
     RecyclerView chose_pet_list;
     pet_shoe_adapter adapter;
+    ArrayList<PetBean> petBeans = new ArrayList<>();
+    chose_pet_listener listener;
 
+    public chose_pet_listener getListener() {
+        return listener;
+    }
 
+    public void setListener(chose_pet_listener listener) {
+        this.listener = listener;
+    }
 
     public DialogShosePet(Activity context){
         this.context = context;
@@ -45,12 +60,29 @@ public class DialogShosePet extends BaseAlertDialog{
         dialog = dialogBuilder.create();
         this.dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         if (allowAnimation) dialog.getWindow().getAttributes().windowAnimations = R.style.customDialogAnimation;
+        adapter.setListener(new chose_pet_listener() {
+            @Override
+            public void chose(String url_foto, int id_pet,String name_pet) {
+                if(listener!=null){
+                    listener.chose(url_foto,id_pet,name_pet);
+                }
+            }
+        });
         prepare_list();
     }
 
     void prepare_list(){
         chose_pet_list.setLayoutManager(new LinearLayoutManager(context));
         chose_pet_list.setAdapter(adapter);
+    }
+
+    public ArrayList<PetBean> getPetBeans() {
+        return petBeans;
+    }
+
+    public void setPetBeans(ArrayList<PetBean> petBeans) {
+        this.petBeans = petBeans;
+        adapter.setPetBeans(this.petBeans);
     }
 
     @Override
@@ -100,6 +132,25 @@ public class DialogShosePet extends BaseAlertDialog{
     public class pet_shoe_adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
         Context context;
+        ArrayList<PetBean> petBeans = new ArrayList<>();
+        chose_pet_listener listener;
+
+        public chose_pet_listener getListener() {
+            return listener;
+        }
+
+        public void setListener(chose_pet_listener listener) {
+            this.listener = listener;
+        }
+
+        public ArrayList<PetBean> getPetBeans() {
+            return petBeans;
+        }
+
+        public void setPetBeans(ArrayList<PetBean> petBeans) {
+            this.petBeans = petBeans;
+            notifyDataSetChanged();
+        }
 
         public pet_shoe_adapter(Context context) {
             this.context = context;
@@ -114,18 +165,31 @@ public class DialogShosePet extends BaseAlertDialog{
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
+            chose_pet_holder h =(chose_pet_holder)holder;
+            Glide.with(context).load(petBeans.get(position).getUrl_photo_tumbh()).into(h.pet_chose_list);
+            h.name_pet_chose_list.setText(petBeans.get(position).getName_pet());
+            h.root_chose_pet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.chose(petBeans.get(position).getUrl_photo_tumbh(),Integer.parseInt(petBeans.get(position).getId_pet()),petBeans.get(position).getName_pet());
+                }
+            });
         }
 
         @Override
         public int getItemCount() {
-            return 3;
+            return petBeans.size();
         }
 
         public class chose_pet_holder extends RecyclerView.ViewHolder{
-
+              ImagenCircular pet_chose_list;
+              TextView name_pet_chose_list;
+              LinearLayout root_chose_pet;
             public chose_pet_holder(@NonNull View itemView) {
                 super(itemView);
+                pet_chose_list = itemView.findViewById(R.id.pet_chose_list);
+                name_pet_chose_list = itemView.findViewById(R.id.name_pet_chose_list);
+                root_chose_pet = itemView.findViewById(R.id.root_chose_pet);
             }
         }
     }

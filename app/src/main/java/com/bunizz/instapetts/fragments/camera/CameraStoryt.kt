@@ -49,8 +49,6 @@ import com.bunizz.instapetts.R
 import com.bunizz.instapetts.activitys.share_post.ShareActivity
 import com.bunizz.instapetts.fragments.FragmentElement
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener
-import com.bunizz.instapetts.utils.imagePicker.data.Album
-import com.bunizz.instapetts.utils.imagePicker.data.Image
 import com.bunizz.instapetts.utils.simulateClick
 import kotlinx.android.synthetic.main.fragment_camera_story.*
 import java.io.File
@@ -325,7 +323,9 @@ class CameraStoryt : Fragment() {
                     override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                         val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
                         val b = Bundle()
-                        b.putString("PATH", savedUri.toString())
+                        val uri = java.util.ArrayList<String>()
+                        uri.add(savedUri.toString())
+                        b.putStringArrayList("PATH_SELECTED", uri)
                         if (listener != null) {
                             val mediaScannerIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
                             mediaScannerIntent.data = savedUri

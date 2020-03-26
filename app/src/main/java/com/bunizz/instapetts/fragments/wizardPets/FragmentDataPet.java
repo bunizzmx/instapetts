@@ -81,9 +81,9 @@ public class FragmentDataPet extends Fragment {
             Bundle b = new Bundle();
             b.putString(BUNDLES.PESO_PET,String.valueOf(height_ruler_picker.getCurrentValue()));
             if(GENERO == 1)
-            b.putString(BUNDLES.GENERO_PET,"MACHO");
+            b.putString(BUNDLES.GENERO_PET,"M");
             else if(GENERO == 2)
-              b.putString(BUNDLES.GENERO_PET,"HEMBRA");
+              b.putString(BUNDLES.GENERO_PET,"H");
 
             b.putString(BUNDLES.EDAD_PET,"12/12/12");
             listener_pet_config.SaveDataPet(b,3);

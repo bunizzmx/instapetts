@@ -6,10 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    android:background="#ffffff">
+    android:background="#F3F3F3">
     <com.google.android.material.appbar.AppBarLayout
         android:paddingBottom="3dp"
-        android:background="#00FFFFFF"
+        android:background="#F3F3F3"
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,12 +22,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
-            android:background="#FFFFFF"
+            android:background="#F3F3F3"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             >
 
             <androidx.appcompat.widget.Toolbar
-                android:background="#FFFFFF"
+                android:background="#F3F3F3"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:minHeight="?attr/actionBarSize"
@@ -52,7 +52,7 @@
                     android:id="@+id/tabs_profile_propietary"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:background="@color/white"/>
+                    android:background="#F3F3F3"/>
                 <LinearLayout
                     android:layout_marginTop="-1dp"
                     android:layout_below="@+id/tabs_profile_propietary"

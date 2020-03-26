@@ -2,6 +2,7 @@ package com.bunizz.instapetts.fragments.search;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PropietaryBean;
+import com.bunizz.instapetts.beans.SearchPetBean;
+import com.bunizz.instapetts.beans.SearchUserBean;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.wizardPets.adapters.TypePetsAdapter;
 import com.bunizz.instapetts.listeners.change_instance_wizard;
@@ -32,6 +35,7 @@ public class SearchPetAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void setData(ArrayList<Object> data) {
+        Log.e("REFRESH_DATA_SEARCH","--> xxxxxdata:" + data.size());
         this.data = data;
         notifyDataSetChanged();
     }
@@ -58,8 +62,8 @@ public class SearchPetAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         SearchPetHolder h =(SearchPetHolder)holder;
-        PropietaryBean data_parsed = (PropietaryBean) data.get(position);
-        h.name_pet_searching.setText(data_parsed.getName());
+        SearchPetBean data_parsed = (SearchPetBean) data.get(position);
+        h.name_pet_searching.setText(data_parsed.getName_pet() );
         Glide.with(context).load(data_parsed.getUrl_photo()).into(h.image_pet_searching);
     }
 

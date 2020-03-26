@@ -19,10 +19,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
+import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.db.helpers.PetHelper;
+import com.bunizz.instapetts.listeners.chose_pet_listener;
 import com.bunizz.instapetts.listeners.uploads;
+import com.bunizz.instapetts.services.ImagePostsService;
 import com.bunizz.instapetts.services.UploadsService;
+import com.bunizz.instapetts.utils.dilogs.DialogShosePet;
+import com.bunizz.instapetts.web.CONST;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,22 +53,31 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     @BindView(R.id.description_post)
     EditText description_post;
     String concat_paths="";
+    PetHelper helper;
+    ArrayList<PetBean> pets_cuerrent = new ArrayList<>();
 
 
     @OnClick(R.id.share_post_pet)
     void share_post_pet()
     {
-       /* DialogShosePet dialogShosePet = new DialogShosePet(getActivity());
-        dialogShosePet.show();*/
-        beginUploadInBackground(paths);
-        PostBean post = new PostBean();
-        post.setName_pet("PET 1");
-        post.setDescription(description_post.getText().toString());
-        post.setName_user("lcklkd");
-        post.setUrl_photo_user("https://firebasestorage.googleapis.com/v0/b/melove-principal/o/C9%2Fthumbmini_38.png?alt=media&token=0d54c5e9-079b-4d81-9b74-9e7048d36e9f");
-        post.setUrls_posts(concat_paths);
-        post.setDate_post(App.formatDateGMT(new Date()));
-        presenter.sendPost(post);
+        DialogShosePet dialogShosePet = new DialogShosePet(getActivity());
+        dialogShosePet.setPetBeans(pets_cuerrent);
+        dialogShosePet.setListener((url_foto, id_pet, name_pet) -> {
+            beginUploadInBackground(paths);
+            PostBean post = new PostBean();
+            post.setName_pet(name_pet);
+            post.setDescription(description_post.getText().toString());
+            post.setName_user(App.read(PREFERENCES.NAME_USER,"INVALID"));
+            post.setUrl_photo_pet(url_foto);
+            post.setUrl_photo_user(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
+            post.setUrls_posts(concat_paths);
+            post.setUuid(App.read(PREFERENCES.UUID,"INVALID"));
+            post.setDate_post(App.formatDateGMT(new Date()));
+            post.setTarget("NEW");
+            post.setId_pet(id_pet);
+            presenter.sendPost(post);
+        });
+        dialogShosePet.show();
     }
     ArrayList<String> paths = new ArrayList<>();
     SharePostPresenter presenter;
@@ -78,6 +94,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         adapter = new ListSelectedAdapter(getContext());
         presenter = new SharePostPresenter(this, getContext());
         Bundle bundle=getArguments();
+        helper = new PetHelper(getContext());
         if(bundle!=null){
             paths.addAll(bundle.getStringArrayList("data_pahs"));
             is_video = bundle.getInt("is_video");
@@ -85,15 +102,16 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
                 String splits[] = paths.get(i).split("/");
                 int index = splits.length;
                 if(i==0)
-                    concat_paths = BASE_URL_BUCKET + "" + splits[index-1];
+                    concat_paths =App.getInstance().make_uri_bucket_posts(splits[index-1]);
                 else
-                    concat_paths += "," + BASE_URL_BUCKET +"" +  splits[index-1];
+                    concat_paths += "," + App.getInstance().make_uri_bucket_posts(splits[index-1]);
 
                 Log.e("URL_SIMPLE","-->" + splits[index-1]);
             }
             Log.e("URL_SIMPLE","FInal : " + concat_paths);
         }
         adapter.setData(paths);
+        pets_cuerrent = helper.getMyPets();
     }
 
     @Nullable
@@ -114,7 +132,10 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     @Override
     public void postStatus(boolean status) {
         if(status){
-            getActivity().finish();
+            if(getActivity()!=null){
+                getActivity().finish();
+            }
+
         }
     }
 
@@ -130,10 +151,10 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             return;
         }
         Context context = getContext().getApplicationContext();
-        Intent intent = new Intent(context, UploadsService.class);
-        intent.putStringArrayListExtra(UploadsService.INTENT_KEY_NAME, filePaths);
+        Intent intent = new Intent(context, ImagePostsService.class);
+        intent.putStringArrayListExtra(ImagePostsService.INTENT_KEY_NAME, filePaths);
         intent.putExtra(BUNDLES.NOTIFICATION_TIPE,0);
-        intent.putExtra(UploadsService.INTENT_TRANSFER_OPERATION, UploadsService.TRANSFER_OPERATION_UPLOAD);
+        intent.putExtra(ImagePostsService.INTENT_TRANSFER_OPERATION, ImagePostsService.TRANSFER_OPERATION_UPLOAD);
         context.startService(intent);
         listener.onImageProfileUpdated();
     }

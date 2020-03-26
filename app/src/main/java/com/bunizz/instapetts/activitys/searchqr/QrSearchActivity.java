@@ -29,6 +29,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.camera.CameraPreviewStoryFragment;
 import com.bunizz.instapetts.fragments.camera.CameraStoryt;
@@ -214,9 +215,11 @@ public class QrSearchActivity extends AppCompatActivity implements changue_fragm
     }
 
     @Override
-    public void open_sheet() {
+    public void open_sheet(PetBean petBean, int is_me) {
 
     }
+
+
 
     @Override
     public void open_wizard_pet() {

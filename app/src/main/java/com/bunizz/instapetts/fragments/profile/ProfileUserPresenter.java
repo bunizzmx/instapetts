@@ -21,7 +21,7 @@ public class ProfileUserPresenter implements   ProfileUserContract.Presenter {
     private CompositeDisposable disposable = new CompositeDisposable();
     private WebServices apiService;
     private static final String TAG = MainLogin.class.getSimpleName();
-
+    int RETRY =0;
     ProfileUserPresenter(ProfileUserContract.View view, Context context) {
         this.mView = view;
         this.mContext = context;
@@ -39,10 +39,21 @@ public class ProfileUserPresenter implements   ProfileUserContract.Presenter {
                         .subscribeWith(new DisposableSingleObserver<ResponseProfileUser>() {
                             @Override
                             public void onSuccess(ResponseProfileUser info) {
-                                mView.showInfoUser(info.getData_user(),info.getPetsUser(),info.getPostsUser());
+                                if(info.getData_user()!=null) {
+                                    mView.showInfoUser(info.getData_user(), info.getPetsUser(), info.getPostsUser());
+                                }else{
+                                    if(RETRY < 3){
+                                        RETRY ++;
+                                        mView.Error();
+                                    }
+                                }
                             }
                             @Override
                             public void onError(Throwable e) {
+                                if(RETRY < 3){
+                                    RETRY ++;
+                                    mView.Error();
+                                }
                                 //mView.showInfoUser(info.getData_user(),info.getPetsUser(),info.getPostsUser());
                             }
                         }));

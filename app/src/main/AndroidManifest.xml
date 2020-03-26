@@ -43,14 +43,16 @@
         </activity>
         <activity android:name=".activitys.intro.IntroActivity" />
         <activity android:name=".activitys.login.LoginActivity" />
-        <activity android:name=".activitys.main.Main"/>
+        <activity android:name=".activitys.main.Main" android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".activitys.wizardPets.WizardPetActivity" android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".utils.HistoryView.StoryPlayer"/>
         <activity android:name=".activitys.share_post.ShareActivity" android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".activitys.camera_history.CameraHistoryActivity"    android:screenOrientation="fullUser"
             android:rotationAnimation="seamless"/>
         <activity android:name=".activitys.searchqr.QrSearchActivity"/>
-        <service android:name=".services.UploadsService"
+        <service android:name=".services.ImageService"
+            android:enabled="true"/>
+        <service android:name=".services.ImagePostsService"
             android:enabled="true"/>
         <service android:name=".services.NotificationsService"
             android:enabled="true"/>

@@ -157,11 +157,14 @@ public class ImageCropFragment extends Fragment implements  FeedContract.View{
                         }catch (Exception e){}
                     }
                     if(CURRENT_INDEX < paths.size()){
+                        Log.e("lkjhdfjkdsh","cccccccc");
                         execute_crop(CURRENT_INDEX);
                     }else{
                         if (App.read(PREFERENCES.FROM_PICKER, "PROFILE").equals("PROFILE")) {
+                            Log.e("lkjhdfjkdsh","PROFILE");
                             listener_uploads.setResultForOtherChanges(array_list_cropes.get(0));
                         }else{
+                            Log.e("lkjhdfjkdsh","POST");
                             Bundle b = new Bundle();
                             b.putStringArrayList("data_pahs",array_list_cropes);
                             listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
@@ -180,12 +183,11 @@ public class ImageCropFragment extends Fragment implements  FeedContract.View{
 
         cropLayout.setUri(Uri.parse(paths.get(0)));
         crop_now_selected.setOnClickListener(view1 -> {
-            if (cropLayout.isOffFrame()) {
-                return;
-            }else{
+
+                Log.e("lkjhdfjkdsh","execute");
                 array_list_cropes.clear();
                 execute_crop(CURRENT_INDEX);
-            }
+
         });
 
     }
@@ -208,7 +210,12 @@ public class ImageCropFragment extends Fragment implements  FeedContract.View{
 
 
     public  boolean saveImage(Bitmap bitmap, String folderName, String filename, Bitmap.CompressFormat compressFormat) {
-        filename = filename + UUID.randomUUID();
+        if(is_from_profile == 1){
+            filename = filename + App.read(PREFERENCES.UUID,"INVALID");
+        }else{
+            filename = filename + UUID.randomUUID();
+        }
+
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + folderName);
         if (!file.exists()) {
             file.mkdir();

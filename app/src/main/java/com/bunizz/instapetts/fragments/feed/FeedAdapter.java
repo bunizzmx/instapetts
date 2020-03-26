@@ -212,10 +212,13 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 f.root_preview_perfil_click.setOnClickListener(view ->{
                     Bundle b = new Bundle();
                     b.putString(BUNDLES.UUID,data_parsed.getUuid());
+                    Log.e("ID_USUARIO_POST","-->" + data_parsed.getId_usuario());
                     b.putInt(BUNDLES.ID_USUARIO,data_parsed.getId_usuario());
                     listener.change_fragment_parameter(INSTANCE_PREVIEW_PROFILE,b);
                 });
-                f.name_pet.setText(data_parsed.getName_user());
+                f.name_pet.setText(data_parsed.getName_pet());
+                f.name_user_posts.setText(data_parsed.getName_user());
+                f.num_likes_posts.setText("a " + data_parsed.getLikes() + " usuarios les gusta esto");
                 if(data_parsed.getDescription().isEmpty()){
                     f.description_posts.setVisibility(View.GONE);
                 }else{
@@ -223,8 +226,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     f.description_posts.setText(data_parsed.getDescription());
                 }
 
-                Glide.with(context).load(data_parsed.getUrl_photo_user()).into(f.image_pet);
-
+                Glide.with(context).load(data_parsed.getUrl_photo_pet()).into(f.image_pet);
+                Glide.with(context).load(data_parsed.getUrl_photo_user()).into(f.mini_user_photo);
                 f.date_post.setText(App.fecha_lenguaje_humano(data_parsed.getDate_post()));
                 f.save_posts.setOnClickListener(view -> {
                      if(data_parsed.isSaved()) {
@@ -247,7 +250,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }else{
                     f.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
                 }
-
+                f.open_options_posts.setOnClickListener(view -> listener_post.openMenuOptions());
 
 
                 break;
@@ -266,16 +269,17 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public class FeedHolder extends RecyclerView.ViewHolder{
         ViewPager list_fotos;
         DotsIndicator dots_indicator;
-        RelativeLayout root_preview_perfil_click;
+        RelativeLayout root_preview_perfil_click,open_options_posts;
         TextView description_posts;
         ImagenCircular image_pet;
-        TextView name_pet;
+        TextView name_pet,name_user_posts,num_likes_posts;
         RelativeLayout root_multiple_image;
         ImageView single_image,icon_like;
         TextView date_post;
         DoubleTapLikeView layout_double_tap_like;
         ImageView save_posts;
         ProgressBar progres_image;
+        ImagenCircular mini_user_photo;
         public FeedHolder(@NonNull View itemView) {
             super(itemView);
             root_preview_perfil_click = itemView.findViewById(R.id.root_preview_perfil_click);
@@ -291,6 +295,10 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             icon_like = itemView.findViewById(R.id.icon_like);
             save_posts = itemView.findViewById(R.id.save_posts);
             progres_image = itemView.findViewById(R.id.progres_image);
+            name_user_posts = itemView.findViewById(R.id.name_user_posts);
+            num_likes_posts = itemView.findViewById(R.id.num_likes_posts);
+            open_options_posts = itemView.findViewById(R.id.open_options_posts);
+            mini_user_photo = itemView.findViewById(R.id.mini_user_photo);
         }
     }
 

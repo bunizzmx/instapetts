@@ -2,6 +2,7 @@ package com.bunizz.instapetts.fragments.search.tabs;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,12 @@ public class FragmentPetList extends Fragment {
 
     ArrayList<Object> data = new ArrayList<>();
 
+    public void setData(ArrayList<Object> data) {
+        Log.e("REFRESH_DATA_SEARCH","--> data:" + data.size());
+        this.data = data;
+        adapter.setData(data);
+    }
+
     public static FragmentPetList newInstance() {
         return new FragmentPetList();
     }
@@ -44,10 +51,6 @@ public class FragmentPetList extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        data.add(new HistoriesBean());
-        data.add(new PostBean());
-        data.add(new PostBean());
-        data.add(new PostBean());
         adapter = new SearchPetAdapter(getContext());
     }
 

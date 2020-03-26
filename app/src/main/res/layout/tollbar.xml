@@ -11,6 +11,7 @@
        android:layout_marginLeft="15dp"
        android:layout_centerVertical="true"
        android:textColor="@color/black"
+       android:textStyle="bold"
        android:fontFamily="@font/avenir_black"
        android:text="news Feed"
        android:layout_width="wrap_content"

@@ -15,7 +15,9 @@ import android.os.Vibrator;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.utils.dilogs.DialogPermision;
+import com.bunizz.instapetts.web.CONST;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.firestore.FirebaseFirestore;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -67,6 +69,10 @@ public class App extends Application {
         Log.e("IDIOMA","-->" + idioma);
         write("IDIOMA",idioma);
         BaseUtils.init(this);
+    }
+
+   public  void clear_preferences(){
+        pref.edit().clear().commit();
     }
 
 
@@ -368,6 +374,40 @@ public class App extends Application {
         }catch (NumberFormatException err){
             return "0";
         }
+    }
+
+
+    public String  make_uri_bucket_profile(){
+        return CONST.BASE_URL_BUCKET_FIRESTORE + "bucket_profile/o/" + read(PREFERENCES.UUID,"INVALID") +"%2FPROFILE%2F"+ read(PREFERENCES.UUID,"INVALID")+
+        ".jpg?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
+    }
+    public String  make_uri_bucket_profile_tumbh(){
+        return CONST.BASE_URL_BUCKET_FIRESTORE + "bucket_profile/o/" + read(PREFERENCES.UUID,"INVALID") +"%2FPROFILE%2Fthumb_"+ read(PREFERENCES.UUID,"INVALID")+
+                ".jpg?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
+    }
+
+
+    public String  make_uri_bucket_posts_thumbh(String URI){
+        return CONST.BASE_URL_BUCKET_FIRESTORE + "instapetts-posts/o/" + read(PREFERENCES.UUID,"INVALID") +"%2FPOSTS%2Fthumb_"+ URI +
+                "?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
+    }
+    public String  make_uri_bucket_posts(String URI){
+        return CONST.BASE_URL_BUCKET_FIRESTORE + "instapetts-posts/o/" + read(PREFERENCES.UUID,"INVALID") +"%2FPOSTS%2F"+ URI +
+                "?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
+    }
+
+
+    public String  make_uri_bucket_post(String FOLDER,String URI){
+        return CONST.BASE_URL_BUCKET  + read(PREFERENCES.UUID,"INVALID") + "/" + FOLDER + "/" + URI;
+    }
+
+    public String  make_uri_bucket_for_pet(String ID_PET){
+        return CONST.BASE_URL_BUCKET_FIRESTORE + "bucket_profile/o/" + read(PREFERENCES.UUID,"INVALID") +"%2FPETS%2F"+ID_PET+
+                ".jpg?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
+    }
+    public String  make_uri_bucket_for_pet_thumbh(String ID_PET){
+        return CONST.BASE_URL_BUCKET_FIRESTORE + "bucket_profile/o/" + read(PREFERENCES.UUID,"INVALID") +"%2FPETS%2Fthumb_"+ID_PET+
+                ".jpg?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
     }
 
 

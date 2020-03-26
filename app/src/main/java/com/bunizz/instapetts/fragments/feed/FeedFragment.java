@@ -27,6 +27,7 @@ import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.postsListener;
+import com.bunizz.instapetts.utils.dilogs.DialogOptionsPosts;
 import com.bunizz.instapetts.web.parameters.PostActions;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     @BindView(R.id.feed_list)
     RecyclerView feed_list;
 
-    change_instance listener;
+    changue_fragment_parameters_listener listener;
     FeedAdapter feedAdapter;
 
     @BindView(R.id.refresh_feed)
@@ -60,7 +61,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     @OnClick(R.id.open_notifications)
     void open_notifications()
     {
-        listener.change(FragmentElement.INSTANCE_NOTIFICATIONS);
+        listener.change_fragment_parameter(FragmentElement.INSTANCE_NOTIFICATIONS,null);
     }
 
 
@@ -76,7 +77,12 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
             data.add(new HistoriesBean());
         }
         feedAdapter = new FeedAdapter(getContext(),data);
-        feedAdapter.setListener((type_fragment, data) -> listener.change(type_fragment));
+        feedAdapter.setListener(new changue_fragment_parameters_listener() {
+            @Override
+            public void change_fragment_parameter(int type_fragment, Bundle data) {
+                listener.change_fragment_parameter(type_fragment,data);
+            }
+        });
         feedAdapter.setListener_open_h(() -> {
             if(listener_open_camera_h!=null){
                 listener_open_camera_h.open();
@@ -108,6 +114,12 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
             public void onDisfavorite(int id_post) {
 
             }
+
+            @Override
+            public void openMenuOptions() {
+                DialogOptionsPosts optionsPosts = new DialogOptionsPosts(getContext());
+                optionsPosts.show();
+            }
         });
 
         mPresenter.get_feed();
@@ -134,7 +146,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        listener= (change_instance) context;
+        listener= (changue_fragment_parameters_listener) context;
         listener_open_camera_h =(open_camera_histories_listener)context;
     }
 
@@ -148,9 +160,11 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         }else{
             historiesBeans.add(new HistoriesBean());
         }
-        historiesBeans.addAll(data_stories);
-        data_object.add(new HistoriesBean());
-        data_object.addAll(data);
+        if(data_stories!=null) {
+            historiesBeans.addAll(data_stories);
+            data_object.add(new HistoriesBean());
+            data_object.addAll(data);
+        }
         feedAdapter.setHistoriesBeans(historiesBeans);
         feedAdapter.addData(data_object);
     }

@@ -7,6 +7,9 @@ import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class PetBean {
 
     @SerializedName("name_pet")
@@ -43,7 +46,7 @@ public class PetBean {
 
     @SerializedName("id_propietary")
     @Expose
-    String id_propietary;
+    int id_propietary;
 
     @SerializedName("id_pet")
     @Expose
@@ -57,16 +60,24 @@ public class PetBean {
     @Expose
     String url_photo;
 
+    @SerializedName("url_photo_tumbh")
+    @Expose
+    String url_photo_tumbh;
+
     @SerializedName("type_pet")
     @Expose
     int type_pet;
+
+    @SerializedName("uuid")
+    @Expose
+    String uuid;
 
 
 
     public PetBean() {
     }
 
-    public PetBean(String name_pet, String raza_pet, String peso_pet, String color_pet, String descripcion_pet, String genero_pet, String rate_pet, String name_propietary, String id_propietary, String id_pet, int type_pet) {
+    public PetBean(String name_pet, String raza_pet, String peso_pet, String color_pet, String descripcion_pet, String genero_pet, String rate_pet, String name_propietary, int id_propietary, String id_pet, int type_pet) {
         this.name_pet = name_pet;
         this.raza_pet = raza_pet;
         this.peso_pet = peso_pet;
@@ -144,11 +155,11 @@ public class PetBean {
         this.name_propietary = name_propietary;
     }
 
-    public String getId_propietary() {
+    public int getId_propietary() {
         return id_propietary;
     }
 
-    public void setId_propietary(String id_propietary) {
+    public void setId_propietary(int id_propietary) {
         this.id_propietary = id_propietary;
     }
 
@@ -199,18 +210,20 @@ public class PetBean {
         contentValues.put(PetHelper.EDAD_PET, getEdad_pet());
         contentValues.put(PetHelper.RATING_PET, getRaza_pet());
         contentValues.put(PetHelper.URL_PHOTO, getUrl_photo());
+        contentValues.put(PetHelper.URL_PHOTO_THUMBH, getUrl_photo_tumbh());
         return contentValues;
     }
 
     public PetBean(Cursor cursor) {
-        if (cursor.getColumnIndex(PetHelper.ID_PET) != -1)
-            this.id_pet = cursor.getString(cursor.getColumnIndex(PetHelper.ID_PET));
+        if (cursor.getColumnIndex(PetHelper.ID) != -1)
+            this.id_pet =String.valueOf(cursor.getInt(cursor.getColumnIndex(PetHelper.ID)));
+
 
         if (cursor.getColumnIndex(PetHelper.NAME_PET) != -1)
             this.name_pet = cursor.getString(cursor.getColumnIndex(PetHelper.NAME_PET));
 
         if (cursor.getColumnIndex(PetHelper.ID_PROPIETARY) != -1)
-            this.id_propietary = cursor.getString(cursor.getColumnIndex(PetHelper.ID_PROPIETARY));
+            this.id_propietary = cursor.getInt(cursor.getColumnIndex(PetHelper.ID_PROPIETARY));
 
         if (cursor.getColumnIndex(PetHelper.NAME_PROPIETARY) != -1)
             this.name_propietary = cursor.getString(cursor.getColumnIndex(PetHelper.NAME_PROPIETARY));
@@ -242,6 +255,24 @@ public class PetBean {
         if (cursor.getColumnIndex(PetHelper.URL_PHOTO) != -1)
             this.url_photo = cursor.getString(cursor.getColumnIndex(PetHelper.URL_PHOTO));
 
+        if (cursor.getColumnIndex(PetHelper.URL_PHOTO_THUMBH) != -1)
+            this.url_photo_tumbh = cursor.getString(cursor.getColumnIndex(PetHelper.URL_PHOTO_THUMBH));
 
+    }
+
+    public String getUrl_photo_tumbh() {
+        return url_photo_tumbh;
+    }
+
+    public void setUrl_photo_tumbh(String url_photo_tumbh) {
+        this.url_photo_tumbh = url_photo_tumbh;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

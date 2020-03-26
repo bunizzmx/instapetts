@@ -6,9 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
@@ -24,6 +30,10 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.main.Main;
 import com.bunizz.instapetts.activitys.searchqr.QrSearchActivity;
 import com.bunizz.instapetts.activitys.share_post.ShareActivity;
+import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.beans.SearchPetBean;
+import com.bunizz.instapetts.beans.SearchUserBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
 import com.bunizz.instapetts.fragments.post.FragmentPostList;
@@ -36,11 +46,13 @@ import com.bunizz.instapetts.utils.tabs.SlidingTabLayout;
 import com.bunizz.instapetts.utils.tabs.TabType;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FragmentSearchPet extends Fragment {
+public class FragmentSearchPet extends Fragment implements SearchPetContract.View{
 
 
     change_instance listener;
@@ -57,10 +69,14 @@ public class FragmentSearchPet extends Fragment {
     ViewPager viewpager_search;
     TabAdapter tabAdapter;
 
-    @BindView(R.id.search_by_qr)
-    RelativeLayout search_by_qr;
-    private static final int REQUEST_CODE_QR_SCAN = 101;
+    @BindView(R.id.search_input)
+    EditText search_input;
 
+    SearchPetPresenter presenter;
+    int POSITION_PAGER =0;
+
+    Handler handler = new Handler(Looper.getMainLooper() /*UI thread*/);
+    Runnable workRunnable;
  RxPermissions rxPermissions;
     public static FragmentSearchPet newInstance() {
         return new FragmentSearchPet();
@@ -71,6 +87,7 @@ public class FragmentSearchPet extends Fragment {
         super.onCreate(savedInstanceState);
         tabAdapter = new TabAdapter(getFragmentManager(), getContext());
         rxPermissions = new RxPermissions(getActivity());
+        presenter = new SearchPetPresenter(this,getContext());
     }
 
     @Nullable
@@ -93,21 +110,42 @@ public class FragmentSearchPet extends Fragment {
         tabs_search.setDistributeEvenly(true);
         tabs_search.setCustomUnfocusedColor(R.color.black);
         tabs_search.setSelectedIndicatorColors(getResources().getColor(R.color.amarillo));
-        search_by_qr.setOnClickListener(view1 -> {
-            rxPermissions
-                    .request(Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.CAMERA)
-                    .subscribe(granted -> {
-                        if (granted) {
-                            Intent i = new Intent(getContext() , QrSearchActivity.class);
-                            startActivityForResult( i,REQUEST_CODE_QR_SCAN);
-                        } else {
-                            App.getInstance().show_dialog_permision(getActivity(),getActivity().getResources().getString(R.string.permision_storage),
-                                    getResources().getString(R.string.permision_storage_body),0);
-                        }
-                    });
+        search_input.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.length()> 3){
+                    handler.removeCallbacks(workRunnable);
+                    workRunnable = () ->{
+                        if(POSITION_PAGER == 0)
+                           presenter.searchusers(search_input.getText().toString());
+                        else
+                            presenter.searchPets(search_input.getText().toString());
+                    };
+                    handler.postDelayed(workRunnable, 1000 /*delay*/);
+                }
+            }
+        });
+
+        viewpager_search.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                POSITION_PAGER = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
         });
     }
 
@@ -118,14 +156,33 @@ public class FragmentSearchPet extends Fragment {
         listener= (change_instance) context;
     }
 
+    @Override
+    public void shoPetsResults(ArrayList<SearchPetBean> pets) {
+        Fragment frag = tabAdapter.fragments[POSITION_PAGER];
+        if (frag instanceof FragmentPetList) {
+            ArrayList<Object> results = new ArrayList<>();
+            results.addAll(pets);
+            ((FragmentPetList) frag).setData(results);
+        }
+    }
+
+    @Override
+    public void shoUsersResults(ArrayList<SearchUserBean> users) {
+        Fragment frag = tabAdapter.fragments[POSITION_PAGER];
+        if (frag instanceof FragmentPopietaryList) {
+            ArrayList<Object> results = new ArrayList<>();
+            results.addAll(users);
+            ((FragmentPopietaryList) frag).setData(results);
+        }
+    }
+
     public class TabAdapter extends SlidingFragmentPagerAdapter {
 
         private String[] titles = {
                 "Propietarios",
-                "Mascotas",
-                "Recientes",
+                "Mascotas"
         };
-
+        public Fragment[] fragments = new Fragment[titles.length];
         private Context context;
 
         public TabAdapter(FragmentManager fm, Context context) {
@@ -147,7 +204,12 @@ public class FragmentSearchPet extends Fragment {
             fragment.setArguments(bundle);
             return fragment;
         }
-
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment createdFragment = (Fragment) super.instantiateItem(container, position);
+            fragments[position]  = createdFragment;
+            return createdFragment;
+        }
         @Override
         public int getCount() {
             return  titles.length ;

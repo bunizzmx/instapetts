@@ -42,7 +42,30 @@ public class LoginPresenter implements LoginContract.Presenter {
                                 if(user.getCode_response() ==1)
                                    mView.loginCompleted(user.getData_user());
                                 else
-                                    mView.registerCompleted();
+                                    mView.isFirstUser(user.getData_user().getId());
+
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                mView.registerError();
+                            }
+                        }));
+    }
+
+    @Override
+    public void updateUser(UserBean userBean) {
+        disposable.add(
+                apiService
+                        .newUser(userBean)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<SimpleResponseLogin>() {
+                            @Override
+                            public void onSuccess(SimpleResponseLogin user) {
+                                if(user.getCode_response() ==1)
+                                    mView.UpdateFirsUserCompleted();
+                                else
+                                    mView.isFirstUser(user.getData_user().getId());
 
                             }
                             @Override

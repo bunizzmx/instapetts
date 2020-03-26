@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:id="@+id/root_chose_pet"
     android:padding="10dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <com.bunizz.instapetts.utils.ImagenCircular
+        android:id="@+id/pet_chose_list"
         android:src="@drawable/perro_demo"
         android:layout_width="60dp"
         android:layout_height="60dp"/>
 
     <TextView
+        android:id="@+id/name_pet_chose_list"
         android:textSize="20dp"
         android:textColor="@color/black"
         android:fontFamily="@font/avenir_black"

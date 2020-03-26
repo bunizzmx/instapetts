@@ -2,6 +2,7 @@ package com.bunizz.instapetts.activitys;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,12 +22,16 @@ public class Splash extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(App.read(IS_INTRO_COMPLETED,false)) {
+            Log.e("STATUS_USER","INTRO_COMPLETED");
             if(App.read(IS_LOGUEDD,false)) {
+                Log.e("STATUS_USER","IS LOGUEADO");
                 i = new Intent(Splash.this, Main.class);
             }else{
+                Log.e("STATUS_USER","NO ESTA LOGUEADO");
                 i = new Intent(Splash.this, LoginActivity.class);
             }
         }else{
+            Log.e("STATUS_USER","NO PASO EL INTROP");
             i = new Intent(Splash.this, IntroActivity.class);
         }
         startActivity(i);

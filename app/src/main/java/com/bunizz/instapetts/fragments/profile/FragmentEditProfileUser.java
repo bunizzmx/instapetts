@@ -28,6 +28,7 @@ import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.open_sheet_listener;
 import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.utils.tabs.TabType;
+import com.bunizz.instapetts.web.CONST;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,7 +43,7 @@ public class FragmentEditProfileUser extends Fragment {
     void change_photo()
     {
         App.write(PREFERENCES.FROM_PICKER,"PROFILE");
-       listener.onImageProfileUpdated();
+        listener.onImageProfileUpdated();
     }
 
     @BindView(R.id.image_userd_edit)
@@ -66,12 +67,15 @@ public class FragmentEditProfileUser extends Fragment {
     @OnClick(R.id.save_info_perfil)
     void save_info_perfil()
     {
-        String URI_FINAL  = BASE_URL_BUCKET +"" + URL_UPDATED;
+        String URI_FINAL  =App.getInstance().make_uri_bucket_profile();
+        String URI_FINAL_TUMBH  =App.getInstance().make_uri_bucket_profile_tumbh();
         App.write(PREFERENCES.DESCRIPCCION,descripcion_user.getText().toString());
         App.write(PREFERENCES.FOTO_PROFILE_USER,URI_FINAL);
+        App.write(PREFERENCES.FOTO_PROFILE_USER_THUMBH,URI_FINAL_TUMBH);
         Bundle b = new Bundle();
         b.putString("DESCRIPCION",descripcion_user.getText().toString());
         b.putString("PHOTO",URI_FINAL);
+        b.putString("PHOTO_TUMBH",URI_FINAL_TUMBH);
         b.putString("PHOTO_LOCAL",URL_LOCAL);
         listener.UpdateProfile(b);
     }
@@ -114,7 +118,7 @@ public class FragmentEditProfileUser extends Fragment {
         if(!App.read(PREFERENCES.DESCRIPCCION,"INVALID").equals("INVALID")){
             descripcion_user.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
         }
-        URL_UPDATED = App.read(PREFERENCES.FOTO_PROFILE_USER,"INVALID");
+        URL_UPDATED = App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID");
         Glide.with(getContext()).load(URL_UPDATED).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_userd_edit);
         Log.e("URL_GUARDADA","-->" + URL_UPDATED);
     }

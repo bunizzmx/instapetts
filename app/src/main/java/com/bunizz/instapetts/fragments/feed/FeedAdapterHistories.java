@@ -71,9 +71,7 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
         if(position == 0){
             h.name_pet_item.setText("Tu History");
             if(historiesBeans.get(position)!=null){
-                Log.e("MY_STORIE","!=null");
                 if(historiesBeans.get(position).getUris_stories()!=null){
-                    Log.e("MY_STORIE","!=null uris");
                     h.image_pet_history.setBorderColor(context.getResources().getColor(R.color.primary));
                     h.profile_background.setOnClickListener(view -> {
                             Intent i = new Intent(context, StoryPlayer.class);
@@ -84,7 +82,6 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
                     h.icon_add_story_user.setVisibility(View.GONE);
                     Glide.with(context).load(historiesBeans.get(position).getUris_stories()).into(h.profile_background);
                 }else{
-                    Log.e("MY_STORIE","null  uris");
                     h.image_pet_history.setStroke_separate(false);
                     h.image_pet_history.setBorderColor(Color.WHITE);
                     h.profile_background.setOnClickListener(view -> {
@@ -98,9 +95,8 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
             }else{
                 Log.e("MY_STORIE","null all ");
             }
-            Glide.with(context).load(App.read(PREFERENCES.FOTO_PROFILE_USER,"INVALID")).placeholder(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(h.image_pet_history);
+            Glide.with(context).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID")).placeholder(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(h.image_pet_history);
         }else{
-            Log.e("GLIDE_DE_LA","-->" + historiesBeans.get(position).getUrl_photo_user());
             Glide.with(context).load(historiesBeans.get(position).getUrl_photo_user()).into(h.image_pet_history);
             Glide.with(context).load(historiesBeans.get(position).getUris_stories()).into(h.profile_background);
             h.image_pet_history.setBorderColor(context.getResources().getColor(R.color.primary));
@@ -111,6 +107,7 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
                 i.putExtra("SELECTED_POSITION", position);
                 context.startActivity(i);
             });
+            h.name_pet_item.setText(historiesBeans.get(position).getName_user());
         }
 
     }

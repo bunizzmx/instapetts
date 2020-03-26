@@ -15,6 +15,7 @@ import com.bunizz.instapetts.db.helpers.MyStoryHelper;
 import com.bunizz.instapetts.fragments.share_post.Share.SharePostContract;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
+import com.bunizz.instapetts.web.responses.PetsResponse;
 import com.bunizz.instapetts.web.responses.SimpleResponse;
 import com.bunizz.instapetts.web.responses.SimpleResponseLogin;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,6 +39,7 @@ public class MainPresenter implements MainContract.Presenter {
     WebServices apiService;
     MyStoryHelper myStoryHelper;
     FirebaseFirestore db;
+    int RETRY_PETS=0;
     private CompositeDisposable disposable = new CompositeDisposable();
 
     MainPresenter(MainContract.View view, Context context) {
@@ -102,6 +104,27 @@ public class MainPresenter implements MainContract.Presenter {
 
                     }
                 });
+        db.collection(FIRESTORE.R_FOLLOWS).document(String.valueOf(userBean.getUuid())).collection(FIRESTORE.SEGUIDOS)
+                .document(App.read(PREFERENCES.UUID,"INVALID"))
+                .set(followUserData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                    }
+                });
     }
 
     @Override
@@ -133,5 +156,29 @@ public class MainPresenter implements MainContract.Presenter {
 
                     }
                 });
+    }
+
+    @Override
+    public void downloadMyPets(UserBean userBean) {
+        disposable.add(
+                apiService
+                        .getPets(userBean)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<PetsResponse>() {
+                            @Override
+                            public void onSuccess(PetsResponse pets) {
+                                    mView.saveMyPets(pets.getList_pets());
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                if(RETRY_PETS <3) {
+                                    RETRY_PETS ++;
+                                    mView.onError(1);
+                                }else{
+                                    RETRY_PETS =0;
+                                }
+                            }
+                        }));
     }
 }

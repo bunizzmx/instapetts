@@ -19,6 +19,7 @@ import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.fragments.post.adapters.GaleryAdapter;
+import com.bunizz.instapetts.fragments.post.adapters.PostsAdapter;
 import com.bunizz.instapetts.listeners.change_instance;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class FragmentPostGalery extends Fragment {
     RecyclerView list_galery;
 
     change_instance listener;
-    GaleryAdapter feedAdapter;
+    PostsAdapter feedAdapter;
 
     ArrayList<Object> data = new ArrayList<>();
 
@@ -46,7 +47,7 @@ public class FragmentPostGalery extends Fragment {
         data.add(new PostBean());
         data.add(new PostBean());
         data.add(new PostBean());
-        feedAdapter = new GaleryAdapter(getContext());
+        feedAdapter = new PostsAdapter(getContext());
     }
 
     @Nullable

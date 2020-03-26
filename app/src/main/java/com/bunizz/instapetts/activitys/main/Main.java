@@ -5,10 +5,12 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -19,6 +21,7 @@ import androidx.fragment.app.FragmentManager;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.camera_history.CameraHistoryActivity;
+import com.bunizz.instapetts.activitys.login.LoginActivity;
 import com.bunizz.instapetts.activitys.share_post.ShareActivity;
 import com.bunizz.instapetts.activitys.wizardPets.WizardPetActivity;
 import com.bunizz.instapetts.beans.HistoriesBean;
@@ -26,25 +29,36 @@ import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.fragments.info.InfoPetFragment;
 import com.bunizz.instapetts.fragments.notifications.NotificationsFragment;
+import com.bunizz.instapetts.fragments.post.FragmentListOfPosts;
 import com.bunizz.instapetts.fragments.previewProfile.FragmentProfileUserPetPreview;
 import com.bunizz.instapetts.fragments.profile.FragmentEditProfileUser;
 import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.fragments.search.FragmentSearchPet;
+import com.bunizz.instapetts.fragments.search.posts.FragmentPostPublics;
+import com.bunizz.instapetts.fragments.share_post.cropImages.ImageCropFragment;
 import com.bunizz.instapetts.fragments.tips.FragmentTipDetail;
 import com.bunizz.instapetts.fragments.tips.FragmentTips;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.folowFavoriteListener;
+import com.bunizz.instapetts.listeners.logout_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
+import com.bunizz.instapetts.listeners.open_side_menu;
 import com.bunizz.instapetts.listeners.uploads;
+import com.bunizz.instapetts.services.ImageService;
 import com.bunizz.instapetts.services.UploadsService;
 import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
+import com.bunizz.instapetts.utils.dilogs.DialogLogout;
+import com.bunizz.instapetts.utils.slidemenu.SlideMenuLayout;
 import com.bunizz.instapetts.web.CONST;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,11 +68,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.bunizz.instapetts.constantes.BUNDLES.PETBEAN;
+import static com.bunizz.instapetts.fragments.FragmentElement.INSTANCE_PREVIEW_PROFILE;
+
 public class Main extends AppCompatActivity implements change_instance,
         changue_fragment_parameters_listener,
         uploads,MainContract.View ,
         open_camera_histories_listener,
-        folowFavoriteListener {
+        folowFavoriteListener, open_side_menu {
 
 
     private Stack<FragmentElement> stack_feed;
@@ -69,6 +86,10 @@ public class Main extends AppCompatActivity implements change_instance,
     private Stack<FragmentElement> stack_tip_detail;
     private Stack<FragmentElement> stack_edit_profile;
     private Stack<FragmentElement> stack_preview_perfil;
+    private Stack<FragmentElement> stack_posts_publics_search;
+    private Stack<FragmentElement> stack_posts_search_advanced;
+
+
     private FragmentElement mCurrentFragment;
 
     private FragmentElement mCurrenSheet;
@@ -90,6 +111,12 @@ public class Main extends AppCompatActivity implements change_instance,
     @BindView(R.id.icon_profile_pet)
     ImageView icon_profile_pet;
 
+    @BindView(R.id.mainSlideMenu)
+    SlideMenuLayout mainSlideMenu;
+
+    @BindView(R.id.app_name_user)
+    TextView app_name_user;
+
 
     @BindView(R.id.sliding_layout)
     SlidingUpPanelLayout mLayout;
@@ -98,6 +125,10 @@ public class Main extends AppCompatActivity implements change_instance,
     RxPermissions rxPermissions ;
 
     MainPresenter presenter;
+    PetHelper petHelper;
+
+    boolean DOWNLOAD_INFO =false;
+    boolean IS_SHEET_OPEN =false;
 
 
     @SuppressLint("MissingPermission")
@@ -122,11 +153,29 @@ public class Main extends AppCompatActivity implements change_instance,
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tap_tips)
     void tap_tips() {
-        if(mCurrentFragment.getInstanceType() != FragmentElement.INSTANCE_TIPS) {
-            changeOfInstance(FragmentElement.INSTANCE_TIPS,null);
-            repaint_nav(R.id.tap_tips);
-        }
+
+     if(mCurrentFragment.getInstanceType() != FragmentElement.INSTANCE_TIPS) {
+         changeOfInstance(FragmentElement.INSTANCE_TIPS, null);
+         repaint_nav(R.id.tap_tips);
+     }
     }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.logout)
+    void logout() {
+        DialogLogout dialogLogout = new DialogLogout(this);
+        dialogLogout.setListener(new logout_listener() {
+            @Override
+            public void logout() {
+                App.getInstance().clear_preferences();
+                Intent i = new Intent(Main.this, LoginActivity.class);
+                startActivity(i);
+            }
+        });
+        dialogLogout.show();
+    }
+
+
 
     @SuppressLint({"MissingPermission", "CheckResult"})
     @OnClick(R.id.tab_add_image)
@@ -161,8 +210,8 @@ public class Main extends AppCompatActivity implements change_instance,
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tab_search_pet)
     void tab_search_pet() {
-        if(mCurrentFragment.getInstanceType() != FragmentElement.INSTANCE_SEARCH) {
-            changeOfInstance(FragmentElement.INSTANCE_SEARCH,null);
+        if(mCurrentFragment.getInstanceType() != FragmentElement.INSTANCE_GET_POSTS_PUBLICS) {
+            changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS,null);
             repaint_nav(R.id.tab_search_pet);
         }
     }
@@ -177,6 +226,16 @@ public class Main extends AppCompatActivity implements change_instance,
         setContentView(R.layout.main);
         ButterKnife.bind(this);
         changeStatusBarColor(R.color.white);
+        Intent iin= getIntent();
+        Bundle b = iin.getExtras();
+        if(b!=null)
+        {
+            int res  = b.getInt("DOWNLOADS_INFO");
+            if(res == 1){
+                petHelper = new PetHelper(this);
+                DOWNLOAD_INFO = true;
+            }
+        }
         rxPermissions = new RxPermissions(this);
         stack_feed = new Stack<>();
         stack_profile_pet = new Stack<>();
@@ -186,6 +245,8 @@ public class Main extends AppCompatActivity implements change_instance,
         stack_tip_detail = new Stack<>();
         stack_edit_profile= new Stack<>();
         stack_preview_perfil = new Stack<>();
+        stack_posts_publics_search = new Stack<>();
+        stack_posts_search_advanced = new Stack<>();
         setupFirstFragment();
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
@@ -206,6 +267,18 @@ public class Main extends AppCompatActivity implements change_instance,
             }
         });
         presenter = new MainPresenter(this,this);
+        if(DOWNLOAD_INFO)
+            download_pets();
+
+        app_name_user.setText(App.read(PREFERENCES.NAME_USER,"INVALID"));
+    }
+
+    void download_pets(){
+        Log.e("DONLOAD_MY_PETS","si");
+        UserBean userBean = new UserBean();
+        userBean.setUuid(App.read(PREFERENCES.UUID,"INVALID"));
+        userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        presenter.downloadMyPets(userBean);
     }
 
     public void changeStatusBarCNAME_USUARIOSolor(int color) {
@@ -305,15 +378,41 @@ public class Main extends AppCompatActivity implements change_instance,
         inflateFragment();
     }
 
-
-    private void change_to_preview_erfil(FragmentElement fragment) {
+    private void change_to_search_posts_publics(FragmentElement fragment) {
         if (fragment != null) {
             mCurrentFragment = fragment;
+            if (stack_posts_publics_search.size() <= 0) {
+                stack_posts_publics_search.push(mCurrentFragment);
+            }
+        }
+
+        inflateFragment();
+    }
+
+
+    private void change_to_preview_erfil(FragmentElement fragment,Bundle data) {
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            //Log.e("EARCH_USERS","fragment : " + data.getInt(BUNDLES.ID_USUARIO));
+            mCurrentFragment.getFragment().setArguments(data);
             if (stack_preview_perfil.size() <= 0) {
                 stack_preview_perfil.push(mCurrentFragment);
             }
         }
         inflateFragment();
+        ((FragmentProfileUserPetPreview) mCurrentFragment.getFragment()).refresh_info();
+    }
+
+    private void change_list_of_posts_advanced(FragmentElement fragment,Bundle data) {
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            mCurrentFragment.getFragment().setArguments(data);
+            if (stack_posts_search_advanced.size() <= 0) {
+                stack_posts_search_advanced.push(mCurrentFragment);
+            }
+        }
+        inflateFragment();
+        ((FragmentListOfPosts) mCurrentFragment.getFragment()).update_lists();
     }
 
 
@@ -374,18 +473,31 @@ public class Main extends AppCompatActivity implements change_instance,
             }
         }
 
+
+
         else if(intanceType == FragmentElement.INSTANCE_PREVIEW_PROFILE) {
             if (stack_preview_perfil.size() == 0) {
-                change_to_preview_erfil(new FragmentElement<>("", FragmentProfileUserPetPreview.newInstance(), FragmentElement.INSTANCE_PREVIEW_PROFILE));
+                change_to_preview_erfil(new FragmentElement<>("", FragmentProfileUserPetPreview.newInstance(), FragmentElement.INSTANCE_PREVIEW_PROFILE),bundle);
             } else {
-                change_to_preview_erfil(stack_preview_perfil.pop());
+                change_to_preview_erfil(stack_preview_perfil.pop(),bundle);
             }
 
         }
+        else if (intanceType == FragmentElement.INSTANCE_GET_POSTS_PUBLICS) {
+            if (stack_posts_publics_search.size() == 0) {
+                change_to_search_posts_publics(new FragmentElement<>("", FragmentPostPublics.newInstance(), FragmentElement.INSTANCE_GET_POSTS_PUBLICS));
+            } else {
+                change_to_search_posts_publics(stack_posts_publics_search.pop());
+            }
+        }
+        else if(intanceType == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED) {
+            if (stack_posts_search_advanced.size() == 0) {
+                change_list_of_posts_advanced(new FragmentElement<>("", FragmentListOfPosts.newInstance(), FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED),bundle);
+            } else {
+                change_list_of_posts_advanced(stack_posts_search_advanced.pop(),bundle);
+            }
 
-
-
-
+        }
     }
 
     @SuppressLint("RestrictedApi")
@@ -428,8 +540,11 @@ public class Main extends AppCompatActivity implements change_instance,
     }
 
     @Override
-    public void open_sheet() {
-        changue_instance_sheet();
+    public void open_sheet(PetBean petBean,int is_me) {
+        Bundle b = new Bundle();
+        b.putParcelable(BUNDLES.PETBEAN, Parcels.wrap(petBean));
+        b.putInt(BUNDLES.IS_ME, is_me);
+        changue_instance_sheet(b);
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
     }
 
@@ -443,6 +558,13 @@ public class Main extends AppCompatActivity implements change_instance,
     public void onBackPressed() {
         if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_TIP_DETAIL){
             changeOfInstance(FragmentElement.INSTANCE_TIPS,null);
+        }
+        else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH || mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED){
+            changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS,null);
+        }
+        else if(IS_SHEET_OPEN){
+            IS_SHEET_OPEN= false;
+           mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         }else{
             changeOfInstance(FragmentElement.INSTANCE_FEED,null);
         }
@@ -502,13 +624,15 @@ public class Main extends AppCompatActivity implements change_instance,
             icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_add_image_black));
     }
 
-    void changue_instance_sheet(){
-        changue_sheet(new FragmentElement<>("", InfoPetFragment.newInstance(), FragmentElement.INSTANCE_PROFILE_PET));
+    void changue_instance_sheet(Bundle data){
+        IS_SHEET_OPEN = true;
+        changue_sheet(new FragmentElement<>("", InfoPetFragment.newInstance(), FragmentElement.INSTANCE_PROFILE_PET),data);
     }
 
-    private void changue_sheet(FragmentElement fragment) {
+    private void changue_sheet(FragmentElement fragment,Bundle data) {
         if (fragment != null) {
             mCurrenSheet = fragment;
+            mCurrenSheet.getFragment().setArguments(data);
         }
         inflate_sheet();
     }
@@ -565,18 +689,48 @@ public class Main extends AppCompatActivity implements change_instance,
     public void UpdateProfile(Bundle bundle) {
         ArrayList<String> uri_profile = new ArrayList<>();
         uri_profile.add(bundle.getString(BUNDLES.PHOTO_LOCAL));
-        Intent intent = new Intent(Main.this, UploadsService.class);
+
+
+        Intent intent = new Intent(Main.this, ImageService.class);
         intent.putStringArrayListExtra(UploadsService.INTENT_KEY_NAME, uri_profile);
         intent.putExtra(BUNDLES.NOTIFICATION_TIPE,1);
         intent.putExtra(UploadsService.INTENT_TRANSFER_OPERATION, UploadsService.TRANSFER_OPERATION_UPLOAD);
         startService(intent);
+
+
         UserBean userBean = new UserBean();
         userBean.setDescripcion(bundle.getString(BUNDLES.DESCRIPCION));
         userBean.setPhoto_user(bundle.getString(BUNDLES.PHOTO));
+        userBean.setPhoto_user_thumbh(bundle.getString(BUNDLES.PHOTO_TUMBH));
         userBean.setTarget("UPDATE");
         userBean.setUuid(App.read(PREFERENCES.UUID,"INVALID"));
         presenter.UpdateProfile(userBean);
         changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET,bundle);
+    }
+
+    void  upload_story(String url){
+        ArrayList<String> uri_profile = new ArrayList<>();
+        uri_profile.add(url);
+
+        Intent intent = new Intent(Main.this, UploadsService.class);
+        intent.putStringArrayListExtra(UploadsService.INTENT_KEY_NAME, uri_profile);
+        intent.putExtra(BUNDLES.NOTIFICATION_TIPE,2);
+        intent.putExtra(UploadsService.INTENT_TRANSFER_OPERATION, UploadsService.TRANSFER_OPERATION_UPLOAD);
+        startService(intent);
+
+        String splits[] =url.split("/");
+        int index  = splits.length;
+        String filename = splits[index -1];
+
+
+        HistoriesBean historiesBean = new HistoriesBean();
+        historiesBean.setUris_stories(App.getInstance().make_uri_bucket_post(CONST.FOLDER_STORIES,filename));
+        historiesBean.setName_pet("FIRULAIS");
+        historiesBean.setName_user("ADOLFIN CANALLIN");
+        historiesBean.setDate_story(App.formatDateGMT(new Date()));
+        historiesBean.setId_user(1);
+        historiesBean.setId_pet(1);
+        presenter.saveMyStory(historiesBean);
     }
 
     @Override
@@ -585,34 +739,44 @@ public class Main extends AppCompatActivity implements change_instance,
     }
 
     @Override
+    public void saveMyPets(ArrayList<PetBean> pets) {
+        if(petHelper!=null) {
+            if (pets != null){
+                petHelper.cleanTable();
+                Log.e("DONLOAD_MY_PETS","si" + pets.size());
+                for (int i = 0; i < pets.size(); i++)
+                    petHelper.savePet(pets.get(i));
+            }
+        }
+    }
+
+    @Override
+    public void onError(int error) {
+        if(error == 1){
+            download_pets();
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
     public void open() {
-        Intent i = new Intent(Main.this, CameraHistoryActivity.class);
-        startActivityForResult(i,NEW_PHOTO_FOR_HISTORY);
+        rxPermissions
+                .request(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA)
+                .subscribe(granted -> {
+                    if (granted) {
+                        Intent i = new Intent(Main.this, CameraHistoryActivity.class);
+                        startActivityForResult(i,NEW_PHOTO_FOR_HISTORY);
+                    } else {
+                        App.getInstance().show_dialog_permision(Main.this,getResources().getString(R.string.permision_storage),
+                                getResources().getString(R.string.permision_storage_body),0);
+                    }
+                });
+
     }
 
-   void  upload_story(String url){
-       ArrayList<String> uri_profile = new ArrayList<>();
-       uri_profile.add(url);
-       Intent intent = new Intent(Main.this, UploadsService.class);
-       intent.putStringArrayListExtra(UploadsService.INTENT_KEY_NAME, uri_profile);
-       intent.putExtra(BUNDLES.NOTIFICATION_TIPE,2);
-       intent.putExtra(UploadsService.INTENT_TRANSFER_OPERATION, UploadsService.TRANSFER_OPERATION_UPLOAD);
-       startService(intent);
 
-       String splits[] =url.split("/");
-       int index  = splits.length;
-       String filename = splits[index -1];
-
-
-       HistoriesBean historiesBean = new HistoriesBean();
-       historiesBean.setUris_stories(CONST.BASE_URL_BUCKET + filename);
-       historiesBean.setName_pet("FIRULAIS");
-       historiesBean.setName_user("ADOLFIN CANALLIN");
-       historiesBean.setDate_story(App.formatDateGMT(new Date()));
-       historiesBean.setId_user(1);
-       historiesBean.setId_pet(1);
-       presenter.saveMyStory(historiesBean);
-    }
 
 
     public void changeStatusBarColor(int color) {
@@ -634,5 +798,10 @@ public class Main extends AppCompatActivity implements change_instance,
     @Override
     public void favoritePet(UserBean userBean, PetBean petBean) {
       presenter.favoritePet(userBean,petBean);
+    }
+
+    @Override
+    public void open_side() {
+        mainSlideMenu.openRightSlide();
     }
 }

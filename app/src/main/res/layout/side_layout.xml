@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="20dp"
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        style="@style/ImmersiveStatusStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:fontFamily="@font/avenir_b"
+            android:id="@+id/app_name_user"
+            android:text="jkshdkjshdjks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <RelativeLayout
+            android:layout_marginTop="15dp"
+            android:background="#E1DFDF"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+        <LinearLayout
+            android:id="@+id/logout"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="?attr/selectableItemBackground"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:src="@drawable/ic_cerrar_sesion"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+            <TextView
+                android:textSize="18dp"
+                android:layout_marginLeft="20dp"
+                android:text="Cerrar Session"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:src="@drawable/ic_usuario"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+            <TextView
+                android:textSize="18dp"
+                android:layout_marginLeft="20dp"
+                android:text="Guardado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -1,6 +1,7 @@
 package com.bunizz.instapetts.fragments.profile;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 public class PetsPropietaryAdapter extends  RecyclerView.Adapter<RecyclerView.ViewHolder>{
     Context context;
     open_sheet_listener listener;
+    boolean IS_ME=false;
 
     ArrayList<PetBean> pets = new ArrayList<>();
 
@@ -29,7 +31,15 @@ public class PetsPropietaryAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public void setPets(ArrayList<PetBean> pets) {
+        IS_ME = true;
         this.pets = pets;
+        notifyDataSetChanged();
+    }
+    public void setPetsforOtherUser(ArrayList<PetBean> pets) {
+        Log.e("OTHER_PET","-->" +pets.size());
+        IS_ME = false;
+        this.pets = pets;
+        notifyDataSetChanged();
     }
 
     public void add_new_pet(PetBean petBean){
@@ -59,17 +69,25 @@ public class PetsPropietaryAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         PetsPropietaryHolder h =(PetsPropietaryHolder)holder;
-        if(position == pets.size()-1){
-            h.image_pet_history_add.setOnClickListener(view -> listener.open_wizard_pet());
-            h.image_pet_history_add.setVisibility(View.VISIBLE);
-            h.image_pet_history.setVisibility(View.GONE);
-            h.name_pet_item.setText("New Pet");
+        if(IS_ME) {
+            if (position == pets.size() - 1) {
+                h.image_pet_history_add.setOnClickListener(view -> listener.open_wizard_pet());
+                h.image_pet_history_add.setVisibility(View.VISIBLE);
+                h.image_pet_history.setVisibility(View.GONE);
+                h.name_pet_item.setText("New Pet");
+            } else {
+                h.name_pet_item.setText(pets.get(position).getName_pet());
+                h.image_pet_history.setOnClickListener(view -> listener.open(pets.get(position),0));
+                h.image_pet_history.setVisibility(View.VISIBLE);
+                h.image_pet_history_add.setVisibility(View.GONE);
+                Glide.with(context).load(pets.get(position).getUrl_photo_tumbh()).into(h.image_pet_history);
+            }
         }else{
-            h.name_pet_item.setText(pets.get(position).getName_pet() + "-");
-            h.image_pet_history.setOnClickListener(view -> listener.open());
+            h.name_pet_item.setText(pets.get(position).getName_pet());
+            h.image_pet_history.setOnClickListener(view -> listener.open(pets.get(position),1));
             h.image_pet_history.setVisibility(View.VISIBLE);
             h.image_pet_history_add.setVisibility(View.GONE);
-            Glide.with(context).load("https://firebasestorage.googleapis.com/v0/b/melove-principal/o/C18%2F15cb3831f0b9426c484d380f0ab1afac.jpg?alt=media&token=042d5974-e96c-4bcc-9fa2-f657fe2167af").into(h.image_pet_history);
+            Glide.with(context).load(pets.get(position).getUrl_photo_tumbh()).into(h.image_pet_history);
         }
 
     }

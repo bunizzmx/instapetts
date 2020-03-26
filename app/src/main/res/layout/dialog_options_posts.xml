@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    android:layout_marginTop="30dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:id="@+id/background"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@android:color/transparent">
+    <RelativeLayout
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:padding="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:background="@drawable/round_white"
+        android:clickable="true">
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/close_dialog"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/follow_unfollow"
+                android:layout_marginBottom="20dp"
+                android:textAllCaps="false"
+                android:text="dejar de seguir"
+                android:textColor="@color/black"
+                android:background="@drawable/button_edit_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/add_other_pet"
+                android:layout_marginBottom="20dp"
+                android:textAllCaps="false"
+                android:text="Guardar post"
+                android:textColor="@color/white"
+                android:background="@drawable/button_follow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/report"
+                android:layout_marginBottom="20dp"
+                android:textAllCaps="false"
+                android:text="Reportar post"
+                android:textColor="@color/black"
+                android:background="@drawable/button_edit_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

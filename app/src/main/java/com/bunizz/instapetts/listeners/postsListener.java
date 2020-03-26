@@ -6,4 +6,5 @@ public interface postsListener {
     void onLike(int id_post);
     void onFavorite(int id_post, PostBean postBean);
     void onDisfavorite(int id_post);
+    void openMenuOptions();
 }

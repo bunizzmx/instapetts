@@ -6,10 +6,14 @@ import com.bunizz.instapetts.beans.AutenticateBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
+import com.bunizz.instapetts.web.parameters.ParameterSearching;
+import com.bunizz.instapetts.web.responses.PetsResponse;
 import com.bunizz.instapetts.web.responses.ResponseCatalogo;
 import com.bunizz.instapetts.web.responses.ResponsePost;
 import com.bunizz.instapetts.web.responses.ResponseProfileUser;
 import com.bunizz.instapetts.web.responses.ResponseTips;
+import com.bunizz.instapetts.web.responses.SearchPetsResponse;
+import com.bunizz.instapetts.web.responses.SearchUsersResponse;
 import com.bunizz.instapetts.web.responses.SimpleResponse;
 import com.bunizz.instapetts.web.responses.SimpleResponseLogin;
 
@@ -33,7 +37,7 @@ public interface WebServices {
     @POST("test/newusers")
     Single<SimpleResponseLogin> newUser(@Body UserBean user);
 
-    @POST("test/getusers")
+    @POST("test/getinfouser")
     Single<ResponseProfileUser> getInfoUser(@Body UserBean user);
 
 
@@ -62,5 +66,18 @@ public interface WebServices {
     // PETS //////////////////////////////////////////////////////////
     @POST("test/newpets")
     Single<SimpleResponse> newPet( @Body PetBean pet );
+
+    @POST("test/getpets")
+    Single<PetsResponse> getPets(@Body UserBean userBean);
     ////////////////////////////////////////////////////////////////////
+
+
+    // PETS //////////////////////////////////////////////////////////
+    @POST("test/serachusers")
+    Single<SearchUsersResponse> searchUser(@Body ParameterSearching parameterSearching );
+    @POST("test/searchpets")
+    Single<SearchPetsResponse> searchPets(@Body ParameterSearching parameterSearching );
+    ////////////////////////////////////////////////////////////////////
+
+
 }

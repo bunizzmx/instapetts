@@ -17,13 +17,17 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferNetworkLossHandler;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.share_post.ShareActivity;
+import com.bunizz.instapetts.constantes.BUNDLES;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.utils.compresor.Compressor;
+import com.bunizz.instapetts.web.CONST;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,10 +53,12 @@ public class UploadsService extends Service {
     public static String TITLE="";
     public static String TITLE_SUCCESS="";
     public static String BODY="";
+    String NAME_PET ="";
     @Override
     public void onCreate() {
         super.onCreate();
         Util util = new Util();
+        TransferNetworkLossHandler.getInstance(this);
         transferUtility = util.getTransferUtility(this);
     }
 
@@ -74,6 +80,7 @@ public class UploadsService extends Service {
         else if(TYPE_NOTIFICATION == 3) {
             TITLE_SUCCESS ="MASCOTA CREADA";
             TITLE = "CONFIGURANDO TU MASCOTA";
+            NAME_PET = intent.getStringExtra(BUNDLES.NAME_PET);
         }
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_ONE_SHOT);
@@ -127,7 +134,16 @@ public class UploadsService extends Service {
 
             String splits[] = key.get(i).split("/");
             int index  = splits.length;
-            String filename = splits[index -1];
+            String filename = "";
+            if(TYPE_NOTIFICATION == 1){
+                filename =App.read(PREFERENCES.UUID,"INVALID") +"/" +  CONST.FOLDER_PROFILE  + "/" + App.read(PREFERENCES.UUID,"INVALID") + ".jpg";
+            }else if(TYPE_NOTIFICATION == 0){
+                filename = App.read(PREFERENCES.UUID,"INVALID") + "/" +  CONST.FOLDER_POSTS + "/" +  splits[index - 1];
+            }else if (TYPE_NOTIFICATION == 3){
+                filename = App.read(PREFERENCES.UUID,"INVALID") + "/" +  CONST.FOLDER_PETS + "/" + App.read(PREFERENCES.UUID,"INVALID")  +  NAME_PET + ".jpg" ;
+            }else{
+                filename =  App.read(PREFERENCES.UUID,"INVALID") + "/" +  CONST.FOLDER_STORIES + "/" +  splits[index - 1];
+            }
             transferObserver = transferUtility.upload(filename, file);
             transferObserver.setTransferListener(new UploadListener());
             TOTAL_LENGTH_ARCHIVES+= transferObserver.getBytesTotal() *2;
@@ -155,11 +171,8 @@ public class UploadsService extends Service {
         // Simply updates the list when notified.
         @Override
         public void onError(int id, Exception e) {
-            Log.e(TAG, "onError: " + id, e);
-            if (notifyUploadActivityNeeded) {
-                ShareActivity.initData();
-                notifyUploadActivityNeeded = false;
-            }
+            Log.e(TAG, "onError: " + e.getMessage());
+
         }
 
         @Override

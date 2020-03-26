@@ -26,6 +26,10 @@ public class UserBean {
     @Expose
     String photo_user;
 
+    @SerializedName("photo_user_thumbh")
+    @Expose
+    String photo_user_thumbh;
+
     @SerializedName("phone_user")
     @Expose
     String phone_user;
@@ -57,6 +61,14 @@ public class UserBean {
     @SerializedName("folowers")
     @Expose
     int folowers;
+
+    @SerializedName("date_active")
+    @Expose
+    String date_active;
+
+    @SerializedName("android_id")
+    @Expose
+    String android_id;
 
     String target;
 
@@ -199,5 +211,29 @@ public class UserBean {
 
     public void setFolowers(int folowers) {
         this.folowers = folowers;
+    }
+
+    public String getDate_active() {
+        return date_active;
+    }
+
+    public void setDate_active(String date_active) {
+        this.date_active = date_active;
+    }
+
+    public String getAndroid_id() {
+        return android_id;
+    }
+
+    public void setAndroid_id(String android_id) {
+        this.android_id = android_id;
+    }
+
+    public String getPhoto_user_thumbh() {
+        return photo_user_thumbh;
+    }
+
+    public void setPhoto_user_thumbh(String photo_user_thumbh) {
+        this.photo_user_thumbh = photo_user_thumbh;
     }
 }

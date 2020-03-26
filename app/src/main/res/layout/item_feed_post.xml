@@ -24,20 +24,32 @@
                 android:layout_toRightOf="@+id/image_pet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-                <TextView
-                    android:layout_marginTop="10dp"
-                    android:id="@+id/name_pet"
-                    android:layout_marginLeft="10dp"
-                    android:textColor="@color/black"
-                    android:fontFamily="@font/avenir_black"
-
-                    android:text="El firulais"
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:id="@+id/item_pet_info"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_marginTop="10dp"
+                        android:tint="@color/azul_facebook"
+                        android:src="@drawable/ic_hand_pet"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"/>
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/name_pet"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/avenir_black"
+                        android:text="El firulais"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
                 <TextView
                     android:layout_marginLeft="10dp"
                     android:textSize="10dp"
-                    android:layout_below="@+id/name_pet"
+                    android:layout_below="@+id/item_pet_info"
                     android:text="Zapopan .Jal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -45,6 +57,8 @@
 
         </RelativeLayout>
            <RelativeLayout
+               android:id="@+id/open_options_posts"
+               android:layout_marginRight="10dp"
                android:layout_centerVertical="true"
                android:layout_alignParentRight="true"
                android:layout_width="30dp"
@@ -64,6 +78,7 @@
         android:layout_height="wrap_content">
 
     <ImageView
+        android:scaleType="centerCrop"
         android:id="@+id/single_image"
         android:layout_width="match_parent"
         android:layout_height="450dp"/>
@@ -133,6 +148,8 @@
             android:layout_width="25dp"
             android:layout_height="25dp"/>
         <TextView
+            android:textSize="12dp"
+            android:id="@+id/num_likes_posts"
             android:textColor="@color/black"
             android:fontFamily="@font/avenir_b"
             android:layout_centerVertical="true"
@@ -143,6 +160,7 @@
             android:layout_height="wrap_content"/>
     </RelativeLayout>
     <TextView
+        android:textSize="12dp"
         android:id="@+id/description_posts"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
@@ -163,6 +181,32 @@
             android:textSize="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/date_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <com.bunizz.instapetts.utils.ImagenCircular
+                android:id="@+id/mini_user_photo"
+                android:src="@drawable/perro_demo"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+            <ImageView
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center_vertical"
+                android:tint="@color/azul_facebook"
+                android:src="@drawable/ic_usuario"
+                android:layout_width="10dp"
+                android:layout_height="10dp"/>
+            <TextView
+                android:id="@+id/name_user_posts"
+                android:layout_marginLeft="3dp"
+                android:layout_gravity="center_vertical"
+                android:text="Name User"
+                android:textSize="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
     </RelativeLayout>
 
 

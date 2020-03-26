@@ -30,7 +30,9 @@ import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
@@ -39,6 +41,7 @@ import com.bunizz.instapetts.fragments.post.FragmentPostList;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.folowFavoriteListener;
 import com.bunizz.instapetts.listeners.open_sheet_listener;
+import com.bunizz.instapetts.listeners.open_side_menu;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.tabs.SlidingFragmentPagerAdapter;
 import com.bunizz.instapetts.utils.tabs.SlidingTabLayout;
@@ -84,6 +87,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     @BindView(R.id.name_property_pet)
     TextView name_property_pet;
     folowFavoriteListener listener_follow;
+    open_side_menu listener_open_side;
 
     String URL_UPDATED="INVALID";
 
@@ -92,10 +96,10 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     ArrayList<PostBean> POSTS = new ArrayList<>();
 
     private TabAdapter adapter;
-
+    PetHelper petHelper;
+    ProfileUserPresenter presenter;
 
     PetsPropietaryAdapter petsPropietaryAdapter;
-
     public static FragmentProfileUserPet newInstance() {
         return new FragmentProfileUserPet();
     }
@@ -105,8 +109,16 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         super.onCreate(savedInstanceState);
         petsPropietaryAdapter = new PetsPropietaryAdapter(getContext());
         adapter = new TabAdapter(getActivity().getSupportFragmentManager(), getContext());
-        PETS.add(new PetBean());
-        petsPropietaryAdapter.setPets(PETS);
+        petHelper = new PetHelper(getContext());
+        presenter = new ProfileUserPresenter(this,getContext());
+        ArrayList<PetBean> my_pets_database = new ArrayList<>();
+            my_pets_database = petHelper.getMyPets();
+            if(my_pets_database.size()>0){
+                PETS.addAll(my_pets_database);
+            }
+            PETS.add(new PetBean());
+            petsPropietaryAdapter.setPets(PETS);
+            Log.e("RFRESH_PETS","3");
     }
 
     @Nullable
@@ -123,8 +135,8 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         list_pets_propietary.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
         petsPropietaryAdapter.setListener(new open_sheet_listener() {
             @Override
-            public void open() {
-                listener.open_sheet();
+            public void open(PetBean petBean, int is_me) {
+                listener.open_sheet(petBean,is_me);
             }
 
             @Override
@@ -143,26 +155,19 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         Log.e("NAME_USUARIOS","-->" +App.read(PREFERENCES.NAME_USER,"USUARIO") );
         title_toolbar.setText(App.read(PREFERENCES.NAME_USER,"USUARIO"));
         name_property_pet.setText("@" + App.read(PREFERENCES.NAME_USER,"USUARIO"));
-        if(false){
             follow_edit.setText(R.string.edit_profile);
             follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_edit_profile));
             follow_edit.setTextColor(Color.BLACK);
             follow_edit.setOnClickListener(view1 -> listener.change(FragmentElement.INSTANCE_EDIT_PROFILE_USER));
-        }else{
-            follow_edit.setText("Sueguir");
-            follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_follow));
-            follow_edit.setTextColor(Color.WHITE);
-            follow_edit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    UserBean userBean = new UserBean();
-                    listener_follow.followUser(userBean);
-                }
-            });
-        }
         descripcion_perfil_user.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
-        URL_UPDATED = App.read(PREFERENCES.FOTO_PROFILE_USER,"INVALID");
+        URL_UPDATED = App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID");
         Glide.with(getContext()).load(URL_UPDATED).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);
+        icon_toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener_open_side.open_side();
+            }
+        });
     }
 
 
@@ -171,6 +176,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         super.onAttach(context);
         listener= (change_instance) context;
         listener_follow =(folowFavoriteListener)context;
+        listener_open_side =(open_side_menu)context;
     }
 
 
@@ -180,20 +186,30 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     }
 
     public void refresh_list_pets(){
-        petsPropietaryAdapter.add_new_pet(new PetBean("El pochilais","","","","","","","","","",1));
+        Log.e("RFRESH_PETS","1");
+        ArrayList<PetBean> my_pets_database = new ArrayList<>();
+        my_pets_database.addAll(petHelper.getMyPets());
+        my_pets_database.add(new PetBean());
+        petsPropietaryAdapter.setPets(my_pets_database);
     }
 
     @Override
     public void showInfoUser(UserBean userBean, ArrayList<PetBean> pets, ArrayList<PostBean> posts) {
-        PETS.addAll(pets);
+        Log.e("RFRESH_PETS","2");
+        if(PETS.size()==1) {
+            PETS.addAll(pets);
+        }
         USERBEAN = userBean;
-        POSTS.addAll(posts);
-
         title_toolbar.setText(USERBEAN.getName_user());
         name_property_pet.setText("@" + USERBEAN.getName_user());
         descripcion_perfil_user.setText(USERBEAN.getDescripcion());
         Glide.with(getContext()).load(USERBEAN.getPhoto_user()).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);
         petsPropietaryAdapter.setPets(PETS);
+
+    }
+
+    @Override
+    public void Error() {
 
     }
 

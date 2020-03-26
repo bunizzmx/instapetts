@@ -55,6 +55,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                     <TextView
+                        android:textSize="14dp"
                         android:layout_gravity="center_horizontal"
                         android:text="Post"
                         android:layout_width="wrap_content"
@@ -120,6 +121,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"/>
                 <TextView
+                    android:textAlignment="center"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginBottom="10dp"
                     android:layout_centerHorizontal="true"
                     android:id="@+id/descripcion_perfil_user"
                     android:layout_marginTop="5dp"
@@ -130,6 +135,12 @@
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_marginBottom="5dp"
+        android:background="#E3E3E3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"

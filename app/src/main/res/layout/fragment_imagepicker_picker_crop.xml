@@ -49,7 +49,7 @@
         android:id="@+id/ccv"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="180dp">
+        android:layout_height="100dp">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/liste_image_selected"
             android:layout_centerVertical="true"

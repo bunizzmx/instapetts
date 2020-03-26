@@ -16,12 +16,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.listeners.change_instance_wizard;
 import com.bunizz.instapetts.listeners.process_save_pet_listener;
 import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.utils.ImagenCircular;
+import com.bunizz.instapetts.web.CONST;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

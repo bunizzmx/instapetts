@@ -17,14 +17,24 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.Splash;
 import com.bunizz.instapetts.activitys.main.Main;
 import com.bunizz.instapetts.activitys.share_post.ShareActivity;
+import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.UserBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.db.Utilities;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.login.MainLogin;
+import com.bunizz.instapetts.fragments.login.first_user.FragmentFirstUser;
 import com.bunizz.instapetts.fragments.login.login.FragmentLogin;
 import com.bunizz.instapetts.fragments.login.sigin.FragmentSigin;
+import com.bunizz.instapetts.fragments.profile.FragmentEditProfileUser;
+import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.login_listener;
+import com.bunizz.instapetts.listeners.uploads;
+import com.bunizz.instapetts.services.UploadsService;
+import com.bunizz.instapetts.utils.AndroidIdentifier;
+import com.bunizz.instapetts.web.CONST;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -43,6 +53,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 import androidx.annotation.NonNull;
@@ -53,11 +64,12 @@ import androidx.fragment.app.FragmentManager;
 
 import static com.bunizz.instapetts.constantes.PREFERENCES.IS_LOGUEDD;
 
-public class LoginActivity extends AppCompatActivity implements change_instance, login_listener,LoginContract.View {
+public class LoginActivity extends AppCompatActivity implements change_instance, login_listener, uploads,LoginContract.View {
 
     private Stack<FragmentElement> stack_login;
     private Stack<FragmentElement> stack_sigin;
     private Stack<FragmentElement> stack_main_login;
+    private Stack<FragmentElement> stack_first_user;
 
     private FragmentElement mCurrentFragment;
     private FragmentElement mOldFragment;
@@ -65,6 +77,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
     private static final int RC_SIGN_IN = 9001;
+    static final int NEW_PHOTO_UPLOADED= 3;
     RxPermissions rxPermissions ;
     @SuppressLint("CheckResult")
     @Override
@@ -75,8 +88,8 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         stack_sigin = new Stack<>();
         stack_main_login = new Stack<>();
         stack_login = new Stack<>();
+        stack_first_user = new Stack<>();
         mAuth = FirebaseAuth.getInstance();
-        setupFirstFragment();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -84,6 +97,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         rxPermissions = new RxPermissions(this);
         presenter = new LoginPresenter(this,this);
+        setupFirstFragment();
     }
 
     public void changeStatusBarColor(int color) {
@@ -97,8 +111,16 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         }
     }
     private void setupFirstFragment() {
-        mCurrentFragment = new FragmentElement<>(null, MainLogin.newInstance(), FragmentElement.INSTANCE_MAIN_LOGIN, true);
-        change_main(mCurrentFragment);
+        if(App.read(PREFERENCES.IS_FIRST_USER,false)){
+            mCurrentFragment = new FragmentElement<>(null, FragmentFirstUser.newInstance(), FragmentElement.INSTANCE_NEW_USER_CONFIG, true);
+            config_first_user(mCurrentFragment);
+            permision_location();
+        }else{
+            mCurrentFragment = new FragmentElement<>(null, MainLogin.newInstance(), FragmentElement.INSTANCE_MAIN_LOGIN, true);
+            change_main(mCurrentFragment);
+            permision_location();
+        }
+
     }
 
     private void change_login(FragmentElement fragment) {
@@ -112,6 +134,14 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         if (fragment != null) {
             mCurrentFragment = fragment;
             if(stack_main_login.size()<=0){stack_main_login.push(mCurrentFragment);}
+        }
+        inflateFragment();
+    }
+
+    private void config_first_user(FragmentElement fragment) {
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            if(stack_first_user.size()<=0){stack_first_user.push(mCurrentFragment);}
         }
         inflateFragment();
     }
@@ -151,6 +181,17 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                 change_main(stack_main_login.pop());
             }
         }
+
+        else if(intanceType == FragmentElement.INSTANCE_NEW_USER_CONFIG) {
+            if (stack_first_user.size() == 0) {
+                config_first_user(new FragmentElement<>("", FragmentFirstUser.newInstance(), FragmentElement.INSTANCE_NEW_USER_CONFIG));
+            } else {
+                config_first_user(stack_first_user.pop());
+            }
+        }
+
+
+
     }
 
     @SuppressLint("RestrictedApi")
@@ -194,9 +235,12 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     }
 
     @Override
-    public void open_sheet() {
+    public void open_sheet(PetBean petBean, int is_me) {
 
     }
+
+
+
 
     @Override
     public void open_wizard_pet() {
@@ -215,7 +259,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     @Override
     public void loginWithGmail() {
-        permision_location();
+
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -248,6 +292,9 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                             // Sign in success, update UI with the signed-in user's information
                             //Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            if(user!=null){
+                                App.write(PREFERENCES.NAME_USER,user.getDisplayName());
+                            }
                             user.sendEmailVerification()
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
@@ -295,6 +342,14 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
         }
+        else if(requestCode == NEW_PHOTO_UPLOADED){
+            if(data!=null) {
+                String url =  data.getStringExtra(BUNDLES.URI_FOTO);
+                if (mCurrentFragment.getFragment() instanceof FragmentFirstUser) {
+                    ((FragmentFirstUser) mCurrentFragment.getFragment()).change_image_profile(url);
+                }
+            }
+        }
     }
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
@@ -341,6 +396,9 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         userBean.setToken(App.read(PREFERENCES.TOKEN,"INVALID"));
         userBean.setTarget("LOGIN");
         userBean.setUuid(App.read(PREFERENCES.UUID,"INVALID"));
+        userBean.setAndroid_id(Utilities.Md5Hash(new AndroidIdentifier(LoginActivity.this).generateCombinationID()));
+        userBean.setPhone_user("0000000");
+        userBean.setPhoto_user(App.read(PREFERENCES.FOTO_PROFILE_USER,"INVALID"));
         presenter.RegisterUser(userBean);
     }
 
@@ -359,26 +417,25 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     @Override
     public void registerCompleted() {
-        if(App.read("IS_NEW_USER",false)){
-
-        }else{
             App.write(IS_LOGUEDD,true);
             Intent i ;
             i = new Intent(LoginActivity.this, Main.class);
             startActivity(i);
-        }
+
     }
 
     @Override
     public void loginCompleted(UserBean userBean) {
+        Log.e("KKKKJSKJS","-->" + userBean.getPhoto_user_thumbh());
         App.write(PREFERENCES.FOTO_PROFILE_USER,userBean.getPhoto_user());
+        App.write(PREFERENCES.FOTO_PROFILE_USER_THUMBH,userBean.getPhoto_user_thumbh());
         App.write(PREFERENCES.DESCRIPCCION,userBean.getDescripcion());
         App.write(PREFERENCES.NAME_USER,userBean.getName_user());
-        Log.e("NAME_USUARIOS","-->" +userBean.getName_user());
-        Log.e("NAME_USUARIOS","xx-->" +userBean.getDescripcion());
+        App.write(PREFERENCES.ID_USER_FROM_WEB,userBean.getId());
         App.write(IS_LOGUEDD,true);
         Intent i ;
         i = new Intent(LoginActivity.this, Main.class);
+        i.putExtra("DOWNLOADS_INFO",1);
         startActivity(i);
     }
 
@@ -386,4 +443,71 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     public void registerError() {
 
     }
+
+    @Override
+    public void isFirstUser(int id_from_web) {
+        Log.e("IS_DKJKD","kskdsl");
+        App.write(PREFERENCES.ID_USER_FROM_WEB,id_from_web);
+        App.write(PREFERENCES.IS_FIRST_USER,true);
+        changeOfInstance(FragmentElement.INSTANCE_NEW_USER_CONFIG);
+    }
+
+    @Override
+    public void UpdateFirsUserCompleted() {
+        Log.e("FIRST_COMPLETED","true");
+        App.write(IS_LOGUEDD,true);
+        Intent i ;
+        i = new Intent(LoginActivity.this, Main.class);
+        startActivity(i);
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void onImageProfileUpdated() {
+        rxPermissions
+                .request(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA)
+                .subscribe(granted -> {
+                    if (granted) {
+                        Intent i = new Intent(LoginActivity.this, ShareActivity.class);
+                        i.putExtra("FROM","PROFILE_PHOTO");
+                        startActivityForResult(i,NEW_PHOTO_UPLOADED);
+                    } else {
+                        App.getInstance().show_dialog_permision(LoginActivity.this,getResources().getString(R.string.permision_storage),
+                                getResources().getString(R.string.permision_storage_body),0);
+                    }
+                });
+    }
+
+    @Override
+    public void setResultForOtherChanges(String url) {
+
+    }
+
+    @Override
+    public void UpdateProfile(Bundle bundle) {
+        App.write(PREFERENCES.FOTO_PROFILE_USER,App.getInstance().make_uri_bucket_profile());
+        upDateUserBean();
+        ArrayList<String> uri_profile = new ArrayList<>();
+        uri_profile.add(bundle.getString(BUNDLES.PHOTO_LOCAL));
+        Intent intent = new Intent(LoginActivity.this, UploadsService.class);
+        intent.putStringArrayListExtra(UploadsService.INTENT_KEY_NAME, uri_profile);
+        intent.putExtra(BUNDLES.NOTIFICATION_TIPE,1);
+        intent.putExtra(UploadsService.INTENT_TRANSFER_OPERATION, UploadsService.TRANSFER_OPERATION_UPLOAD);
+        startService(intent);
+    }
+
+
+    void upDateUserBean(){
+        UserBean userBean = new UserBean();
+        userBean.setDescripcion(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
+        userBean.setName_user(App.read(PREFERENCES.NAME_USER,"INVALID"));
+        userBean.setPhoto_user(App.read(PREFERENCES.FOTO_PROFILE_USER,"INVALID"));
+        userBean.setUuid(App.read(PREFERENCES.UUID,"INVALID"));
+        userBean.setTarget("UPDATE");
+        presenter.updateUser(userBean);
+    }
+
+
 }

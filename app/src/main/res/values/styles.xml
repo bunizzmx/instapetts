@@ -1,5 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-
+    <style name="ImmersiveStatusStyle">
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:clipToPadding">true</item>
+    </style>
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->

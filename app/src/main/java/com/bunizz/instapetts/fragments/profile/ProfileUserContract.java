@@ -13,5 +13,6 @@ public interface ProfileUserContract {
 
     interface View{
         void showInfoUser(UserBean userBean, ArrayList<PetBean> pets, ArrayList<PostBean> posts);
+        void Error();
     }
 }

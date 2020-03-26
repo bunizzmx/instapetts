@@ -376,11 +376,6 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
     }
 
 
-    void set_results_uris(){
-        Intent data = new Intent();
-        data.putExtra("URIS_PATHS",false);
-        setResult(RESULT_OK,data);
-    }
 
     public static File get_dir(){
        String  filename = "perra" + UUID.randomUUID();
@@ -393,30 +388,6 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
     }
 
 
-
-
-
-
-    public static void initData() {
-     /*   transferRecordMaps.clear();
-        // Use TransferUtility to get all upload transfers.
-        observers = transferUtility.getTransfersWithType(TransferType.UPLOAD);
-        TransferListener listener = new MyService.UploadListener();
-        for (TransferObserver observer : observers) {
-            observer.refresh();
-            HashMap<String, Object> map = new HashMap<String, Object>();
-            util.fillMap(map, observer, false);
-            transferRecordMaps.add(map);
-
-            // Sets listeners to in progress transfers
-            if (TransferState.WAITING.equals(observer.getState())
-                    || TransferState.WAITING_FOR_NETWORK.equals(observer.getState())
-                    || TransferState.IN_PROGRESS.equals(observer.getState())) {
-                observer.setTransferListener(listener);
-            }
-        }
-        simpleAdapter.notifyDataSetChanged();*/
-    }
 
     @Override
     public void onImageProfileUpdated() {

@@ -29,6 +29,8 @@
             android:layout_width="15dp"
             android:layout_height="15dp"></ImageView>
         <TextView
+            android:layout_marginBottom="20dp"
+            android:fontFamily="@font/avenir_b"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/close_dialog"
             android:id="@+id/label_shose_pet"
@@ -36,10 +38,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
-            android:text="De quien es esta foto.."
+            android:text="Elige a la mascota correcta"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="20dp" />
+            android:textSize="18dp" />
     <androidx.recyclerview.widget.RecyclerView
         android:layout_below="@+id/label_shose_pet"
         android:id="@+id/chose_pet_list"

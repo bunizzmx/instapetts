@@ -3,8 +3,11 @@ package com.bunizz.instapetts.beans;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
 import java.util.ArrayList;
 
+@Parcel
 public class PostBean {
     @SerializedName("url_posts")
     @Expose
@@ -22,6 +25,10 @@ public class PostBean {
     @Expose
     String url_photo_user;
 
+    @SerializedName("url_photo_pet")
+    @Expose
+    String url_photo_pet;
+
     @SerializedName("description")
     @Expose
     String description;
@@ -38,11 +45,21 @@ public class PostBean {
     @Expose
     int id_usuario;
 
+    @SerializedName("id_pet")
+    @Expose
+    int id_pet;
+
+    @SerializedName("likes")
+    @Expose
+    int likes;
+
     @SerializedName("id_post")
     @Expose
     int id_post_from_web;
     boolean saved;
     boolean liked;
+
+    String target;
 
     public PostBean() {
     }
@@ -149,6 +166,38 @@ public class PostBean {
 
     public void setId_usuario(int id_usuario) {
         this.id_usuario = id_usuario;
+    }
+
+    public String getUrl_photo_pet() {
+        return url_photo_pet;
+    }
+
+    public void setUrl_photo_pet(String url_photo_pet) {
+        this.url_photo_pet = url_photo_pet;
+    }
+
+    public int getId_pet() {
+        return id_pet;
+    }
+
+    public void setId_pet(int id_pet) {
+        this.id_pet = id_pet;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
     }
 }
 
