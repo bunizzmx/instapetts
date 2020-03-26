@@ -17,6 +17,7 @@
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"/>
     <RelativeLayout
+        android:background="?attr/selectableItemBackground"
         android:id="@+id/open_notifications"
         android:layout_centerVertical="true"
         android:elevation="5dp"

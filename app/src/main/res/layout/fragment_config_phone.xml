@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <RelativeLayout
+            android:paddingRight="10dp"
+            android:paddingLeft="20dp"
+            android:id="@+id/back_to_main"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_centerVertical="true"
+                android:tint="@color/amarillo"
+                android:src="@drawable/ic_arrow_back"
+                android:layout_width="15dp"
+                android:layout_height="15dp"/>
+        </RelativeLayout>
+        <TextView
+            android:textColor="@color/black"
+            android:fontFamily="@font/avenir_b"
+            android:textSize="16dp"
+            android:text="Configura tu telefono"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <LinearLayout
+        android:padding="30dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:lineSpacingExtra="5dp"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:fontFamily="@font/avenir_b"
+            android:text="Introduce un numero de\ntelefono"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_marginTop="10dp"
+            android:lineSpacingExtra="5dp"
+            android:textSize="14dp"
+            android:text="Te enviaremos un SMS con un codigo de verificacion. Es posible que aplique una tarifa por el SMS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textColor="@color/black"
+                    android:text="MX +52"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <ImageView
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_arrow_down"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"/>
+            </LinearLayout>
+            <RelativeLayout
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center_vertical"
+                android:background="@color/black"
+                android:layout_width="0.5dp"
+                android:layout_height="10dp"/>
+            <EditText
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/avenir_b"
+                android:inputType="number"
+                android:layout_marginLeft="10dp"
+                android:hint="Numero de telefono"
+                android:padding="10dp"
+                android:background="#00FFFFFF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_marginTop="5dp"
+            android:background="#343333"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+
+        <Button
+            android:background="#F4F3F3"
+            android:layout_marginTop="20dp"
+            android:textColor="#696666"
+            android:textAllCaps="false"
+            android:textSize="14dp"
+            android:text="Enviar codigo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</LinearLayout>

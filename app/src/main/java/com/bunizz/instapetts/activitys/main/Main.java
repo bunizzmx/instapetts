@@ -23,6 +23,7 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.camera_history.CameraHistoryActivity;
 import com.bunizz.instapetts.activitys.login.LoginActivity;
 import com.bunizz.instapetts.activitys.share_post.ShareActivity;
+import com.bunizz.instapetts.activitys.side_menus_activities.SideMenusActivities;
 import com.bunizz.instapetts.activitys.wizardPets.WizardPetActivity;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
@@ -141,14 +142,13 @@ public class Main extends AppCompatActivity implements change_instance,
         repaint_nav(R.id.tab_profile_pet);
     }
 
-    /*@SuppressLint("MissingPermission")
-    @OnClick(R.id.searc_pet_now)
-    void searc_pet_now() {
-        Log.e("CHANGE_INSTANCE", "profile pet");
-        Intent i = new Intent(Main.this, FragmentSearchPet.class);
-        startActivityForResult(i, NEW_PET_REQUEST);
-        // changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET);
-    }*/
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.menu_centro_ayuda)
+    void menu_centro_ayuda() {
+        Log.e("STARTACTIVITY","-->");
+        Intent i = new Intent(Main.this, SideMenusActivities.class);
+        startActivity(i);
+    }
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tap_tips)
@@ -270,7 +270,7 @@ public class Main extends AppCompatActivity implements change_instance,
         if(DOWNLOAD_INFO)
             download_pets();
 
-        app_name_user.setText(App.read(PREFERENCES.NAME_USER,"INVALID"));
+        app_name_user.setText("@" + App.read(PREFERENCES.NAME_USER,"INVALID"));
     }
 
     void download_pets(){

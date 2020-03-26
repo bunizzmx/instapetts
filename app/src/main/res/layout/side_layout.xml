@@ -25,9 +25,185 @@
             android:background="#E1DFDF"
             android:layout_width="match_parent"
             android:layout_height="1dp"/>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/avenir_b"
+            android:text="CUENTA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:background="?attr/selectableItemBackground"
+            android:paddingBottom="10dp"
+            android:paddingTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:src="@drawable/ic_favorite"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+            <TextView
+                android:textSize="14dp"
+                android:layout_marginLeft="20dp"
+                android:text="Guardado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:background="?attr/selectableItemBackground"
+            android:paddingBottom="10dp"
+            android:paddingTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:src="@drawable/ic_compartir"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+            <TextView
+                android:textSize="14dp"
+                android:layout_marginLeft="20dp"
+                android:text="Compartir tu Perfil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+            android:background="?attr/selectableItemBackground"
+            android:paddingBottom="10dp"
+            android:paddingTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:src="@drawable/ic_qr"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+            <TextView
+                android:textSize="14dp"
+                android:layout_marginLeft="20dp"
+                android:text="Tu identificacion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:background="?attr/selectableItemBackground"
+            android:paddingBottom="10dp"
+            android:paddingTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:src="@drawable/ic_usuario"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+            <TextView
+                android:textSize="14dp"
+                android:layout_marginLeft="20dp"
+                android:text="Administrar tu cuenta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <TextView
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/avenir_b"
+            android:text="GENERAL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:background="?attr/selectableItemBackground"
+            android:paddingBottom="10dp"
+            android:paddingTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:src="@drawable/ic_notification"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+            <TextView
+                android:textSize="14dp"
+                android:layout_marginLeft="20dp"
+                android:text="Notificaciones push"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/menu_centro_ayuda"
+            android:background="?attr/selectableItemBackground"
+            android:paddingBottom="10dp"
+            android:paddingTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:src="@drawable/ic_pregunta"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+            <TextView
+                android:textSize="14dp"
+                android:layout_marginLeft="20dp"
+                android:text="Centro de Hayuda"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+            android:background="?attr/selectableItemBackground"
+            android:paddingBottom="10dp"
+            android:paddingTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:src="@drawable/ic_politica"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+            <TextView
+                android:textSize="14dp"
+                android:layout_marginLeft="20dp"
+                android:text="Terminos de uso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+            android:background="?attr/selectableItemBackground"
+            android:paddingBottom="10dp"
+            android:paddingTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:src="@drawable/ic_pregunta"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+            <TextView
+                android:textSize="14dp"
+                android:layout_marginLeft="20dp"
+                android:text="Politica privacidad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:background="?attr/selectableItemBackground"
+            android:paddingBottom="10dp"
+            android:paddingTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:src="@drawable/ic_terminos"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+            <TextView
+                android:textSize="14dp"
+                android:layout_marginLeft="20dp"
+                android:text="Terminos de uso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_marginTop="15dp"
+            android:background="#E1DFDF"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
         <LinearLayout
             android:id="@+id/logout"
-            android:paddingTop="10dp"
+            android:paddingTop="15dp"
             android:paddingBottom="10dp"
             android:background="?attr/selectableItemBackground"
             android:layout_marginTop="20dp"
@@ -38,25 +214,9 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                android:textSize="18dp"
+                android:textSize="14dp"
                 android:layout_marginLeft="20dp"
                 android:text="Cerrar Session"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-        <LinearLayout
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:src="@drawable/ic_usuario"
-                android:layout_width="20dp"
-                android:layout_height="20dp"/>
-            <TextView
-                android:textSize="18dp"
-                android:layout_marginLeft="20dp"
-                android:text="Guardado"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>

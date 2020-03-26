@@ -28,6 +28,10 @@ import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.postsListener;
 import com.bunizz.instapetts.utils.dilogs.DialogOptionsPosts;
+import com.bunizz.instapetts.utils.loadings.SpinKitView;
+import com.bunizz.instapetts.utils.loadings.SpriteFactory;
+import com.bunizz.instapetts.utils.loadings.Style;
+import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
 import com.bunizz.instapetts.web.parameters.PostActions;
 
 import java.util.ArrayList;
@@ -42,6 +46,11 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
 
     @BindView(R.id.feed_list)
     RecyclerView feed_list;
+
+    @BindView(R.id.spin_kit)
+    SpinKitView spin_kit;
+
+
 
     changue_fragment_parameters_listener listener;
     FeedAdapter feedAdapter;
@@ -140,6 +149,11 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         refresh_feed.setOnRefreshListener(() ->{
            mPresenter.get_feed();
         });
+        Style style = Style.values()[14];
+        Sprite drawable = SpriteFactory.create(style);
+        spin_kit.setIndeterminateDrawable(drawable);
+        spin_kit.setColor(getContext().getResources().getColor(R.color.amarillo));
+
     }
 
 
@@ -161,6 +175,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
             historiesBeans.add(new HistoriesBean());
         }
         if(data_stories!=null) {
+            spin_kit.setVisibility(View.GONE);
             historiesBeans.addAll(data_stories);
             data_object.add(new HistoriesBean());
             data_object.addAll(data);

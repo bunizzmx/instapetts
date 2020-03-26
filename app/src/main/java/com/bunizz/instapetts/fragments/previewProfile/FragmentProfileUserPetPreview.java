@@ -80,6 +80,21 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     @BindView(R.id.descripcion_perfil_user)
     TextView descripcion_perfil_user;
 
+    @BindView(R.id.title_name_preview)
+    TextView title_name_preview;
+
+    @BindView(R.id.num_posts)
+    TextView num_posts;
+
+    @BindView(R.id.num_pets)
+    TextView num_pets;
+
+    @BindView(R.id.num_followers)
+    TextView num_followers;
+
+
+
+
     @BindView(R.id.name_property_pet)
     TextView name_property_pet;
     folowFavoriteListener listener_follow;
@@ -163,6 +178,8 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         tabs_profile_propietary.setSelectedIndicatorColors(getResources().getColor(R.color.primary));
         if(IS_MISMO_USER)
             show_myInfo();
+        else
+            paint_buttons();
     }
 
 
@@ -203,22 +220,13 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
                 userBean.setId(ID_USER_PARAMETER);
                 userBean.setUuid("xxxx");
                 presenter.getInfoUser(userBean);
+
             }
+            paint_buttons();
         }
     }
 
-    @Override
-    public void showInfoUser(UserBean userBean, ArrayList<PetBean> pets, ArrayList<PostBean> posts) {
-        PETS.addAll(pets);
-        USERBEAN = userBean;
-        name_property_pet.setText("@" + USERBEAN.getName_user());
-        descripcion_perfil_user.setText(USERBEAN.getDescripcion());
-        Glide.with(getContext()).load(USERBEAN.getPhoto_user()).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);
-        petsPropietaryAdapter.setPetsforOtherUser(PETS);
-
-    }
-
-    void show_myInfo(){
+    void paint_buttons(){
         if(IS_MISMO_USER){
             follow_edit.setText(R.string.edit_profile);
             follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_edit_profile));
@@ -236,7 +244,27 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
                 }
             });
         }
+    }
+
+    @Override
+    public void showInfoUser(UserBean userBean, ArrayList<PetBean> pets, ArrayList<PostBean> posts) {
+        PETS.addAll(pets);
+        USERBEAN = userBean;
+        name_property_pet.setText("@" + USERBEAN.getName_user());
+        descripcion_perfil_user.setText(USERBEAN.getDescripcion());
+        Glide.with(getContext()).load(USERBEAN.getPhoto_user()).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);
+        petsPropietaryAdapter.setPetsforOtherUser(PETS);
+        title_name_preview.setText(USERBEAN.getName_user());
+        num_posts.setText(String.valueOf(USERBEAN.getNum_pets()));
+        num_pets.setText(String.valueOf(USERBEAN.getRate_pets()));
+        num_followers.setText(String.valueOf(USERBEAN.getFolowers()));
+
+    }
+
+    void show_myInfo(){
+        paint_buttons();
         name_property_pet.setText("@" + App.read(PREFERENCES.NAME_USER,"USUARIO"));
+        title_name_preview.setText( App.read(PREFERENCES.NAME_USER,"USUARIO"));
         descripcion_perfil_user.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
         URL_UPDATED = App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID");
         Glide.with(getContext()).load(URL_UPDATED).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);

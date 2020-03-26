@@ -232,7 +232,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 f.save_posts.setOnClickListener(view -> {
                      if(data_parsed.isSaved()) {
                          listener_post.onDisfavorite(data_parsed.getId_post_from_web());
-                         f.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_estrella));
+                         f.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite));
                      }
                      else {
                          f.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_estrella_black));
@@ -242,7 +242,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                  if(data_parsed.isSaved()){
                      f.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_estrella_black));
                  }else{
-                     f.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_estrella));
+                     f.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite));
                  }
 
                 if(data_parsed.isLiked()){

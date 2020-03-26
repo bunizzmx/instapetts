@@ -30,6 +30,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PetBean;
+import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.camera.CameraPreviewStoryFragment;
 import com.bunizz.instapetts.fragments.camera.CameraStoryt;
@@ -38,6 +39,7 @@ import com.bunizz.instapetts.fragments.qr.FragmentDetectQR;
 import com.bunizz.instapetts.fragments.qr.FragmentMyQRPreview;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.folowFavoriteListener;
 import com.bunizz.instapetts.utils.ViewExtensionsKt;
 import com.bunizz.instapetts.utils.dilogs.DialogQrResult;
 
@@ -52,7 +54,7 @@ import butterknife.ButterKnife;
 
 
 
-public class QrSearchActivity extends AppCompatActivity implements changue_fragment_parameters_listener, change_instance {
+public class QrSearchActivity extends AppCompatActivity implements changue_fragment_parameters_listener, change_instance, folowFavoriteListener {
 
     private Stack<FragmentElement> stack_qr;
     private Stack<FragmentElement> stack_qr_my_pet;
@@ -223,6 +225,16 @@ public class QrSearchActivity extends AppCompatActivity implements changue_fragm
 
     @Override
     public void open_wizard_pet() {
+
+    }
+
+    @Override
+    public void followUser(UserBean userBean) {
+
+    }
+
+    @Override
+    public void favoritePet(UserBean userBean, PetBean petBean) {
 
     }
 }

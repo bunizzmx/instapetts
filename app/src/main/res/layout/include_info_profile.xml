@@ -13,7 +13,7 @@
         <com.bunizz.instapetts.utils.ImagenCircular
             android:layout_centerHorizontal="true"
             android:id="@+id/image_profile_property_pet"
-            android:src="@drawable/perro_demo"
+            android:src="@drawable/ic_hand_pet_preload"
             android:layout_width="80dp"
             android:layout_height="80dp"/>
         <LinearLayout
@@ -29,7 +29,7 @@
                     android:layout_marginTop="10dp"
                     android:fontFamily="@font/avenir_black"
                     android:textColor="@color/black"
-                    android:text="Louisa Bardely"
+                    android:text="-"
                     android:id="@+id/name_property_pet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -37,21 +37,21 @@
             <LinearLayout
                 android:weightSum="3"
                 android:layout_marginTop="15dp"
-                android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <LinearLayout
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content">
                     <TextView
+                        android:id="@+id/num_posts"
                         android:layout_gravity="center_horizontal"
                         android:fontFamily="@font/avenir_black"
                         android:textSize="18dp"
                         android:textColor="@color/black"
-                        android:text="245"
+                        android:text="-"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                     <TextView
@@ -64,14 +64,15 @@
                 <LinearLayout
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content">
                     <TextView
+                        android:id="@+id/num_pets"
                         android:layout_gravity="center_horizontal"
                         android:fontFamily="@font/avenir_black"
                         android:textSize="18dp"
                         android:textColor="@color/black"
-                        android:text="4.6"
+                        android:text="-"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                     <TextView
@@ -83,14 +84,15 @@
                 <LinearLayout
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content">
                     <TextView
+                        android:id="@+id/num_followers"
                         android:layout_gravity="center_horizontal"
                         android:fontFamily="@font/avenir_black"
                         android:textSize="18dp"
                         android:textColor="@color/black"
-                        android:text="1.2M"
+                        android:text="-"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                     <TextView
@@ -117,7 +119,7 @@
                     android:paddingLeft="50dp"
                     android:textColor="@color/white"
                     android:background="@drawable/button_follow"
-                    android:text="FOLLOW"
+                    android:text="-"
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"/>
                 <TextView
@@ -128,7 +130,7 @@
                     android:layout_centerHorizontal="true"
                     android:id="@+id/descripcion_perfil_user"
                     android:layout_marginTop="5dp"
-                    android:text="holi amo a los perritos y gatitps"
+                    android:text="-"
                     android:layout_below="@+id/follow_edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>

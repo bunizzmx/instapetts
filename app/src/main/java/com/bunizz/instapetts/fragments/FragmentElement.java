@@ -43,6 +43,13 @@ public class FragmentElement<T extends Fragment> {
 
     public static final int INSTANCE_GET_POSTS_PUBLICS= 28;
     public static final int INSTANCE_GET_POSTS_PUBLICS_ADVANCED= 29;
+
+
+    public static final int INSTANCE_WEB_TERMS = 30;
+    public static final int INSTANCE_ADMINISTRATE_ACCOUNT = 31;
+    public static final int INSTANCE_ADMINISTRATE_PHONE = 32;
+    public static final int INSTANCE_ADMINISTRATE_EMAIL= 33;
+    public static final int INSTANCE_ADMINISTRATE_PASSWORD = 34;
     //endregion
     private String mTitle;
     private T fragment;

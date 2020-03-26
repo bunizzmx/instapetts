@@ -15,11 +15,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.Utilities;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.qr.demo.generator.QRGContents;
 import com.bunizz.instapetts.utils.qr.demo.generator.QRGEncoder;
 import com.google.zxing.WriterException;
@@ -32,6 +36,8 @@ public class FragmentMyQRPreview extends Fragment {
 
     @BindView(R.id.qr_target)
     ImageView qr_target;
+
+
 
     Bitmap bitmap;
 
