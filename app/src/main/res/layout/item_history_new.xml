@@ -12,8 +12,8 @@
   <com.bunizz.instapetts.utils.ImagenCircular
       android:src="@drawable/perro_demo"
       android:id="@+id/image_pet_history"
-      android:layout_width="60dp"
-      android:layout_height="60dp"/>
+      android:layout_width="50dp"
+      android:layout_height="50dp"/>
   <com.bunizz.instapetts.utils.ImagenCircular
       android:layout_marginBottom="5dp"
       android:layout_centerHorizontal="true"

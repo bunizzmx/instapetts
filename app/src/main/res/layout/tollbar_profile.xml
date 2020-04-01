@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    android:background="@color/white"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:id="@+id/root_toolbar"
@@ -16,7 +17,7 @@
        android:text="news Feed"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"/>
-    <RelativeLayout
+    <LinearLayout
         android:background="?attr/selectableItemBackground"
         android:id="@+id/searc_pet_now"
         android:layout_centerVertical="true"
@@ -30,6 +31,6 @@
             android:src="@drawable/ic_dots"
             android:layout_width="20dp"
             android:layout_height="20dp"/>
-    </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>

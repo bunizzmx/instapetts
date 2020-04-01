@@ -1,21 +1,16 @@
 package com.bunizz.instapetts.fragments.search;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,22 +20,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
-import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.activitys.main.Main;
-import com.bunizz.instapetts.activitys.searchqr.QrSearchActivity;
-import com.bunizz.instapetts.activitys.share_post.ShareActivity;
-import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.SearchPetBean;
 import com.bunizz.instapetts.beans.SearchUserBean;
-import com.bunizz.instapetts.constantes.BUNDLES;
-import com.bunizz.instapetts.constantes.PREFERENCES;
-import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
-import com.bunizz.instapetts.fragments.post.FragmentPostList;
-import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
-import com.bunizz.instapetts.fragments.search.tabs.FragmentPetList;
-import com.bunizz.instapetts.fragments.search.tabs.FragmentPopietaryList;
-import com.bunizz.instapetts.listeners.change_instance;
+import com.bunizz.instapetts.fragments.search.tabs.pets.FragmentPetList;
+import com.bunizz.instapetts.fragments.search.tabs.users.FragmentPopietaryList;
+import com.bunizz.instapetts.fragments.search.tabs.pets.SearchPetAdapter;
+import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.utils.tabs.SlidingFragmentPagerAdapter;
 import com.bunizz.instapetts.utils.tabs.SlidingTabLayout;
 import com.bunizz.instapetts.utils.tabs.TabType;
@@ -50,12 +36,11 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class FragmentSearchPet extends Fragment implements SearchPetContract.View{
 
 
-    change_instance listener;
+    changue_fragment_parameters_listener listener;
 
     @BindView(R.id.searching_results_list_pets)
     RecyclerView searching_results_list_pets;
@@ -74,6 +59,9 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
 
     SearchPetPresenter presenter;
     int POSITION_PAGER =0;
+
+    String QUERY_PETS_SAVED="";
+    String QUERY_USERS_SAVED="";
 
     Handler handler = new Handler(Looper.getMainLooper() /*UI thread*/);
     Runnable workRunnable;
@@ -104,6 +92,13 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
         adapter = new SearchPetAdapter(getContext());
         searching_results_list_pets.setLayoutManager(new LinearLayoutManager(getContext()));
         searching_results_list_pets.setAdapter(adapter);
+        adapter.setListener(new changue_fragment_parameters_listener() {
+            @Override
+            public void change_fragment_parameter(int type_fragment, Bundle data) {
+                if(listener!=null)
+                    listener.change_fragment_parameter(type_fragment,data);
+            }
+        });
         viewpager_search.setAdapter(tabAdapter);
         tabs_search.setTabType(TabType.TEXT_ONLY);
         tabs_search.setViewPager(viewpager_search);
@@ -139,6 +134,13 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
 
             @Override
             public void onPageSelected(int position) {
+                if(position>0){
+                   // QUERY_PETS_SAVED = search_input.getText().toString();
+                    search_input.setText("");
+                }else{
+                    //QUERY_USERS_SAVED = search_input.getText().toString();
+                    search_input.setText("");
+                }
                 POSITION_PAGER = position;
             }
 
@@ -153,7 +155,7 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        listener= (change_instance) context;
+        listener= (changue_fragment_parameters_listener) context;
     }
 
     @Override
@@ -179,8 +181,8 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
     public class TabAdapter extends SlidingFragmentPagerAdapter {
 
         private String[] titles = {
-                "Propietarios",
-                "Mascotas"
+               getContext().getResources().getString(R.string.users),
+                getContext().getResources().getString(R.string.pets)
         };
         public Fragment[] fragments = new Fragment[titles.length];
         private Context context;

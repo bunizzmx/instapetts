@@ -48,6 +48,7 @@ public class SearchRazaHelper extends GenericHelper {
     public ArrayList<RazaBean> getRazas(String querytext) {
         Log.e("CATEGORIA_FILTRADa","-->" + querytext);
         ArrayList<RazaBean> razas = new ArrayList<>();
+        razas.clear();
         final Cursor cursor = getReadableDatabase().query(
                 TABLE_NAME,
                 new String[] { NAME_ESP, NAME_ENG,TYPE_PET},

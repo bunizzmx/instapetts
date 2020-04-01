@@ -397,8 +397,13 @@ public class App extends Application {
     }
 
 
-    public String  make_uri_bucket_post(String FOLDER,String URI){
-        return CONST.BASE_URL_BUCKET  + read(PREFERENCES.UUID,"INVALID") + "/" + FOLDER + "/" + URI;
+    public String  make_uri_bucket_history(String URI){
+        return CONST.BASE_URL_BUCKET_FIRESTORE + "bucket_profile/o/" + read(PREFERENCES.UUID,"INVALID") +"%2FSTORIES%2F"+ URI +
+                "?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
+    }
+    public String  make_uri_bucket_history_thumbh(String URI){
+        return CONST.BASE_URL_BUCKET_FIRESTORE + "bucket_profile/o/" + read(PREFERENCES.UUID,"INVALID") +"%2FSTORIES%2Fthumb_"+ URI +
+                "?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
     }
 
     public String  make_uri_bucket_for_pet(String ID_PET){

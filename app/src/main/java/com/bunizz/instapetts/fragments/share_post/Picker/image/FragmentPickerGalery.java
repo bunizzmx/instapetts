@@ -51,7 +51,7 @@ import java.util.UUID;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FragmentPickerGalery  extends Fragment implements  FeedContract.View, ImagePickerContract.View,
+public class FragmentPickerGalery  extends Fragment implements  ImagePickerContract.View,
         View.OnClickListener,
         AdapterView.OnItemSelectedListener,
         ImageListRecyclerViewAdapter.OnItemClickListener,
@@ -286,13 +286,5 @@ public class FragmentPickerGalery  extends Fragment implements  FeedContract.Vie
         uploas_listener =(uploads)context;
     }
 
-    @Override
-    public void show_feed(ArrayList<PostBean> data, ArrayList<HistoriesBean> data_stories) {
 
-    }
-
-    @Override
-    public void peticion_error() {
-
-    }
 }

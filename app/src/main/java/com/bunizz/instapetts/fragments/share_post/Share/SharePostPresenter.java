@@ -43,26 +43,6 @@ public class SharePostPresenter implements SharePostContract.Presenter {
         });
     }*/
 
-    @SuppressLint("CheckResult")
-    void get_algo(){
-        AutenticateBean autenticateBean = new AutenticateBean();
-        autenticateBean.setName_user("DEMO");
-        autenticateBean.setToken("xxxx");
-        apiService.getPosts(autenticateBean)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSingleObserver<ResponsePost>() {
-                    @Override
-                    public void onSuccess(ResponsePost notes) {
-                        // Received all notes
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        // Network error
-                    }
-                });
-    }
 
     @SuppressLint("CheckResult")
     @Override
@@ -73,14 +53,21 @@ public class SharePostPresenter implements SharePostContract.Presenter {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
                     @Override
-                    public void onSuccess(SimpleResponse notes) {
+                    public void onSuccess(SimpleResponse response) {
                     Log.e("POST","SUCCESS");
-                    mView.postStatus(true);
+                    if(response!=null){
+                        if(response.getCode_response() ==200){
+                            mView.postStatus(true);
+                        }else{
+                            mView.postStatus(false);
+                        }
+                    }
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e("POST","FALLO" + e.getMessage());
+                        mView.postStatus(false);
                     }
                 });
 

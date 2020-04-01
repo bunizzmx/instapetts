@@ -5,18 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1"
-    android:layout_marginTop="30dp"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
     android:id="@+id/background"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@android:color/transparent">
+    android:background="@color/white">
     <RelativeLayout
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:padding="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:background="@drawable/round_white"
         android:clickable="true">
@@ -46,7 +40,7 @@
         android:layout_below="@+id/label_shose_pet"
         android:id="@+id/chose_pet_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
 
     </RelativeLayout>
 

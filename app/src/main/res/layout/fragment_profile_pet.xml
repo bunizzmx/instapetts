@@ -6,14 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    android:background="#F3F3F3">
+    android:background="#FFFFFF">
+
     <com.google.android.material.appbar.AppBarLayout
-        android:paddingBottom="3dp"
-        android:background="#F3F3F3"
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:elevation="0.1dp"
+        android:background="@color/white"
         android:fitsSystemWindows="true"
         >
 
@@ -22,18 +22,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
-            android:background="#F3F3F3"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             >
-
             <androidx.appcompat.widget.Toolbar
-                android:background="#F3F3F3"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:minHeight="?attr/actionBarSize"
                 android:gravity="top"
                 app:layout_collapseMode="pin" />
             <RelativeLayout
+                android:background="@color/white"
                 android:layout_gravity="bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -51,12 +49,11 @@
                     android:layout_below="@+id/llx"
                     android:id="@+id/tabs_profile_propietary"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="#F3F3F3"/>
+                    android:layout_height="40dp" />
                 <LinearLayout
                     android:layout_marginTop="-1dp"
                     android:layout_below="@+id/tabs_profile_propietary"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="5dp"
                     android:background="#CAC8C8"
                     android:layout_width="match_parent"
                     android:layout_height="0.2dp"/>

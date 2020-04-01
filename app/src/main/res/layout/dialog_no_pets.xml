@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    android:id="@+id/background"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:background="@drawable/round_white"
+        android:clickable="true">
+        <ImageView
+            android:layout_margin="20dp"
+            android:id="@+id/close_dialog"
+            android:tint="@color/black"
+            android:src="@drawable/ic_cross"
+            android:layout_width="15dp"
+            android:layout_height="15dp"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.bunizz.instapetts.utils.ImagenCircular
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/perro_demo"
+                android:layout_width="200dp"
+                android:layout_height="200dp"/>
+            <TextView
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/avenir_b"
+                android:id="@+id/label_shose_pet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:text="No tienes mascotas aun"
+                android:textAlignment="center"
+                android:textColor="#F44336"
+                android:textSize="24dp" />
+            <TextView
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:text="Solo puedes hacer publicaciones si tienes mascotas agregadas"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+              android:id="@+id/new_pet_button"
+               android:layout_marginBottom="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_food_pet"
+                android:tint="@color/white"
+                app:fabSize="auto"
+                app:elevation="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

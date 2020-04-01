@@ -6,22 +6,11 @@
     <string name="acept_next">Aceptar</string>
 
     <string name="counter_label_text_constructor" formatted="false">%s%s%s%s</string>
-    <string name="demo">El firulas es una mascota que le gusta comer a todas horas y solo quiere estar dormido , por lo que necesita de un lgar de mucha paz y silencio si no le da rabia.</string>
-
     <string name="text_imagepicker_album_all_key">all</string>
 
     <string name="permision_storage">Permisos de Almacenamientos Requeridos</string>
     <string name="permision_storage_body">Para mejorar la experiencia en Eshary necesitamos tu permiso para acceder a tu almacenamiento.</string>
     <string name="text_imagepicker_permission_denied_external_storage">Please grant the permission to show media.</string>
-    <string name="tip_demo">Efectivamente, sería una verdadera imprudencia no mantener contacto alguno con nuestro perito en estos casos, puesto que, siempre respetando la veracidad del contenido de su informe y su obligación de ser imparcial y objetivo, existen diversas reglas, unas generales sobre la prueba pericial y otras particulares del caso objeto de pericia, que todo perito debe conocer y que deben clarificarse antes de su intervención.
-A continuación, vamos a destacar algunas de las reglas que debe conocer el perito en relación con su intervención en el juicio oral (basadas en el trabajo de Niccy Valera, Eficacia del Perito en el Juicio Oral):
-A la vista del dictamen, el abogado deberá exponer al perito la relevancia que tiene el dictamen en relación con el litigio, exponiéndole los puntos en los que va a incidir y aquellos aspectos clave del mismo.
-El abogado debe solicitar al perito le auxilie en la formulación de las preguntas técnicas que puedan colaborar a extraer lo más relevante de la pericia.
-\n\nSe le informará de que es esencial escuchar atentamente las preguntas que se le realicen por las partes y las que realice el juez, advirtiéndole que nunca deberá apresurarse al dar la respuesta.
-Caso de no entender una pregunta, deberá solicitar se le repita hasta que alcance a comprender el significado de la misma.
-Jamás responder a una pregunta que haya sido previamente declarada impertinente o inútil por el juez.
-Cuando pregunte el abogado contrario, nunca deberá mirar al abogado que lo ha propuesto buscando una respuesta o aclaración.
-Hay que ser siempre respetuoso y cortés y no discutir nunca con quienes lo examinen, especialmente con el abogado contrario, ni menos aún enfrentarse, pues es símbolo de falta de objetividad y, cómo no, de respeto. Esta actitud, ajena a la calma y sosiego que debe mantener el perito, es más que contraproducente.</string>
 
 
 <string name="pet_type_dog">Pero</string>
@@ -101,5 +90,17 @@ Hay que ser siempre respetuoso y cortés y no discutir nunca con quienes lo exam
     <string name="pick_a_video">Select or record a a video below to try it out:</string>
     <string name="trimming_progress">Trimming your video...</string>
     <string name="video_shoot_tip">Drag to select the segment within %d second that you want to post！</string>
+
+
+
+
+    <string name="users">Usuarios</string>
+    <string name="pets">Mascotas</string>
+    <string name="search">Buscar...</string>
+
+    <string name="nav_home">Inicio</string>
+    <string name="nav_tips">Tips</string>
+    <string name="nav_search">Buscar</string>
+    <string name="nav_perfil">Perfil</string>
 
 </resources>

@@ -4,16 +4,13 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.GetChars;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,16 +23,13 @@ import androidx.viewpager.widget.ViewPager;
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
-import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedAdapter;
-import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
 import com.bunizz.instapetts.fragments.post.FragmentPostList;
 import com.bunizz.instapetts.listeners.change_instance;
@@ -46,7 +40,6 @@ import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.tabs.SlidingFragmentPagerAdapter;
 import com.bunizz.instapetts.utils.tabs.SlidingTabLayout;
 import com.bunizz.instapetts.utils.tabs.TabType;
-import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 
@@ -81,6 +74,15 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     @BindView(R.id.follow_edit)
     Button follow_edit;
 
+    @BindView(R.id.num_posts)
+    TextView num_posts;
+
+    @BindView(R.id.num_pets)
+    TextView num_pets;
+
+    @BindView(R.id.num_followers)
+    TextView num_followers;
+
     @BindView(R.id.descripcion_perfil_user)
     TextView descripcion_perfil_user;
 
@@ -94,7 +96,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     ArrayList<PetBean> PETS = new ArrayList<>();
     UserBean USERBEAN = new UserBean();
     ArrayList<PostBean> POSTS = new ArrayList<>();
-
+   int POSITION_PAGER =0;
     private TabAdapter adapter;
     PetHelper petHelper;
     ProfileUserPresenter presenter;
@@ -168,6 +170,36 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
                 listener_open_side.open_side();
             }
         });
+        viewpager_profile.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                POSITION_PAGER = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+
+      /*  refresh_profile.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                UserBean userBean = new UserBean();
+                userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+                presenter.getInfoUser(userBean);
+                presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+            }
+        });*/
+        UserBean userBean = new UserBean();
+        userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        presenter.getInfoUser(userBean);
     }
 
 
@@ -181,8 +213,10 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
 
 
     public void change_image_profile(String url){
-        if(image_profile_property_pet!=null)
-        Glide.with(getContext()).load(url).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);
+        if(image_profile_property_pet!=null) {
+            if(!url.equals("INVALID"))
+            Glide.with(getContext()).load(url).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);
+        }
     }
 
     public void refresh_list_pets(){
@@ -194,7 +228,8 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     }
 
     @Override
-    public void showInfoUser(UserBean userBean, ArrayList<PetBean> pets, ArrayList<PostBean> posts) {
+    public void showInfoUser(UserBean userBean, ArrayList<PetBean> pets) {
+       // refresh_profile.setRefreshing(false);
         Log.e("RFRESH_PETS","2");
         if(PETS.size()==1) {
             PETS.addAll(pets);
@@ -205,27 +240,50 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         descripcion_perfil_user.setText(USERBEAN.getDescripcion());
         Glide.with(getContext()).load(USERBEAN.getPhoto_user()).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);
         petsPropietaryAdapter.setPets(PETS);
+        num_posts.setText(String.valueOf(USERBEAN.getNum_pets()));
+        num_pets.setText(String.valueOf(USERBEAN.getRate_pets()));
+        num_followers.setText(String.valueOf(USERBEAN.getFolowers()));
 
+
+    }
+
+
+    @Override
+    public void showPostUser(ArrayList<PostBean> posts) {
+        Log.e("SETDATA","ONMY_PROFILE" + posts.size());
+        Fragment frag = adapter.fragments[POSITION_PAGER];
+        Fragment frag2 = adapter.fragments[1];
+        POSTS.addAll(posts);
+        ArrayList<Object> results = new ArrayList<>();
+        results.addAll(POSTS);
+        if (frag instanceof FragmentPostList) {
+
+            ((FragmentPostList) frag).setData(results);
+        }
+        if (frag2 instanceof FragmentPostGalery) {
+            ((FragmentPostGalery) frag2).setData(results);
+        }
     }
 
     @Override
     public void Error() {
+        UserBean userBean = new UserBean();
+        userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        presenter.getInfoUser(userBean);
+    }
 
+    @Override
+    public void ErrorPostUsers() {
+       // refresh_profile.setRefreshing(false);
     }
 
     public class TabAdapter extends SlidingFragmentPagerAdapter {
-
-        private String[] titles = {
-                "Contacts",
-                "Favorites",
-                "Groups",
-        };
-
         private int[] icons = {
                 R.drawable.ic_menu,
-                R.drawable.ic_favorito,
                 R.drawable.ic_lista
         };
+        public Fragment[] fragments = new Fragment[icons.length];
+
         private Context context;
 
         public TabAdapter(FragmentManager fm, Context context) {
@@ -249,13 +307,20 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         }
 
         @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment createdFragment = (Fragment) super.instantiateItem(container, position);
+            fragments[position]  = createdFragment;
+            return createdFragment;
+        }
+
+        @Override
         public int getCount() {
-            return icons.length == titles.length ? icons.length : 0;
+            return icons.length;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return titles[position];
+            return "-";
         }
 
         @Override
@@ -265,7 +330,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
 
         @Override
         public String getToolbarTitle(int position) {
-            return titles[position];
+            return "-";
         }
     }
 }

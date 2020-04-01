@@ -1,25 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/root_chose_pet"
-    android:padding="10dp"
+<androidx.cardview.widget.CardView android:id="@+id/root_chose_pet"
+    android:layout_marginTop="15dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    app:cardElevation="3dp"
+    app:cardCornerRadius="10dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:padding="15dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <com.bunizz.instapetts.utils.ImagenCircular
+        android:layout_gravity="center_vertical"
         android:id="@+id/pet_chose_list"
         android:src="@drawable/perro_demo"
         android:layout_width="60dp"
         android:layout_height="60dp"/>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/name_pet_chose_list"
-        android:textSize="20dp"
-        android:textColor="@color/black"
-        android:fontFamily="@font/avenir_black"
-        android:layout_marginLeft="20dp"
-        android:layout_gravity="center_vertical"
-        android:text="Firulais"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/name_pet_chose_list"
+            android:textSize="18dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/avenir_black"
+            android:layout_marginLeft="20dp"
+            android:layout_gravity="center_vertical"
+            android:text="Firulais"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-</LinearLayout>
+        <RelativeLayout
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="12dp"
+                android:text="Raza mascota"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:textSize="12dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="end"
+                android:text="BULLDOG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="12dp"
+                android:text="Edad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:textSize="12dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_alignParentRight="true"
+                android:text="7 años"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="12dp"
+                android:text="Rate pet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:textSize="12dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_alignParentRight="true"
+                android:text="4.9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+    </LinearLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

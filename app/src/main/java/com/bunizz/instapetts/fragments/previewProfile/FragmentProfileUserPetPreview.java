@@ -239,15 +239,15 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
             follow_edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    UserBean userBean = new UserBean();
-                    listener_follow.followUser(userBean);
+                    Log.e("FOLLOW_USER","-->" + USERBEAN.getId());
+                    listener_follow.followUser(USERBEAN);
                 }
             });
         }
     }
 
     @Override
-    public void showInfoUser(UserBean userBean, ArrayList<PetBean> pets, ArrayList<PostBean> posts) {
+    public void showInfoUser(UserBean userBean, ArrayList<PetBean> pets) {
         PETS.addAll(pets);
         USERBEAN = userBean;
         name_property_pet.setText("@" + USERBEAN.getName_user());
@@ -258,6 +258,12 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         num_posts.setText(String.valueOf(USERBEAN.getNum_pets()));
         num_pets.setText(String.valueOf(USERBEAN.getRate_pets()));
         num_followers.setText(String.valueOf(USERBEAN.getFolowers()));
+
+    }
+
+    @Override
+    public void showPostUser(ArrayList<PostBean> posts) {
+        POSTS.addAll(posts);
 
     }
 
@@ -273,6 +279,11 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     @Override
     public void Error() {
         presenter.getInfoUser(userBean);
+    }
+
+    @Override
+    public void ErrorPostUsers() {
+
     }
 
     public class TabAdapter extends SlidingFragmentPagerAdapter {

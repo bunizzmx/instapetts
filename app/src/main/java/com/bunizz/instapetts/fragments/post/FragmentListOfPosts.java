@@ -13,6 +13,7 @@ import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.post.adapters.GaleryAdapter;
 import com.bunizz.instapetts.fragments.post.adapters.PostsAdapter;
 import com.bunizz.instapetts.listeners.change_instance;
+import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 
 import org.parceler.Parcels;
 
@@ -31,7 +32,7 @@ public class FragmentListOfPosts extends Fragment {
     @BindView(R.id.list_posts_publics_advanced)
     RecyclerView list_posts_publics_advanced;
 
-    change_instance listener;
+    changue_fragment_parameters_listener listener;
     PostsAdapter feedAdapter;
 
     ArrayList<Object> data = new ArrayList<>();
@@ -64,6 +65,12 @@ public class FragmentListOfPosts extends Fragment {
         list_posts_publics_advanced.setLayoutManager(new LinearLayoutManager(getContext()));
         list_posts_publics_advanced.setAdapter(feedAdapter);
         feedAdapter.setData(data);
+        feedAdapter.setListener(new changue_fragment_parameters_listener() {
+            @Override
+            public void change_fragment_parameter(int type_fragment, Bundle data) {
+                listener.change_fragment_parameter(type_fragment,data);
+            }
+        });
     }
 
     public void update_lists(){
@@ -80,7 +87,7 @@ public class FragmentListOfPosts extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        listener= (change_instance) context;
+        listener= (changue_fragment_parameters_listener) context;
     }
 }
 

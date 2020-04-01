@@ -2,6 +2,7 @@ package com.bunizz.instapetts.fragments.wizardPets.adapters;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,6 +81,7 @@ public class TypePetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 if(listener!=null){
                     Bundle b = new Bundle();
                     b.putInt(BUNDLES.TYPE_PET,petTtypes.get(position).getId());
+                    Log.e("PET_IDZZ","-->" + petTtypes.get(position).getId() );
                     listener.onchange(FragmentElement.INSTANCE_TYPE_SEARCH_RAZA,b);
                 }
             });

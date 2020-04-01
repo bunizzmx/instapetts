@@ -1,5 +1,6 @@
 package com.bunizz.instapetts.fragments.feed;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -12,6 +13,7 @@ import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.FIRESTORE;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.db.helpers.FollowsHelper;
 import com.bunizz.instapetts.db.helpers.LikePostHelper;
 import com.bunizz.instapetts.db.helpers.MyStoryHelper;
 import com.bunizz.instapetts.db.helpers.SavedPostHelper;
@@ -19,7 +21,10 @@ import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
 import com.bunizz.instapetts.managers.FeedResponse;
 import com.bunizz.instapetts.web.parameters.PostActions;
+import com.bunizz.instapetts.web.parameters.PostFriendsBean;
+import com.bunizz.instapetts.web.parameters.PostLikeBean;
 import com.bunizz.instapetts.web.responses.ResponsePost;
+import com.bunizz.instapetts.web.responses.SimpleResponse;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -54,25 +59,32 @@ public class FeedPresenter implements FeedContract.Presenter {
     MyStoryHelper myStoryHelper;
     int RETRY =0;
     FirebaseFirestore db;
+    FollowsHelper followsHelper;
 
     FeedPresenter(FeedContract.View view, Context context) {
         this.mView = view;
         this.mContext = context;
         apiService = ApiClient.getClient(context)
                 .create(WebServices.class);
-        savedPostHelper = new SavedPostHelper(context);
-        likePostHelper = new LikePostHelper(context);
-        myStoryHelper = new MyStoryHelper(context);
+        savedPostHelper = new SavedPostHelper(this.mContext);
+        likePostHelper = new LikePostHelper(this.mContext);
+        myStoryHelper = new MyStoryHelper(this.mContext);
+        followsHelper = new FollowsHelper(this.mContext);
         db = App.getIntanceFirestore();
     }
 
     @Override
-    public void get_feed() {
-        AutenticateBean autenticateBean = new AutenticateBean();
-        autenticateBean.setName_user("DEMO");
-        autenticateBean.setToken("xxxx");
+    public void get_feed(boolean one_user,int id_one) {
+        PostFriendsBean postFriendsBean = new PostFriendsBean();
+        if(one_user){
+            postFriendsBean.setId_one(id_one);
+            postFriendsBean.setTarget("ONE");
+        }else{
+            postFriendsBean.setTarget("MULTIPLE");
+            postFriendsBean.setIds(followsHelper.getMyFriendsForPost());
+        }
         disposable.add(
-                apiService.getPosts(autenticateBean)
+                apiService.getPosts(postFriendsBean)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableSingleObserver<ResponsePost>() {
@@ -96,7 +108,10 @@ public class FeedPresenter implements FeedContract.Presenter {
                                     }
                                     mView.show_feed(post, responsePost.getList_stories());
                                 }  else{
-                                    mView.peticion_error();
+                                    RETRY ++;
+                                    if(RETRY < 3) {
+                                        mView.peticion_error();
+                                    }
                                     }
                             }
                             @Override
@@ -114,8 +129,91 @@ public class FeedPresenter implements FeedContract.Presenter {
     }
 
     @Override
+    public void geet_feed_recomended(boolean one_user, int id_one) {
+        PostFriendsBean postFriendsBean = new PostFriendsBean();
+         postFriendsBean.setTarget("DISCOVER");
+         postFriendsBean.setId_one(0);
+        disposable.add(
+                apiService.getPosts(postFriendsBean)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<ResponsePost>() {
+                            @Override
+                            public void onSuccess(ResponsePost responsePost) {
+                                if(responsePost.getList_posts()!=null) {
+                                    if(responsePost.getList_posts()!=null)
+                                        Log.e("NUMBER_POSTS_RECOMENDED", "-->" + responsePost.getList_posts().size());
+                                    ArrayList<PostBean> post = new ArrayList<>();
+                                    post.addAll(responsePost.getList_posts());
+                                    mView.show_feed_recomended(post);
+                                }  else{
+                                    RETRY ++;
+                                    if(RETRY < 3) {
+                                        mView.peticion_error();
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                RETRY ++;
+                                if(RETRY < 3) {
+                                    mView.peticion_error();
+                                }else{
+                                    Log.e("NUMBER_POSTS","-->EROR : " + e.getMessage());
+                                }
+
+                            }
+                        })
+        );
+    }
+
+    @Override
     public void likePost(PostActions postActions) {
-        likePostHelper.saveLikePost(postActions.getId_post());
+        boolean existsin_db = likePostHelper.saveLikePost(postActions.getId_post());
+        if(!existsin_db) {
+            PostLikeBean postLikeBean = new PostLikeBean();
+            postLikeBean.setId_post(postActions.getId_post());
+            postLikeBean.setType_event(Integer.parseInt(postActions.getAcccion()));
+            postLikeBean.setTarget("NEW_LIKE");
+            disposable.add(
+                    apiService.like_posts(postLikeBean)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                                @Override
+                                public void onSuccess(SimpleResponse responsePost) {
+                                    if (responsePost != null) {
+                                        if (responsePost.getCode_response() == 200) {
+                                            mView.LikeSuccess();
+                                        } else {
+                                            RETRY++;
+                                            if (RETRY < 3) {
+                                                mView.LikeEror();
+                                            }
+                                        }
+                                    } else {
+                                        RETRY++;
+                                        if (RETRY < 3) {
+                                            mView.LikeEror();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    RETRY++;
+                                    if (RETRY < 3) {
+                                        mView.LikeEror();
+                                    } else {
+                                        Log.e("NUMBER_POSTS", "-->EROR : " + e.getMessage());
+                                    }
+
+                                }
+                            })
+            );
+        }else{
+            Log.e("REGISTER_LIKE", "-->YA EXISTE NO LO ENVBIO A WEB : ");
+        }
     }
 
     @Override
@@ -159,6 +257,31 @@ public class FeedPresenter implements FeedContract.Presenter {
     @Override
     public void deleteFavorite(int id_post) {
         savedPostHelper.deleteSavedPost(id_post);
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void deletePost(PostBean postBean) {
+        apiService.delete_post(postBean)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                    @Override
+                    public void onSuccess(SimpleResponse response) {
+                        Log.e("POST","SUCCESS");
+                     if(response!=null){
+                        if(response.getCode_response() ==200)
+                            mView.deletePostError(true);
+                        else
+                            mView.deletePostError(false);
+                     }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.deletePostError(false);
+                    }
+                });
     }
 
     @Override

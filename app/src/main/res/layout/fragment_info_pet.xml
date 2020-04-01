@@ -2,12 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-   >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
 
   <com.bunizz.instapetts.utils.ImagenCircular
       android:id="@+id/image_pet_info"
-      android:layout_margin="20dp"
+      android:layout_marginTop="10dp"
       android:layout_centerHorizontal="true"
       android:src="@drawable/perro_demo"
       android:layout_width="70dp"
@@ -36,19 +36,38 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/layout_follows"
-        android:padding="10dp"
         android:layout_below="@+id/layout_info_names"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+      <Button
+          android:textAllCaps="false"
+          android:layout_marginBottom="5dp"
+          android:layout_marginTop="5dp"
+          android:layout_toLeftOf="@+id/layout_favorites_pet"
+          android:layout_marginLeft="20dp"
+          android:textSize="10dp"
+          android:textColor="@color/white"
+          android:text="Favoritos"
+          android:background="@drawable/button_follow"
+          android:layout_width="wrap_content"
+          android:layout_height="40dp"/>
         <LinearLayout
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:id="@+id/layout_favorites_pet"
+            android:layout_centerHorizontal="true"
             android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <TextView
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/avenir_b"
                 android:textColor="@color/black"
                 android:text="125K"
                 android:layout_gravity="center_horizontal"
@@ -59,18 +78,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
-      <Button
-          android:layout_marginLeft="20dp"
-          android:textSize="10dp"
-          android:textColor="@color/white"
-          android:text="Favoritos"
-          android:background="@drawable/button_follow"
-          android:layout_width="wrap_content"
-          android:layout_height="40dp"/>
-    </LinearLayout>
+        <androidx.cardview.widget.CardView
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/layout_favorites_pet"
+            app:contentPaddingRight="30dp"
+            app:contentPaddingBottom="10dp"
+            app:contentPaddingTop="10dp"
+            app:contentPaddingLeft="30dp"
+            app:cardElevation="3dp"
+            app:cardCornerRadius="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:src="@drawable/ic_estrella"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
 
 <LinearLayout
-    android:layout_marginTop="10dp"
     android:padding="20dp"
     android:layout_below="@+id/layout_follows"
     android:orientation="vertical"
@@ -85,7 +112,7 @@
     <TextView
         android:id="@+id/descripcion_pet_profile"
         android:layout_marginTop="10dp"
-        android:text="@string/demo"
+        android:text="-"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <include layout="@layout/include_info_pet_list"/>

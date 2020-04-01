@@ -23,6 +23,7 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.main.Main;
 import com.bunizz.instapetts.activitys.wizardPets.WizardPetActivity;
 import com.bunizz.instapetts.beans.RazaBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.wizardPets.adapters.SearchRazaAdapter;
 import com.bunizz.instapetts.listeners.change_instance_wizard;
@@ -62,6 +63,7 @@ public class FragmentSearchPet extends Fragment  implements SearchPetContract.Vi
     SearchRazaAdapter adapter;
     SearchPetPresenter presenter;
     change_instance_wizard listener;
+    int TYPE_PET =1;
 
     public static FragmentSearchPet newInstance() {
         return new FragmentSearchPet();
@@ -73,6 +75,13 @@ public class FragmentSearchPet extends Fragment  implements SearchPetContract.Vi
         super.onCreate(savedInstanceState);
         adapter = new SearchRazaAdapter(getContext());
         presenter = new SearchPetPresenter(this,getContext());
+        Bundle bundle=getArguments();
+        if(bundle!=null){
+            Log.e("PET_PARAMETER","-->" +TYPE_PET);
+            TYPE_PET = bundle.getInt(BUNDLES.TYPE_PET);
+        }
+        else Log.e("PET_PARAMETER","--> nullo");
+
     }
 
     @Nullable
@@ -99,7 +108,7 @@ public class FragmentSearchPet extends Fragment  implements SearchPetContract.Vi
             }
         });
         list_words_search.setAdapter(adapter);
-        presenter.downloadCatalogo(1);
+        presenter.downloadCatalogo(TYPE_PET);
         serach_raza.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -110,9 +119,8 @@ public class FragmentSearchPet extends Fragment  implements SearchPetContract.Vi
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if(charSequence.toString().trim().length()>0) {
                     texto_buscado = charSequence.toString().toLowerCase();
+                    if(texto_buscado.length() > 0)
                     presenter.search_query(charSequence.toString());
-                }else{
-                    adapter.clear();
                 }
 
             }
@@ -144,6 +152,12 @@ public class FragmentSearchPet extends Fragment  implements SearchPetContract.Vi
         razasfor_database.addAll(data);
         SaveDictionaryTask task =new  SaveDictionaryTask();
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        adapter.setData(data,"");
+    }
+
+    @Override
+    public void onCatalogoError() {
+        presenter.downloadCatalogo(TYPE_PET);
     }
 
 
@@ -151,6 +165,7 @@ public class FragmentSearchPet extends Fragment  implements SearchPetContract.Vi
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            presenter.clean_table();
             presenter.clean_table();
         }
 
@@ -160,9 +175,7 @@ public class FragmentSearchPet extends Fragment  implements SearchPetContract.Vi
                 try {
                     if (razasfor_database != null){
                         for (int i = 0; i < razasfor_database.size(); i++) {
-                            for (int j = 0; j < razasfor_database.size(); j++) {
                                 presenter.saveRaza(razasfor_database.get(i));
-                            }
                         }
                     }
                 }catch (Exception e) {e.printStackTrace();}

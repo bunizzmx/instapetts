@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.RazaBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.listeners.change_instance_wizard;
+import com.bunizz.instapetts.utils.ImagenCircular;
 
 import java.util.ArrayList;
 
@@ -44,7 +47,9 @@ public class SearchRazaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public void setData(ArrayList<RazaBean> data,String texto_bu) {
-        this.data = data;
+        this.data.clear();
+        this.data.addAll(data);
+        Log.e("DATA_WEHIG","-->" + this.data.size());
         this.texto_buscado =texto_bu;
         notifyDataSetChanged();
     }
@@ -84,6 +89,8 @@ public class SearchRazaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             b.putString(BUNDLES.RAZA_PET,data.get(position).getName_raza_esp());
             listener.onchange(FragmentElement.INSTANCE_DATA_PET,b);
         });
+        if(data.get(position).getUrl_photo()!=null)
+        Glide.with(context).load(data.get(position).getUrl_photo()).into(h.foto_pet_raza);
     }
 
     @Override
@@ -94,10 +101,12 @@ public class SearchRazaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public class SearchRazaHolder extends RecyclerView.ViewHolder{
          TextView result_search_raza;
          RelativeLayout root_raza_select;
+         ImagenCircular foto_pet_raza;
         public SearchRazaHolder(@NonNull View itemView) {
             super(itemView);
             result_search_raza = itemView.findViewById(R.id.result_search_raza);
             root_raza_select = itemView.findViewById(R.id.root_raza_select);
+            foto_pet_raza =itemView.findViewById(R.id.foto_pet_raza);
         }
     }
 }

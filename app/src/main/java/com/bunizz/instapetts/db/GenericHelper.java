@@ -1,7 +1,12 @@
 package com.bunizz.instapetts.db;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.AndroidRuntimeException;
+import android.util.Log;
 
+import com.bunizz.instapetts.App;
+import com.bunizz.instapetts.activitys.Splash;
 import com.bunizz.instapetts.utils.AndroidIdentifier;
 
 import net.sqlcipher.database.SQLiteDatabase;
@@ -37,7 +42,15 @@ public class GenericHelper {
         try {
             return mHelper.getReadableDatabase(secret);
         } catch (SQLiteException readableDatabase) {
+            Log.e("EXCEPTIOCN","-->" + readableDatabase.getMessage()) ;
             context.deleteDatabase(DataSQLite.DATABASE_NAME);
+            App.getInstance().clear_preferences();
+            Intent homeIntent = new Intent(context, Splash.class);
+            try {
+                context.startActivity(homeIntent);
+            } catch (AndroidRuntimeException ignore) {}
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(homeIntent);
             return null;
         }
     }

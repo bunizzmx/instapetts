@@ -2,6 +2,7 @@ package com.bunizz.instapetts.fragments.post;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,11 @@ import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.fragments.post.adapters.GaleryAdapter;
 import com.bunizz.instapetts.fragments.post.adapters.PostsAdapter;
+import com.bunizz.instapetts.fragments.profile.AdapterGridPostsProfile;
+import com.bunizz.instapetts.fragments.search.AdapterGridPosts;
+import com.bunizz.instapetts.fragments.search.posts.FragmentPostPublics;
 import com.bunizz.instapetts.listeners.change_instance;
+import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 
 import java.util.ArrayList;
 
@@ -31,11 +36,14 @@ public class FragmentPostGalery extends Fragment {
     @BindView(R.id.list_galery)
     RecyclerView list_galery;
 
-    change_instance listener;
-    PostsAdapter feedAdapter;
-
+    changue_fragment_parameters_listener listener;
+    AdapterGridPostsProfile feedAdapter;
     ArrayList<Object> data = new ArrayList<>();
-
+    public void setData(ArrayList<Object> data) {
+        Log.e("REFRESH_DATA_SEARCH","--> data:" + data.size());
+        this.data = data;
+        feedAdapter.setPosts(data);
+    }
     public static FragmentPostGalery newInstance() {
         return new FragmentPostGalery();
     }
@@ -43,11 +51,8 @@ public class FragmentPostGalery extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        data.add(new HistoriesBean());
-        data.add(new PostBean());
-        data.add(new PostBean());
-        data.add(new PostBean());
-        feedAdapter = new PostsAdapter(getContext());
+        feedAdapter = new AdapterGridPostsProfile(getContext());
+
     }
 
     @Nullable
@@ -68,7 +73,7 @@ public class FragmentPostGalery extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        listener= (change_instance) context;
+        listener= (changue_fragment_parameters_listener) context;
     }
 }
 

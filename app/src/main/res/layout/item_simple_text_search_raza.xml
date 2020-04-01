@@ -2,19 +2,29 @@
 <RelativeLayout
     android:id="@+id/root_raza_select"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
     android:foreground="?attr/selectableItemBackground">
     <TextView
+        android:layout_marginLeft="20dp"
         android:fontFamily="@font/avenir_black"
         android:textColor="#777575"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="20dp"
         android:text="Raza Callegera"
         android:id="@+id/result_search_raza"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
+    <com.bunizz.instapetts.utils.ImagenCircular
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/ic_hand_pet_preload"
+        android:id="@+id/foto_pet_raza"
+        android:layout_width="35dp"
+        android:layout_height="35dp"/>
 
 </RelativeLayout>

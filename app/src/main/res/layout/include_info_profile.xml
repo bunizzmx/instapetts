@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:background="@color/white"
     android:layout_below="@+id/root_toolbar"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
@@ -35,15 +36,15 @@
                     android:layout_height="wrap_content"/>
             </RelativeLayout>
             <LinearLayout
+                android:layout_gravity="center_horizontal"
                 android:weightSum="3"
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <LinearLayout
-                    android:layout_weight="1"
                     android:orientation="vertical"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <TextView
                         android:id="@+id/num_posts"
@@ -55,16 +56,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                     <TextView
-                        android:textSize="14dp"
+                        android:textSize="12dp"
                         android:layout_gravity="center_horizontal"
                         android:text="Post"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
+                <RelativeLayout
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:background="#AEAEAE"
+                    android:layout_width="0.5dp"
+                    android:layout_height="20dp"/>
                 <LinearLayout
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <TextView
                         android:id="@+id/num_pets"
@@ -76,15 +83,23 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                     <TextView
+                        android:textSize="12dp"
                         android:layout_gravity="center_horizontal"
                         android:text="Rate Pets"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
+                <RelativeLayout
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="25dp"
+                    android:background="#AEAEAE"
+                    android:layout_width="0.5dp"
+                    android:layout_height="20dp"/>
                 <LinearLayout
+
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <TextView
                         android:id="@+id/num_followers"
@@ -96,6 +111,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                     <TextView
+                        android:textSize="12dp"
                         android:layout_gravity="center_horizontal"
                         android:text="Fllowers"
                         android:layout_width="wrap_content"
@@ -103,6 +119,8 @@
                 </LinearLayout>
             </LinearLayout>
             <RelativeLayout
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -112,7 +130,7 @@
                     android:layout_marginBottom="10dp"
                     android:elevation="1dp"
                     android:id="@+id/follow_edit"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginRight="20dp"
                     android:textSize="10dp"
                     android:paddingRight="50dp"
@@ -120,12 +138,10 @@
                     android:textColor="@color/white"
                     android:background="@drawable/button_follow"
                     android:text="-"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="35dp"/>
                 <TextView
                     android:textAlignment="center"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginLeft="20dp"
                     android:layout_marginBottom="10dp"
                     android:layout_centerHorizontal="true"
                     android:id="@+id/descripcion_perfil_user"
@@ -150,7 +166,9 @@
         <TextView
             android:fontFamily="@font/avenir_black"
             android:textSize="10dp"
-            android:layout_margin="10dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="8dp"
             android:textColor="@color/black"
             android:text="PET LIST"
             android:layout_width="wrap_content"

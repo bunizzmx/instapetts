@@ -13,4 +13,6 @@
     <item type="id" name="encode_succeeded"/>
     <item type="id" name="quit"/>
     <item type="id" name="restart_preview"/>
+
+    <item name="instructions_view" type="id" />
 </resources>

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,13 +17,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.camera_history.CameraHistoryActivity;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.db.helpers.FollowsHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.login.login.FragmentLogin;
+import com.bunizz.instapetts.listeners.actions_dialog_profile;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
@@ -58,8 +63,9 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     @BindView(R.id.refresh_feed)
     SwipeRefreshLayout refresh_feed;
     open_camera_histories_listener listener_open_camera_h;
-
+     FollowsHelper followsHelper;
     ArrayList<Object> data = new ArrayList<>();
+    boolean HAS_FRIENDS =false;
 
     public static FeedFragment newInstance() {
         return new FeedFragment();
@@ -78,6 +84,12 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter = new FeedPresenter(this, getContext());
+        followsHelper = new FollowsHelper(getContext());
+        if(followsHelper.getMyFriendsForPost().size()>0)
+            HAS_FRIENDS =true;
+        else
+            HAS_FRIENDS=false;
+
         HistoriesBean my_storie_bean = new HistoriesBean();
         if(mPresenter.getMyStories().size()>0) {
             my_storie_bean = mPresenter.getMyStories().get(0);
@@ -100,11 +112,14 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         });
         feedAdapter.setListener_post(new postsListener() {
             @Override
-            public void onLike(int id_post) {
+            public void onLike(int id_post,boolean type_like) {
                 PostActions postActions = new PostActions();
                 postActions.setId_post(id_post);
-                postActions.setAcccion("LIKE");
-                postActions.setId_usuario("MYIDXXXX");
+                if(type_like)
+                postActions.setAcccion("1");
+                else
+                postActions.setAcccion("2");
+                postActions.setId_usuario(App.read(PREFERENCES.UUID,"INVALID"));
                 postActions.setValor("1");
                 mPresenter.likePost(postActions);
             }
@@ -125,13 +140,19 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
             }
 
             @Override
-            public void openMenuOptions() {
-                DialogOptionsPosts optionsPosts = new DialogOptionsPosts(getContext());
+            public void openMenuOptions(int id_post,int id_usuario,String uuid) {
+                DialogOptionsPosts optionsPosts = new DialogOptionsPosts(getContext(),id_post,id_usuario,uuid);
+                optionsPosts.setListener(id_post1 -> {
+                    PostBean postBean = new PostBean();
+                    postBean.setId_post_from_web(id_post1);
+                    postBean.setTarget("DELETE");
+                    mPresenter.deletePost(postBean);
+                });
                 optionsPosts.show();
             }
         });
 
-        mPresenter.get_feed();
+
     }
 
     @Nullable
@@ -147,12 +168,17 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         feed_list.setLayoutManager(new LinearLayoutManager(getContext()));
         feed_list.setAdapter(feedAdapter);
         refresh_feed.setOnRefreshListener(() ->{
-           mPresenter.get_feed();
+           mPresenter.get_feed(false,App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         });
         Style style = Style.values()[14];
         Sprite drawable = SpriteFactory.create(style);
         spin_kit.setIndeterminateDrawable(drawable);
         spin_kit.setColor(getContext().getResources().getColor(R.color.amarillo));
+        if(HAS_FRIENDS){
+            mPresenter.get_feed(false, App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        }else{
+            mPresenter.geet_feed_recomended(false, App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        }
 
     }
 
@@ -185,8 +211,47 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     }
 
     @Override
+    public void show_feed_recomended(ArrayList<PostBean> data) {
+        refresh_feed.setRefreshing(false);
+        spin_kit.setVisibility(View.GONE);
+        ArrayList<HistoriesBean> historiesBeans = new ArrayList<>();
+        if(mPresenter.getMyStories().size()>0){
+            historiesBeans.add(mPresenter.getMyStories().get(0));
+        }else{
+            historiesBeans.add(new HistoriesBean());
+        }
+
+        ArrayList<Object> data_object= new ArrayList<>();
+        data_object.add(new HistoriesBean());
+        ArrayList<Object> data_recomended = new ArrayList<>();
+        data_recomended.clear();
+        data_recomended.addAll(data);
+        feedAdapter.setHistoriesBeans(historiesBeans);
+        feedAdapter.addData(data_object);
+        feedAdapter.setData_recomended(data_recomended);
+    }
+
+    @Override
     public void peticion_error() {
-        mPresenter.get_feed();
+        mPresenter.get_feed(false,App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+    }
+
+    @Override
+    public void deletePostError(boolean deleted) {
+        if(deleted)
+            Toast.makeText(getContext(),"POST ELIMINADO",Toast.LENGTH_LONG).show();
+        else
+            Toast.makeText(getContext(),"NO SE PUDO BORRAR EL POSTS INTENTA DE NUEVO",Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void LikeEror() {
+
+    }
+
+    @Override
+    public void LikeSuccess() {
+
     }
 }
 

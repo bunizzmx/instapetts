@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.bunizz.instapetts.App;
+import com.bunizz.instapetts.BuildConfig;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.camera_history.CameraHistoryActivity;
 import com.bunizz.instapetts.activitys.login.LoginActivity;
@@ -41,7 +42,6 @@ import com.bunizz.instapetts.fragments.profile.FragmentEditProfileUser;
 import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.fragments.search.FragmentSearchPet;
 import com.bunizz.instapetts.fragments.search.posts.FragmentPostPublics;
-import com.bunizz.instapetts.fragments.share_post.cropImages.ImageCropFragment;
 import com.bunizz.instapetts.fragments.tips.FragmentTipDetail;
 import com.bunizz.instapetts.fragments.tips.FragmentTips;
 import com.bunizz.instapetts.listeners.change_instance;
@@ -56,21 +56,20 @@ import com.bunizz.instapetts.services.UploadsService;
 import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
 import com.bunizz.instapetts.utils.dilogs.DialogLogout;
 import com.bunizz.instapetts.utils.slidemenu.SlideMenuLayout;
-import com.bunizz.instapetts.web.CONST;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Stack;
 
+import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
+import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.bunizz.instapetts.constantes.BUNDLES.PETBEAN;
-import static com.bunizz.instapetts.fragments.FragmentElement.INSTANCE_PREVIEW_PROFILE;
 
 public class Main extends AppCompatActivity implements change_instance,
         changue_fragment_parameters_listener,
@@ -118,6 +117,9 @@ public class Main extends AppCompatActivity implements change_instance,
     @BindView(R.id.app_name_user)
     TextView app_name_user;
 
+    @BindView(R.id.version_app)
+    TextView version_app;
+
 
     @BindView(R.id.sliding_layout)
     SlidingUpPanelLayout mLayout;
@@ -127,7 +129,7 @@ public class Main extends AppCompatActivity implements change_instance,
 
     MainPresenter presenter;
     PetHelper petHelper;
-
+    Intent i ;
     boolean DOWNLOAD_INFO =false;
     boolean IS_SHEET_OPEN =false;
 
@@ -145,10 +147,34 @@ public class Main extends AppCompatActivity implements change_instance,
     @SuppressLint("MissingPermission")
     @OnClick(R.id.menu_centro_ayuda)
     void menu_centro_ayuda() {
-        Log.e("STARTACTIVITY","-->");
-        Intent i = new Intent(Main.this, SideMenusActivities.class);
+        i.putExtra("TYPE_MENU",0);
         startActivity(i);
     }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.side_menu_administrate_account)
+    void side_menu_administrate_account() {
+        i.putExtra("TYPE_MENU",1);
+        startActivity(i);
+    }
+
+
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.menu_side_guardado)
+    void menu_side_guardado() {
+        i.putExtra("TYPE_MENU",2);
+        startActivity(i);
+    }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.side_menu_open_push)
+    void side_menu_open_push() {
+        i.putExtra("TYPE_MENU",3);
+        startActivity(i);
+    }
+
+
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tap_tips)
@@ -159,6 +185,14 @@ public class Main extends AppCompatActivity implements change_instance,
          repaint_nav(R.id.tap_tips);
      }
     }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.side_menu_share_profile)
+    void side_menu_share_profile() {
+        share_profile();
+    }
+
+
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.logout)
@@ -225,6 +259,7 @@ public class Main extends AppCompatActivity implements change_instance,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ButterKnife.bind(this);
+        i = new Intent(Main.this, SideMenusActivities.class);
         changeStatusBarColor(R.color.white);
         Intent iin= getIntent();
         Bundle b = iin.getExtras();
@@ -271,6 +306,10 @@ public class Main extends AppCompatActivity implements change_instance,
             download_pets();
 
         app_name_user.setText("@" + App.read(PREFERENCES.NAME_USER,"INVALID"));
+        version_app.setText("Version : " + BuildConfig.VERSION_NAME);
+
+
+
     }
 
     void download_pets(){
@@ -583,7 +622,13 @@ public class Main extends AppCompatActivity implements change_instance,
                 }
             }
         }else if(requestCode == NEW_POST_REQUEST){
+            Log.e("ACTIVITYRES","4");
             if(data!=null) {
+                if(data.getStringExtra("PET_REQUEST")!=null){
+                    Log.e("ACTIVITYRES","2");
+                    Intent i = new Intent(Main.this, WizardPetActivity.class);
+                    startActivityForResult(i, NEW_PET_REQUEST);
+                }
                 data.getStringArrayListExtra(BUNDLES.URI_FOTO);
             }
         }
@@ -591,9 +636,11 @@ public class Main extends AppCompatActivity implements change_instance,
         else if(requestCode == NEW_PHOTO_UPLOADED){
             if(data!=null) {
                String url =  data.getStringExtra(BUNDLES.URI_FOTO);
-                if (mCurrentFragment.getFragment() instanceof FragmentEditProfileUser) {
-                    ((FragmentEditProfileUser) mCurrentFragment.getFragment()).change_image_profile(url);
-                }
+
+                   if (mCurrentFragment.getFragment() instanceof FragmentEditProfileUser) {
+                       ((FragmentEditProfileUser) mCurrentFragment.getFragment()).change_image_profile(url);
+                   }
+
             }
         }
         else if(requestCode == NEW_PHOTO_FOR_HISTORY){
@@ -607,21 +654,21 @@ public class Main extends AppCompatActivity implements change_instance,
 
     private void repaint_nav(int id ){
         icon_tips.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_food_pet));
-        icon_profile_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_hand_pet_white));
-        icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_add_image));
+        icon_profile_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_usuario));
+        icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_hand_pet_white));
         icon_feed_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_home_pet));
         icon_search_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_search));
 
         if(id == R.id.tap_tips)
             icon_tips.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_food_pet_black));
         else if(id == R.id.tab_profile_pet)
-            icon_profile_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_hand_pet_black));
+            icon_profile_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_usuario));
         else if(id == R.id.tab_feed)
             icon_feed_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_home_pet_black));
         else if(id == R.id.tab_search_pet)
             icon_search_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_search_black));
         else if(id == R.id.tab_add_image)
-            icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_add_image_black));
+            icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_hand_pet_white));
     }
 
     void changue_instance_sheet(Bundle data){
@@ -689,15 +736,15 @@ public class Main extends AppCompatActivity implements change_instance,
     public void UpdateProfile(Bundle bundle) {
         ArrayList<String> uri_profile = new ArrayList<>();
         uri_profile.add(bundle.getString(BUNDLES.PHOTO_LOCAL));
-
-
-        Intent intent = new Intent(Main.this, ImageService.class);
-        intent.putStringArrayListExtra(UploadsService.INTENT_KEY_NAME, uri_profile);
-        intent.putExtra(BUNDLES.NOTIFICATION_TIPE,1);
-        intent.putExtra(UploadsService.INTENT_TRANSFER_OPERATION, UploadsService.TRANSFER_OPERATION_UPLOAD);
-        startService(intent);
-
-
+        if(!bundle.getString(BUNDLES.PHOTO_LOCAL).equals("INVALID")){
+            Intent intent = new Intent(Main.this, ImageService.class);
+            intent.putStringArrayListExtra(UploadsService.INTENT_KEY_NAME, uri_profile);
+            intent.putExtra(BUNDLES.NOTIFICATION_TIPE,1);
+            intent.putExtra(UploadsService.INTENT_TRANSFER_OPERATION, UploadsService.TRANSFER_OPERATION_UPLOAD);
+            startService(intent);
+        }else{
+            Log.e("NO_MODIFICO_FOTO","xxxx");
+        }
         UserBean userBean = new UserBean();
         userBean.setDescripcion(bundle.getString(BUNDLES.DESCRIPCION));
         userBean.setPhoto_user(bundle.getString(BUNDLES.PHOTO));
@@ -708,14 +755,19 @@ public class Main extends AppCompatActivity implements change_instance,
         changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET,bundle);
     }
 
+    @Override
+    public void new_pet() {
+
+    }
+
     void  upload_story(String url){
         ArrayList<String> uri_profile = new ArrayList<>();
         uri_profile.add(url);
 
-        Intent intent = new Intent(Main.this, UploadsService.class);
-        intent.putStringArrayListExtra(UploadsService.INTENT_KEY_NAME, uri_profile);
+        Intent intent = new Intent(Main.this, ImageService.class);
+        intent.putStringArrayListExtra(ImageService.INTENT_KEY_NAME, uri_profile);
         intent.putExtra(BUNDLES.NOTIFICATION_TIPE,2);
-        intent.putExtra(UploadsService.INTENT_TRANSFER_OPERATION, UploadsService.TRANSFER_OPERATION_UPLOAD);
+        intent.putExtra(ImageService.INTENT_TRANSFER_OPERATION, ImageService.TRANSFER_OPERATION_UPLOAD);
         startService(intent);
 
         String splits[] =url.split("/");
@@ -724,12 +776,13 @@ public class Main extends AppCompatActivity implements change_instance,
 
 
         HistoriesBean historiesBean = new HistoriesBean();
-        historiesBean.setUris_stories(App.getInstance().make_uri_bucket_post(CONST.FOLDER_STORIES,filename));
+        historiesBean.setUris_stories(App.getInstance().make_uri_bucket_history(filename));
         historiesBean.setName_pet("FIRULAIS");
-        historiesBean.setName_user("ADOLFIN CANALLIN");
+        historiesBean.setName_user(App.read(PREFERENCES.NAME_USER,"INVALID"));
         historiesBean.setDate_story(App.formatDateGMT(new Date()));
-        historiesBean.setId_user(1);
+        historiesBean.setId_user(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         historiesBean.setId_pet(1);
+        historiesBean.setUrl_photo_user(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
         presenter.saveMyStory(historiesBean);
     }
 
@@ -791,8 +844,8 @@ public class Main extends AppCompatActivity implements change_instance,
     }
 
     @Override
-    public void followUser(UserBean userBean) {
-       presenter.followUser(userBean);
+    public void followUser(UserBean userBeanx) {
+       presenter.followUser(userBeanx);
     }
 
     @Override
@@ -803,5 +856,13 @@ public class Main extends AppCompatActivity implements change_instance,
     @Override
     public void open_side() {
         mainSlideMenu.openRightSlide();
+    }
+
+
+    void share_profile(){
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+            startActivity(intent);
     }
 }

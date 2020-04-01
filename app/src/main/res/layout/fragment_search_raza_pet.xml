@@ -43,19 +43,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <RelativeLayout
-            android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <EditText
+                android:maxLines="1"
+                android:maxLength="100"
+                android:padding="15dp"
                 android:id="@+id/serach_raza"
                 android:paddingLeft="10dp"
-                android:textSize="12dp"
-                android:hint="busca raza de mascota"
+                android:textSize="16dp"
+                android:hint="@string/search"
                 android:background="#02FFFFFF"
                 android:layout_toRightOf="@+id/icon_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
             <ImageView
+                android:layout_marginLeft="10dp"
                 android:id="@+id/icon_search"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_search"

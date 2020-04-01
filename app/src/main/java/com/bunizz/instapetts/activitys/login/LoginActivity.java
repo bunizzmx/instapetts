@@ -34,6 +34,7 @@ import com.bunizz.instapetts.listeners.login_listener;
 import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.services.UploadsService;
 import com.bunizz.instapetts.utils.AndroidIdentifier;
+import com.bunizz.instapetts.utils.dilogs.DialogLoanding;
 import com.bunizz.instapetts.web.CONST;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -79,12 +80,14 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     private static final int RC_SIGN_IN = 9001;
     static final int NEW_PHOTO_UPLOADED= 3;
     RxPermissions rxPermissions ;
+    DialogLoanding dialogLoanding ;
     @SuppressLint("CheckResult")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         changeStatusBarColor(R.color.white);
+        dialogLoanding = new DialogLoanding(this);
         stack_sigin = new Stack<>();
         stack_main_login = new Stack<>();
         stack_login = new Stack<>();
@@ -379,7 +382,6 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                             generate_user_bean();
                         });
                     } else {
-                        App.sonar(3);
                         Toast.makeText(LoginActivity.this, "Intente de nuevo", Toast.LENGTH_LONG).show();
 
                     }
@@ -387,6 +389,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     }
 
     void generate_user_bean(){
+        dialogLoanding.show();
         UserBean userBean = new UserBean();
         userBean.setDescripcion("");
         userBean.setIds_pets("");
@@ -496,6 +499,11 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         intent.putExtra(BUNDLES.NOTIFICATION_TIPE,1);
         intent.putExtra(UploadsService.INTENT_TRANSFER_OPERATION, UploadsService.TRANSFER_OPERATION_UPLOAD);
         startService(intent);
+    }
+
+    @Override
+    public void new_pet() {
+
     }
 
 

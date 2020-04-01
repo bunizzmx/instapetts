@@ -50,6 +50,7 @@ public class FragmentElement<T extends Fragment> {
     public static final int INSTANCE_ADMINISTRATE_PHONE = 32;
     public static final int INSTANCE_ADMINISTRATE_EMAIL= 33;
     public static final int INSTANCE_ADMINISTRATE_PASSWORD = 34;
+    public static final int INSTANCE_COONFIG_PUSH = 35;
     //endregion
     private String mTitle;
     private T fragment;

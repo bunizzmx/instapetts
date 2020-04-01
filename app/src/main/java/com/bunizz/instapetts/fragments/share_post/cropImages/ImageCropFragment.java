@@ -57,7 +57,7 @@ import butterknife.ButterKnife;
 
 import static com.bunizz.instapetts.utils.trimVideo.utils.UIThreadUtil.runOnUiThread;
 
-public class ImageCropFragment extends Fragment implements  FeedContract.View{
+public class ImageCropFragment extends Fragment {
 
     String PATH_TEMP="-";
     @BindView(R.id.crop_view)
@@ -198,15 +198,6 @@ public class ImageCropFragment extends Fragment implements  FeedContract.View{
         cropLayout.crop();
     }
 
-    @Override
-    public void show_feed(ArrayList<PostBean> data,ArrayList<HistoriesBean> historiesBeans) {
-
-    }
-
-    @Override
-    public void peticion_error() {
-
-    }
 
 
     public  boolean saveImage(Bitmap bitmap, String folderName, String filename, Bitmap.CompressFormat compressFormat) {

@@ -29,7 +29,9 @@ import com.bunizz.instapetts.fragments.search.posts.FragmentPostPublics;
 import com.bunizz.instapetts.fragments.side_menus_activities.FragmentAdministrateAccount;
 import com.bunizz.instapetts.fragments.side_menus_activities.FragmentConfigEmail;
 import com.bunizz.instapetts.fragments.side_menus_activities.FragmentConfigPhone;
+import com.bunizz.instapetts.fragments.side_menus_activities.FragmentNotificacionesConfig;
 import com.bunizz.instapetts.fragments.side_menus_activities.FragmentWebTerms;
+import com.bunizz.instapetts.fragments.side_menus_activities.postsSaved.FragmentPostPublicsSaved;
 import com.bunizz.instapetts.fragments.tips.FragmentTipDetail;
 import com.bunizz.instapetts.fragments.tips.FragmentTips;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
@@ -46,6 +48,8 @@ public class SideMenusActivities extends AppCompatActivity implements changue_fr
     private Stack<FragmentElement> stack_config_phone;
     private Stack<FragmentElement> stack_config_email;
     private Stack<FragmentElement> stack_config_password;
+    private Stack<FragmentElement> saved_post;
+    private Stack<FragmentElement> stack_push;
     int TYPE_MENU =0;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,6 +60,8 @@ public class SideMenusActivities extends AppCompatActivity implements changue_fr
         stack_config_email = new Stack<>();
         stack_config_phone = new Stack<>();
         stack_config_password = new Stack<>();
+        stack_push= new Stack<>();
+        saved_post = new Stack<>();
         Intent iin= getIntent();
         Bundle b = iin.getExtras();
         if(b!=null)
@@ -63,10 +69,11 @@ public class SideMenusActivities extends AppCompatActivity implements changue_fr
             TYPE_MENU = b.getInt("TYPE_MENU");
         }
         changeStatusBarColor(R.color.white);
-        setupFirstFragment(1);
+        setupFirstFragment(TYPE_MENU);
     }
 
     private void setupFirstFragment(int type_fragment) {
+        Bundle b = new Bundle();
         switch (type_fragment){
             case 0:
                 mCurrentFragment = new FragmentElement<>(null, FragmentWebTerms.newInstance(), FragmentElement.INSTANCE_WEB_TERMS, true);
@@ -77,15 +84,18 @@ public class SideMenusActivities extends AppCompatActivity implements changue_fr
                 change_to_admin(mCurrentFragment,null);
                 break;
             case 2:
-                mCurrentFragment = new FragmentElement<>(null, FragmentConfigPhone.newInstance(), FragmentElement.INSTANCE_ADMINISTRATE_PHONE, true);
-                change_to_phone(mCurrentFragment,null);
+                mCurrentFragment = new FragmentElement<>(null, FragmentPostPublicsSaved.newInstance(), FragmentElement.INSTANCE_GET_POSTS_PUBLICS, true);
+                b.putInt("SAVED_POST",1);
+                change_to_saved_posts(mCurrentFragment,b);
                 break;
+
             case 3:
-                mCurrentFragment = new FragmentElement<>(null, FragmentConfigEmail.newInstance(), FragmentElement.INSTANCE_ADMINISTRATE_EMAIL, true);
-                change_to_email(mCurrentFragment,null);
+                mCurrentFragment = new FragmentElement<>(null, FragmentNotificacionesConfig.newInstance(), FragmentElement.INSTANCE_COONFIG_PUSH, true);
+                change_to_push(mCurrentFragment,b);
                 break;
 
         }
+
 
     }
 
@@ -139,8 +149,34 @@ public class SideMenusActivities extends AppCompatActivity implements changue_fr
         inflateFragment();
     }
 
-    private void change_to_phone(FragmentElement fragment,Bundle bundle) {
+    private void change_to_saved_posts(FragmentElement fragment,Bundle bundle) {
         Log.e("INFLATE_TERMS","siii");
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            if(bundle!=null){
+                mCurrentFragment.getFragment().setArguments(bundle);
+            }
+            if (saved_post.size() <= 0) {
+                saved_post.push(mCurrentFragment);
+            }
+        }
+        inflateFragment();
+    }
+
+    private void change_to_push(FragmentElement fragment,Bundle bundle) {
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            if(bundle!=null){
+                mCurrentFragment.getFragment().setArguments(bundle);
+            }
+            if (stack_push.size() <= 0) {
+                stack_push.push(mCurrentFragment);
+            }
+        }
+        inflateFragment();
+    }
+
+    private void change_to_phone(FragmentElement fragment,Bundle bundle) {
         if (fragment != null) {
             mCurrentFragment = fragment;
             if(bundle!=null){
@@ -238,7 +274,8 @@ public class SideMenusActivities extends AppCompatActivity implements changue_fr
             finish();
         }
         else if(mCurrentFragment.getInstanceType() != FragmentElement.INSTANCE_ADMINISTRATE_ACCOUNT){
-            changeOfInstance(FragmentElement.INSTANCE_ADMINISTRATE_ACCOUNT,null);
+            finish();
+           // changeOfInstance(FragmentElement.INSTANCE_ADMINISTRATE_ACCOUNT,null);
         }
     }
 

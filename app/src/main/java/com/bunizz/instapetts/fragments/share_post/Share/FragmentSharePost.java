@@ -28,6 +28,7 @@ import com.bunizz.instapetts.listeners.chose_pet_listener;
 import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.services.ImagePostsService;
 import com.bunizz.instapetts.services.UploadsService;
+import com.bunizz.instapetts.utils.dilogs.DialogNoPets;
 import com.bunizz.instapetts.utils.dilogs.DialogShosePet;
 import com.bunizz.instapetts.web.CONST;
 
@@ -60,24 +61,52 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     @OnClick(R.id.share_post_pet)
     void share_post_pet()
     {
-        DialogShosePet dialogShosePet = new DialogShosePet(getActivity());
-        dialogShosePet.setPetBeans(pets_cuerrent);
-        dialogShosePet.setListener((url_foto, id_pet, name_pet) -> {
-            beginUploadInBackground(paths);
-            PostBean post = new PostBean();
-            post.setName_pet(name_pet);
-            post.setDescription(description_post.getText().toString());
-            post.setName_user(App.read(PREFERENCES.NAME_USER,"INVALID"));
-            post.setUrl_photo_pet(url_foto);
-            post.setUrl_photo_user(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
-            post.setUrls_posts(concat_paths);
-            post.setUuid(App.read(PREFERENCES.UUID,"INVALID"));
-            post.setDate_post(App.formatDateGMT(new Date()));
-            post.setTarget("NEW");
-            post.setId_pet(id_pet);
-            presenter.sendPost(post);
-        });
-        dialogShosePet.show();
+        if(pets_cuerrent.size()> 0) {
+            DialogShosePet dialogShosePet = new DialogShosePet(getActivity());
+            dialogShosePet.setPetBeans(pets_cuerrent);
+            dialogShosePet.setListener(new chose_pet_listener() {
+                @Override
+                public void chose(String url_foto, int id_pet, String name_pet) {
+                    beginUploadInBackground(paths);
+                    PostBean post = new PostBean();
+                    post.setName_pet(name_pet);
+                    post.setDescription(description_post.getText().toString());
+                    post.setName_user(App.read(PREFERENCES.NAME_USER, "INVALID"));
+                    post.setUrl_photo_pet(url_foto);
+                    post.setUrl_photo_user(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH, "INVALID"));
+                    post.setUrls_posts(concat_paths);
+                    post.setUuidbucket("xx");
+                    post.setUuid(App.read(PREFERENCES.UUID, "INVALID"));
+                    post.setDate_post(App.formatDateGMT(new Date()));
+                    post.setTarget("NEW");
+                    post.setId_pet(id_pet);
+                    post.setId_usuario(App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
+                    presenter.sendPost(post);
+                }
+
+                @Override
+                public void request_no_pets() {
+
+                }
+            });
+            if (dialogShosePet != null) {
+                dialogShosePet.show();
+            }
+        }else{
+            DialogNoPets dialogNoPets = new DialogNoPets(getActivity());
+            dialogNoPets.setListener(new chose_pet_listener() {
+                @Override
+                public void chose(String url_foto, int id_pet, String name_pet) {
+
+                }
+
+                @Override
+                public void request_no_pets() {
+                    listener.new_pet();
+                }
+            });
+            dialogNoPets.show();
+        }
     }
     ArrayList<String> paths = new ArrayList<>();
     SharePostPresenter presenter;
@@ -135,7 +164,9 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             if(getActivity()!=null){
                 getActivity().finish();
             }
-
+        }else{
+            if(getContext()!=null)
+            Toast.makeText(getContext(),"FALLO AL PUBLICAR INTENTA DE NUEVO",Toast.LENGTH_LONG).show();
         }
     }
 

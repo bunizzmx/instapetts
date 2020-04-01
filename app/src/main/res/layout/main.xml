@@ -43,10 +43,9 @@
     </com.bunizz.instapetts.utils.slidemenu.SlideMenuLayout>
 </RelativeLayout>
     <RelativeLayout
-        android:paddingTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#EAE7E7"
+        android:background="#FFFFFF"
         android:orientation="vertical"
         android:clickable="false"
         android:id="@+id/dragView">
@@ -64,7 +63,7 @@
             android:id="@+id/back_to_main"
             android:layout_margin="10dp"
             app:cardElevation="5dp"
-            app:cardCornerRadius="30dp"
+            app:cardCornerRadius="20dp"
             app:contentPadding="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">

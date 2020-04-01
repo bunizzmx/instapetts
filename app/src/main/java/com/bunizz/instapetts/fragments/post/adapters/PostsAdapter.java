@@ -88,6 +88,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public void setData(ArrayList<Object> data) {
         this.data = data;
+        notifyDataSetChanged();
     }
 
     public void addData(ArrayList<Object> data){
@@ -113,18 +114,8 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        switch (viewType){
-            case TYPE_POST:
                 view = getInflatedView(parent, R.layout.item_feed_post);
                 return new FeedHolder(view);
-
-            case TYPE_HISTORI:
-            default:
-                View unifiedNativeLayoutView = LayoutInflater.from(
-                        parent.getContext()).inflate(R.layout.item_histories_feed,
-                        parent, false);
-                return new HistoriesHolder(unifiedNativeLayoutView);
-        }
     }
 
 
@@ -133,9 +124,6 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         int viewtype = getItemViewType(position);
         switch (viewtype) {
-            case TYPE_HISTORI:
-
-                break;
             default:
                 FeedHolder f = (FeedHolder)holder;
                 PostBean data_parsed = (PostBean) data.get(position);
@@ -173,9 +161,11 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         f.layout_double_tap_like.setVisibility(View.VISIBLE);
                         f.layout_double_tap_like.animate_icon(f.layout_double_tap_like);
                         if(!data_parsed.isLiked()) {
+                            data_parsed.setLiked(true);
                             f.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
-                            listener_post.onLike(data_parsed.getId_post_from_web());
+                            listener_post.onLike(data_parsed.getId_post_from_web(),true);
                         }else{
+                            data_parsed.setLiked(false);
                             f.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
                         }
                     }
@@ -220,7 +210,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 }else{
                     f.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
                 }
-                f.open_options_posts.setOnClickListener(view -> listener_post.openMenuOptions());
+                f.open_options_posts.setOnClickListener(view -> listener_post.openMenuOptions(data_parsed.getId_post_from_web(),data_parsed.getId_usuario(),data_parsed.getUuid()));
 
 
                 break;

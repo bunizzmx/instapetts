@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_marginLeft="8dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     app:cardCornerRadius="8dp"
-    app:cardElevation="5dp"
+    app:cardElevation="3dp"
     android:layout_width="110dp"
     android:layout_height="190dp">
   <RelativeLayout
       android:layout_width="wrap_content"
       android:layout_height="wrap_content">
+    <ImageView
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_hand_pet_preload"
+        android:scaleType="centerCrop"
+        android:layout_width="80dp"
+        android:layout_height="80dp"/>
     <ImageView
         android:scaleType="centerCrop"
         android:id="@+id/profile_background"
@@ -26,21 +35,19 @@
       android:layout_height="45dp"/>
     <RelativeLayout
         android:elevation="3dp"
-        android:layout_centerVertical="true"
-       android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
         android:id="@+id/icon_add_story_user"
-        android:layout_marginTop="15dp"
-       android:layout_marginLeft="10dp"
         android:background="@drawable/circle_instapets"
-        android:layout_width="30dp"
-        android:layout_height="30dp">
+        android:layout_width="45dp"
+        android:layout_height="45dp">
       <ImageView
           android:layout_centerHorizontal="true"
           android:layout_centerVertical="true"
-          android:tint="@color/white"
+          android:tint="@color/primary"
           android:src="@drawable/ic_add_black_24dp"
-          android:layout_width="10dp"
-          android:layout_height="10dp"/>
+          android:layout_width="20dp"
+          android:layout_height="20dp"/>
     </RelativeLayout>
     <RelativeLayout
       android:paddingBottom="5dp"
@@ -53,7 +60,7 @@
             android:layout_centerHorizontal="true"
             android:textSize="12dp"
             android:textColor="@color/white"
-            android:text="El firulais"
+            android:text="-"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
       </RelativeLayout>

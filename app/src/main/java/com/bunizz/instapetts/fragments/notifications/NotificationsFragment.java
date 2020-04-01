@@ -33,6 +33,12 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
     @BindView(R.id.list_notifications)
     RecyclerView list_notifications;
 
+    @BindView(R.id.root_no_data)
+    RelativeLayout root_no_data;
+
+
+
+
     NotificationsAdapter notificationsAdapter;
     NotificationsPresenter presenter;
     public static NotificationsFragment newInstance() {
@@ -66,7 +72,14 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
 
     @Override
     public void showNotifications(ArrayList<NotificationBean> notificationBeans) {
-        notificationsAdapter.setNotificationBeans(notificationBeans);
+        if(notificationBeans.size()>0) {
+            list_notifications.setVisibility(View.VISIBLE);
+            notificationsAdapter.setNotificationBeans(notificationBeans);
+        }
+        else{
+            root_no_data.setVisibility(View.VISIBLE);
+            list_notifications.setVisibility(View.GONE);
+        }
     }
 
 

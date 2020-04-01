@@ -1,12 +1,18 @@
 package com.bunizz.instapetts.web.responses;
 
 import com.bunizz.instapetts.beans.RazaBean;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
 public class ResponseCatalogo {
 
+    @SerializedName("list_catalogo")
+    @Expose
     ArrayList<RazaBean> list_catalogo ;
+    @SerializedName("code_response")
+    @Expose
     int code_response;
 
     public ResponseCatalogo() {

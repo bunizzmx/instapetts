@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -58,7 +59,7 @@ public class DialogShosePet extends BaseAlertDialog{
         label_body = dialogView.findViewById(R.id.label_shose_pet);
         dialogBuilder.setView(dialogView);
         dialog = dialogBuilder.create();
-        this.dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        this.dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
         if (allowAnimation) dialog.getWindow().getAttributes().windowAnimations = R.style.customDialogAnimation;
         adapter.setListener(new chose_pet_listener() {
             @Override
@@ -66,6 +67,11 @@ public class DialogShosePet extends BaseAlertDialog{
                 if(listener!=null){
                     listener.chose(url_foto,id_pet,name_pet);
                 }
+            }
+
+            @Override
+            public void request_no_pets() {
+
             }
         });
         prepare_list();
@@ -184,7 +190,7 @@ public class DialogShosePet extends BaseAlertDialog{
         public class chose_pet_holder extends RecyclerView.ViewHolder{
               ImagenCircular pet_chose_list;
               TextView name_pet_chose_list;
-              LinearLayout root_chose_pet;
+              CardView root_chose_pet;
             public chose_pet_holder(@NonNull View itemView) {
                 super(itemView);
                 pet_chose_list = itemView.findViewById(R.id.pet_chose_list);

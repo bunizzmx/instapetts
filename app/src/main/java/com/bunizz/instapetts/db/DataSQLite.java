@@ -44,12 +44,14 @@ public class DataSQLite extends SQLiteOpenHelper {
         Log.e("CREATE_TABLES","--");
         db.execSQL(context.getString(R.string.table_historias_vistas));
         db.execSQL(context.getString(R.string.histories));
-        db.execSQL(context.getString(R.string.pets));
+        db.execSQL(context.getString(R.string.pets_table));
         db.execSQL(context.getString(R.string.propietary));
         db.execSQL(context.getString(R.string.table_razas));
         db.execSQL(context.getString(R.string.table_saved_posts));
         db.execSQL(context.getString(R.string.table_liked_post));
         db.execSQL(context.getString(R.string.table_notifications));
+        db.execSQL(context.getString(R.string.table_relacion_follows));
+        db.execSQL(context.getString(R.string.table_search_recents));
 
     }
 

@@ -11,6 +11,7 @@ import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.FIRESTORE;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.db.helpers.FollowsHelper;
 import com.bunizz.instapetts.db.helpers.MyStoryHelper;
 import com.bunizz.instapetts.fragments.share_post.Share.SharePostContract;
 import com.bunizz.instapetts.web.ApiClient;
@@ -39,6 +40,7 @@ public class MainPresenter implements MainContract.Presenter {
     WebServices apiService;
     MyStoryHelper myStoryHelper;
     FirebaseFirestore db;
+    FollowsHelper followsHelper;
     int RETRY_PETS=0;
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -48,6 +50,7 @@ public class MainPresenter implements MainContract.Presenter {
         apiService = ApiClient.getClient(context)
                 .create(WebServices.class);
         myStoryHelper = new MyStoryHelper(context);
+        followsHelper = new FollowsHelper(mContext);
         db = App.getIntanceFirestore();
     }
 
@@ -61,6 +64,7 @@ public class MainPresenter implements MainContract.Presenter {
                         .subscribeWith(new DisposableSingleObserver<SimpleResponseLogin>() {
                             @Override
                             public void onSuccess(SimpleResponseLogin user) {
+
                                 mView.psuccessProfileUpdated();
                             }
                             @Override
@@ -73,6 +77,21 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void saveMyStory(HistoriesBean historiesBean) {
         myStoryHelper.saveMyStory(historiesBean);
+        disposable.add(
+                apiService
+                        .newstory(historiesBean)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                            @Override
+                            public void onSuccess(SimpleResponse user) {
+                               // mView.psuccessProfileUpdated();
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.e("ERROR","UPDATED PROFILE");
+                            }
+                        }));
     }
 
     @Override
@@ -83,6 +102,7 @@ public class MainPresenter implements MainContract.Presenter {
         followUserData.put("uuid_user",userBean.getUuid());
         followUserData.put("id_user",userBean.getId());
         followUserData.put("name_nip_user",userBean.getName_user());
+        followsHelper.saveNewFriend(userBean);
         db.collection(FIRESTORE.R_FOLLOWS).document(App.read(PREFERENCES.UUID,"INVALID")).collection(FIRESTORE.SEGUIDOS)
                 .document(String.valueOf(userBean.getUuid()))
                 .set(followUserData)

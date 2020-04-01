@@ -18,5 +18,6 @@ public interface SearchPetContract {
     interface View{
         void showCatalogo(ArrayList<RazaBean> data,String query);
         void saveRazas(ArrayList<RazaBean> data);
+        void onCatalogoError();
     }
 }

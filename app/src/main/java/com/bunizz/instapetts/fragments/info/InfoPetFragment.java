@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
 
 import static com.bunizz.instapetts.constantes.BUNDLES.PETBEAN;
 
-public class InfoPetFragment extends Fragment implements  FeedContract.View{
+public class InfoPetFragment extends Fragment {
 
 
     public static InfoPetFragment newInstance() {
@@ -92,15 +92,5 @@ public class InfoPetFragment extends Fragment implements  FeedContract.View{
         Glide.with(getContext()).load(petBean.getUrl_photo()).into(image_pet_info);
     }
 
-
-    @Override
-    public void show_feed(ArrayList<PostBean> data,ArrayList<HistoriesBean> historiesBeans) {
-
-    }
-
-    @Override
-    public void peticion_error() {
-
-    }
 }
 

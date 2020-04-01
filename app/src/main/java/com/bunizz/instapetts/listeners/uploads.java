@@ -6,4 +6,5 @@ public interface uploads {
     void onImageProfileUpdated();
     void setResultForOtherChanges(String url);
     void UpdateProfile(Bundle bundle);
+    void new_pet();
 }

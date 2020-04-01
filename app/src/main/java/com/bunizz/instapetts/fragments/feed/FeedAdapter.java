@@ -28,6 +28,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.beans.DataEmptyBean;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
@@ -38,6 +39,10 @@ import com.bunizz.instapetts.utils.Dots.DotsIndicator;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.ViewPagerAdapter;
 import com.bunizz.instapetts.utils.double_tap.DoubleTapLikeView;
+import com.bunizz.instapetts.utils.loadings.SpinKitView;
+import com.bunizz.instapetts.utils.loadings.SpriteFactory;
+import com.bunizz.instapetts.utils.loadings.Style;
+import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 
 import java.util.ArrayList;
@@ -50,15 +55,17 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Context context;
     ArrayList<String> current_images = new ArrayList<>();
     ArrayList<Object> data = new ArrayList<>();
+    ArrayList<Object> data_recomended = new ArrayList<>();
     ArrayList<HistoriesBean> historiesBeans = new ArrayList<>();
     changue_fragment_parameters_listener listener;
     postsListener listener_post;
     open_camera_histories_listener listener_open_h;
-
+    Style style = Style.values()[8];
+    Sprite drawable = SpriteFactory.create(style);
     public postsListener getListener_post() {
         return listener_post;
     }
-
+    boolean POST_EMPTY = false;
     public void setListener_post(postsListener listener_post) {
         this.listener_post = listener_post;
     }
@@ -79,9 +86,18 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.listener = listener;
     }
 
+    public ArrayList<Object> getData_recomended() {
+        return data_recomended;
+    }
+
+    public void setData_recomended(ArrayList<Object> data_recomended) {
+        this.data_recomended = data_recomended;
+        notifyDataSetChanged();
+    }
+
     private static final int TYPE_POST=1;
     private static final int TYPE_HISTORI = 2;
-
+    private static final int TYPE_EMPTY = 3;
     public FeedAdapter(Context context,ArrayList<Object> data) {
         this.context = context;
         this.data.addAll(data);
@@ -92,7 +108,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void setHistoriesBeans(ArrayList<HistoriesBean> historiesBeans) {
-        Log.e("DATA_HISTORIES","xxxx" + historiesBeans.size());
         this.historiesBeans = historiesBeans;
     }
 
@@ -107,6 +122,14 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void addData(ArrayList<Object> data){
         this.data.clear();
         this.data.addAll(data);
+        if(this.data.size() > 1){
+            Log.e("SIZE_EMPTY","no empty");
+            POST_EMPTY = false;
+        }else{
+            Log.e("SIZE_EMPTY","add_empty");
+            this.data.add(new DataEmptyBean("xxx","xx"));
+            POST_EMPTY = true;
+        }
         notifyDataSetChanged();
     }
 
@@ -115,9 +138,11 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         Object recyclerViewItem = data.get(position);
         if (recyclerViewItem instanceof HistoriesBean) {
             return TYPE_HISTORI;
+        }else if(recyclerViewItem instanceof DataEmptyBean){
+            return TYPE_EMPTY;
+        }else{
+            return TYPE_POST;
         }
-        return TYPE_POST;
-
     }
 
 
@@ -136,6 +161,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case TYPE_POST:
                 view = getInflatedView(parent, R.layout.item_feed_post);
                 return new FeedHolder(view);
+            case TYPE_EMPTY:
+                view = getInflatedView(parent, R.layout.no_data_feed1);
+                return new EmptyHolder(view);
 
             case TYPE_HISTORI:
             default:
@@ -165,6 +193,16 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 h.list_histories.setLayoutManager(new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false));
 
                 break;
+
+            case TYPE_EMPTY:
+                EmptyHolder e =(EmptyHolder)holder;
+                FeedAdapterRecomended feedAdapterRecomended = new FeedAdapterRecomended(context);
+                e.list_post_recomended.setLayoutManager(new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false));
+                feedAdapterRecomended.setData(data_recomended);
+                e.list_post_recomended.setAdapter(feedAdapterRecomended);
+                e.title_no_data.setText("Aun no sigues a nadie");
+                e.body_no_data.setText("Te recomendamos a estas hermosas mascotas,porque no les echas un ojo.");
+                break;
             default:
                 FeedHolder f = (FeedHolder)holder;
                 PostBean data_parsed = (PostBean) data.get(position);
@@ -179,6 +217,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     f.dots_indicator.setViewPager(f.list_fotos);
 
                 }else{
+                    f.progres_image.setIndeterminateDrawable(drawable);
+                    f.progres_image.setColor(context.getResources().getColor(R.color.primary));
                     f.root_multiple_image.setVisibility(View.GONE);
                     f.single_image.setVisibility(View.VISIBLE);
                     Glide.with(context).load(data_parsed.getUrls_posts()).addListener(new RequestListener<Drawable>() {
@@ -202,9 +242,11 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         f.layout_double_tap_like.setVisibility(View.VISIBLE);
                         f.layout_double_tap_like.animate_icon(f.layout_double_tap_like);
                         if(!data_parsed.isLiked()) {
+                            data_parsed.setLiked(true);
                             f.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
-                            listener_post.onLike(data_parsed.getId_post_from_web());
+                            listener_post.onLike(data_parsed.getId_post_from_web(),true);
                         }else{
+                            data_parsed.setLiked(false);
                             f.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
                         }
                     }
@@ -250,7 +292,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }else{
                     f.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
                 }
-                f.open_options_posts.setOnClickListener(view -> listener_post.openMenuOptions());
+                f.open_options_posts.setOnClickListener(view -> listener_post.openMenuOptions(data_parsed.getId_post_from_web(),data_parsed.getId_usuario(),data_parsed.getUuid()));
 
 
                 break;
@@ -278,7 +320,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         TextView date_post;
         DoubleTapLikeView layout_double_tap_like;
         ImageView save_posts;
-        ProgressBar progres_image;
+        SpinKitView progres_image;
         ImagenCircular mini_user_photo;
         public FeedHolder(@NonNull View itemView) {
             super(itemView);
@@ -311,6 +353,16 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    public class EmptyHolder extends RecyclerView.ViewHolder{
+        RecyclerView list_post_recomended;
+        TextView title_no_data,body_no_data;
+        public EmptyHolder(@NonNull View itemView) {
+            super(itemView);
+            list_post_recomended = itemView.findViewById(R.id.list_post_recomended);
+            body_no_data = itemView.findViewById(R.id.body_no_data);
+            title_no_data = itemView.findViewById(R.id.title_no_data);
+        }
+    }
     public boolean is_multiple(String uris_not_parsed) {
         String parsed[]  = uris_not_parsed.split(",");
         if(parsed.length > 1)

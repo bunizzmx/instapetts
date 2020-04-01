@@ -10,6 +10,7 @@ import com.bunizz.instapetts.fragments.login.MainLogin;
 import com.bunizz.instapetts.fragments.profile.ProfileUserContract;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
+import com.bunizz.instapetts.web.parameters.PostFriendsBean;
 import com.bunizz.instapetts.web.responses.ResponsePost;
 
 import java.util.ArrayList;
@@ -36,11 +37,10 @@ public class PostPublicsPresenter implements   PostPublicsContract.Presenter {
 
     @Override
     public void getPostPublics() {
-        AutenticateBean autenticateBean = new AutenticateBean();
-        autenticateBean.setName_user("DEMO");
-        autenticateBean.setToken("xxxx");
+        PostFriendsBean postFriendsBean = new PostFriendsBean();
+        postFriendsBean.setTarget("DISCOVER");
         disposable.add(
-                apiService.getPosts(autenticateBean)
+                apiService.getPosts(postFriendsBean)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableSingleObserver<ResponsePost>() {

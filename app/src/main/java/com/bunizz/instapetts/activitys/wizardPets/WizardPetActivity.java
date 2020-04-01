@@ -107,9 +107,10 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
         }
         inflateFragment();
     }
-    private void change_search_raza(FragmentElement fragment) {
+    private void change_search_raza(FragmentElement fragment,Bundle data) {
         if (fragment != null) {
             mCurrentFragment = fragment;
+            mCurrentFragment.getFragment().setArguments(data);
             if(stack_search_raza_pet.size()<=0){stack_search_raza_pet.push(mCurrentFragment);}
         }
         inflateFragment();
@@ -146,9 +147,9 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
         }
         else if (intanceType == FragmentElement.INSTANCE_TYPE_SEARCH_RAZA) {
             if (stack_search_raza_pet.size() == 0) {
-                change_search_raza(new FragmentElement<>("", FragmentSearchPet.newInstance(), FragmentElement.INSTANCE_TYPE_SEARCH_RAZA));
+                change_search_raza(new FragmentElement<>("", FragmentSearchPet.newInstance(), FragmentElement.INSTANCE_TYPE_SEARCH_RAZA),data);
             } else {
-                change_search_raza(stack_search_raza_pet.pop());
+                change_search_raza(stack_search_raza_pet.pop(),data);
             }
         }
 
@@ -301,6 +302,11 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
 
     @Override
     public void UpdateProfile(Bundle bundle) {
+
+    }
+
+    @Override
+    public void new_pet() {
 
     }
 

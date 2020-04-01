@@ -2,6 +2,7 @@ package com.bunizz.instapetts.fragments.post;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,12 @@ public class FragmentPostList  extends Fragment {
 
     public static FragmentPostList newInstance() {
         return new FragmentPostList();
+    }
+
+    public void setData(ArrayList<Object> data) {
+        Log.e("REFRESH_DATA_SEARCH","--> data:" + data.size());
+        this.data = data;
+        feedAdapter.setData(data);
     }
 
     @Override

@@ -7,4 +7,10 @@
         android:id="@+id/list_propietary_search_result"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_propietary_search_recent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <include layout="@layout/no_data"/>
 </RelativeLayout>

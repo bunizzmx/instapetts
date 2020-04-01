@@ -244,4 +244,9 @@ public class CameraHistoryActivity extends AppCompatActivity implements  changue
     public void UpdateProfile(Bundle bundle) {
 
     }
+
+    @Override
+    public void new_pet() {
+
+    }
 }

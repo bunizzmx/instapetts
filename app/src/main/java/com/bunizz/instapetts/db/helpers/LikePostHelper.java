@@ -25,15 +25,35 @@ public class LikePostHelper extends GenericHelper {
     }
 
 
-    public void saveLikePost(int id_post) {
-        Log.e("SAVE_RAZA",":)");
+    public boolean saveLikePost(int id_post) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(ID, id_post);
         try {
-            getWritableDatabase().insertOrThrow(TABLE_NAME, null,contentValues);
+            final Cursor cursor = getReadableDatabase().query(
+                    TABLE_NAME,
+                    new String[] { ID},
+                    ID + "=" + id_post,
+                    null, null, null, null, null);
+            try {
+                if (cursor.moveToFirst()) {
+                    Log.e("YA ESTA_REGISTYRADO","---");
+                    return true;
+                }else{
+                    getWritableDatabase().insertOrThrow(TABLE_NAME, null,contentValues);
+                    return false;
+                }
+            } catch (SQLiteConstraintException | IllegalStateException e) {
+                e.printStackTrace();
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+
         } catch (SQLiteConstraintException | IllegalStateException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     public boolean searchPostById(int id_post) {

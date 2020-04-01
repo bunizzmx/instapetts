@@ -10,7 +10,7 @@ import com.bunizz.instapetts.R;
 public enum ErrorCodes {
 
     //region ired Web Error codes
-    ERROR_E999(999, R.string.demo, R.string.demo, null);
+    ERROR_E999(999, R.string.exit, R.string.exit, null);
 
 
     //endregion

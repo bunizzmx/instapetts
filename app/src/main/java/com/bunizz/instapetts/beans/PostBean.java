@@ -41,6 +41,12 @@ public class PostBean {
     @Expose
     String uuid;
 
+    @SerializedName("uuidbucket")
+    @Expose
+    String uuidbucket;
+
+
+
     @SerializedName("id_usuario")
     @Expose
     int id_usuario;
@@ -198,6 +204,14 @@ public class PostBean {
 
     public void setTarget(String target) {
         this.target = target;
+    }
+
+    public String getUuidbucket() {
+        return uuidbucket;
+    }
+
+    public void setUuidbucket(String uuidbucket) {
+        this.uuidbucket = uuidbucket;
     }
 }
 

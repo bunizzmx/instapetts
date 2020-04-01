@@ -407,5 +407,13 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
     }
 
+    @Override
+    public void new_pet() {
+        Intent intent = new Intent();
+        intent.putExtra("PET_REQUEST","PET_REQUEST");
+        setResult(RESULT_OK,intent);
+        finish();
+    }
+
 
 }

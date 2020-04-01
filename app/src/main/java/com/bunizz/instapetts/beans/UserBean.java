@@ -58,7 +58,7 @@ public class UserBean {
     @Expose
     double rate_pets;
 
-    @SerializedName("folowers")
+    @SerializedName("followers")
     @Expose
     int folowers;
 

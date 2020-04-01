@@ -26,33 +26,51 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/follow_unfollow"
-                android:layout_marginBottom="20dp"
-                android:textAllCaps="false"
-                android:text="dejar de seguir"
-                android:textColor="@color/black"
-                android:background="@drawable/button_edit_profile"
+            <RelativeLayout
+                android:padding="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <Button
-                android:id="@+id/add_other_pet"
-                android:layout_marginBottom="20dp"
-                android:textAllCaps="false"
-                android:text="Guardar post"
-                android:textColor="@color/white"
-                android:background="@drawable/button_follow"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textColor="@color/black"
+                    android:layout_centerHorizontal="true"
+                    android:text="Dejar de seguir"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:padding="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            <Button
-                android:id="@+id/report"
-                android:layout_marginBottom="20dp"
-                android:textAllCaps="false"
-                android:text="Reportar post"
-                android:textColor="@color/black"
-                android:background="@drawable/button_edit_profile"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textColor="@color/black"
+                    android:layout_centerHorizontal="true"
+                    android:text="Guardar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:padding="10dp"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textColor="@color/black"
+                    android:layout_centerHorizontal="true"
+                    android:text="Reportar Publicacion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/delete_post"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textColor="@color/black"
+                    android:layout_centerHorizontal="true"
+                    android:text="Eliminar publicacion"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
+            </RelativeLayout>
         </LinearLayout>
 
     </RelativeLayout>

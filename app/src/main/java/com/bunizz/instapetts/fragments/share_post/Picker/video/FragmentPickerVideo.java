@@ -47,7 +47,7 @@ import java.util.UUID;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FragmentPickerVideo extends Fragment implements  FeedContract.View, VideoPickerContract.View,
+public class FragmentPickerVideo extends Fragment implements   VideoPickerContract.View,
         View.OnClickListener,
         AdapterView.OnItemSelectedListener,
         VideoListRecyclerViewAdapter.OnItemClickListener{
@@ -138,15 +138,6 @@ public class FragmentPickerVideo extends Fragment implements  FeedContract.View,
     }
 
 
-    @Override
-    public void show_feed(ArrayList<PostBean> data,ArrayList<HistoriesBean> historiesBeans) {
-
-    }
-
-    @Override
-    public void peticion_error() {
-
-    }
 
     @Override
     public void onClick(View view) {

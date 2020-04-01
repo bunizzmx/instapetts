@@ -3,10 +3,14 @@ package com.bunizz.instapetts.web;
 import android.provider.ContactsContract;
 
 import com.bunizz.instapetts.beans.AutenticateBean;
+import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
+import com.bunizz.instapetts.web.parameters.CatalogoParameters;
 import com.bunizz.instapetts.web.parameters.ParameterSearching;
+import com.bunizz.instapetts.web.parameters.PostFriendsBean;
+import com.bunizz.instapetts.web.parameters.PostLikeBean;
 import com.bunizz.instapetts.web.responses.PetsResponse;
 import com.bunizz.instapetts.web.responses.ResponseCatalogo;
 import com.bunizz.instapetts.web.responses.ResponsePost;
@@ -47,8 +51,14 @@ public interface WebServices {
     @POST("test/newposts")
     Single<SimpleResponse> sendPost( @Body PostBean post );
 
+    @POST("test/newposts")
+    Single<SimpleResponse> delete_post( @Body PostBean post );
+
+    @POST("test/newposts")
+    Single<SimpleResponse> like_posts( @Body PostLikeBean postLikeBean );
+
     @POST("test/getposts")
-    Single<ResponsePost> getPosts(@Body AutenticateBean autenticateBean);
+    Single<ResponsePost> getPosts(@Body PostFriendsBean postFriendsBean);
     ////////////////////////////////////////////////////////////////////
 
 
@@ -61,7 +71,7 @@ public interface WebServices {
     Single<ResponseTips> getTips(@Body AutenticateBean autenticateBean);
 
     @POST("test/catalogo")
-    Single<ResponseCatalogo> getCatalogos(@Body int idPet );
+    Single<ResponseCatalogo> getCatalogos(@Body CatalogoParameters catalogoParameters);
 
     // PETS //////////////////////////////////////////////////////////
     @POST("test/newpets")
@@ -79,5 +89,8 @@ public interface WebServices {
     Single<SearchPetsResponse> searchPets(@Body ParameterSearching parameterSearching );
     ////////////////////////////////////////////////////////////////////
 
+
+    @POST("test/newstories")
+    Single<SimpleResponse> newstory(@Body HistoriesBean historiesBean );
 
 }

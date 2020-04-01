@@ -18,6 +18,7 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.RazaBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.fragments.wizardPets.adapters.TypePetsAdapter;

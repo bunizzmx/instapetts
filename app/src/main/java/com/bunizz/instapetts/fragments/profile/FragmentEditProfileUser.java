@@ -77,6 +77,7 @@ public class FragmentEditProfileUser extends Fragment {
         b.putString("PHOTO",URI_FINAL);
         b.putString("PHOTO_TUMBH",URI_FINAL_TUMBH);
         b.putString("PHOTO_LOCAL",URL_LOCAL);
+
         listener.UpdateProfile(b);
     }
 

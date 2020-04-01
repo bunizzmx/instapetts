@@ -9,6 +9,7 @@ import com.bunizz.instapetts.db.helpers.SearchRazaHelper;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
+import com.bunizz.instapetts.web.parameters.CatalogoParameters;
 import com.bunizz.instapetts.web.responses.ResponseCatalogo;
 import com.bunizz.instapetts.web.responses.ResponsePost;
 
@@ -26,6 +27,7 @@ public class SearchPetPresenter implements  SearchPetContract.Presenter {
     private CompositeDisposable disposable = new CompositeDisposable();
     private WebServices apiService;
     SearchRazaHelper helper;
+    int RETRY =0;
 
     SearchPetPresenter(SearchPetContract.View view, Context context) {
         this.mView = view;
@@ -43,19 +45,37 @@ public class SearchPetPresenter implements  SearchPetContract.Presenter {
 
     @Override
     public void downloadCatalogo(int type_pet) {
-        int idPet = 1;
+        int idPet = type_pet;
+        CatalogoParameters  catalogoParameters = new CatalogoParameters();
+        catalogoParameters.setId_raza(idPet);
         disposable.add(
-                apiService.getCatalogos(idPet)
+                apiService.getCatalogos(catalogoParameters)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableSingleObserver<ResponseCatalogo>() {
                             @Override
                             public void onSuccess(ResponseCatalogo responsePost) {
-                                mView.saveRazas(responsePost.getList_catalogo());
+
+                                if(responsePost!=null){
+                                    if(responsePost.getCode_response()==200){
+                                        mView.saveRazas(responsePost.getList_catalogo());
+                                    }else{
+                                        if(RETRY < 3){
+                                            mView.onCatalogoError();
+                                        }
+                                    }
+                                }else{
+                                    if(RETRY < 3){
+                                       mView.onCatalogoError();
+                                    }
+                                }
+
                             }
                             @Override
                             public void onError(Throwable e) {
-                                Log.e("NUMBER_POSTS","-->EROR : " + e.getMessage());
+                                if(RETRY < 3){
+                                    mView.onCatalogoError();
+                                }
                             }
                         })
         );

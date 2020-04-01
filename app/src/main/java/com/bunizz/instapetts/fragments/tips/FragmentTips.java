@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +24,10 @@ import com.bunizz.instapetts.fragments.post.adapters.GaleryAdapter;
 import com.bunizz.instapetts.fragments.tips.adapters.TipsAdapter;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.utils.loadings.SpinKitView;
+import com.bunizz.instapetts.utils.loadings.SpriteFactory;
+import com.bunizz.instapetts.utils.loadings.Style;
+import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
 
 import java.util.ArrayList;
 
@@ -38,6 +43,13 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
     TipsAdapter adapter;
     TipsPresenter presenter;
     ArrayList<Object> data = new ArrayList<>();
+
+    @BindView(R.id.root_loading)
+    RelativeLayout root_loading;
+
+
+    @BindView(R.id.spin_kit)
+    SpinKitView spin_kit;
 
     @BindView(R.id.refresh_tips)
     SwipeRefreshLayout refresh_tips;
@@ -70,7 +82,10 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
         refresh_tips.setOnRefreshListener(() ->{
             presenter.getTips();
         });
-
+        Style style = Style.values()[8];
+        Sprite drawable = SpriteFactory.create(style);
+        spin_kit.setIndeterminateDrawable(drawable);
+        spin_kit.setColor(getContext().getResources().getColor(R.color.primary));
     }
 
 
@@ -84,6 +99,7 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
     @Override
     public void showTips(ArrayList<TipsBean> tips_list) {
         if(tips_list!=null) {
+            root_loading.setVisibility(View.GONE);
             ArrayList<Object> to_object_data = new ArrayList<>();
             to_object_data.addAll(tips_list);
             adapter.setData(to_object_data);
