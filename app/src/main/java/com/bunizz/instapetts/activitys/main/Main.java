@@ -3,6 +3,8 @@ package com.bunizz.instapetts.activitys.main;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -55,6 +57,7 @@ import com.bunizz.instapetts.services.ImageService;
 import com.bunizz.instapetts.services.UploadsService;
 import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
 import com.bunizz.instapetts.utils.dilogs.DialogLogout;
+import com.bunizz.instapetts.utils.slidemenu.OnSlideChangedListener;
 import com.bunizz.instapetts.utils.slidemenu.SlideMenuLayout;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -111,6 +114,16 @@ public class Main extends AppCompatActivity implements change_instance,
     @BindView(R.id.icon_profile_pet)
     ImageView icon_profile_pet;
 
+    @BindView(R.id.text_tips)
+    TextView text_tips;
+    @BindView(R.id.text_feed_pet)
+    TextView text_feed_pet;
+    @BindView(R.id.text_search_pet)
+    TextView text_search_pet;
+    @BindView(R.id.text_profile_pet)
+    TextView text_profile_pet;
+
+
     @BindView(R.id.mainSlideMenu)
     SlideMenuLayout mainSlideMenu;
 
@@ -132,6 +145,7 @@ public class Main extends AppCompatActivity implements change_instance,
     Intent i ;
     boolean DOWNLOAD_INFO =false;
     boolean IS_SHEET_OPEN =false;
+    boolean SIDE_OPEN=false;
 
 
     @SuppressLint("MissingPermission")
@@ -308,8 +322,22 @@ public class Main extends AppCompatActivity implements change_instance,
         app_name_user.setText("@" + App.read(PREFERENCES.NAME_USER,"INVALID"));
         version_app.setText("Version : " + BuildConfig.VERSION_NAME);
 
+       /* int currentNightMode = configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        switch (currentNightMode) {
+            case Configuration.UI_MODE_NIGHT_NO:
+                // Night mode is not active, we're using the light theme
+                break;
+            case Configuration.UI_MODE_NIGHT_YES:
+                // Night mode is active, we're using dark theme
+                break;
+        }*/
+        mainSlideMenu.addOnSlideChangedListener((slideMenu, isLeftSlideOpen, isRightSlideOpen) -> {
 
-
+            if(isRightSlideOpen)
+                SIDE_OPEN =true;
+            else
+                SIDE_OPEN = false;
+        });
     }
 
     void download_pets(){
@@ -601,9 +629,10 @@ public class Main extends AppCompatActivity implements change_instance,
         else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH || mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED){
             changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS,null);
         }
-        else if(IS_SHEET_OPEN){
+        else if(IS_SHEET_OPEN || SIDE_OPEN){
             IS_SHEET_OPEN= false;
-           mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+            mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+            mainSlideMenu.closeRightSlide();
         }else{
             changeOfInstance(FragmentElement.INSTANCE_FEED,null);
         }
@@ -646,7 +675,10 @@ public class Main extends AppCompatActivity implements change_instance,
         else if(requestCode == NEW_PHOTO_FOR_HISTORY){
             if(data!=null) {
                 String url =  data.getStringExtra(BUNDLES.URI_FOTO);
-                upload_story(url);
+                int id_pet= data.getIntExtra(BUNDLES.ID_PET,0);
+                String name_pet = data.getStringExtra(BUNDLES.NAME_PET);
+                String photo_pet = data.getStringExtra(BUNDLES.URL_PHOTO_PET);
+                upload_story(url,name_pet,id_pet,photo_pet);
             }
         }
 
@@ -655,20 +687,34 @@ public class Main extends AppCompatActivity implements change_instance,
     private void repaint_nav(int id ){
         icon_tips.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_food_pet));
         icon_profile_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_usuario));
-        icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_hand_pet_white));
+        icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_camera));
         icon_feed_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_home_pet));
         icon_search_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_search));
 
-        if(id == R.id.tap_tips)
+        text_profile_pet.setTextColor(Color.BLACK);
+        text_tips.setTextColor(Color.BLACK);
+        text_search_pet.setTextColor(Color.BLACK);
+        text_feed_pet.setTextColor(Color.BLACK);
+
+        if(id == R.id.tap_tips) {
+            text_tips.setTextColor(this.getResources().getColor(R.color.primary));
             icon_tips.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_food_pet_black));
-        else if(id == R.id.tab_profile_pet)
-            icon_profile_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_usuario));
-        else if(id == R.id.tab_feed)
+        }
+        else if(id == R.id.tab_profile_pet){
+            text_profile_pet.setTextColor(this.getResources().getColor(R.color.primary));
+            icon_profile_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_usuario_fill));
+        }
+        else if(id == R.id.tab_feed) {
+            text_feed_pet.setTextColor(this.getResources().getColor(R.color.primary));
             icon_feed_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_home_pet_black));
-        else if(id == R.id.tab_search_pet)
+        }
+        else if(id == R.id.tab_search_pet) {
+            text_search_pet.setTextColor(this.getResources().getColor(R.color.primary));
             icon_search_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_search_black));
-        else if(id == R.id.tab_add_image)
-            icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_hand_pet_white));
+        }
+        else if(id == R.id.tab_add_image) {
+            icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_camera));
+        }
     }
 
     void changue_instance_sheet(Bundle data){
@@ -760,7 +806,7 @@ public class Main extends AppCompatActivity implements change_instance,
 
     }
 
-    void  upload_story(String url){
+    void  upload_story(String url,String name_pet,int id_pet,String phohto_pet){
         ArrayList<String> uri_profile = new ArrayList<>();
         uri_profile.add(url);
 
@@ -777,11 +823,12 @@ public class Main extends AppCompatActivity implements change_instance,
 
         HistoriesBean historiesBean = new HistoriesBean();
         historiesBean.setUris_stories(App.getInstance().make_uri_bucket_history(filename));
-        historiesBean.setName_pet("FIRULAIS");
+        historiesBean.setName_pet(name_pet);
         historiesBean.setName_user(App.read(PREFERENCES.NAME_USER,"INVALID"));
         historiesBean.setDate_story(App.formatDateGMT(new Date()));
         historiesBean.setId_user(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
-        historiesBean.setId_pet(1);
+        historiesBean.setId_pet(id_pet);
+        historiesBean.setUrl_photo_pet(phohto_pet);
         historiesBean.setUrl_photo_user(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
         presenter.saveMyStory(historiesBean);
     }
@@ -855,6 +902,7 @@ public class Main extends AppCompatActivity implements change_instance,
 
     @Override
     public void open_side() {
+        SIDE_OPEN = true;
         mainSlideMenu.openRightSlide();
     }
 

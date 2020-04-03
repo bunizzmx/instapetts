@@ -238,6 +238,7 @@ public class App extends Application {
 
     public static String fecha_lenguaje_humano(String fecha){
         try {
+
             Date fechaInicial = StringToDate(fecha, "-", 0);
             Calendar calFechaInicial = Calendar.getInstance();
             Calendar calFechaFinal = Calendar.getInstance();
@@ -321,6 +322,7 @@ public class App extends Application {
 
 
     public static Date StringToDate(String fecha, String caracter, int op){
+
         String formatoHora=" HH:mm:ss";
         String formato="yyyy"+caracter+"MM"+caracter+"dd"+formatoHora;
         if(op==1)
@@ -339,6 +341,7 @@ public class App extends Application {
         try {
 
             sdf.setLenient(false);
+
             fechaFormato=sdf.parse(fecha);
         } catch (ParseException ex) {
            Log.e("FORAMT_ERROR","--->" + ex.getMessage());

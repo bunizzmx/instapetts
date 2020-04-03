@@ -42,6 +42,7 @@ public class FragmentPostGalery extends Fragment {
     public void setData(ArrayList<Object> data) {
         Log.e("REFRESH_DATA_SEARCH","--> data:" + data.size());
         this.data = data;
+        if(feedAdapter!=null)
         feedAdapter.setPosts(data);
     }
     public static FragmentPostGalery newInstance() {

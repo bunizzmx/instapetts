@@ -27,6 +27,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
@@ -37,6 +38,8 @@ import com.bunizz.instapetts.listeners.story_finished_listener;
 import com.bunizz.instapetts.utils.HistoryView.StoryPlayer;
 import com.bunizz.instapetts.utils.HistoryView.StoryPlayerProgressView;
 import com.bunizz.instapetts.utils.ImagenCircular;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -63,11 +66,15 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
     @BindView(R.id.progress_top)
     ProgressBar progress_top;
 
+    @BindView(R.id.imagen_usuario_historia)
+    ImagenCircular imagen_usuario_historia;
+
+
+
     story_finished_listener listener;
-    String splits_uris="";
 
     ArrayList<String> uris_fotos = new ArrayList<>();
-
+    HistoriesBean HISTORY_BEAN;
 
     public static FragmentStoriView newInstance() {
         return new FragmentStoriView();
@@ -78,8 +85,8 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
         super.onCreate(savedInstanceState);
         Bundle bundle=getArguments();
         if(bundle!=null) {
-            splits_uris = bundle.getString("IMAGS");
-            String uris[] = splits_uris.split(",");
+            HISTORY_BEAN =  Parcels.unwrap(bundle.getParcelable("HISTORY_PARAMETER"));
+            String uris[] = HISTORY_BEAN.getUris_stories().split(",");
             if(uris.length == 1){
                 uris_fotos.add(uris[0]);
             }else{
@@ -103,6 +110,14 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
         storyPlayerProgressView.setSingleStoryDisplayTime(6000);
         PROGRESS_COUNT=uris_fotos.size();
         initStoryProgressView();
+        name.setText(HISTORY_BEAN.getName_user());
+        Glide.with(getActivity()).load(HISTORY_BEAN.getUrl_photo_user()).into(imagen_usuario_historia);
+        try {
+            time.setText(App.fecha_lenguaje_humano(HISTORY_BEAN.getDate_story().replace("T"," ").replace("Z","")));
+        }catch (Exception e){
+            time.setText("Hace un momento");
+        }
+
 
     }
 

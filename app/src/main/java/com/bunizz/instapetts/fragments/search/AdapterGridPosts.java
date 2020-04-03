@@ -13,10 +13,12 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.utils.dilogs.DialogPreviewPost;
 
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
     public class AdapterGridPosts extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
@@ -73,6 +75,14 @@ import androidx.recyclerview.widget.RecyclerView;
                     listener.change_fragment_parameter(FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED,data_selected);
                 }
             });
+            h.root_posts_search_item.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    DialogPreviewPost dialogPreviewPost = new DialogPreviewPost(context,data_parsed);
+                    dialogPreviewPost.show();
+                    return false;
+                }
+            });
 
         }
 
@@ -83,7 +93,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
         public class postsPublicsHolder extends RecyclerView.ViewHolder{
             ImageView multiple_images_posts,fisrt_stack_foto;
-            RelativeLayout root_posts_search_item;
+            CardView root_posts_search_item;
             public postsPublicsHolder(@NonNull View itemView) {
                 super(itemView);
                 fisrt_stack_foto = itemView.findViewById(R.id.fisrt_stack_foto);

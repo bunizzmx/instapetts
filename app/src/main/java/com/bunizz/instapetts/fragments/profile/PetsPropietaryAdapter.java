@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -75,7 +76,9 @@ public class PetsPropietaryAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
                 h.image_pet_history_add.setVisibility(View.VISIBLE);
                 h.image_pet_history.setVisibility(View.GONE);
                 h.name_pet_item.setText("New Pet");
+                h.type_pet_icon.setVisibility(View.GONE);
             } else {
+                h.type_pet_icon.setVisibility(View.VISIBLE);
                 h.name_pet_item.setText(pets.get(position).getName_pet());
                 h.image_pet_history.setOnClickListener(view -> listener.open(pets.get(position),0));
                 h.image_pet_history.setVisibility(View.VISIBLE);
@@ -83,6 +86,7 @@ public class PetsPropietaryAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
                 Glide.with(context).load(pets.get(position).getUrl_photo_tumbh()).into(h.image_pet_history);
             }
         }else{
+            h.type_pet_icon.setVisibility(View.VISIBLE);
             h.name_pet_item.setText(pets.get(position).getName_pet());
             h.image_pet_history.setOnClickListener(view -> listener.open(pets.get(position),1));
             h.image_pet_history.setVisibility(View.VISIBLE);
@@ -98,7 +102,7 @@ public class PetsPropietaryAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public class PetsPropietaryHolder extends RecyclerView.ViewHolder{
-        ImagenCircular image_pet_history;
+        ImageView image_pet_history,type_pet_icon;
         ImagenCircular image_pet_history_add;
         TextView name_pet_item;
         public PetsPropietaryHolder(@NonNull View itemView) {
@@ -106,6 +110,7 @@ public class PetsPropietaryAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
             image_pet_history = itemView.findViewById(R.id.image_pet_history);
             name_pet_item = itemView.findViewById(R.id.name_pet_item);
             image_pet_history_add = itemView.findViewById(R.id.image_pet_history_add);
+            type_pet_icon = itemView.findViewById(R.id.type_pet_icon);
         }
     }
 }

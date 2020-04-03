@@ -72,16 +72,18 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
             h.name_pet_item.setText("Tu History");
             if(historiesBeans.get(position)!=null){
                 if(historiesBeans.get(position).getUris_stories()!=null){
-                    h.image_pet_history.setBorderColor(context.getResources().getColor(R.color.primary));
                     h.profile_background.setOnClickListener(view -> {
                             Intent i = new Intent(context, StoryPlayer.class);
                             i.putExtra("sliders", Parcels.wrap(historiesBeans));
                             i.putExtra("SELECTED_POSITION", position);
                             context.startActivity(i);
                     });
-                    h.icon_add_story_user.setVisibility(View.GONE);
+                    h.image_pet_history.setVisibility(View.VISIBLE);
                     Glide.with(context).load(historiesBeans.get(position).getUris_stories()).into(h.profile_background);
+                    h.add_story_icon.setVisibility(View.GONE);
                 }else{
+                    h.add_story_icon.setVisibility(View.VISIBLE);
+                    h.image_pet_history.setVisibility(View.GONE);
                     h.image_pet_history.setStroke_separate(false);
                     h.image_pet_history.setBorderColor(Color.WHITE);
                     h.profile_background.setOnClickListener(view -> {
@@ -90,24 +92,29 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
                         }
 
                     });
-                    h.icon_add_story_user.setVisibility(View.VISIBLE);
+
                 }
             }else{
+                h.image_pet_history.setVisibility(View.GONE);
                 Log.e("MY_STORIE","null all ");
             }
             Glide.with(context).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID")).placeholder(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(h.image_pet_history);
         }else{
+            h.add_story_icon.setVisibility(View.GONE);
+            h.image_pet_history.setVisibility(View.VISIBLE);
             Glide.with(context).load(historiesBeans.get(position).getUrl_photo_user()).into(h.image_pet_history);
             Glide.with(context).load(historiesBeans.get(position).getUris_stories()).into(h.profile_background);
-            h.image_pet_history.setBorderColor(context.getResources().getColor(R.color.primary));
-            h.icon_add_story_user.setVisibility(View.GONE);
             h.profile_background.setOnClickListener(view -> {
                 Intent i = new Intent(context, StoryPlayer.class);
                 i.putExtra("sliders", Parcels.wrap(historiesBeans));
                 i.putExtra("SELECTED_POSITION", position);
                 context.startActivity(i);
             });
-            h.name_pet_item.setText(historiesBeans.get(position).getName_user());
+            if(historiesBeans.get(position).getName_user().length() >10) {
+                h.name_pet_item.setText(historiesBeans.get(position).getName_user().substring(0,9) + "...");
+            }else{
+                h.name_pet_item.setText(historiesBeans.get(position).getName_user());
+            }
         }
 
     }
@@ -119,15 +126,15 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
 
     public class FeedHistoriesHolder extends RecyclerView.ViewHolder{
      ImagenCircular image_pet_history;
-     RelativeLayout icon_add_story_user;
      TextView name_pet_item;
      ImageView profile_background;
+     ImageView add_story_icon;
         public FeedHistoriesHolder(@NonNull View itemView) {
             super(itemView);
             image_pet_history = itemView.findViewById(R.id.image_pet_history);
-            icon_add_story_user = itemView.findViewById(R.id.icon_add_story_user);
             name_pet_item = itemView.findViewById(R.id.name_pet_item);
             profile_background = itemView.findViewById(R.id.profile_background);
+            add_story_icon = itemView.findViewById(R.id.add_story_icon);
         }
     }
 

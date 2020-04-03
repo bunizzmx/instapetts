@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.cardview.widget.CardView app:cardCornerRadius="5dp"
+    android:elevation="1dp"
     android:id="@+id/root_posts_search_item"
     android:layout_margin="1dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
    <ImageView
        android:scaleType="centerCrop"
        android:id="@+id/fisrt_stack_foto"
@@ -21,4 +25,5 @@
         android:layout_margin="10dp"
         android:layout_width="20dp"
         android:layout_height="20dp"/>
-</RelativeLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

@@ -83,7 +83,7 @@
                     android:layout_alignRight="@+id/text_field_boxes_editTextLayout"
                     android:layout_alignStart="@+id/text_field_boxes_editTextLayout"
                     android:layout_below="@+id/text_field_boxes_editTextLayout"
-                    android:background="@color/A400red"
+                    android:background="@color/primary"
                     android:visibility="gone" />
 
             </RelativeLayout>

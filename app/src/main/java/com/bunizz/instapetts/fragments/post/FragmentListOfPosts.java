@@ -14,6 +14,7 @@ import com.bunizz.instapetts.fragments.post.adapters.GaleryAdapter;
 import com.bunizz.instapetts.fragments.post.adapters.PostsAdapter;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.postsListener;
 
 import org.parceler.Parcels;
 
@@ -45,6 +46,27 @@ public class FragmentListOfPosts extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         feedAdapter = new PostsAdapter(getContext());
+        feedAdapter.setListener_post(new postsListener() {
+            @Override
+            public void onLike(int id_post, boolean type_like) {
+
+            }
+
+            @Override
+            public void onFavorite(int id_post, PostBean postBean) {
+
+            }
+
+            @Override
+            public void onDisfavorite(int id_post) {
+
+            }
+
+            @Override
+            public void openMenuOptions(int id_post, int id_usuario, String uuid) {
+
+            }
+        });
         Bundle bundle=getArguments();
         if(bundle!=null){
             data = Parcels.unwrap(bundle.getParcelable("POSTS"));

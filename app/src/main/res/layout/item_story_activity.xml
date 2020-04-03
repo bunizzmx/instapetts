@@ -60,7 +60,7 @@
             android:id="@+id/imagen_usuario_historia"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/perro_demo"
+            android:src="@drawable/ic_hand_pet_preload"
             app:civ_border_width="2dp"
             app:civ_border_color="@color/white"/>
         <TextView
@@ -70,7 +70,7 @@
             android:textColor="@color/white"
             android:layout_toRightOf="@+id/imagen_usuario_historia"
             android:id="@+id/usuario_historia_nombre"
-            android:text="La dueña del firulais"
+            android:text="-"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
@@ -80,7 +80,7 @@
             android:textColor="@color/white"
             android:layout_below="@+id/usuario_historia_nombre"
             android:layout_toRightOf="@+id/imagen_usuario_historia"
-            android:text="Hace 500 años"
+            android:text="-"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>

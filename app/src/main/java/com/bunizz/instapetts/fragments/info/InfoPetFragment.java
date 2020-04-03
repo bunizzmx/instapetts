@@ -1,11 +1,13 @@
 package com.bunizz.instapetts.fragments.info;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,8 +23,11 @@ import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.PetHelper;
+import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
+import com.bunizz.instapetts.listeners.RatePetListener;
 import com.bunizz.instapetts.utils.ImagenCircular;
+import com.bunizz.instapetts.utils.dilogs.DialogRatePet;
 
 import org.parceler.Parcels;
 
@@ -31,6 +36,7 @@ import java.util.ArrayList;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.bunizz.instapetts.constantes.BUNDLES.PETBEAN;
 
@@ -59,6 +65,25 @@ public class InfoPetFragment extends Fragment {
 
     @BindView(R.id.image_pet_info)
     ImagenCircular image_pet_info;
+
+    @BindView(R.id.icon_star_rated)
+    ImageView icon_star_rated;
+
+
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.rate_pet_card)
+    void rate_pet_card() {
+        DialogRatePet dialogRatePet = new DialogRatePet(getContext(),petBean);
+        dialogRatePet.setListener(new RatePetListener() {
+            @Override
+            public void onRate(double rate, String comment, int id_pet, int id_usuario, String uuid) {
+                icon_star_rated.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_estrella_black));
+            }
+        });
+        dialogRatePet.show();
+    }
+
   boolean IS_ME=false;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

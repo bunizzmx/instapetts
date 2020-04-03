@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -38,6 +39,7 @@ import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
 import com.bunizz.instapetts.fragments.post.FragmentPostList;
+import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.fragments.profile.PetsPropietaryAdapter;
 import com.bunizz.instapetts.fragments.profile.ProfileUserContract;
 import com.bunizz.instapetts.fragments.profile.ProfileUserPresenter;
@@ -48,9 +50,11 @@ import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.tabs.SlidingFragmentPagerAdapter;
 import com.bunizz.instapetts.utils.tabs.SlidingTabLayout;
 import com.bunizz.instapetts.utils.tabs.TabType;
+import com.bunizz.instapetts.utils.tabs2.SmartTabLayout;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,7 +73,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     ImagenCircular image_profile_property_pet;
 
     @BindView(R.id.tabs_profile_propietary)
-    SlidingTabLayout tabs_profile_propietary;
+    SmartTabLayout tabs_profile_propietary;
 
     @BindView(R.id.viewpager_profile)
     ViewPager viewpager_profile;
@@ -105,7 +109,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     UserBean USERBEAN = new UserBean();
     ArrayList<PostBean> POSTS = new ArrayList<>();
 
-    private TabAdapter adapter;
+    ViewPagerAdapter adapter_pager;
     PetHelper petHelper;
     PreviewProfileUserPresenter presenter;
 
@@ -121,7 +125,10 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         petsPropietaryAdapter = new PetsPropietaryAdapter(getContext());
-        adapter = new TabAdapter(getActivity().getSupportFragmentManager(), getContext());
+        adapter_pager = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
+        adapter_pager.addFragment(new FragmentPostGalery(), "Post");
+        adapter_pager.addFragment(new FragmentPostGalery(), "Favoritos");
+        adapter_pager.addFragment(new FragmentPostGalery(), "Post Privados");
         petHelper = new PetHelper(getContext());
         presenter = new PreviewProfileUserPresenter(this,getContext());
         Bundle bundle=getArguments();
@@ -143,6 +150,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
             userBean.setId(ID_USER_PARAMETER);
             userBean.setUuid("xxxx");
             presenter.getInfoUser(userBean);
+            presenter.getPostUser(true,userBean.getId());
         }
     }
 
@@ -169,13 +177,10 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
             }
         });
         list_pets_propietary.setAdapter(petsPropietaryAdapter);
-        viewpager_profile.setAdapter(adapter);
-        tabs_profile_propietary.setTabType(TabType.ICON_ONLY);
+        viewpager_profile.setAdapter(adapter_pager);
         tabs_profile_propietary.setViewPager(viewpager_profile);
-        tabs_profile_propietary.setTextSize(18);
-        tabs_profile_propietary.setDistributeEvenly(true);
-        tabs_profile_propietary.setCustomUnfocusedColor(R.color.black);
-        tabs_profile_propietary.setSelectedIndicatorColors(getResources().getColor(R.color.primary));
+
+
         if(IS_MISMO_USER)
             show_myInfo();
         else
@@ -220,6 +225,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
                 userBean.setId(ID_USER_PARAMETER);
                 userBean.setUuid("xxxx");
                 presenter.getInfoUser(userBean);
+                presenter.getPostUser(true,userBean.getId());
 
             }
             paint_buttons();
@@ -263,8 +269,14 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
 
     @Override
     public void showPostUser(ArrayList<PostBean> posts) {
+        Log.e("SETDATA","ONMY_PROFILE" + posts.size());
+        Fragment frag = adapter_pager.getItem(0);
         POSTS.addAll(posts);
-
+        ArrayList<Object> results = new ArrayList<>();
+        results.addAll(POSTS);
+        if (frag instanceof FragmentPostGalery) {
+            ((FragmentPostGalery) frag).setData(results);
+        }
     }
 
     void show_myInfo(){
@@ -286,59 +298,32 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
 
     }
 
-    public class TabAdapter extends SlidingFragmentPagerAdapter {
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        private String[] titles = {
-                "Contacts",
-                "Favorites",
-                "Groups",
-        };
-
-        private int[] icons = {
-                R.drawable.ic_menu,
-                R.drawable.ic_favorito,
-                R.drawable.ic_lista
-        };
-        private Context context;
-
-        public TabAdapter(FragmentManager fm, Context context) {
-            super(fm);
-            this.context = context;
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
         }
 
         @Override
         public Fragment getItem(int position) {
-            Bundle bundle = new Bundle();
-            bundle.putInt("x", position + 1);
-            Fragment fragment;
-            if(position == 0){
-                fragment = new FragmentPostList();
-            }else{
-                fragment = new FragmentPostGalery();
-            }
-
-            fragment.setArguments(bundle);
-            return fragment;
+            return mFragmentList.get(position);
         }
 
         @Override
         public int getCount() {
-            return icons.length == titles.length ? icons.length : 0;
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return titles[position];
-        }
-
-        @Override
-        public Drawable getPageDrawable(int position) {
-            return context.getResources().getDrawable(icons[position]);
-        }
-
-        @Override
-        public String getToolbarTitle(int position) {
-            return titles[position];
+            return mFragmentTitleList.get(position);
         }
     }
 }

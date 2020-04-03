@@ -3,8 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white">
-
+    style="@style/AppTheme">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
   <com.bunizz.instapetts.utils.ImagenCircular
       android:id="@+id/image_pet_info"
       android:layout_marginTop="10dp"
@@ -79,6 +84,7 @@
                 android:layout_height="wrap_content"/>
         </LinearLayout>
         <androidx.cardview.widget.CardView
+            android:id="@+id/rate_pet_card"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:layout_toRightOf="@+id/layout_favorites_pet"
@@ -91,6 +97,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageView
+                android:id="@+id/icon_star_rated"
                 android:src="@drawable/ic_estrella"
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
@@ -102,7 +109,7 @@
     android:layout_below="@+id/layout_follows"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
     <TextView
         android:textStyle="bold"
         android:textColor="@color/black"
@@ -117,5 +124,6 @@
         android:layout_height="wrap_content"/>
     <include layout="@layout/include_info_pet_list"/>
 </LinearLayout>
-
+    </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>

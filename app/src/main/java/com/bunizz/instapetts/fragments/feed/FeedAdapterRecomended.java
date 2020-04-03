@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.listeners.SelectUserListener;
 import com.bunizz.instapetts.utils.ImagenCircular;
 
 import java.util.ArrayList;
@@ -21,6 +23,15 @@ public class FeedAdapterRecomended extends RecyclerView.Adapter<RecyclerView.Vie
 
     ArrayList<Object> data = new ArrayList<>();
     Context context;
+    SelectUserListener listener;
+
+    public SelectUserListener getListener() {
+        return listener;
+    }
+
+    public void setListener(SelectUserListener listener) {
+        this.listener = listener;
+    }
 
     public FeedAdapterRecomended(Context context) {
         this.context = context;
@@ -54,6 +65,12 @@ public class FeedAdapterRecomended extends RecyclerView.Adapter<RecyclerView.Vie
         }
         Glide.with(context).load(data_parsed.getUrl_photo_user()).into(h.image_user_recomended);
         h.name_user_recomended.setText(data_parsed.getName_user());
+        h.root_simple_recomended_user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onSelectUser(data_parsed.getId_usuario(),data_parsed.getUuid());
+            }
+        });
     }
 
     @Override
@@ -65,11 +82,13 @@ public class FeedAdapterRecomended extends RecyclerView.Adapter<RecyclerView.Vie
        ImageView image_post_recomended;
        ImagenCircular image_user_recomended;
        TextView name_user_recomended;
+       RelativeLayout root_simple_recomended_user;
         public RecomendedHolder(@NonNull View itemView) {
             super(itemView);
             image_post_recomended = itemView.findViewById(R.id.image_post_recomended);
             image_user_recomended = itemView.findViewById(R.id.image_user_recomended);
             name_user_recomended = itemView.findViewById(R.id.name_user_recomended);
+            root_simple_recomended_user = itemView.findViewById(R.id.root_simple_recomended_user);
         }
     }
 

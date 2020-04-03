@@ -13,12 +13,12 @@
             android:id="@+id/back_to_main"
             android:layout_margin="10dp"
             app:cardElevation="5dp"
-            app:cardCornerRadius="30dp"
+            app:cardCornerRadius="20dp"
             app:contentPadding="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageView
-                android:tint="@color/amarillo"
+                android:tint="@color/primary"
                 android:src="@drawable/ic_arrow_back"
                 android:layout_width="15dp"
                 android:layout_height="15dp"/>
@@ -56,10 +56,13 @@
             android:text="Me gusta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
         <Switch
-            android:layout_alignParentRight="true"
+            android:id="@+id/switch_me_gusta"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:theme="@style/SwitchCompatTheme" />
     </RelativeLayout>
     <RelativeLayout
         android:padding="10dp"
@@ -73,6 +76,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <Switch
+            android:id="@+id/switch_nuevos_seguidores"
+            android:theme="@style/SwitchCompatTheme"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -89,6 +94,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <Switch
+            android:id="@+id/switch_noticias_tips"
+            android:theme="@style/SwitchCompatTheme"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -118,6 +125,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <Switch
+            android:id="@+id/switch_contenido_seguidos"
+            android:theme="@style/SwitchCompatTheme"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

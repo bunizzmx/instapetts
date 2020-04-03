@@ -158,8 +158,10 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 f.icon_like.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        f.layout_double_tap_like.setVisibility(View.VISIBLE);
-                        f.layout_double_tap_like.animate_icon(f.layout_double_tap_like);
+                        if(!data_parsed.isLiked()) {
+                            f.layout_double_tap_like.setVisibility(View.VISIBLE);
+                            f.layout_double_tap_like.animate_icon(f.layout_double_tap_like);
+                        }
                         if(!data_parsed.isLiked()) {
                             data_parsed.setLiked(true);
                             f.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
@@ -191,16 +193,18 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 f.date_post.setText(App.fecha_lenguaje_humano(data_parsed.getDate_post()));
                 f.save_posts.setOnClickListener(view -> {
                      if(data_parsed.isSaved()) {
+                         data_parsed.setSaved(false);
                          listener_post.onDisfavorite(data_parsed.getId_post_from_web());
                          f.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite));
                      }
                      else {
-                         f.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_estrella_black));
+                         data_parsed.setSaved(true);
+                         f.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite_fill));
                          listener_post.onFavorite(data_parsed.getId_post_from_web(), data_parsed);
                      }
                  });
                  if(data_parsed.isSaved()){
-                     f.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_estrella_black));
+                     f.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite_fill));
                  }else{
                      f.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite));
                  }

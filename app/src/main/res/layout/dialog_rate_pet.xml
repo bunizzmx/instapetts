@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    android:id="@+id/background"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@android:color/transparent">
+    <RelativeLayout
+        android:padding="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:background="@drawable/round_white"
+        android:clickable="true">
+        <ImageView
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/close_dialog"
+            android:tint="@color/black"
+            android:src="@drawable/ic_cross"
+            android:layout_width="15dp"
+            android:layout_height="15dp"/>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/close_dialog"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_marginTop="10dp"
+                style="@style/FontNormalTitleSecondary"
+                android:layout_gravity="center_horizontal"
+                android:text="Que tan feliz se ve esta mascota?"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+    <com.bunizz.instapetts.utils.ImagenCircular
+        android:id="@+id/image_pet_rate"
+        android:src="@drawable/ic_hand_pet_preload"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
+            <TextView
+                android:id="@+id/name_pet_rate"
+                android:layout_marginTop="10dp"
+                style="@style/FontNormalTitle"
+                android:text="Name de mascota"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <RatingBar
+                android:theme="@style/RatingBar"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center_horizontal"
+                android:numStars="5"
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/input_comment_rate_pet"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:lines="5"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/avenir_b"
+                android:inputType="textMultiLine"
+                android:hint="Escribe un comentario o solo califica"
+                android:padding="10dp"
+                android:background="#00FFFFFF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <RelativeLayout
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/corner_line"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"/>
+
+            <Button
+                android:layout_marginTop="20dp"
+                android:id="@+id/rate_now"
+                android:layout_marginBottom="20dp"
+                android:textAllCaps="false"
+                android:text="Calificar"
+                android:textColor="@color/white"
+                android:background="@drawable/button_follow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

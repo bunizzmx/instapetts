@@ -32,6 +32,7 @@ import com.bunizz.instapetts.beans.DataEmptyBean;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
+import com.bunizz.instapetts.listeners.SelectUserListener;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.postsListener;
@@ -60,7 +61,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     changue_fragment_parameters_listener listener;
     postsListener listener_post;
     open_camera_histories_listener listener_open_h;
-    Style style = Style.values()[8];
+    Style style = Style.values()[6];
     Sprite drawable = SpriteFactory.create(style);
     public postsListener getListener_post() {
         return listener_post;
@@ -197,11 +198,18 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case TYPE_EMPTY:
                 EmptyHolder e =(EmptyHolder)holder;
                 FeedAdapterRecomended feedAdapterRecomended = new FeedAdapterRecomended(context);
+                feedAdapterRecomended.setListener((id_user, uuid) -> {
+                    Bundle b = new Bundle();
+                    b.putString(BUNDLES.UUID,uuid);
+                    b.putInt(BUNDLES.ID_USUARIO,id_user);
+                    listener.change_fragment_parameter(INSTANCE_PREVIEW_PROFILE,b);
+                });
                 e.list_post_recomended.setLayoutManager(new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false));
                 feedAdapterRecomended.setData(data_recomended);
                 e.list_post_recomended.setAdapter(feedAdapterRecomended);
                 e.title_no_data.setText("Aun no sigues a nadie");
                 e.body_no_data.setText("Te recomendamos a estas hermosas mascotas,porque no les echas un ojo.");
+
                 break;
             default:
                 FeedHolder f = (FeedHolder)holder;
@@ -239,8 +247,10 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 f.icon_like.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        f.layout_double_tap_like.setVisibility(View.VISIBLE);
-                        f.layout_double_tap_like.animate_icon(f.layout_double_tap_like);
+                        if(!data_parsed.isLiked()) {
+                            f.layout_double_tap_like.setVisibility(View.VISIBLE);
+                            f.layout_double_tap_like.animate_icon(f.layout_double_tap_like);
+                        }
                         if(!data_parsed.isLiked()) {
                             data_parsed.setLiked(true);
                             f.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
@@ -273,16 +283,18 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 f.date_post.setText(App.fecha_lenguaje_humano(data_parsed.getDate_post()));
                 f.save_posts.setOnClickListener(view -> {
                      if(data_parsed.isSaved()) {
+                         data_parsed.setSaved(false);
                          listener_post.onDisfavorite(data_parsed.getId_post_from_web());
                          f.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite));
                      }
                      else {
-                         f.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_estrella_black));
+                         data_parsed.setSaved(true);
+                         f.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite_fill));
                          listener_post.onFavorite(data_parsed.getId_post_from_web(), data_parsed);
                      }
                  });
                  if(data_parsed.isSaved()){
-                     f.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_estrella_black));
+                     f.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite_fill));
                  }else{
                      f.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite));
                  }

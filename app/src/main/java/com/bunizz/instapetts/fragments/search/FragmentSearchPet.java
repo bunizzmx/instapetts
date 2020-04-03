@@ -104,7 +104,7 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
         tabs_search.setViewPager(viewpager_search);
         tabs_search.setDistributeEvenly(true);
         tabs_search.setCustomUnfocusedColor(R.color.black);
-        tabs_search.setSelectedIndicatorColors(getResources().getColor(R.color.amarillo));
+        tabs_search.setSelectedIndicatorColors(getResources().getColor(R.color.primary));
         search_input.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}

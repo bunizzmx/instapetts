@@ -44,11 +44,11 @@ public class MainLogin extends Fragment implements  MainLoginContract.View{
        listener.change(FragmentElement.INSTANCE_SIGIN);
     }
 
-    @OnClick(R.id.change_to_login)
+  /*  @OnClick(R.id.change_to_login)
     void change_to_login()
     {
         listener.change(FragmentElement.INSTANCE_LOGIN);
-    }
+    }*/
 
     public static MainLogin newInstance() {
         return new MainLogin();

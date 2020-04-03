@@ -9,7 +9,6 @@
         android:layout_marginRight="40dp"
         android:layout_alignParentBottom="true"
         android:layout_margin="30dp"
-        android:tint="#00BCD4"
         android:src="@drawable/ic_hand_7"
         android:layout_width="140dp"
         android:layout_height="140dp"/>
@@ -17,7 +16,6 @@
         android:layout_marginRight="-40dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:tint="#61E91E63"
         android:src="@drawable/ic_hand_1"
         android:layout_width="150dp"
         android:layout_height="150dp"/>
@@ -34,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <ImageView
-            android:tint="@color/amarillo"
+            android:tint="@color/primary"
             android:src="@drawable/ic_arrow_back"
             android:layout_width="15dp"
             android:layout_height="15dp"/>
@@ -50,41 +48,73 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <LinearLayout
-        android:paddingRight="20dp"
-        android:paddingLeft="20dp"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
         android:paddingBottom="30dp"
         android:layout_centerVertical="true"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-      <EditText
-          android:inputType="textEmailAddress"
-          android:fontFamily="@font/avenir_b"
-          android:hint="Correo"
-          android:padding="20dp"
-          android:background="@drawable/eddittext_background"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"/>
-
         <EditText
-            android:inputType="textPassword"
-            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="center_vertical"
             android:fontFamily="@font/avenir_b"
+            android:inputType="textEmailAddress"
+            android:hint="Correo"
+            android:padding="10dp"
+            android:background="#00FFFFFF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <RelativeLayout
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/corner_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
+        <EditText
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="@font/avenir_b"
+            android:inputType="textPassword"
             android:hint="Contraseña"
-            android:padding="20dp"
-            android:background="@drawable/eddittext_background"
+            android:padding="10dp"
+            android:background="#00FFFFFF"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+        <RelativeLayout
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/corner_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
 
         <EditText
-            android:inputType="textPassword"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="center_vertical"
             android:fontFamily="@font/avenir_b"
-            android:hint="Confirmar contraseña"
-            android:padding="20dp"
-            android:background="@drawable/eddittext_background"
+            android:inputType="textPassword"
+            android:hint="Confirma contraseña"
+            android:padding="10dp"
+            android:background="#00FFFFFF"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+        <RelativeLayout
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/corner_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
 
         <Button
             android:id="@+id/button_signin"

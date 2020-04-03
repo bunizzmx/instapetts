@@ -59,7 +59,7 @@ public class DialogShosePet extends BaseAlertDialog{
         label_body = dialogView.findViewById(R.id.label_shose_pet);
         dialogBuilder.setView(dialogView);
         dialog = dialogBuilder.create();
-        this.dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        this.dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         if (allowAnimation) dialog.getWindow().getAttributes().windowAnimations = R.style.customDialogAnimation;
         adapter.setListener(new chose_pet_listener() {
             @Override
@@ -188,7 +188,7 @@ public class DialogShosePet extends BaseAlertDialog{
         }
 
         public class chose_pet_holder extends RecyclerView.ViewHolder{
-              ImagenCircular pet_chose_list;
+              ImageView pet_chose_list;
               TextView name_pet_chose_list;
               CardView root_chose_pet;
             public chose_pet_holder(@NonNull View itemView) {

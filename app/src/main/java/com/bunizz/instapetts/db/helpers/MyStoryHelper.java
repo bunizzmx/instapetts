@@ -5,8 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.RazaBean;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.GenericHelper;
 
 import net.sqlcipher.database.SQLiteConstraintException;
@@ -62,6 +64,8 @@ public class MyStoryHelper extends GenericHelper {
                   h.setName_pet(cursor.getString(cursor.getColumnIndex(NOMBRE_PET)));
                   h.setId_pet(cursor.getInt(cursor.getColumnIndex(ID_PET)));
                   h.setId_user(cursor.getInt(cursor.getColumnIndex(ID_USER)));
+                  h.setName_user(App.read(PREFERENCES.NAME_USER,"INVALID"));
+                  h.setUrl_photo_user(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
                   h.setUris_stories(cursor.getString(cursor.getColumnIndex(URIS_FOTOS)));
                   histories.add(h);
             }

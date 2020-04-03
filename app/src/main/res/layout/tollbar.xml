@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:background="@color/white"
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:id="@+id/root_toolbar"
     android:layout_width="match_parent"
     android:layout_height="50dp"
+    style="@style/AppTheme"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
+        android:background="?attr/selectableItemBackground"
+        android:id="@+id/new_story"
+        android:layout_width="50dp"
+        android:layout_height="match_parent">
+        <ImageView
+            android:tint="#5A5959"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_camera"
+            android:layout_width="20dp"
+            android:layout_height="20dp"/>
+    </RelativeLayout>
    <TextView
-       android:textSize="20dp"
-       android:layout_marginLeft="15dp"
+       android:layout_toRightOf="@+id/new_story"
+       android:id="@+id/label_toolbar"
+       style="@style/FontNormalTitleSecondary"
+       android:layout_marginLeft="10dp"
        android:layout_centerVertical="true"
-       android:textColor="@color/black"
-       android:textStyle="bold"
-       android:fontFamily="@font/avenir_black"
        android:text="news Feed"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"/>
@@ -25,6 +38,7 @@
         android:layout_width="50dp"
         android:layout_height="match_parent">
         <ImageView
+            style="@style/IconsDark"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:src="@drawable/ic_notification"
@@ -36,7 +50,7 @@
             android:layout_marginTop="13dp"
             android:layout_marginRight="13dp"
             android:layout_alignParentRight="true"
-            app:cardBackgroundColor="@color/primary"
+            app:cardBackgroundColor="@color/orange"
             android:layout_width="9dp"
             android:layout_height="9dp"/>
     </RelativeLayout>

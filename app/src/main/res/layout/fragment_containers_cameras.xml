@@ -13,7 +13,7 @@
         android:id="@+id/tabs_camera"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/white">
+        >
         <RelativeLayout
             android:id="@+id/changue_to_pictures"
             android:layout_weight="1"

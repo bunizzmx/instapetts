@@ -14,7 +14,7 @@
         android:id="@+id/tabs_camera"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/white">
+       >
         <RelativeLayout
             android:background="?attr/selectableItemBackground"
             android:id="@+id/changue_to_pictures"
@@ -51,7 +51,7 @@
             android:layout_height="match_parent">
             <ImageView
                 android:tint="#CDCDCD"
-                android:src="@drawable/ic_picker_camera"
+                android:src="@drawable/ic_camera"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_width="20dp"

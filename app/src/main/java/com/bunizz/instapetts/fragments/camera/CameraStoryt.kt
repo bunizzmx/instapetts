@@ -100,7 +100,7 @@ class CameraStoryt : Fragment() {
 
 
     /** Blocking camera operations are performed using this executor */
-    private val cameraExecutor = Executors.newSingleThreadExecutor()
+    private var cameraExecutor = Executors.newSingleThreadExecutor()
 
     /** Volume down button receiver used to trigger shutter */
     private val volumeDownReceiver = object : BroadcastReceiver() {
@@ -136,6 +136,15 @@ class CameraStoryt : Fragment() {
                 imageAnalyzer?.targetRotation = view.display.rotation
             }
         } ?: Unit
+    }
+
+    fun stop_camera(){
+        Log.e("SHUT_DOWN","CAMERA")
+        // Shut down our background executor
+        cameraExecutor.shutdown()
+        // Unregister the broadcast receivers and listeners
+        broadcastManager.unregisterReceiver(volumeDownReceiver)
+        displayManager.unregisterDisplayListener(displayListener)
     }
 
     override fun onResume() {
@@ -220,15 +229,11 @@ class CameraStoryt : Fragment() {
         val cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
         cameraProviderFuture.addListener(Runnable {
-
-            // CameraProvider
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
 
             // Preview
             preview = Preview.Builder()
-                // We request aspect ratio but no resolution
                 .setTargetAspectRatio(screenAspectRatio)
-                // Set initial target rotation
                 .setTargetRotation(rotation)
                 .build()
 
@@ -238,15 +243,16 @@ class CameraStoryt : Fragment() {
             // ImageCapture
             imageCapture = ImageCapture.Builder()
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                // We request aspect ratio but no resolution to match preview config, but letting
-                // CameraX optimize for whatever specific resolution best fits our use cases
                 .setTargetAspectRatio(screenAspectRatio)
-                // Set initial target rotation, we will have to call this again if rotation changes
-                // during the lifecycle of this use case
                 .setTargetRotation(rotation)
                 .build()
 
             // ImageAnalysis
+            if(cameraExecutor==null){
+                if(cameraExecutor.isShutdown) {
+                    cameraExecutor = Executors.newSingleThreadExecutor()
+                }
+            }
             imageAnalyzer = ImageAnalysis.Builder()
                 // We request aspect ratio but no resolution
                 .setTargetAspectRatio(screenAspectRatio)
@@ -311,6 +317,25 @@ class CameraStoryt : Fragment() {
                 val metadata = Metadata().apply {
                     isReversedHorizontal = lensFacing == CameraSelector.LENS_FACING_FRONT
                 }
+
+                if(cameraExecutor==null){
+                    Log.e("CAMERA_EXECUTOR"," es nulo");
+                    if(cameraExecutor.isShutdown) {
+                        Log.e("CAMERA_EXECUTOR"," es nulo y esta apagada");
+                        cameraExecutor = Executors.newSingleThreadExecutor()
+                    }else{
+                        Log.e("CAMERA_EXECUTOR"," es nulo esta prendida");
+                    }
+                }else{
+                    Log.e("CAMERA_EXECUTOR","no es nulo");
+                    if(cameraExecutor.isShutdown) {
+                        Log.e("CAMERA_EXECUTOR","no es nulo pero esta apagada");
+                        cameraExecutor = Executors.newSingleThreadExecutor()
+                    }else{
+                        Log.e("CAMERA_EXECUTOR","no es nulo y esta prendida");
+                    }
+                }
+
                 val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
                         .setMetadata(metadata)
                         .build()

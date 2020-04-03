@@ -47,10 +47,6 @@ public class FragmentPostList  extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        data.add(new HistoriesBean());
-        data.add(new PostBean());
-        data.add(new PostBean());
-        data.add(new PostBean());
         feedAdapter = new ListAdapter(getContext());
     }
 

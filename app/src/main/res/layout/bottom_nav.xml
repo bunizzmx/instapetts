@@ -6,29 +6,32 @@
     android:layout_height="wrap_content"
     android:elevation="5dp"
     android:layout_alignParentBottom="true"
-    android:background="#FFFFFF">
+    style="@style/BlackSecondary">
     <LinearLayout
-
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:orientation="horizontal"
         android:weightSum="15"
         tools:ignore="DisableBaselineAlignment">
         <RelativeLayout
+            android:layout_gravity="center_vertical"
             android:padding="10dp"
             android:id="@+id/tab_feed"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="3"
             android:background="?attr/selectableItemBackground">
             <ImageView
                 android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:id="@+id/icon_feed_pet"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_home_pet"
                 tools:ignore="ContentDescription" />
            <TextView
+               android:visibility="gone"
+               android:id="@+id/text_feed_pet"
                android:layout_marginTop="3dp"
                android:textColor="@color/black"
                android:textSize="9dp"
@@ -39,14 +42,15 @@
                android:layout_height="wrap_content"/>
         </RelativeLayout>
         <RelativeLayout
+
             android:padding="10dp"
             android:id="@+id/tap_tips"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_gravity="bottom"
             android:layout_weight="3"
             android:background="?attr/selectableItemBackground">
             <ImageView
+                android:layout_centerVertical="true"
                 android:rotation="90"
                 android:layout_centerHorizontal="true"
                 android:id="@+id/icon_tips"
@@ -56,6 +60,8 @@
                 android:src="@drawable/ic_food_pet"
                 tools:ignore="ContentDescription" />
             <TextView
+                android:visibility="gone"
+                android:id="@+id/text_tips"
                 android:textStyle="bold"
                 android:layout_marginTop="3dp"
                 android:textColor="@color/black"
@@ -74,48 +80,28 @@
             android:layout_height="match_parent"
             android:layout_weight="3"
             >
-            <androidx.cardview.widget.CardView
-                app:cardCornerRadius="5dp"
-                app:contentPaddingRight="3dp"
-                app:contentPaddingLeft="3dp"
-                app:cardBackgroundColor="@color/primary"
-                android:layout_centerInParent="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                    <androidx.cardview.widget.CardView
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:background="#fff"
-                        android:layout_width="40dp"
-                        android:layout_height="30dp">
                         <ImageView
-                            android:layout_gravity="center_horizontal|center_vertical"
+                            android:layout_centerVertical="true"
+                            android:tint="@color/colorPrimaryDark"
+                           android:layout_centerHorizontal="true"
                             android:id="@+id/icon_add_image_pet"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:src="@drawable/ic_hand_pet_white"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_camera"
                             tools:ignore="ContentDescription" />
-                    </androidx.cardview.widget.CardView>
-
-                </RelativeLayout>
-
-            </androidx.cardview.widget.CardView>
-
         </RelativeLayout>
 
         <RelativeLayout
+            android:layout_gravity="center_vertical"
             android:padding="10dp"
             android:id="@+id/tab_search_pet"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_gravity="bottom"
             android:layout_weight="3"
             android:background="?attr/selectableItemBackground"
             >
             <ImageView
+                android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
                 android:id="@+id/icon_search_pet"
                 android:layout_width="20dp"
@@ -123,6 +109,8 @@
                 android:src="@drawable/ic_search"
                 tools:ignore="ContentDescription" />
             <TextView
+                android:visibility="gone"
+                android:id="@+id/text_search_pet"
                 android:textStyle="bold"
                 android:layout_marginTop="3dp"
                 android:textColor="@color/black"
@@ -135,15 +123,16 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:layout_gravity="center_vertical"
             android:padding="10dp"
             android:id="@+id/tab_profile_pet"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_gravity="bottom"
             android:layout_weight="3"
             android:background="?attr/selectableItemBackground"
             >
             <ImageView
+                android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
                 android:id="@+id/icon_profile_pet"
                 android:layout_width="20dp"
@@ -151,6 +140,8 @@
                 android:src="@drawable/ic_usuario"
                 tools:ignore="ContentDescription" />
             <TextView
+                android:visibility="gone"
+                android:id="@+id/text_profile_pet"
                 android:textStyle="bold"
                 android:layout_marginTop="3dp"
                 android:textColor="@color/black"

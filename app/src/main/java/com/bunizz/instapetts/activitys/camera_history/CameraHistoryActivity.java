@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -17,6 +18,7 @@ import com.bunizz.instapetts.activitys.main.Main;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.FragmentElement;
+import com.bunizz.instapetts.fragments.camera.CameraFragment;
 import com.bunizz.instapetts.fragments.camera.CameraPreviewStoryFragment;
 import com.bunizz.instapetts.fragments.camera.CameraStoryt;
 import com.bunizz.instapetts.fragments.login.MainLogin;
@@ -25,6 +27,7 @@ import com.bunizz.instapetts.fragments.login.sigin.FragmentSigin;
 import com.bunizz.instapetts.fragments.share_post.Picker.image.FragmentPickerGalery;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.hisotry_listener;
 import com.bunizz.instapetts.listeners.login_listener;
 import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.utils.ViewExtensionsKt;
@@ -41,7 +44,7 @@ import butterknife.ButterKnife;
 import static com.bunizz.instapetts.constantes.PREFERENCES.IS_LOGUEDD;
 import static com.bunizz.instapetts.utils.ViewExtensionsKt.FLAGS_FULLSCREEN;
 
-public class CameraHistoryActivity extends AppCompatActivity implements  changue_fragment_parameters_listener, uploads {
+public class CameraHistoryActivity extends AppCompatActivity implements  changue_fragment_parameters_listener, hisotry_listener,uploads {
 
     private Stack<FragmentElement> stack_history_camera;
     private Stack<FragmentElement> stack_history_foto;
@@ -125,6 +128,12 @@ public class CameraHistoryActivity extends AppCompatActivity implements  changue
                 changue_camera(stack_history_camera.pop());
             }
         }else if(intanceType == FragmentElement.INSTANCE_HISTORY_FOTO_PICKED) {
+            if (mCurrentFragment.getFragment() instanceof CameraStoryt) {
+                Log.e("DETENGO_CAMERA","si");
+                ((CameraStoryt) mCurrentFragment.getFragment()).stop_camera();
+            }else{
+                Log.e("DETENGO_CAMERA","NO");
+            }
             if (stack_history_foto.size() == 0) {
                 change_foto(new FragmentElement<>("", CameraPreviewStoryFragment.newInstance(), FragmentElement.INSTANCE_HISTORY_FOTO_PICKED),data);
             } else {
@@ -132,6 +141,12 @@ public class CameraHistoryActivity extends AppCompatActivity implements  changue
             }
 
         }else if(intanceType == FragmentElement.INSTANCE_PICKER_IMAGES) {
+            if (mCurrentFragment.getFragment() instanceof CameraStoryt) {
+                Log.e("DETENGO_CAMERA","si");
+                ((CameraStoryt) mCurrentFragment.getFragment()).stop_camera();
+            }else{
+                Log.e("DETENGO_CAMERA","NO");
+            }
             if (stack_history_picker_foto.size() == 0) {
                 change_to_picker(new FragmentElement<>("", FragmentPickerGalery.newInstance(), FragmentElement.INSTANCE_PICKER_IMAGES));
             } else {
@@ -228,16 +243,24 @@ public class CameraHistoryActivity extends AppCompatActivity implements  changue
     }
 
     @Override
+    public void chose_complete(Bundle bundle) {
+        Intent data = new Intent();
+        data.putExtra(BUNDLES.URI_FOTO,bundle.getString(BUNDLES.PATH_SELECTED));
+        data.putExtra(BUNDLES.ID_PET,bundle.getInt(BUNDLES.ID_PET));
+        data.putExtra(BUNDLES.NAME_PET,bundle.getString(BUNDLES.NAME_PET));
+        data.putExtra(BUNDLES.URL_PHOTO_PET,bundle.getString(BUNDLES.URL_PHOTO_PET));
+        setResult(RESULT_OK,data);
+        finish();
+    }
+
+    @Override
     public void onImageProfileUpdated() {
 
     }
 
     @Override
     public void setResultForOtherChanges(String url) {
-        Intent data = new Intent();
-        data.putExtra(BUNDLES.URI_FOTO,url);
-        setResult(RESULT_OK,data);
-        finish();
+
     }
 
     @Override

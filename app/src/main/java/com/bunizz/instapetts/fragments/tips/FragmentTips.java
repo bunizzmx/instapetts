@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -51,6 +53,14 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
     @BindView(R.id.spin_kit)
     SpinKitView spin_kit;
 
+    @BindView(R.id.label_toolbar)
+    TextView label_toolbar;
+
+    @BindView(R.id.new_story)
+    RelativeLayout new_story;
+
+
+
     @BindView(R.id.refresh_tips)
     SwipeRefreshLayout refresh_tips;
 
@@ -82,10 +92,12 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
         refresh_tips.setOnRefreshListener(() ->{
             presenter.getTips();
         });
-        Style style = Style.values()[8];
+        Style style = Style.values()[6];
         Sprite drawable = SpriteFactory.create(style);
         spin_kit.setIndeterminateDrawable(drawable);
         spin_kit.setColor(getContext().getResources().getColor(R.color.primary));
+        label_toolbar.setText("Tips y Noticias");
+        new_story.setVisibility(View.GONE);
     }
 
 

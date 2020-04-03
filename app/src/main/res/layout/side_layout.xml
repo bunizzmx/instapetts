@@ -13,17 +13,15 @@
         android:paddingRight="10dp"
         android:paddingTop="10dp"
         android:orientation="vertical"
-        android:background="#FFFFFF"
+
         style="@style/ImmersiveStatusStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
             android:layout_marginLeft="20dp"
-            android:textColor="@color/black"
-            android:textSize="16dp"
-            android:fontFamily="@font/avenir_b"
+            style="@style/FontNormalTitlePrimary"
             android:id="@+id/app_name_user"
-            android:text="jkshdkjshdjks"
+            android:text="-"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <RelativeLayout
@@ -38,7 +36,7 @@
             android:layout_height="wrap_content">
         <TextView
             android:layout_marginTop="10dp"
-            android:fontFamily="@font/avenir_b"
+            android:fontFamily="@font/font_titles"
             android:text="CUENTA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -55,7 +53,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                android:textSize="14dp"
+                style="@style/FontNormal"
                 android:layout_marginLeft="20dp"
                 android:text="Guardado"
                 android:layout_width="wrap_content"
@@ -74,7 +72,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                android:textSize="14dp"
+                style="@style/FontNormal"
                 android:layout_marginLeft="20dp"
                 android:text="Compartir tu Perfil"
                 android:layout_width="wrap_content"
@@ -87,11 +85,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
-                android:src="@drawable/ic_qr"
+                android:src="@drawable/ic_scanner"
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                android:textSize="14dp"
+                style="@style/FontNormal"
                 android:layout_marginLeft="20dp"
                 android:text="Tu identificacion"
                 android:layout_width="wrap_content"
@@ -110,7 +108,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                android:textSize="14dp"
+                style="@style/FontNormal"
                 android:layout_marginLeft="20dp"
                 android:text="Administrar tu cuenta"
                 android:layout_width="wrap_content"
@@ -118,7 +116,7 @@
         </LinearLayout>
         <TextView
             android:layout_marginTop="10dp"
-            android:fontFamily="@font/avenir_b"
+            android:fontFamily="@font/font_titles"
             android:text="GENERAL"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -134,7 +132,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                android:textSize="14dp"
+                style="@style/FontNormal"
                 android:layout_marginLeft="20dp"
                 android:text="Notificaciones push"
                 android:layout_width="wrap_content"
@@ -152,7 +150,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                android:textSize="14dp"
+                style="@style/FontNormal"
                 android:layout_marginLeft="20dp"
                 android:text="Centro de Hayuda"
                 android:layout_width="wrap_content"
@@ -169,7 +167,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                android:textSize="14dp"
+                style="@style/FontNormal"
                 android:layout_marginLeft="20dp"
                 android:text="Terminos de uso"
                 android:layout_width="wrap_content"
@@ -186,7 +184,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                android:textSize="14dp"
+                style="@style/FontNormal"
                 android:layout_marginLeft="20dp"
                 android:text="Politica privacidad"
                 android:layout_width="wrap_content"
@@ -204,7 +202,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                android:textSize="14dp"
+                style="@style/FontNormal"
                 android:layout_marginLeft="20dp"
                 android:text="Terminos de uso"
                 android:layout_width="wrap_content"
@@ -233,7 +231,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                android:textSize="14dp"
+                style="@style/FontNormal"
                 android:layout_marginLeft="20dp"
                 android:text="Cerrar Session"
                 android:layout_width="wrap_content"
@@ -241,7 +239,7 @@
         </LinearLayout>
         </LinearLayout>
         <TextView
-            android:textSize="12dp"
+            style="@style/FontNormal"
             android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
             android:id="@+id/version_app"

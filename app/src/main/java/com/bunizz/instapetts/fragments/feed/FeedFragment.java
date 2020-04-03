@@ -79,6 +79,13 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         listener.change_fragment_parameter(FragmentElement.INSTANCE_NOTIFICATIONS,null);
     }
 
+    @OnClick(R.id.new_story)
+    void new_story()
+    {
+        if(listener_open_camera_h!=null){
+            listener_open_camera_h.open();
+        }
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -170,10 +177,10 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         refresh_feed.setOnRefreshListener(() ->{
            mPresenter.get_feed(false,App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         });
-        Style style = Style.values()[14];
+        Style style = Style.values()[6];
         Sprite drawable = SpriteFactory.create(style);
         spin_kit.setIndeterminateDrawable(drawable);
-        spin_kit.setColor(getContext().getResources().getColor(R.color.amarillo));
+        spin_kit.setColor(getContext().getResources().getColor(R.color.primary));
         if(HAS_FRIENDS){
             mPresenter.get_feed(false, App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         }else{

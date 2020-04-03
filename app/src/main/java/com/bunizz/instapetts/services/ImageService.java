@@ -155,7 +155,7 @@ public class ImageService extends Service {
                             .build();
                     final StorageReference reference = storageReference.child(filename);
                     uploadTask  = reference.putFile(Uri.fromFile(file),metadata);
-                    uploadTask.addOnFailureListener(exception -> App.sonar(3)).addOnSuccessListener(taskSnapshot -> {
+                    uploadTask.addOnFailureListener(exception -> {}).addOnSuccessListener(taskSnapshot -> {
                     }).addOnProgressListener(taskSnapshot -> {
                         int progreso = (int) ((int) (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
                         mBuilder.setContentText("Progreso " + progreso + "%")

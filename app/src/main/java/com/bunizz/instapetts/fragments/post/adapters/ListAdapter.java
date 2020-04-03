@@ -61,7 +61,7 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public ListAdapter(Context context) {
         this.context = context;
     }
-    Style style = Style.values()[8];
+    Style style = Style.values()[6];
     Sprite drawable = SpriteFactory.create(style);
 
     public ArrayList<Object> getData() {

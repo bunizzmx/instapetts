@@ -340,20 +340,18 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
     @Override
     public void onBackPressed() {
         if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PICKER_IMAGES){
-            Log.e("VERIFICACION","xxxxxxxxxxxxxxxxxxxxx");
             super.onBackPressed();
            finish();
-
         }else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_CROP_IMAGE){
             changeOfInstance(FragmentElement.INSTANCE_PICKER_IMAGES,null);
         }else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_CROP_VIDEO){
             changeOfInstance(FragmentElement.INSTANCE_PICKER_VIDEOS,null);
         }else{
-            Log.e("VERIFICACION","VERIFICO SI HAY PATHS PENDIENTES" + mCurrentFragment.getInstanceType());
             tabs_camera.setVisibility(View.VISIBLE);
-            Log.e("VERIFICACION","VERIFICO SI HAY PATHS PENDIENTES");
             if(paths_themp.size()>0){
                 delete_files();
+                changeOfInstance(FragmentElement.INSTANCE_PICKER_IMAGES,null);
+            }else{
                 changeOfInstance(FragmentElement.INSTANCE_PICKER_IMAGES,null);
             }
         }

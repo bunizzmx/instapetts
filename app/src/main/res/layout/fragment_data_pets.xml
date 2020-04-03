@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <ImageView
-            android:tint="@color/amarillo"
+            android:tint="@color/primary"
             android:src="@drawable/ic_arrow_back"
             android:layout_width="15dp"
             android:layout_height="15dp"/>
@@ -191,7 +191,6 @@
             android:id="@+id/height_ruler_picker"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:background="@color/white"
             app:indicator_color="@android:color/darker_gray"
             app:indicator_interval="30dp"
             app:indicator_width="1dp"

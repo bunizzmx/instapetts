@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:weightSum="1"
     android:id="@+id/background"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white">
+    xmlns:tools="http://schemas.android.com/tools">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,10 +20,10 @@
             android:tint="@color/black"
             android:src="@drawable/ic_cross"
             android:layout_width="15dp"
-            android:layout_height="15dp"></ImageView>
+            android:layout_height="15dp"/>
         <TextView
             android:layout_marginBottom="20dp"
-            android:fontFamily="@font/avenir_b"
+            style="@style/FontNormalTitleSecondary"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/close_dialog"
             android:id="@+id/label_shose_pet"
@@ -34,8 +33,7 @@
             android:layout_marginRight="40dp"
             android:text="Elige a la mascota correcta"
             android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="18dp" />
+            />
     <androidx.recyclerview.widget.RecyclerView
         android:layout_below="@+id/label_shose_pet"
         android:id="@+id/chose_pet_list"

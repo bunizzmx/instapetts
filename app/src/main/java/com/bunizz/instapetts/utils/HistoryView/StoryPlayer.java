@@ -109,12 +109,6 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
 
     public class TabAdapter extends SlidingFragmentPagerAdapter {
       ArrayList<HistoriesBean> historiesBeans = new ArrayList<>();
-
-        private int[] icons = {
-                R.drawable.ic_menu,
-                R.drawable.ic_favorito,
-                R.drawable.ic_lista
-        };
         private Context context;
 
         public TabAdapter(FragmentManager fm, Context context,ArrayList<HistoriesBean> historiesBeans) {
@@ -126,8 +120,7 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
         @Override
         public Fragment getItem(int position) {
             Bundle bundle = new Bundle();
-            bundle.putInt("x", position + 1);
-            bundle.putString("IMAGS",this.historiesBeans.get(position).getUris_stories());
+            bundle.putParcelable("HISTORY_PARAMETER", Parcels.wrap(this.historiesBeans.get(position)));
             Fragment fragment;
             fragment = new FragmentStoriView();
             fragment.setArguments(bundle);
@@ -139,11 +132,6 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
             return  this.historiesBeans.size();
         }
 
-
-        @Override
-        public Drawable getPageDrawable(int position) {
-            return context.getResources().getDrawable(icons[position]);
-        }
 
     }
 
