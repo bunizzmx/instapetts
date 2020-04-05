@@ -23,50 +23,59 @@
             android:text="Elegir foto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-        <RelativeLayout
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView
+            <EditText
+                android:maxLines="1"
                 android:id="@+id/configure_name_pet"
-                android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
-                android:lines="2"
-                android:maxLines="2"
-                android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
-                android:inputType="textMultiLine"
+                android:layout_marginRight="20dp"
+                android:layout_gravity="center_vertical"
                 android:fontFamily="@font/avenir_b"
+                android:inputType="text"
                 android:hint="Nombre de tu mascota..."
-                android:textAlignment="center"
-                android:paddingRight="20dp"
-                android:paddingLeft="20dp"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp"
-                android:background="@drawable/eddittext_background"
+                android:padding="10dp"
+                android:background="#00FFFFFF"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+            <RelativeLayout
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/corner_line"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"/>
 
-        </RelativeLayout>
+        </LinearLayout>
 
 
-
-        <androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView
-            android:id="@+id/descripcion_pet"
+        <EditText
             android:lines="5"
             android:maxLines="5"
-            android:layout_marginRight="20dp"
+            android:id="@+id/descripcion_pet"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
-            android:inputType="textMultiLine"
-            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="center_vertical"
             android:fontFamily="@font/avenir_b"
+            android:inputType="textMultiLine"
             android:hint="Que le gusta a tu mascota?"
-            android:paddingRight="20dp"
-            android:paddingLeft="20dp"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
-            android:background="@drawable/eddittext_background"
+            android:padding="10dp"
+            android:background="#00FFFFFF"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+        <RelativeLayout
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/corner_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
 
 
     </LinearLayout>

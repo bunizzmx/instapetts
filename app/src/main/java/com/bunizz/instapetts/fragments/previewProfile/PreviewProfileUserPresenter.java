@@ -14,9 +14,11 @@ import com.bunizz.instapetts.fragments.login.MainLogin;
 import com.bunizz.instapetts.fragments.profile.ProfileUserContract;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
+import com.bunizz.instapetts.web.parameters.FollowParameter;
 import com.bunizz.instapetts.web.parameters.PostFriendsBean;
 import com.bunizz.instapetts.web.responses.ResponsePost;
 import com.bunizz.instapetts.web.responses.ResponseProfileUser;
+import com.bunizz.instapetts.web.responses.SimpleResponse;
 
 import java.util.ArrayList;
 
@@ -126,5 +128,52 @@ public class PreviewProfileUserPresenter implements   ProfileUserContract.Presen
                             }
                         })
         );
+    }
+
+    @Override
+    public void follow(int id_user,boolean follow) {
+        FollowParameter followParameter= new FollowParameter();
+        followParameter.setId_user(id_user);
+        if(follow)
+            followParameter.setTarget("FOLLOW");
+        else
+            followParameter.setTarget("UNFOLLOW");
+        disposable.add(
+                apiService.follows(followParameter)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                            @Override
+                            public void onSuccess(SimpleResponse responsePost) {
+                                if(responsePost!=null) {
+                                    if(responsePost.getCode_response()==200)
+                                        mView.successFollow(follow,id_user);
+                                    else
+                                        mView.successFollow(follow,id_user);
+
+                                }  else{
+                                    mView.successFollow(follow,id_user);
+                                }
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                RETRY ++;
+                                if(RETRY < 3) {
+                                    mView.successFollow(false,id_user);
+                                }else{
+                                    Log.e("NUMBER_POSTS","-->EROR : " + e.getMessage());
+                                }
+
+                            }
+                        })
+        );
+    }
+
+    @Override
+    public boolean is_user_followed(int id_user) {
+        if(followsHelper.isMyFriend(id_user))
+          return true;
+        else
+            return false;
     }
 }

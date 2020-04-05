@@ -33,7 +33,6 @@ public class PetHelper extends GenericHelper {
     public static final String PESO_PET = "peso";
     public static final String RAZA_PET = "raza";
     public static final String TYPE_PET = "type_pet";
-    public static final String COLOR_PET = "color";
     public static final String GENERO_PET = "genero";
     public static final String DESCRIPCION_PET = "descripcion";
     public static final String EDAD_PET = "edad";
@@ -106,27 +105,6 @@ public class PetHelper extends GenericHelper {
         return pet;
     }
 
-   /* public int getVotoby_id(String id) {
-        Log.e("CATEGORIA_FILTRADa","-->" + id);
-        String[] columns = {ID_DOCUMENT,TIPO_VOTO};
-        String selection = "id_document =?";
-        String[] selectionArgs = {id};
-        final SQLiteDatabase readableDatabase = getReadableDatabase();
-        final Cursor cursor = readableDatabase.query(TABLE_NAME, columns,  selection, selectionArgs, null,
-                null, null);
-        try {
-            while (cursor.moveToFirst()) {
-              return cursor.getInt(cursor.getColumnIndex(TIPO_VOTO));
-            }
-        } catch (SQLiteConstraintException | IllegalStateException e) {
-            e.printStackTrace();
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return 0;
-    }*/
 
     public void cleanTable() {
         SQLiteDatabase writableDatabase = getWritableDatabase();

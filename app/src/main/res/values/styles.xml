@@ -4,10 +4,10 @@
         <item name="android:clipToPadding">true</item>
     </style>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
-        <item name="android:background">@color/white</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="cardBackgroundColor">@color/white</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="BlackSecondary" parent="Theme.AppCompat.DayNight">

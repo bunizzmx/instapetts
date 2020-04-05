@@ -27,6 +27,15 @@ public class AdapterGridPostsProfile extends RecyclerView.Adapter<RecyclerView.V
 
     Context context;
 
+    changue_fragment_parameters_listener listener;
+
+    public changue_fragment_parameters_listener getListener() {
+        return listener;
+    }
+
+    public void setListener(changue_fragment_parameters_listener listener) {
+        this.listener = listener;
+    }
 
     public AdapterGridPostsProfile(Context context) {
         this.context = context;
@@ -67,6 +76,16 @@ public class AdapterGridPostsProfile extends RecyclerView.Adapter<RecyclerView.V
                 DialogPreviewPost dialogPreviewPost = new DialogPreviewPost(context,data_parsed);
                 dialogPreviewPost.show();
                 return false;
+            }
+        });
+        h.root_posts_search_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(listener!=null){
+                    Bundle data_selected = new Bundle();
+                    data_selected.putInt("POSITION",position);
+                    listener.change_fragment_parameter(FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED,data_selected);
+                }
             }
         });
 

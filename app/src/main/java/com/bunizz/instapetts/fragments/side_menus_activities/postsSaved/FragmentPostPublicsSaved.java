@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
@@ -37,6 +38,15 @@ public class FragmentPostPublicsSaved extends Fragment implements  PostPublicsSa
 
     @BindView(R.id.list_posts_publics)
     RecyclerView list_posts_publics;
+
+    @BindView(R.id.title_no_data)
+    TextView title_no_data;
+
+    @BindView(R.id.body_no_data)
+    TextView body_no_data;
+
+    @BindView(R.id.root_no_data)
+    RelativeLayout root_no_data;
 
     ArrayList<Object> data_posts = new ArrayList<>();
 
@@ -94,6 +104,8 @@ public class FragmentPostPublicsSaved extends Fragment implements  PostPublicsSa
         list_posts_publics.setLayoutManager(new GridLayoutManager(getContext(),3));
         list_posts_publics.setAdapter(adapter);
         presenter.getPostPublics();
+        title_no_data.setText("No tienes post guardados");
+        body_no_data.setText("Explora por todo un mundo, de lindas y divertidas mascotas, y guarda las que mas te agraden.");
     }
 
 
@@ -101,12 +113,24 @@ public class FragmentPostPublicsSaved extends Fragment implements  PostPublicsSa
 
     @Override
     public void showPosts(ArrayList<PostBean> posts) {
-        data_posts.clear();
-        data_posts.addAll(posts);
-        adapter.setPosts(data_posts);
+        if(posts!=null){
+            if(posts.size()>0){
+                root_no_data.setVisibility(View.GONE);
+                data_posts.clear();
+                data_posts.addAll(posts);
+                adapter.setPosts(data_posts);
+            }else{
+                root_no_data.setVisibility(View.VISIBLE);
+            }
+        }else{
+            root_no_data.setVisibility(View.VISIBLE);
+        }
     }
 
-
+    @Override
+    public void Error() {
+        root_no_data.setVisibility(View.VISIBLE);
+    }
 
 
     @Override

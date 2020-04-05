@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.App;
@@ -33,10 +35,10 @@ public class FragmentFirstUser extends Fragment {
     uploads listener_uploads;
 
     @BindView(R.id.configure_name)
-    AutoCompleteTextView configure_name;
+    EditText configure_name;
 
     @BindView(R.id.descripcion_user)
-    AutoCompleteTextView descripcion_user;
+    EditText descripcion_user;
 
     @BindView(R.id.image_userd_edit)
     ImageView image_userd_edit;
@@ -57,15 +59,26 @@ public class FragmentFirstUser extends Fragment {
     @OnClick(R.id.save_info_perfil)
     void save_info_perfil()
     {
-        String URI_FINAL  =App.getInstance().make_uri_bucket_profile();
-        App.write(PREFERENCES.DESCRIPCCION,descripcion_user.getText().toString());
-        App.write(PREFERENCES.FOTO_PROFILE_USER,URI_FINAL);
-        App.write(PREFERENCES.NAME_USER,configure_name.getText().toString());
-        Bundle b = new Bundle();
-        b.putString("DESCRIPCION",descripcion_user.getText().toString());
-        b.putString("PHOTO",URI_FINAL);
-        b.putString("PHOTO_LOCAL",URL_LOCAL);
-        listener_uploads.UpdateProfile(b);
+        if(!descripcion_user.getText().toString().isEmpty() && !configure_name.getText().toString().isEmpty() && !URL_LOCAL.equals("INVALID")) {
+            String URI_FINAL = App.getInstance().make_uri_bucket_profile();
+            String URI_FINAL_THUMBH = App.getInstance().make_uri_bucket_profile_tumbh();
+            App.write(PREFERENCES.DESCRIPCCION, descripcion_user.getText().toString());
+            App.write(PREFERENCES.FOTO_PROFILE_USER, URI_FINAL);
+            App.write(PREFERENCES.FOTO_PROFILE_USER_THUMBH, URI_FINAL_THUMBH);
+            App.write(PREFERENCES.NAME_USER, configure_name.getText().toString());
+            Bundle b = new Bundle();
+            b.putString("DESCRIPCION", descripcion_user.getText().toString());
+            b.putString("PHOTO", URI_FINAL);
+            b.putString("PHOTO_LOCAL", URL_LOCAL);
+            listener_uploads.UpdateProfile(b);
+        }else{
+            if(descripcion_user.getText().toString().length() < 5){
+                Toast.makeText(getContext(),"Elige nombre valido",Toast.LENGTH_LONG).show();
+            }
+            if(URL_LOCAL.equals("INVALID")){
+                Toast.makeText(getContext(),"Elige una foto primero",Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
 
@@ -90,7 +103,6 @@ public class FragmentFirstUser extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         if(  App.read(PREFERENCES.NAME_USER,"-").equals("-")){
-            configure_name.setHint("@Un usuario");
         }else{
             configure_name.setText(App.read(PREFERENCES.NAME_USER,"-"));
         }

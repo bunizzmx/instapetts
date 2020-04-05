@@ -36,4 +36,7 @@ public interface BUNDLES {
     String IS_ME ="IS_ME";
 
     String PETBEAN ="PETBEAN";
+
+
+    String DOWNLOADS_INFO ="DOWNLOADS_INFO";
 }

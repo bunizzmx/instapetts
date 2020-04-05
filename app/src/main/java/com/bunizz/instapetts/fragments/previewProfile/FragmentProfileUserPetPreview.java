@@ -2,21 +2,20 @@ package com.bunizz.instapetts.fragments.previewProfile;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.GetChars;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -27,7 +26,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
@@ -36,22 +34,18 @@ import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedAdapter;
-import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
-import com.bunizz.instapetts.fragments.post.FragmentPostList;
-import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.fragments.profile.PetsPropietaryAdapter;
 import com.bunizz.instapetts.fragments.profile.ProfileUserContract;
-import com.bunizz.instapetts.fragments.profile.ProfileUserPresenter;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.folowFavoriteListener;
 import com.bunizz.instapetts.listeners.open_sheet_listener;
 import com.bunizz.instapetts.utils.ImagenCircular;
-import com.bunizz.instapetts.utils.tabs.SlidingFragmentPagerAdapter;
-import com.bunizz.instapetts.utils.tabs.SlidingTabLayout;
-import com.bunizz.instapetts.utils.tabs.TabType;
+import com.bunizz.instapetts.utils.loadings.SpinKitView;
+import com.bunizz.instapetts.utils.loadings.SpriteFactory;
+import com.bunizz.instapetts.utils.loadings.Style;
+import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
 import com.bunizz.instapetts.utils.tabs2.SmartTabLayout;
-import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,10 +91,25 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     TextView num_followers;
 
 
-
+    @BindView(R.id.open_saved)
+    CardView open_saved;
 
     @BindView(R.id.name_property_pet)
     TextView name_property_pet;
+
+    @BindView(R.id.root_info_ptofile)
+    LinearLayout root_info_ptofile;
+
+    @BindView(R.id.loanding_preview_root)
+    RelativeLayout loanding_preview_root;
+
+    @BindView(R.id.spinky_loading_profile_info)
+    SpinKitView spinky_loading_profile_info;
+
+
+
+    Style style = Style.values()[6];
+    Sprite drawable = SpriteFactory.create(style);
     folowFavoriteListener listener_follow;
 
     String URL_UPDATED="INVALID";
@@ -117,6 +126,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     int ID_USER_PARAMETER=0;
     UserBean userBean = new UserBean();
     boolean IS_MISMO_USER=false;
+    boolean IS_MY_FIRNED =false;
     public static FragmentProfileUserPetPreview newInstance() {
         return new FragmentProfileUserPetPreview();
     }
@@ -132,11 +142,13 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         petHelper = new PetHelper(getContext());
         presenter = new PreviewProfileUserPresenter(this,getContext());
         Bundle bundle=getArguments();
+
         PETS.clear();
         ArrayList<PetBean> my_pets_database = new ArrayList<>();
         if(bundle!=null){
             ID_USER_PARAMETER = bundle.getInt(BUNDLES.ID_USUARIO);
         }
+        IS_MY_FIRNED = presenter.is_user_followed(ID_USER_PARAMETER);
         if(ID_USER_PARAMETER == App.read(PREFERENCES.ID_USER_FROM_WEB,0) && ID_USER_PARAMETER!=0){
             IS_MISMO_USER = true;
             my_pets_database = petHelper.getMyPets();
@@ -152,6 +164,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
             presenter.getInfoUser(userBean);
             presenter.getPostUser(true,userBean.getId());
         }
+
     }
 
     @Nullable
@@ -164,6 +177,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        open_saved.setVisibility(View.GONE);
         list_pets_propietary.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
         petsPropietaryAdapter.setListener(new open_sheet_listener() {
             @Override
@@ -179,12 +193,19 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         list_pets_propietary.setAdapter(petsPropietaryAdapter);
         viewpager_profile.setAdapter(adapter_pager);
         tabs_profile_propietary.setViewPager(viewpager_profile);
-
-
-        if(IS_MISMO_USER)
-            show_myInfo();
-        else
-            paint_buttons();
+        spinky_loading_profile_info.setIndeterminateDrawable(drawable);
+        spinky_loading_profile_info.setColor(getContext().getResources().getColor(R.color.primary));
+        loanding_preview_root.setVisibility(View.VISIBLE);
+        root_info_ptofile.setVisibility(View.GONE);
+        paint_buttons();
+        loanding_preview_root.setVisibility(View.VISIBLE);
+        root_info_ptofile.setVisibility(View.GONE);
+        spinky_loading_profile_info.setIndeterminateDrawable(drawable);
+        spinky_loading_profile_info.setColor(getContext().getResources().getColor(R.color.primary));
+        userBean.setId(ID_USER_PARAMETER);
+        userBean.setUuid("xxxx");
+        presenter.getInfoUser(userBean);
+        presenter.getPostUser(true,userBean.getId());
     }
 
 
@@ -203,12 +224,17 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
 
     public void refresh_info(){
         if(petHelper!=null && petsPropietaryAdapter!=null && presenter!= null) {
+            loanding_preview_root.setVisibility(View.VISIBLE);
+            root_info_ptofile.setVisibility(View.GONE);
+            spinky_loading_profile_info.setIndeterminateDrawable(drawable);
+            spinky_loading_profile_info.setColor(getContext().getResources().getColor(R.color.primary));
             PETS.clear();
             Bundle bundle = getArguments();
             ArrayList<PetBean> my_pets_database = new ArrayList<>();
             if (bundle != null) {
                 ID_USER_PARAMETER = bundle.getInt(BUNDLES.ID_USUARIO);
             }
+            IS_MY_FIRNED = presenter.is_user_followed(ID_USER_PARAMETER);
             if (ID_USER_PARAMETER == App.read(PREFERENCES.ID_USER_FROM_WEB, 0) && ID_USER_PARAMETER != 0) {
                 IS_MISMO_USER = true;
                 my_pets_database = petHelper.getMyPets();
@@ -217,11 +243,12 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
                 }
                 PETS.add(new PetBean());
                 petsPropietaryAdapter.setPets(PETS);
-                Log.e("RFRESH_PETS", "3");
-                show_myInfo();
+                userBean.setId(ID_USER_PARAMETER);
+                userBean.setUuid("xxxx");
+                presenter.getInfoUser(userBean);
+                presenter.getPostUser(true,userBean.getId());
             } else {
                 IS_MISMO_USER = false;
-                Log.e("MANDO_PETICION_POR_USER", "SI" + ID_USER_PARAMETER);
                 userBean.setId(ID_USER_PARAMETER);
                 userBean.setUuid("xxxx");
                 presenter.getInfoUser(userBean);
@@ -239,23 +266,37 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
             follow_edit.setTextColor(Color.BLACK);
             follow_edit.setOnClickListener(view1 -> listener.change(FragmentElement.INSTANCE_EDIT_PROFILE_USER));
         }else{
-            follow_edit.setText("Sueguir");
-            follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_follow));
-            follow_edit.setTextColor(Color.WHITE);
-            follow_edit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.e("FOLLOW_USER","-->" + USERBEAN.getId());
-                    listener_follow.followUser(USERBEAN);
-                }
-            });
+            if(IS_MY_FIRNED){
+                follow_edit.setText("Dejar de seguir");
+                follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_gmail));
+                follow_edit.setTextColor(Color.BLACK);
+                follow_edit.setOnClickListener(view -> {
+                    listener_follow.followUser(USERBEAN,false);
+                    presenter.follow(USERBEAN.getId(),false);
+                });
+            }else{
+                follow_edit.setText("Seguir");
+                follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_follow));
+                follow_edit.setTextColor(Color.WHITE);
+                follow_edit.setOnClickListener(view -> {
+                    listener_follow.followUser(USERBEAN,true);
+                    presenter.follow(USERBEAN.getId(),true);
+                });
+            }
+
+
         }
     }
 
     @Override
     public void showInfoUser(UserBean userBean, ArrayList<PetBean> pets) {
+        loanding_preview_root.setVisibility(View.GONE);
+        root_info_ptofile.setVisibility(View.VISIBLE);
+        PETS.clear();
         PETS.addAll(pets);
+
         USERBEAN = userBean;
+        Log.e("USER_BEAN","-->TOKEN:" + USERBEAN.getToken() );
         name_property_pet.setText("@" + USERBEAN.getName_user());
         descripcion_perfil_user.setText(USERBEAN.getDescripcion());
         Glide.with(getContext()).load(USERBEAN.getPhoto_user()).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);
@@ -271,21 +312,13 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     public void showPostUser(ArrayList<PostBean> posts) {
         Log.e("SETDATA","ONMY_PROFILE" + posts.size());
         Fragment frag = adapter_pager.getItem(0);
+        POSTS.clear();
         POSTS.addAll(posts);
         ArrayList<Object> results = new ArrayList<>();
         results.addAll(POSTS);
         if (frag instanceof FragmentPostGalery) {
-            ((FragmentPostGalery) frag).setData(results);
+            ((FragmentPostGalery) frag).setData_posts(results);
         }
-    }
-
-    void show_myInfo(){
-        paint_buttons();
-        name_property_pet.setText("@" + App.read(PREFERENCES.NAME_USER,"USUARIO"));
-        title_name_preview.setText( App.read(PREFERENCES.NAME_USER,"USUARIO"));
-        descripcion_perfil_user.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
-        URL_UPDATED = App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID");
-        Glide.with(getContext()).load(URL_UPDATED).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);
     }
 
     @Override
@@ -295,6 +328,28 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
 
     @Override
     public void ErrorPostUsers() {
+
+    }
+
+    @Override
+    public void successFollow(boolean follow,int id_user) {
+        if(follow){
+            follow_edit.setText("Dejar de seguir");
+            follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_gmail));
+            follow_edit.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
+            follow_edit.setOnClickListener(view -> {
+                listener_follow.followUser(USERBEAN,false);
+                presenter.follow(USERBEAN.getId(),false);
+            });
+        }else{
+            follow_edit.setText("Seguir");
+            follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_follow));
+            follow_edit.setTextColor(Color.WHITE);
+            follow_edit.setOnClickListener(view -> {
+                listener_follow.followUser(USERBEAN,true);
+                presenter.follow(USERBEAN.getId(),true);
+            });
+        }
 
     }
 

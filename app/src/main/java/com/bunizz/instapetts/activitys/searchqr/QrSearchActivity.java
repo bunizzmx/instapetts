@@ -54,7 +54,7 @@ import butterknife.ButterKnife;
 
 
 
-public class QrSearchActivity extends AppCompatActivity implements changue_fragment_parameters_listener, change_instance, folowFavoriteListener {
+public class QrSearchActivity extends AppCompatActivity implements changue_fragment_parameters_listener, change_instance {
 
     private Stack<FragmentElement> stack_qr;
     private Stack<FragmentElement> stack_qr_my_pet;
@@ -228,13 +228,4 @@ public class QrSearchActivity extends AppCompatActivity implements changue_fragm
 
     }
 
-    @Override
-    public void followUser(UserBean userBean) {
-
-    }
-
-    @Override
-    public void favoritePet(UserBean userBean, PetBean petBean) {
-
-    }
 }

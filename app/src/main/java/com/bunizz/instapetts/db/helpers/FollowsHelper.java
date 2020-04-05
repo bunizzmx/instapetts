@@ -65,6 +65,28 @@ public class FollowsHelper extends GenericHelper {
 
     }
 
+    public boolean isMyFriend(int id_user) {
+        final Cursor cursor = getReadableDatabase().query(
+                TABLE_NAME,
+                null,
+                "id_user="+id_user,
+                null, null, null, null, null);
+        try {
+           if(cursor.moveToFirst()){
+               return true;
+           }else{
+               return  false;
+           }
+        } catch (SQLiteConstraintException | IllegalStateException e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return false;
+    }
+
     public ArrayList<Integer> getMyFriendsForPost() {
         ArrayList<Integer> ids_users = new ArrayList<>();
         final Cursor cursor = getReadableDatabase().query(
@@ -83,7 +105,6 @@ public class FollowsHelper extends GenericHelper {
                 cursor.close();
             }
         }
-        Log.e("RESULTADOS_BUSQUEDA","HISTORIES-->" + ids_users.size());
         return ids_users;
     }
 }

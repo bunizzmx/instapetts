@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
@@ -58,11 +58,16 @@
             android:enabled="true"/>
         <service android:name=".services.NotificationsService"
             android:enabled="true"/>
-        <service android:name=".notifications.NotificationsManagers">
+        <service android:name=".notifications.NotificationsManagers"
+            android:enabled="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <service android:name=".services.DownloadsService"  android:enabled="true"/>
+        <service
+            android:name=".services.FetchAddressIntentService"
+            android:exported="false"/>
         <!-- ACTIVIDADES  -->
     </application>
 

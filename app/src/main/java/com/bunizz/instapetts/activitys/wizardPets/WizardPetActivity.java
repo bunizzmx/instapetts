@@ -39,9 +39,6 @@ import com.bunizz.instapetts.listeners.process_save_pet_listener;
 import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.services.ImagePostsService;
 import com.bunizz.instapetts.services.ImageService;
-import com.bunizz.instapetts.services.UploadsService;
-import com.bunizz.instapetts.web.CONST;
-import com.bunizz.instapetts.web.responses.SimpleResponse;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
@@ -243,7 +240,6 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
         switch (donde){
             case 1:
                 NEW_PET.setType_pet(b.getInt(BUNDLES.TYPE_PET));
-                NEW_PET.setRate_pet("0");
                 break;
             case 2:
                 NEW_PET.setRaza_pet(b.getString(BUNDLES.RAZA_PET));

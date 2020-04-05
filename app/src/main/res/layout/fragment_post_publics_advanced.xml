@@ -45,6 +45,14 @@
                         android:layout_width="15dp"
                         android:layout_height="15dp"/>
                 </androidx.cardview.widget.CardView>
+                <TextView
+                    android:layout_marginLeft="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/back_to_main"
+                    style="@style/FontNormalTitleSecondary"
+                    android:text="Publicaciones"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
             </RelativeLayout>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>

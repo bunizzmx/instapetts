@@ -79,6 +79,36 @@ public class PetsPropietaryAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
                 h.type_pet_icon.setVisibility(View.GONE);
             } else {
                 h.type_pet_icon.setVisibility(View.VISIBLE);
+                switch (pets.get(position).getType_pet()){
+                    case 1:
+                        h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_perro));
+                    break;
+                    case 2:
+                        h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_gato));
+                        break;
+                    case 3:
+                        h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_mascota_perico));
+                        break;
+                    case 4:
+                        h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_mascota_conejo));
+                        break;
+                    case 5:
+                        h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_mascota_hamster));
+                        break;
+                    case 6:break;
+                    case 7:break;
+                    case 8:break;
+                    case 9:break;
+                    case 10:break;
+                    case 11:break;
+                    case 12:break;
+                    case 13:break;
+                    case 14:break;
+                    case 15:break;
+                    case 16:break;
+                    default:break;
+
+                }
                 h.name_pet_item.setText(pets.get(position).getName_pet());
                 h.image_pet_history.setOnClickListener(view -> listener.open(pets.get(position),0));
                 h.image_pet_history.setVisibility(View.VISIBLE);
@@ -86,6 +116,36 @@ public class PetsPropietaryAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
                 Glide.with(context).load(pets.get(position).getUrl_photo_tumbh()).into(h.image_pet_history);
             }
         }else{
+            switch (pets.get(position).getType_pet()){
+                case 1:
+                    h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_perro));
+                    break;
+                case 2:
+                    h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_gato));
+                    break;
+                case 3:
+                    h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_mascota_perico));
+                    break;
+                case 4:
+                    h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_mascota_conejo));
+                    break;
+                case 5:
+                    h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_mascota_hamster));
+                    break;
+                case 6:break;
+                case 7:break;
+                case 8:break;
+                case 9:break;
+                case 10:break;
+                case 11:break;
+                case 12:break;
+                case 13:break;
+                case 14:break;
+                case 15:break;
+                case 16:break;
+                default:break;
+
+            }
             h.type_pet_icon.setVisibility(View.VISIBLE);
             h.name_pet_item.setText(pets.get(position).getName_pet());
             h.image_pet_history.setOnClickListener(view -> listener.open(pets.get(position),1));

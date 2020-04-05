@@ -3,11 +3,11 @@
     <!-- Database name:FC version:1 -->
     <string name="table_historias_vistas" translatable="false">CREATE TABLE IF NOT EXISTS histories_views (id INTEGER AUTO INCREMENT PRIMARY KEY , id_history TEXT, visto INT(2),num_fotos INT(2))</string>
     <string name="histories" translatable="false">CREATE TABLE IF NOT EXISTS histories (id INTEGER AUTO INCREMENT PRIMARY KEY , id_history TEXT, fecha TEXT,nombre_pet TEXT,id_pet TEXT,id_propietary TEXT,uris_photos TEXT)</string>
-    <string name="pets_table" translatable="false">CREATE TABLE IF NOT EXISTS pets (id INTEGER AUTO INCREMENT PRIMARY KEY , id_pet TEXT, name_pet TEXT,id_propietary int,name_propietary TEXT,raza TEXT,peso TEXT,color TEXT,genero TEXT,
+    <string name="pets_table" translatable="false">CREATE TABLE IF NOT EXISTS pets (id INTEGER AUTO INCREMENT PRIMARY KEY , id_pet TEXT, name_pet TEXT,id_propietary int,name_propietary TEXT,raza TEXT,peso TEXT,genero TEXT,
     descripcion TEXT,edad TEXT,rating INT,type_pet INT,url_foto TEXT,url_photo_tumbh TEXT)</string>
     <string name="propietary" translatable="false">CREATE TABLE IF NOT EXISTS propietary (id INTEGER AUTO INCREMENT PRIMARY KEY ,id_propietary TEXT,name_propietary TEXT,
     descripcion TEXT,url_photo TEXT,rating REAL,followers INT,posts INT)</string>
-    <string name="table_razas" translatable="false">CREATE TABLE IF NOT EXISTS razas (id INTEGER AUTO INCREMENT PRIMARY KEY , name_eng TEXT, nam_esp TEXT,id_type_pet INT)</string>
+    <string name="table_razas" translatable="false">CREATE TABLE IF NOT EXISTS razas (id INTEGER AUTO INCREMENT PRIMARY KEY , name_eng TEXT, nam_esp TEXT,id_type_pet INT,photo TEXT)</string>
     <string name="table_saved_posts">CREATE TABLE saved_posts(id INT INTEGER AUTO INCREMENT PRIMARY KEY,id_from_web INT, name_pet TEXT,name_user TEXT,urls_posts TEXT, url_photo_user TEXT, description TEXT,date_post TEXT)</string>
     <string name="table_liked_post">CREATE TABLE liked_posts(id_from_web INT)</string>
     <string name="table_notifications">CREATE TABLE IF NOT EXISTS notifications(id INTEGER AUTO INCREMENT PRIMARY KEY,title TEXT,body TEXT,url_resource TEXT, type_notification INT,id_usuario INT)</string>

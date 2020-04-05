@@ -5,17 +5,18 @@
     android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:gravity="bottom"
     >
 
     <com.google.android.material.appbar.AppBarLayout
+        android:background="@color/white"
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:elevation="0.1dp"
         android:fitsSystemWindows="true"
         >
-
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
@@ -30,7 +31,6 @@
                 android:gravity="top"
                 app:layout_collapseMode="pin" />
             <RelativeLayout
-                style="@style/AppTheme"
                 android:layout_gravity="bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -67,4 +67,19 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+    <RelativeLayout
+        android:background="@color/white"
+        android:id="@+id/loanding_preview_root"
+        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.bunizz.instapetts.utils.loadings.SpinKitView
+            style="@style/SpinKitView"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/spinky_loading_profile_info"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+    </RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

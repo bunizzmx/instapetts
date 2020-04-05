@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -70,10 +71,10 @@ public class FragmentFinalConfigPet extends Fragment {
     }
 
     @BindView(R.id.configure_name_pet)
-    AutoCompleteTextView configure_name_pet;
+    EditText configure_name_pet;
 
     @BindView(R.id.descripcion_pet)
-    AutoCompleteTextView descripcion_pet;
+    EditText descripcion_pet;
 
     @BindView(R.id.image_pet_edit)
     ImagenCircular image_pet_edit;

@@ -62,6 +62,11 @@ public class PostBean {
     @SerializedName("id_post")
     @Expose
     int id_post_from_web;
+
+    @SerializedName("address")
+    @Expose
+    String address;
+
     boolean saved;
     boolean liked;
 
@@ -77,13 +82,22 @@ public class PostBean {
         this.url_photo_user = url_photo_user;
         this.description = description;
     }
-    public PostBean(String urls_posts, String name_pet, String name_user, String url_photo_user, String description,int id_post_from_web) {
+
+    public PostBean(String urls_posts, String name_pet, String name_user, String url_photo_user, String url_photo_pet, String description, String date_post, String uuid, String uuidbucket, int id_usuario, int id_pet, int likes, int id_post_from_web, String address) {
         this.urls_posts = urls_posts;
         this.name_pet = name_pet;
         this.name_user = name_user;
         this.url_photo_user = url_photo_user;
+        this.url_photo_pet = url_photo_pet;
         this.description = description;
-        this.id_post_from_web =id_post_from_web;
+        this.date_post = date_post;
+        this.uuid = uuid;
+        this.uuidbucket = uuidbucket;
+        this.id_usuario = id_usuario;
+        this.id_pet = id_pet;
+        this.likes = likes;
+        this.id_post_from_web = id_post_from_web;
+        this.address = address;
     }
 
     public int getId_post_from_web() {
@@ -92,6 +106,14 @@ public class PostBean {
 
     public void setId_post_from_web(int id_post_from_web) {
         this.id_post_from_web = id_post_from_web;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public boolean isLiked() {

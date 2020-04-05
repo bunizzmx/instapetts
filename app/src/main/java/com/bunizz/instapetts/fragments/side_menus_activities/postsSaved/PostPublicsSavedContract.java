@@ -11,6 +11,7 @@ public interface PostPublicsSavedContract {
 
     interface View{
         void showPosts(ArrayList<PostBean> posts);
+        void Error();
     }
 
 }

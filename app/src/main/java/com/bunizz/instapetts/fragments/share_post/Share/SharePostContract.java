@@ -7,7 +7,8 @@ import java.util.ArrayList;
 
 public interface SharePostContract {
     interface Presenter {
-        public void sendPost(PostBean post);
+         void sendPost(PostBean post);
+         void getLocation();
 
     }
 

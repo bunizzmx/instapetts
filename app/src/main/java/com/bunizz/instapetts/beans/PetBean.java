@@ -24,9 +24,7 @@ public class PetBean {
     @SerializedName("peso_pet")
     @Expose
     String peso_pet;
-    @SerializedName("color_pet")
-    @Expose
-    String color_pet;
+
 
     @SerializedName("descripcion_pet")
     @Expose
@@ -81,7 +79,6 @@ public class PetBean {
         this.name_pet = name_pet;
         this.raza_pet = raza_pet;
         this.peso_pet = peso_pet;
-        this.color_pet = color_pet;
         this.descripcion_pet = descripcion_pet;
         this.genero_pet = genero_pet;
         this.rate_pet = rate_pet;
@@ -115,13 +112,6 @@ public class PetBean {
         this.peso_pet = peso_pet;
     }
 
-    public String getColor_pet() {
-        return color_pet;
-    }
-
-    public void setColor_pet(String color_pet) {
-        this.color_pet = color_pet;
-    }
 
     public String getDescripcion_pet() {
         return descripcion_pet;
@@ -204,7 +194,6 @@ public class PetBean {
         contentValues.put(PetHelper.PESO_PET, getPeso_pet());
         contentValues.put(PetHelper.RAZA_PET, getRaza_pet());
         contentValues.put(PetHelper.TYPE_PET, getType_pet());
-        contentValues.put(PetHelper.COLOR_PET, getColor_pet());
         contentValues.put(PetHelper.GENERO_PET, getGenero_pet());
         contentValues.put(PetHelper.DESCRIPCION_PET, getDescripcion_pet());
         contentValues.put(PetHelper.EDAD_PET, getEdad_pet());
@@ -237,8 +226,6 @@ public class PetBean {
         if (cursor.getColumnIndex(PetHelper.TYPE_PET) != -1)
             this.type_pet = cursor.getInt(cursor.getColumnIndex(PetHelper.TYPE_PET));
 
-        if (cursor.getColumnIndex(PetHelper.COLOR_PET) != -1)
-            this.color_pet = cursor.getString(cursor.getColumnIndex(PetHelper.COLOR_PET));
 
         if (cursor.getColumnIndex(PetHelper.GENERO_PET) != -1)
             this.genero_pet = cursor.getString(cursor.getColumnIndex(PetHelper.GENERO_PET));

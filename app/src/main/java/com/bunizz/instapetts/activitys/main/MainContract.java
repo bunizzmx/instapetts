@@ -12,13 +12,17 @@ public interface MainContract {
         void UpdateProfile(UserBean userBean);
         void saveMyStory(HistoriesBean historiesBean);
         void followUser(UserBean userBean);
+        void unfollowUser(String id_document);
         void favoritePet(UserBean userBean, PetBean petBean);
         void downloadMyPets(UserBean userBean);
+        void have_pets();
+        void update_token(UserBean userBean);
     }
 
     interface View{
        void psuccessProfileUpdated();
        void saveMyPets(ArrayList<PetBean> pets);
        void onError(int error);
+       void havePetsResult(boolean result);
     }
 }

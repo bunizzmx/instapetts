@@ -70,6 +70,9 @@ public class FragmentDataPet extends Fragment {
     @BindView(R.id.icon_macho)
     ImageView icon_macho;
     int GENERO =0;
+    DatePickerDialogFragment datePickerDialogFragment;
+
+    String FECHA_CUMPLEAN ="NULO";
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.next_finalize)
@@ -85,12 +88,12 @@ public class FragmentDataPet extends Fragment {
             else if(GENERO == 2)
               b.putString(BUNDLES.GENERO_PET,"H");
 
-            b.putString(BUNDLES.EDAD_PET,"12/12/12");
+            b.putString(BUNDLES.EDAD_PET,FECHA_CUMPLEAN);
             listener_pet_config.SaveDataPet(b,3);
             if(GENERO == 0){
                 Toast.makeText(getContext(),"SELECIONA GENERO",Toast.LENGTH_LONG).show();
             }else{
-                if(date_selected.getText().toString().isEmpty())
+                if(date_selected.getText().toString().isEmpty() || FECHA_CUMPLEAN.equals("NULO"))
                     Toast.makeText(getContext(),"SELECIONA FECHA",Toast.LENGTH_LONG).show();
                 else {
                     listener_pet_config.SaveDataPet(b,3);
@@ -178,10 +181,11 @@ public class FragmentDataPet extends Fragment {
 
         factor_peso.setText(FACTOR);
         card_age.setOnClickListener(view1 -> {
-            DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment();
+            datePickerDialogFragment= new DatePickerDialogFragment();
             datePickerDialogFragment.setOnDateChooseListener((year, month, day) -> {
                 date_selected.setVisibility(View.VISIBLE);
                 date_selected.setText(year + "-" + month + "-" + day);
+                FECHA_CUMPLEAN = year+"-"+month+"-"+day;
             });
             datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
         });

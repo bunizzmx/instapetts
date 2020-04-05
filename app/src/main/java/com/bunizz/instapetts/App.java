@@ -20,6 +20,8 @@ import com.bunizz.instapetts.utils.dilogs.DialogPermision;
 import com.bunizz.instapetts.web.CONST;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import net.sqlcipher.database.SQLiteDatabase;
 
 import java.text.DecimalFormat;
@@ -69,6 +71,7 @@ public class App extends Application {
         Log.e("IDIOMA","-->" + idioma);
         write("IDIOMA",idioma);
         BaseUtils.init(this);
+
     }
 
    public  void clear_preferences(){

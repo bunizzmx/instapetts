@@ -26,15 +26,15 @@
         android:layout_height="match_parent"/>
     <LinearLayout
         android:id="@+id/logo_instapetts"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
             android:src="@drawable/ic_hand_pet_preload"
             android:layout_gravity="center_horizontal"
-            android:layout_width="90dp"
-            android:layout_height="90dp"/>
+            android:layout_width="80dp"
+            android:layout_height="80dp"/>
         <TextView
             android:fontFamily="@font/avenir_black"
             android:textSize="28dp"
@@ -49,8 +49,8 @@
     <LinearLayout
         android:id="@+id/layout_inputs"
         android:padding="20dp"
-        android:layout_marginTop="20dp"
         android:layout_below="@+id/logo_instapetts"
+        android:layout_above="@+id/change_to_create_account"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -102,68 +102,70 @@
             android:textAllCaps="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-    </LinearLayout>
 
-    <RelativeLayout
-        android:padding="10dp"
-        android:id="@+id/login_or_register"
-        android:layout_below="@+id/layout_inputs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_centerHorizontal="true"
-            android:padding="5dp"
-            android:text="login or register whit"
+        <RelativeLayout
+            android:padding="10dp"
+            android:id="@+id/login_or_register"
+            android:layout_below="@+id/layout_inputs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_centerHorizontal="true"
+                android:padding="5dp"
+                android:text="login or register whit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_below="@+id/login_or_register"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </RelativeLayout>
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:id="@+id/login_with_gmail"
+                android:background="?attr/selectableItemBackground"
+                android:layout_width="50dp"
+                android:layout_height="50dp">
+                <ImageView
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_google_mas"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_marginLeft="10dp"
+                android:background="?attr/selectableItemBackground"
+                android:layout_width="50dp"
+                android:layout_height="50dp">
+                <ImageView
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_twitter"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/login_with_facebook"
+                android:layout_marginLeft="10dp"
+                android:background="?attr/selectableItemBackground"
+                android:layout_width="50dp"
+                android:layout_height="50dp">
+                <ImageView
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_facebook"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"/>
+            </RelativeLayout>
+        </LinearLayout>
 
-    <LinearLayout
-        android:layout_below="@+id/login_or_register"
-        android:orientation="horizontal"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <RelativeLayout
-            android:id="@+id/login_with_gmail"
-            android:background="?attr/selectableItemBackground"
-            android:layout_width="50dp"
-            android:layout_height="50dp">
-            <ImageView
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_google_mas"
-                android:layout_width="25dp"
-                android:layout_height="25dp"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_marginLeft="10dp"
-            android:background="?attr/selectableItemBackground"
-            android:layout_width="50dp"
-            android:layout_height="50dp">
-            <ImageView
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_twitter"
-                android:layout_width="20dp"
-                android:layout_height="20dp"/>
-        </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/login_with_facebook"
-            android:layout_marginLeft="10dp"
-            android:background="?attr/selectableItemBackground"
-            android:layout_width="50dp"
-            android:layout_height="50dp">
-            <ImageView
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_facebook"
-                android:layout_width="20dp"
-                android:layout_height="20dp"/>
-        </RelativeLayout>
     </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/change_to_create_account"

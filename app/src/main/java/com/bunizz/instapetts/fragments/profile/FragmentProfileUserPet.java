@@ -2,15 +2,18 @@ package com.bunizz.instapetts.fragments.profile;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,6 +28,8 @@ import androidx.viewpager.widget.ViewPager;
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.main.Main;
+import com.bunizz.instapetts.activitys.side_menus_activities.SideMenusActivities;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
@@ -33,16 +38,18 @@ import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
-import com.bunizz.instapetts.fragments.post.FragmentPostList;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.folowFavoriteListener;
 import com.bunizz.instapetts.listeners.open_sheet_listener;
 import com.bunizz.instapetts.listeners.open_side_menu;
 import com.bunizz.instapetts.utils.ImagenCircular;
-import com.bunizz.instapetts.utils.tabs.SlidingFragmentPagerAdapter;
-import com.bunizz.instapetts.utils.tabs.SlidingTabLayout;
-import com.bunizz.instapetts.utils.tabs.TabType;
+import com.bunizz.instapetts.utils.loadings.SpinKitView;
+import com.bunizz.instapetts.utils.loadings.SpriteFactory;
+import com.bunizz.instapetts.utils.loadings.Style;
+import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
 import com.bunizz.instapetts.utils.tabs2.SmartTabLayout;
+import com.bunizz.instapetts.utils.target.TapTarget;
+import com.bunizz.instapetts.utils.target.TapTargetView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,11 +103,36 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     folowFavoriteListener listener_follow;
     open_side_menu listener_open_side;
 
+    @BindView(R.id.root_info_ptofile)
+    LinearLayout root_info_ptofile;
+
+    @BindView(R.id.loanding_preview_root)
+    RelativeLayout loanding_preview_root;
+
+    @BindView(R.id.spinky_loading_profile_info)
+    SpinKitView spinky_loading_profile_info;
+
+
+
+    Style style = Style.values()[6];
+    Sprite drawable = SpriteFactory.create(style);
+
+
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.open_side_menu)
     void open_side_menu() {
         listener_open_side.open_side();
+    }
+
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.open_saved)
+    void open_saved() {
+        Intent i;
+        i = new Intent(getActivity(), SideMenusActivities.class);
+        i.putExtra("TYPE_MENU",2);
+        startActivity(i);
     }
 
 
@@ -165,7 +197,10 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         list_pets_propietary.setAdapter(petsPropietaryAdapter);
         viewpager_profile.setAdapter(adapter_pager);
         tabs_profile_propietary.setViewPager(viewpager_profile);
-        Log.e("NAME_USUARIOS","-->" +App.read(PREFERENCES.NAME_USER,"USUARIO") );
+        spinky_loading_profile_info.setIndeterminateDrawable(drawable);
+        spinky_loading_profile_info.setColor(getContext().getResources().getColor(R.color.primary));
+        loanding_preview_root.setVisibility(View.VISIBLE);
+        root_info_ptofile.setVisibility(View.GONE);
         title_toolbar.setText(App.read(PREFERENCES.NAME_USER,"USUARIO"));
         name_property_pet.setText("@" + App.read(PREFERENCES.NAME_USER,"USUARIO"));
             follow_edit.setText(R.string.edit_profile);
@@ -225,19 +260,30 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     }
 
     public void refresh_list_pets(){
-        Log.e("RFRESH_PETS","1");
         ArrayList<PetBean> my_pets_database = new ArrayList<>();
         my_pets_database.addAll(petHelper.getMyPets());
         my_pets_database.add(new PetBean());
         petsPropietaryAdapter.setPets(my_pets_database);
+        if(listener_open_side!=null){
+            if(my_pets_database.size() <3) {
+                Log.e("MAS_DE_UN_PET","NO");
+                listener_open_side.open_target_post();
+            }else{
+                Log.e("MAS_DE_UN_PET","SI");
+            }
+        }
     }
 
     @Override
     public void showInfoUser(UserBean userBean, ArrayList<PetBean> pets) {
-       // refresh_profile.setRefreshing(false);
-        Log.e("RFRESH_PETS","2");
+        loanding_preview_root.setVisibility(View.GONE);
+        root_info_ptofile.setVisibility(View.VISIBLE);
         if(PETS.size()==1) {
             PETS.addAll(pets);
+            if(pets.size()<1 && PETS.size() ==1){
+                Log.e("NO TIENES_PETS",":(");
+                fist_pet();
+            }
         }
         USERBEAN = userBean;
         title_toolbar.setText(USERBEAN.getName_user());
@@ -245,7 +291,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         descripcion_perfil_user.setText(USERBEAN.getDescripcion());
         Glide.with(getContext()).load(USERBEAN.getPhoto_user()).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);
         petsPropietaryAdapter.setPets(PETS);
-        num_posts.setText(String.valueOf(USERBEAN.getNum_pets()));
+        num_posts.setText(String.valueOf(USERBEAN.getPosts()));
         num_pets.setText(String.valueOf(USERBEAN.getRate_pets()));
         num_followers.setText(String.valueOf(USERBEAN.getFolowers()));
     }
@@ -253,13 +299,12 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
 
     @Override
     public void showPostUser(ArrayList<PostBean> posts) {
-        Log.e("SETDATA","ONMY_PROFILE" + posts.size());
         Fragment frag = adapter_pager.getItem(0);
         POSTS.addAll(posts);
         ArrayList<Object> results = new ArrayList<>();
         results.addAll(POSTS);
         if (frag instanceof FragmentPostGalery) {
-            ((FragmentPostGalery) frag).setData(results);
+            ((FragmentPostGalery) frag).setData_posts(results);
         }
     }
 
@@ -273,6 +318,11 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     @Override
     public void ErrorPostUsers() {
        // refresh_profile.setRefreshing(false);
+    }
+
+    @Override
+    public void successFollow(boolean follow, int id_user) {
+
     }
 
 
@@ -304,5 +354,33 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
             return mFragmentTitleList.get(position);
         }
     }
+
+
+
+    void fist_pet(){
+        final SpannableString spannedDesc = new SpannableString("Configura a tu mascota para asignarle un perfil.");
+        TapTargetView.showFor(getActivity(), TapTarget.forView(getView().findViewById(R.id.list_pets_propietary), "Agrega una mascota", spannedDesc)
+                .cancelable(false)
+                .drawShadow(true)
+                .tintTarget(false), new TapTargetView.Listener() {
+            @SuppressLint("CheckResult")
+            @Override
+            public void onTargetClick(TapTargetView view) {
+                super.onTargetClick(view);
+                if(listener!=null)
+                listener.open_wizard_pet();
+            }
+
+            @Override
+            public void onOuterCircleClick(TapTargetView view) {
+                super.onOuterCircleClick(view);
+            }
+
+            @Override
+            public void onTargetDismissed(TapTargetView view, boolean userInitiated) { }
+        });
+    }
+
+
 }
 

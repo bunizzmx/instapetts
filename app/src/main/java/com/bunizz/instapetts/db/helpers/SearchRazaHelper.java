@@ -30,6 +30,7 @@ public class SearchRazaHelper extends GenericHelper {
     public static final String NAME_ENG = "name_eng";
     public static final String NAME_ESP = "nam_esp";
     public static final String TYPE_PET = "id_type_pet";
+    public static final String PHOTO = "photo";
 
 
     public void saveRaza(RazaBean raza) {
@@ -38,6 +39,7 @@ public class SearchRazaHelper extends GenericHelper {
         contentValues.put(NAME_ENG, raza.getName_raza_eng());
         contentValues.put(NAME_ESP, raza.getName_raza_esp());
         contentValues.put(TYPE_PET, raza.getId_type_pet());
+        contentValues.put(PHOTO, raza.getUrl_photo());
         try {
             getWritableDatabase().insertOrThrow(TABLE_NAME, null,contentValues);
         } catch (SQLiteConstraintException | IllegalStateException e) {
@@ -51,7 +53,7 @@ public class SearchRazaHelper extends GenericHelper {
         razas.clear();
         final Cursor cursor = getReadableDatabase().query(
                 TABLE_NAME,
-                new String[] { NAME_ESP, NAME_ENG,TYPE_PET},
+                new String[] { NAME_ESP, NAME_ENG,TYPE_PET,PHOTO},
                 NAME_ESP + " LIKE '%" + querytext + "%'",
                 null, null, null, null, null);
         try {
@@ -59,7 +61,8 @@ public class SearchRazaHelper extends GenericHelper {
                 razas.add(new RazaBean(
                         cursor.getString(cursor.getColumnIndex(NAME_ESP)),
                         cursor.getString(cursor.getColumnIndex(NAME_ENG)),
-                        cursor.getInt(cursor.getColumnIndex(TYPE_PET))
+                        cursor.getInt(cursor.getColumnIndex(TYPE_PET)),
+                        cursor.getString(cursor.getColumnIndex(PHOTO))
                 ));
             }
         } catch (SQLiteConstraintException | IllegalStateException e) {
@@ -69,7 +72,6 @@ public class SearchRazaHelper extends GenericHelper {
                 cursor.close();
             }
         }
-        Log.e("RESULTADOS_BUSQUEDA","--->" + razas.size());
         return razas;
     }
 

@@ -68,8 +68,8 @@
 
 
 
-    <string name="cancel">Cancel</string>
-    <string name="save">Save</string>
+    <string name="cancel">Cancelar</string>
+    <string name="save">Guardar</string>
     <string name="Ok">Ok</string>
     <string name="short_seconds">sec</string>
     <string name="megabyte">MB</string>
@@ -103,4 +103,25 @@
     <string name="nav_search">Buscar</string>
     <string name="nav_perfil">Perfil</string>
 
+
+    <string name="intro_title_1">Son especiales y lo sabemos</string>
+    <string name="intro_body_1">Por eso desarrollamos Instapetts para ustedes, aquellos que aman a sus mascotas</string>
+
+    <string name="intro_title_2">Recordar es vivir</string>
+    <string name="intro_body_2">Ellos solo estarán un momento en nuestras vidas, demuestra lo feliz que las puedes hacer estando contigo.</string>
+
+    <string name="intro_title_3">Siempre para ti</string>
+    <string name="intro_body_3">Instapetts siempre estará para ustedes, inmortaliza los momentos, vive instantes únicos y muéstranos las mejores risas con tus mascotas.</string>
+
+    <string name="chose_photo">Elegir una foto</string>
+    <string name="write_name">Escribe tu nombre...</string>
+    <string name="write_description">Escribe algo sobre ti...</string>
+
+    <string name="label_config_user">Configura tu usuario</string>
+
+    <string name="no_geocoder_available">No geocoder disponible</string>
+    <string name="no_address_found">No domicilio disponible</string>
+    <string name="address_found">Adrees</string>
+    <string name="service_not_available">Servicio no disponible</string>
+    <string name="invalid_lat_long_used">Invalid LAT LON</string>
 </resources>

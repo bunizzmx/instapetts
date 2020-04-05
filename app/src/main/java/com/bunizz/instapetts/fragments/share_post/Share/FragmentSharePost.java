@@ -7,7 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +29,6 @@ import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.listeners.chose_pet_listener;
 import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.services.ImagePostsService;
-import com.bunizz.instapetts.services.UploadsService;
 import com.bunizz.instapetts.utils.dilogs.DialogNoPets;
 import com.bunizz.instapetts.utils.dilogs.DialogShosePet;
 import com.bunizz.instapetts.web.CONST;
@@ -57,6 +58,10 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     PetHelper helper;
     ArrayList<PetBean> pets_cuerrent = new ArrayList<>();
 
+    @BindView(R.id.check_location)
+    Switch check_location;
+
+
 
     @OnClick(R.id.share_post_pet)
     void share_post_pet()
@@ -80,6 +85,8 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
                     post.setDate_post(App.formatDateGMT(new Date()));
                     post.setTarget("NEW");
                     post.setId_pet(id_pet);
+                    if(App.read(PREFERENCES.ALLOW_LOCATION_POST,true))
+                    post.setAddress(App.read(PREFERENCES.ADDRESS_USER,"INVALID"));
                     post.setId_usuario(App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
                     presenter.sendPost(post);
                 }
@@ -155,7 +162,18 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         ButterKnife.bind(this, view);
         list_image_selected.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
         list_image_selected.setAdapter(adapter);
-       // presenter.getLocation();
+        if(App.read(PREFERENCES.ALLOW_LOCATION_POST,true))
+            check_location.setChecked(true);
+        else
+            check_location.setChecked(false);
+
+        check_location.setOnCheckedChangeListener((compoundButton, b) -> {
+            if(b)
+                App.write(PREFERENCES.ALLOW_LOCATION_POST,true);
+            else
+                App.write(PREFERENCES.ALLOW_LOCATION_POST,false);
+        });
+        presenter.getLocation();
     }
 
     @Override
@@ -171,8 +189,9 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     }
 
     @Override
-    public void showLocation(String corrdenadas) {
-        location_user.setText(corrdenadas);
+    public void showLocation(String address) {
+        if(!address.equals("INVALID"))
+        location_user.setText(address);
     }
 
     private void beginUploadInBackground(ArrayList<String> filePaths) {

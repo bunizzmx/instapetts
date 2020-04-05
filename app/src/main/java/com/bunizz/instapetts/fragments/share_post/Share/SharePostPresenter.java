@@ -5,8 +5,10 @@ import android.content.Context;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.beans.AutenticateBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
 import com.bunizz.instapetts.web.responses.ResponsePost;
@@ -71,5 +73,10 @@ public class SharePostPresenter implements SharePostContract.Presenter {
                     }
                 });
 
+    }
+
+    @Override
+    public void getLocation() {
+        mView.showLocation(App.read(PREFERENCES.ADDRESS_USER,"INVALID"));
     }
 }

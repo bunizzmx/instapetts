@@ -127,6 +127,15 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             default:
                 FeedHolder f = (FeedHolder)holder;
                 PostBean data_parsed = (PostBean) data.get(position);
+
+                if(!data_parsed.getAddress().equals("INVALID")) {
+                    f.addres_post.setVisibility(View.VISIBLE);
+                    f.addres_post.setText(data_parsed.getAddress());
+                }
+                else
+                    f.addres_post.setVisibility(View.GONE);
+
+
                 if(is_multiple(data_parsed.getUrls_posts())) {
                     f.progres_image.setVisibility(View.GONE);
                     f.root_multiple_image.setVisibility(View.VISIBLE);
@@ -243,6 +252,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         DoubleTapLikeView layout_double_tap_like;
         ImageView save_posts;
         ProgressBar progres_image;
+        TextView addres_post;
         public FeedHolder(@NonNull View itemView) {
             super(itemView);
             root_preview_perfil_click = itemView.findViewById(R.id.root_preview_perfil_click);
@@ -261,6 +271,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             name_user_posts = itemView.findViewById(R.id.name_user_posts);
             num_likes_posts = itemView.findViewById(R.id.num_likes_posts);
             open_options_posts = itemView.findViewById(R.id.open_options_posts);
+            addres_post = itemView.findViewById(R.id.addres_post);
         }
     }
 

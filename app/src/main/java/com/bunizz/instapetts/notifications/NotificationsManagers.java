@@ -1,5 +1,6 @@
 package com.bunizz.instapetts.notifications;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -33,7 +34,7 @@ public class NotificationsManagers extends FirebaseMessagingService {
         String title = remoteMessage.getNotification().getTitle();
         String body =  remoteMessage.getNotification().getBody();
         String type_notification = remoteMessage.getData().get("type_notification");
-        String url_resource = remoteMessage.getData().get("url_resource");
+        String url_resource = remoteMessage.getData().get("url_foto");
         String id_usuario = remoteMessage.getData().get("id_usuario");
 
         Intent intent = new Intent(this, NotificationsService.class);
@@ -79,8 +80,9 @@ public class NotificationsManagers extends FirebaseMessagingService {
                 .setContentText(body)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
+                .setVibrate(new long[] { 1000, 1000})
                 .setContentIntent(pendingIntent);
-
+         mBuilder.setDefaults( Notification.DEFAULT_VIBRATE);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
         stackBuilder.addNextIntent(intent);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(

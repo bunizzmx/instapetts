@@ -127,4 +127,12 @@ public class ProfileUserPresenter implements   ProfileUserContract.Presenter {
                         })
         );
     }
+
+    @Override
+    public void follow(int id_user, boolean follow) { }
+
+    @Override
+    public boolean is_user_followed(int id_user) {
+        return false;
+    }
 }

@@ -8,6 +8,7 @@ import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.web.parameters.CatalogoParameters;
+import com.bunizz.instapetts.web.parameters.FollowParameter;
 import com.bunizz.instapetts.web.parameters.ParameterSearching;
 import com.bunizz.instapetts.web.parameters.PostFriendsBean;
 import com.bunizz.instapetts.web.parameters.PostLikeBean;
@@ -40,6 +41,9 @@ public interface WebServices {
     //USERS //////////////////////////////////////////////////////////
     @POST("test/newusers")
     Single<SimpleResponseLogin> newUser(@Body UserBean user);
+
+    @POST("test/newusers")
+    Single<SimpleResponse> update_token(@Body UserBean user);
 
     @POST("test/getinfouser")
     Single<ResponseProfileUser> getInfoUser(@Body UserBean user);
@@ -92,5 +96,10 @@ public interface WebServices {
 
     @POST("test/newstories")
     Single<SimpleResponse> newstory(@Body HistoriesBean historiesBean );
+
+
+    @POST("test/follows")
+    Single<SimpleResponse> follows(@Body FollowParameter followParameter );
+
 
 }

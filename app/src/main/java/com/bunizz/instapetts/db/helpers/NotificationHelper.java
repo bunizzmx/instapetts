@@ -71,7 +71,6 @@ public class NotificationHelper extends GenericHelper {
                 cursor.close();
             }
         }
-        Log.e("RESULTADOS_BUSQUEDA","HISTORIES-->" + notifications.size());
         return notifications;
     }
 }

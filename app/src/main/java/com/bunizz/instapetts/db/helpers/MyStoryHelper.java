@@ -76,7 +76,7 @@ public class MyStoryHelper extends GenericHelper {
                 cursor.close();
             }
         }
-        Log.e("RESULTADOS_BUSQUEDA","HISTORIES-->" + histories.size());
+
         return histories;
     }
 }

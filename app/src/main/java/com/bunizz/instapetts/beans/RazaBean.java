@@ -24,10 +24,11 @@ public class RazaBean {
     public RazaBean() {
     }
 
-    public RazaBean(String name_raza_esp, String name_raza_eng, int id_type_pet) {
+    public RazaBean(String name_raza_esp, String name_raza_eng, int id_type_pet,String url_photo) {
         this.name_raza_esp = name_raza_esp;
         this.name_raza_eng = name_raza_eng;
         this.id_type_pet = id_type_pet;
+        this.url_photo =url_photo;
     }
 
     public String getName_raza_esp() {

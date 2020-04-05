@@ -10,6 +10,8 @@ public interface ProfileUserContract {
     interface Presenter {
         void getInfoUser(UserBean user);
         void getPostUser(boolean one_user,int id_one);
+        void follow(int id_user,boolean follow);
+        boolean is_user_followed(int id_user);
     }
 
     interface View{
@@ -17,5 +19,6 @@ public interface ProfileUserContract {
         void showPostUser(ArrayList<PostBean> posts);
         void Error();
         void ErrorPostUsers();
+        void successFollow(boolean follow,int id_user);
     }
 }

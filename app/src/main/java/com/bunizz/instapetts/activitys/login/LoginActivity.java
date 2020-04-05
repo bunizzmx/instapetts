@@ -32,7 +32,8 @@ import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.login_listener;
 import com.bunizz.instapetts.listeners.uploads;
-import com.bunizz.instapetts.services.UploadsService;
+import com.bunizz.instapetts.services.DownloadsService;
+import com.bunizz.instapetts.services.ImageService;
 import com.bunizz.instapetts.utils.AndroidIdentifier;
 import com.bunizz.instapetts.utils.dilogs.DialogLoanding;
 import com.bunizz.instapetts.web.CONST;
@@ -81,12 +82,14 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     static final int NEW_PHOTO_UPLOADED= 3;
     RxPermissions rxPermissions ;
     DialogLoanding dialogLoanding ;
+    Intent intent_service ;
     @SuppressLint("CheckResult")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         changeStatusBarColor(R.color.white);
+        intent_service = new Intent(this, DownloadsService.class);
         dialogLoanding = new DialogLoanding(this);
         stack_sigin = new Stack<>();
         stack_main_login = new Stack<>();
@@ -391,9 +394,9 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     void generate_user_bean(){
         dialogLoanding.show();
         UserBean userBean = new UserBean();
-        userBean.setDescripcion("");
-        userBean.setIds_pets("");
-        userBean.setName_user("");
+        userBean.setDescripcion("-");
+        userBean.setIds_pets("-");
+        userBean.setName_user("-");
         userBean.setLat(App.read(PREFERENCES.LAT,(float)0));
         userBean.setLon(App.read(PREFERENCES.LON,(float)0));
         userBean.setToken(App.read(PREFERENCES.TOKEN,"INVALID"));
@@ -420,6 +423,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     @Override
     public void registerCompleted() {
+           startService(intent_service);
             App.write(IS_LOGUEDD,true);
             Intent i ;
             i = new Intent(LoginActivity.this, Main.class);
@@ -429,7 +433,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     @Override
     public void loginCompleted(UserBean userBean) {
-        Log.e("KKKKJSKJS","-->" + userBean.getPhoto_user_thumbh());
+        startService(intent_service);
         App.write(PREFERENCES.FOTO_PROFILE_USER,userBean.getPhoto_user());
         App.write(PREFERENCES.FOTO_PROFILE_USER_THUMBH,userBean.getPhoto_user_thumbh());
         App.write(PREFERENCES.DESCRIPCCION,userBean.getDescripcion());
@@ -438,7 +442,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         App.write(IS_LOGUEDD,true);
         Intent i ;
         i = new Intent(LoginActivity.this, Main.class);
-        i.putExtra("DOWNLOADS_INFO",1);
+        i.putExtra(BUNDLES.DOWNLOADS_INFO,1);
         startActivity(i);
     }
 
@@ -449,15 +453,20 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     @Override
     public void isFirstUser(int id_from_web) {
-        Log.e("IS_DKJKD","kskdsl");
         App.write(PREFERENCES.ID_USER_FROM_WEB,id_from_web);
         App.write(PREFERENCES.IS_FIRST_USER,true);
+        try {
+            dialogLoanding.dismiss();
+        }catch (Exception e){}
         changeOfInstance(FragmentElement.INSTANCE_NEW_USER_CONFIG);
     }
 
     @Override
     public void UpdateFirsUserCompleted() {
-        Log.e("FIRST_COMPLETED","true");
+        startService(intent_service);
+        try {
+            dialogLoanding.dismiss();
+        }catch (Exception e){}
         App.write(IS_LOGUEDD,true);
         Intent i ;
         i = new Intent(LoginActivity.this, Main.class);
@@ -494,10 +503,10 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         upDateUserBean();
         ArrayList<String> uri_profile = new ArrayList<>();
         uri_profile.add(bundle.getString(BUNDLES.PHOTO_LOCAL));
-        Intent intent = new Intent(LoginActivity.this, UploadsService.class);
-        intent.putStringArrayListExtra(UploadsService.INTENT_KEY_NAME, uri_profile);
+        Intent intent = new Intent(LoginActivity.this, ImageService.class);
+        intent.putStringArrayListExtra(ImageService.INTENT_KEY_NAME, uri_profile);
         intent.putExtra(BUNDLES.NOTIFICATION_TIPE,1);
-        intent.putExtra(UploadsService.INTENT_TRANSFER_OPERATION, UploadsService.TRANSFER_OPERATION_UPLOAD);
+        intent.putExtra(ImageService.INTENT_TRANSFER_OPERATION, ImageService.TRANSFER_OPERATION_UPLOAD);
         startService(intent);
     }
 
@@ -512,8 +521,12 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         userBean.setDescripcion(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
         userBean.setName_user(App.read(PREFERENCES.NAME_USER,"INVALID"));
         userBean.setPhoto_user(App.read(PREFERENCES.FOTO_PROFILE_USER,"INVALID"));
+        userBean.setPhoto_user_thumbh(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
         userBean.setUuid(App.read(PREFERENCES.UUID,"INVALID"));
         userBean.setTarget("UPDATE");
+        try {
+            dialogLoanding.show();
+        }catch (Exception e){}
         presenter.updateUser(userBean);
     }
 

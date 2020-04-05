@@ -5,8 +5,14 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -53,12 +59,17 @@ import com.bunizz.instapetts.listeners.logout_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.open_side_menu;
 import com.bunizz.instapetts.listeners.uploads;
+import com.bunizz.instapetts.services.FetchAddressIntentService;
 import com.bunizz.instapetts.services.ImageService;
-import com.bunizz.instapetts.services.UploadsService;
 import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
 import com.bunizz.instapetts.utils.dilogs.DialogLogout;
 import com.bunizz.instapetts.utils.slidemenu.OnSlideChangedListener;
 import com.bunizz.instapetts.utils.slidemenu.SlideMenuLayout;
+import com.bunizz.instapetts.utils.target.TapTarget;
+import com.bunizz.instapetts.utils.target.TapTargetView;
+import com.bunizz.instapetts.web.CONST;
+import com.google.android.gms.location.LocationServices;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import org.parceler.Parcels;
@@ -147,13 +158,15 @@ public class Main extends AppCompatActivity implements change_instance,
     boolean IS_SHEET_OPEN =false;
     boolean SIDE_OPEN=false;
 
+    String addressOutput="";
+
+
+    private AddressResultReceiver resultReceiver;
+
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tab_profile_pet)
     void tab_profile_pet() {
-       /* Log.e("CHANGE_INSTANCE", "profile pet");
-
-         changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET);*/
         changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET,null);
         repaint_nav(R.id.tab_profile_pet);
     }
@@ -266,8 +279,6 @@ public class Main extends AppCompatActivity implements change_instance,
 
 
 
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -279,7 +290,7 @@ public class Main extends AppCompatActivity implements change_instance,
         Bundle b = iin.getExtras();
         if(b!=null)
         {
-            int res  = b.getInt("DOWNLOADS_INFO");
+            int res  = b.getInt(BUNDLES.DOWNLOADS_INFO);
             if(res == 1){
                 petHelper = new PetHelper(this);
                 DOWNLOAD_INFO = true;
@@ -322,15 +333,6 @@ public class Main extends AppCompatActivity implements change_instance,
         app_name_user.setText("@" + App.read(PREFERENCES.NAME_USER,"INVALID"));
         version_app.setText("Version : " + BuildConfig.VERSION_NAME);
 
-       /* int currentNightMode = configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK;
-        switch (currentNightMode) {
-            case Configuration.UI_MODE_NIGHT_NO:
-                // Night mode is not active, we're using the light theme
-                break;
-            case Configuration.UI_MODE_NIGHT_YES:
-                // Night mode is active, we're using dark theme
-                break;
-        }*/
         mainSlideMenu.addOnSlideChangedListener((slideMenu, isLeftSlideOpen, isRightSlideOpen) -> {
 
             if(isRightSlideOpen)
@@ -338,10 +340,30 @@ public class Main extends AppCompatActivity implements change_instance,
             else
                 SIDE_OPEN = false;
         });
+
+        presenter.have_pets();
+        getLocation();
+        resultReceiver = new AddressResultReceiver(new Handler());
+        if (!Geocoder.isPresent()) {
+            Toast.makeText(Main.this,
+                    R.string.no_geocoder_available,
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+        Log.e("LAT_LON","-->" + App.read(PREFERENCES.LAT,0f) + "/" + App.read(PREFERENCES.LON,0f));
+        // Start service and update UI to reflect new location
+        startIntentService();
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
+            String token = instanceIdResult.getToken();
+            UserBean U_TOK = new UserBean();
+            U_TOK.setToken(token);
+            U_TOK.setTarget("TOKEN");
+            U_TOK.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+            presenter.update_token(U_TOK);
+        });
     }
 
     void download_pets(){
-        Log.e("DONLOAD_MY_PETS","si");
         UserBean userBean = new UserBean();
         userBean.setUuid(App.read(PREFERENCES.UUID,"INVALID"));
         userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
@@ -624,16 +646,26 @@ public class Main extends AppCompatActivity implements change_instance,
     @Override
     public void onBackPressed() {
         if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_TIP_DETAIL){
+            repaint_nav(R.id.tap_tips);
             changeOfInstance(FragmentElement.INSTANCE_TIPS,null);
         }
         else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH || mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED){
-            changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS,null);
+           if(mOldFragment.getInstanceType()==FragmentElement.INSTANCE_PROFILE_PET) {
+               repaint_nav(R.id.tab_profile_pet);
+               changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null);
+           }else{
+               changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null);
+           }
+        }
+        else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE && mOldFragment.getInstanceType()== FragmentElement.INSTANCE_GET_POSTS_PUBLICS){
+            changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null);
         }
         else if(IS_SHEET_OPEN || SIDE_OPEN){
             IS_SHEET_OPEN= false;
             mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
             mainSlideMenu.closeRightSlide();
         }else{
+            repaint_nav(R.id.tab_feed);
             changeOfInstance(FragmentElement.INSTANCE_FEED,null);
         }
 
@@ -784,9 +816,9 @@ public class Main extends AppCompatActivity implements change_instance,
         uri_profile.add(bundle.getString(BUNDLES.PHOTO_LOCAL));
         if(!bundle.getString(BUNDLES.PHOTO_LOCAL).equals("INVALID")){
             Intent intent = new Intent(Main.this, ImageService.class);
-            intent.putStringArrayListExtra(UploadsService.INTENT_KEY_NAME, uri_profile);
+            intent.putStringArrayListExtra(ImageService.INTENT_KEY_NAME, uri_profile);
             intent.putExtra(BUNDLES.NOTIFICATION_TIPE,1);
-            intent.putExtra(UploadsService.INTENT_TRANSFER_OPERATION, UploadsService.TRANSFER_OPERATION_UPLOAD);
+            intent.putExtra(ImageService.INTENT_TRANSFER_OPERATION, ImageService.TRANSFER_OPERATION_UPLOAD);
             startService(intent);
         }else{
             Log.e("NO_MODIFICO_FOTO","xxxx");
@@ -857,6 +889,36 @@ public class Main extends AppCompatActivity implements change_instance,
         }
     }
 
+    @Override
+    public void havePetsResult(boolean result) {
+        if(!result) {
+            final SpannableString spannedDesc = new SpannableString("Que tal una primera publicacion de tu mascota?");
+            TapTargetView.showFor(this, TapTarget.forView(findViewById(R.id.tab_profile_pet), "Hey que tal!!", spannedDesc)
+                    .cancelable(false)
+                    .drawShadow(true)
+                    .tintTarget(false), new TapTargetView.Listener() {
+                @SuppressLint("CheckResult")
+                @Override
+                public void onTargetClick(TapTargetView view) {
+                    super.onTargetClick(view);
+                    changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null);
+                    repaint_nav(R.id.tab_profile_pet);
+                }
+
+                @Override
+                public void onOuterCircleClick(TapTargetView view) {
+                    super.onOuterCircleClick(view);
+                    Toast.makeText(view.getContext(), "You clicked the outer circle!", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
+                    Log.d("TapTargetViewSample", "You dismissed me :(");
+                }
+            });
+        }
+    }
+
     @SuppressLint("CheckResult")
     @Override
     public void open() {
@@ -891,8 +953,11 @@ public class Main extends AppCompatActivity implements change_instance,
     }
 
     @Override
-    public void followUser(UserBean userBeanx) {
-       presenter.followUser(userBeanx);
+    public void followUser(UserBean userBeanx,boolean follow_unfollow) {
+        if(follow_unfollow)
+            presenter.followUser(userBeanx);
+        else
+            presenter.unfollowUser(userBeanx.getUuid());
     }
 
     @Override
@@ -913,4 +978,114 @@ public class Main extends AppCompatActivity implements change_instance,
             intent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
             startActivity(intent);
     }
+
+
+
+
+   @Override
+   public void open_target_post(){
+       final SpannableString spannedDesc = new SpannableString("Configura a tu mascota para asignarle un perfil.");
+       TapTargetView.showFor(this, TapTarget.forView(findViewById(R.id.tab_add_image), "Agrega una mascota", spannedDesc)
+               .cancelable(false)
+               .drawShadow(true)
+               .tintTarget(false), new TapTargetView.Listener() {
+           @SuppressLint("CheckResult")
+           @Override
+           public void onTargetClick(TapTargetView view) {
+               super.onTargetClick(view);
+               rxPermissions
+                       .request(Manifest.permission.READ_EXTERNAL_STORAGE,
+                               Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                               Manifest.permission.CAMERA)
+                       .subscribe(granted -> {
+                           if (granted) {
+                               App.write(PREFERENCES.FROM_PICKER,"POST");
+                               Intent i = new Intent(Main.this, ShareActivity.class);
+                               startActivityForResult(i,NEW_POST_REQUEST);
+                           } else {
+                               App.getInstance().show_dialog_permision(Main.this,getResources().getString(R.string.permision_storage),
+                                       getResources().getString(R.string.permision_storage_body),0);
+                           }
+                       });
+           }
+
+           @Override
+           public void onOuterCircleClick(TapTargetView view) {
+               super.onOuterCircleClick(view);
+           }
+
+           @Override
+           public void onTargetDismissed(TapTargetView view, boolean userInitiated) { }
+       });
+    }
+
+
+    protected void startIntentService() {
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+        intent.putExtra(CONST.RECEIVER, resultReceiver);
+        intent.putExtra(CONST.LOCATION_DATA_EXTRA_LON, App.read(PREFERENCES.LON,0f));
+        intent.putExtra(CONST.LOCATION_DATA_EXTRA_LAT, App.read(PREFERENCES.LAT,0f));
+        startService(intent);
+    }
+
+    class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+           String DOM_CUT="";
+            if (resultData == null) {
+                return;
+            }
+
+            // Display the address string
+            // or an error message sent from the intent service.
+            addressOutput = resultData.getString(CONST.RESULT_DATA_KEY);
+            if (addressOutput == null) {
+                addressOutput = "";
+            }
+            String splits_addres[];
+            splits_addres = addressOutput.split(",");
+            if(splits_addres.length >=3){
+                DOM_CUT = splits_addres [splits_addres.length-3] + " " + splits_addres[splits_addres.length-2] + " " + splits_addres[splits_addres.length-1] ;
+            }else if(splits_addres.length == 2){
+                DOM_CUT = splits_addres[splits_addres.length-2] + " " + splits_addres[splits_addres.length-1] ;
+            }
+            else if(splits_addres.length == 1){
+                DOM_CUT = splits_addres[splits_addres.length-1] ;
+            }
+            Log.e("ADDRES","OUTPUT: " + addressOutput);
+            Log.e("ADDRES","CUT: " + DOM_CUT);
+            App.write(PREFERENCES.ADDRESS_USER,DOM_CUT);
+            // Show a toast message if an address was found.
+            if (resultCode == CONST.SUCCESS_RESULT) {
+                Log.e("ADDRES","ENCONTRADO");
+            }
+
+        }
+    }
+
+
+    @SuppressLint("CheckResult")
+    void getLocation(){
+        rxPermissions
+                .request(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                .subscribe(granted -> {
+                    if (granted) {
+                        LocationServices.getFusedLocationProviderClient(Main.this).getLastLocation().addOnSuccessListener(location -> {
+                            if(location!=null){
+                                Log.e("LOCALIZACION","-->" + location.getLatitude()  + "/" + location.getLongitude());
+                                if(location!=null){
+                                    App.write(PREFERENCES.LAT,(float)location.getLatitude());
+                                    App.write(PREFERENCES.LON,(float)location.getLongitude());
+                                }
+                            }
+                        });
+                    }
+                });
+    }
+
 }

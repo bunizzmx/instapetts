@@ -68,7 +68,7 @@ public class PostPublicsSavedPresenter implements   PostPublicsSavedContract.Pre
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-
+                      mView.Error();
                     }
                 });
     }
