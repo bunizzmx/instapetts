@@ -10,12 +10,14 @@ public interface BUNDLES {
     String PATH_SELECTED = "PATH_SELECTED";
     String URI_FOTO = "URI_FOTO";
     String NOTIFICATION_TIPE = "NOTIFICATION_TIPE";
+    String POST_TYPE="POST_TYPE";
 
 
     String TITLE = "TITLE";
     String BODY = "BODY";
     String TYPE_NOTIFICACION = "TYPE_NOTIFICACION";
     String ID_USUARIO = "ID_USUARIO";
+    String NAME_USUARIO = "NAME_USUARIO";
     String URL_RESOURCE = "URL_RESOURCE";
 
 

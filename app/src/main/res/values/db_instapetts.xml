@@ -2,7 +2,7 @@
 <resources>
     <!-- Database name:FC version:1 -->
     <string name="table_historias_vistas" translatable="false">CREATE TABLE IF NOT EXISTS histories_views (id INTEGER AUTO INCREMENT PRIMARY KEY , id_history TEXT, visto INT(2),num_fotos INT(2))</string>
-    <string name="histories" translatable="false">CREATE TABLE IF NOT EXISTS histories (id INTEGER AUTO INCREMENT PRIMARY KEY , id_history TEXT, fecha TEXT,nombre_pet TEXT,id_pet TEXT,id_propietary TEXT,uris_photos TEXT)</string>
+    <string name="histories" translatable="false">CREATE TABLE IF NOT EXISTS histories (id INTEGER AUTO INCREMENT PRIMARY KEY , id_history TEXT, fecha TEXT,nombre_pet TEXT,id_pet TEXT,id_propietary TEXT,uri_photo TEXT,uri_perfil TEXT)</string>
     <string name="pets_table" translatable="false">CREATE TABLE IF NOT EXISTS pets (id INTEGER AUTO INCREMENT PRIMARY KEY , id_pet TEXT, name_pet TEXT,id_propietary int,name_propietary TEXT,raza TEXT,peso TEXT,genero TEXT,
     descripcion TEXT,edad TEXT,rating INT,type_pet INT,url_foto TEXT,url_photo_tumbh TEXT)</string>
     <string name="propietary" translatable="false">CREATE TABLE IF NOT EXISTS propietary (id INTEGER AUTO INCREMENT PRIMARY KEY ,id_propietary TEXT,name_propietary TEXT,

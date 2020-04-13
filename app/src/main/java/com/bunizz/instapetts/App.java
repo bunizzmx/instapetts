@@ -33,6 +33,10 @@ import java.util.Locale;
 
 import androidx.annotation.RequiresApi;
 
+import androidx.core.provider.FontRequest;
+import androidx.emoji.bundled.BundledEmojiCompatConfig;
+import androidx.emoji.text.EmojiCompat;
+import androidx.emoji.text.FontRequestEmojiCompatConfig;
 import iknow.android.utils.BaseUtils;
 
 
@@ -60,6 +64,9 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         initTypeface();
+        EmojiCompat.Config config = new BundledEmojiCompatConfig(this)
+                .setReplaceAll(true);
+        EmojiCompat.init(config);
         SQLiteDatabase.loadLibs(getApplicationContext());
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -400,6 +407,10 @@ public class App extends Application {
     public String  make_uri_bucket_posts(String URI){
         return CONST.BASE_URL_BUCKET_FIRESTORE + "instapetts-posts/o/" + read(PREFERENCES.UUID,"INVALID") +"%2FPOSTS%2F"+ URI +
                 "?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
+    }
+
+    public String  make_uri_video_hls(String URI){
+        return CONST.BASE_URL_HLS_VIDEO  + URI.replace(".mp4","") + "video_640_640.m3u8";
     }
 
 

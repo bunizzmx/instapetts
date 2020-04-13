@@ -65,6 +65,7 @@ public class DialogShosePet extends BaseAlertDialog{
             @Override
             public void chose(String url_foto, int id_pet,String name_pet) {
                 if(listener!=null){
+                    dismiss();
                     listener.chose(url_foto,id_pet,name_pet);
                 }
             }

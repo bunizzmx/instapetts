@@ -10,6 +10,7 @@ import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.db.GenericHelper;
 
 import net.sqlcipher.database.SQLiteConstraintException;
+import net.sqlcipher.database.SQLiteDatabase;
 
 import java.util.ArrayList;
 
@@ -106,6 +107,15 @@ public class FollowsHelper extends GenericHelper {
             }
         }
         return ids_users;
+    }
+
+    public void cleanTable() {
+        SQLiteDatabase writableDatabase = getWritableDatabase();
+        try {
+            writableDatabase.delete(TABLE_NAME, null, null);
+        } catch (SQLiteConstraintException ex) {
+            ex.printStackTrace();
+        }
     }
 }
 

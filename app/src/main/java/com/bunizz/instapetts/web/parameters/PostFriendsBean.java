@@ -14,6 +14,10 @@ public class PostFriendsBean {
     @Expose
     ArrayList<Integer>ids;
 
+    @SerializedName("ids_h")
+    @Expose
+    ArrayList<Integer>ids_h;
+
     @SerializedName("target")
     @Expose
     String target;
@@ -46,6 +50,14 @@ public class PostFriendsBean {
 
     public void setIds(ArrayList<Integer> ids) {
         this.ids = ids;
+    }
+
+    public ArrayList<Integer> getIds_h() {
+        return ids_h;
+    }
+
+    public void setIds_h(ArrayList<Integer> ids_h) {
+        this.ids_h = ids_h;
     }
 
     public String getTarget() {

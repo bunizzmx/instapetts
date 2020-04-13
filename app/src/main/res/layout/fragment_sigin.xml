@@ -5,10 +5,9 @@
     android:background="#EFEFEF"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <ImageView
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="40dp"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:layout_margin="30dp"
+        android:layout_marginLeft="10dp"
         android:src="@drawable/ic_hand_7"
         android:layout_width="140dp"
         android:layout_height="140dp"/>
@@ -55,17 +54,23 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <EditText
+        <RelativeLayout
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_gravity="center_vertical"
-            android:fontFamily="@font/avenir_b"
-            android:inputType="textEmailAddress"
-            android:hint="Correo"
-            android:padding="10dp"
-            android:background="#00FFFFFF"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/email_signin"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/avenir_b"
+                android:inputType="textEmailAddress"
+                android:hint="Correo"
+                android:padding="10dp"
+                android:background="#00FFFFFF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
         <RelativeLayout
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
@@ -74,28 +79,54 @@
             android:background="@drawable/corner_line"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"/>
-        <EditText
-            android:layout_marginTop="10dp"
+        <RelativeLayout
+            android:paddingRight="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_gravity="center_vertical"
-            android:fontFamily="@font/avenir_b"
-            android:inputType="textPassword"
-            android:hint="Contraseña"
-            android:padding="10dp"
-            android:background="#00FFFFFF"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/see_password"
+                android:id="@+id/password_signin"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/avenir_b"
+                android:inputType="textPassword"
+                android:hint="Contraseña"
+                android:padding="10dp"
+                android:background="#00FFFFFF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:layout_centerVertical="true"
+                android:id="@+id/see_password"
+                android:layout_alignParentRight="true"
+                android:layout_margin="5dp"
+                android:src="@drawable/ic_invisible"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+        </RelativeLayout>
+
         <RelativeLayout
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:layout_marginBottom="20dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/corner_line"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"/>
+        <TextView
+            android:id="@+id/label_check_password_first"
+            android:textSize="10dp"
+            style="@style/FontNormalTitlePrimary"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <EditText
+            android:id="@+id/password_signin_confirm"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
@@ -110,11 +141,19 @@
         <RelativeLayout
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:layout_marginBottom="20dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/corner_line"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"/>
+        <TextView
+            android:id="@+id/label_check_password"
+            android:textSize="10dp"
+            style="@style/FontNormalTitlePrimary"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <Button
             android:id="@+id/button_signin"

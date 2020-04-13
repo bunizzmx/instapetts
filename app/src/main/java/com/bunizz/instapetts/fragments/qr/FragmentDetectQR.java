@@ -13,12 +13,18 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
-import com.bunizz.instapetts.utils.dilogs.DialogQrResult;
-import com.bunizz.instapetts.utils.qr.demo.QRDataListener;
-import com.bunizz.instapetts.utils.qr.demo.QREader;
+
+import com.bunizz.instapetts.utils.qr2.CodeScanner;
+import com.bunizz.instapetts.utils.qr2.CodeScannerView;
+import com.bunizz.instapetts.utils.qr2.DecodeCallback;
+import com.google.zxing.Result;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,8 +37,10 @@ import static com.bunizz.instapetts.fragments.FragmentElement.INSTANCE_PREVIEW_P
 public class FragmentDetectQR extends Fragment implements Callback {
     private boolean mHasSurface;
 
-    @BindView(R.id.camera_view)
-    SurfaceView camera_view;
+    @BindView(R.id.scanner_view)
+    CodeScannerView scannerView;
+
+    CodeScanner mCodeScanner ;
 
     changue_fragment_parameters_listener listener;
 
@@ -44,7 +52,7 @@ public class FragmentDetectQR extends Fragment implements Callback {
 
 
     private Context mApplicationContext;
-    private QREader qrEader;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,18 +78,31 @@ public class FragmentDetectQR extends Fragment implements Callback {
     }
 
     void setupQREader() {
-        // Init QREader
-        // ------------
-        qrEader = new QREader.Builder(getContext(), camera_view, data -> {
-            Log.e("QREader", "Value : " + data);
-            listener.change_fragment_parameter(INSTANCE_PREVIEW_PROFILE,null);
-            qrEader.stop();
-
-        }).facing(QREader.BACK_CAM)
-                .enableAutofocus(true)
-                .height(camera_view.getHeight())
-                .width(camera_view.getWidth())
-                .build();
+        mCodeScanner = new CodeScanner(getContext(), scannerView);
+        mCodeScanner.setDecodeCallback(new DecodeCallback() {
+            @Override
+            public void onDecoded(@NonNull final Result result) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(result.getText().toString().contains("instapetts")) {
+                            String splits[] = result.getText().toString().split("/");
+                            if (splits.length == 3) {
+                                Bundle b = new Bundle();
+                                b.putString(BUNDLES.UUID,splits[1]);
+                                b.putInt(BUNDLES.ID_USUARIO,Integer.valueOf(splits[2]));
+                                listener.change_fragment_parameter(INSTANCE_PREVIEW_PROFILE, b);
+                            }
+                        }else{
+                            Toast.makeText(getContext(),"No es un QR de Instapetts",Toast.LENGTH_LONG).show();
+                            App.getInstance().vibrate();
+                            mCodeScanner.startPreview();
+                        }
+                    }
+                });
+            }
+        });
+        mCodeScanner.startPreview();
     }
 
 
@@ -109,7 +130,13 @@ public class FragmentDetectQR extends Fragment implements Callback {
     @Override
     public void onResume() {
         super.onResume();
-        qrEader.initAndStart(camera_view);
+        mCodeScanner.startPreview();
+    }
+
+    @Override
+    public void onPause() {
+        mCodeScanner.releaseResources();
+        super.onPause();
     }
 
     @Override

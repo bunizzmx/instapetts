@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.fragments.FragmentElement;
@@ -15,40 +17,48 @@ import com.bunizz.instapetts.listeners.login_listener;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainLogin extends Fragment implements  MainLoginContract.View{
 
     change_instance listener;
-    MainLoginPresenter presenter;
     login_listener listener_login;
+
+    @BindView(R.id.mail_user)
+    EditText mail_user;
+
+    @BindView(R.id.password_email)
+    EditText password_email;
+
+
+
 
     @OnClick(R.id.login_with_facebook)
     void login_with_facebook()
     {
         listener_login.loginWithFacebook();
-       // listener.change(FragmentElement.INSTANCE_LOGIN);
     }
 
     @OnClick(R.id.login_with_gmail)
     void login_with_gmail()
     {
         listener_login.loginWithGmail();
-       // listener.change(FragmentElement.INSTANCE_SIGIN);
     }
+
+    @OnClick(R.id.login_user_email)
+    void login_user_email()
+    {
+       listener_login.loginWithEmail(mail_user.getText().toString(),password_email.getText().toString());
+    }
+
 
     @OnClick(R.id.change_to_create_account)
     void change_to_create_account()
     {
        listener.change(FragmentElement.INSTANCE_SIGIN);
     }
-
-  /*  @OnClick(R.id.change_to_login)
-    void change_to_login()
-    {
-        listener.change(FragmentElement.INSTANCE_LOGIN);
-    }*/
 
     public static MainLogin newInstance() {
         return new MainLogin();
@@ -57,7 +67,6 @@ public class MainLogin extends Fragment implements  MainLoginContract.View{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new MainLoginPresenter(this,getContext());
     }
 
     @Nullable

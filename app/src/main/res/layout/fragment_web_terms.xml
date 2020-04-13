@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
+        android:id="@+id/root_toolbar_web"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="50dp">
@@ -28,7 +29,16 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
 <WebView
+    android:layout_below="@+id/root_toolbar_web"
     android:id="@+id/web_instapets"
     android:layout_width="match_parent"
     android:layout_height="match_parent"/>
-</LinearLayout>
+    <com.bunizz.instapetts.utils.loadings.SpinKitView
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/progres_image"
+        style="@style/SpinKitView"
+        android:background="?selectableItemBackgroundBorderless"
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
+</RelativeLayout>

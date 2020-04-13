@@ -2,7 +2,10 @@ package com.bunizz.instapetts.fragments.feed;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,15 +15,22 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.camera_history.CameraHistoryActivity;
 import com.bunizz.instapetts.beans.HistoriesBean;
+import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.PREFERENCES;
@@ -37,9 +47,12 @@ import com.bunizz.instapetts.utils.loadings.SpinKitView;
 import com.bunizz.instapetts.utils.loadings.SpriteFactory;
 import com.bunizz.instapetts.utils.loadings.Style;
 import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
+import com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerView;
 import com.bunizz.instapetts.web.parameters.PostActions;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,14 +60,20 @@ import butterknife.OnClick;
 
 public class FeedFragment extends Fragment implements  FeedContract.View{
 
+    private boolean firstTime = true;
 
+   /* @BindView(R.id.feed_list)
+    RecyclerView feed_list;*/
 
-    @BindView(R.id.feed_list)
-    RecyclerView feed_list;
+    @BindView(R.id.exoPlayerRecyclerView)
+    ExoPlayerRecyclerView mRecyclerView;
+
 
     @BindView(R.id.spin_kit)
     SpinKitView spin_kit;
 
+    @BindView(R.id.root_no_internet)
+    RelativeLayout root_no_internet;
 
 
     changue_fragment_parameters_listener listener;
@@ -62,6 +81,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
 
     @BindView(R.id.refresh_feed)
     SwipeRefreshLayout refresh_feed;
+
     open_camera_histories_listener listener_open_camera_h;
      FollowsHelper followsHelper;
     ArrayList<Object> data = new ArrayList<>();
@@ -98,8 +118,8 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
             HAS_FRIENDS=false;
 
         HistoriesBean my_storie_bean = new HistoriesBean();
-        if(mPresenter.getMyStories().size()>0) {
-            my_storie_bean = mPresenter.getMyStories().get(0);
+        if(mPresenter.getMyStories().getHistories().size()>0) {
+            my_storie_bean = mPresenter.getMyStories();
             data.add(my_storie_bean);
         }else {
             data.add(new HistoriesBean());
@@ -172,10 +192,26 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        feed_list.setLayoutManager(new LinearLayoutManager(getContext()));
-        feed_list.setAdapter(feedAdapter);
+
+        /*feed_list.setLayoutManager(new LinearLayoutManager(getContext()));
+        feed_list.setAdapter(feedAdapter);*/
+        feedAdapter.setRequestManager(initGlide());
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setAdapter(feedAdapter);
+
         refresh_feed.setOnRefreshListener(() ->{
-           mPresenter.get_feed(false,App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+            root_no_internet.setVisibility(View.GONE);
+            if(followsHelper.getMyFriendsForPost().size()>0)
+                HAS_FRIENDS =true;
+            else
+                HAS_FRIENDS=false;
+
+            if(HAS_FRIENDS){
+                mPresenter.get_feed(false, App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+            }else{
+                mPresenter.geet_feed_recomended(false, App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+            }
         });
         Style style = Style.values()[6];
         Sprite drawable = SpriteFactory.create(style);
@@ -187,8 +223,14 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
             mPresenter.geet_feed_recomended(false, App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         }
 
-    }
 
+
+    }
+    private RequestManager initGlide() {
+        RequestOptions options = new RequestOptions();
+        return Glide.with(this)
+                .setDefaultRequestOptions(options);
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -198,20 +240,38 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     }
 
     @Override
-    public void show_feed(ArrayList<PostBean> data,ArrayList<HistoriesBean> data_stories) {
+    public void show_feed(ArrayList<PostBean> data,ArrayList<IndividualDataPetHistoryBean> data_stories) {
+        ArrayList<IndividualDataPetHistoryBean> story_by_user=new ArrayList<>();
         refresh_feed.setRefreshing(false);
         ArrayList<HistoriesBean> historiesBeans = new ArrayList<>();
         ArrayList<Object> data_object= new ArrayList<>();
-        if(mPresenter.getMyStories().size()>0){
-            historiesBeans.add(mPresenter.getMyStories().get(0));
+        if(mPresenter.getMyStories().getHistories().size()>0){
+            historiesBeans.add(mPresenter.getMyStories());
         }else{
             historiesBeans.add(new HistoriesBean());
         }
         if(data_stories!=null) {
+            Collections.sort(data_stories);
+            for(int i =0;i<data_stories.size();i++){
+               if(i>1){
+                  if(data_stories.get(i).getId_user() == data_stories.get(i - 1).getId_user()){
+                      story_by_user.add(data_stories.get(i));
+                  }else{
+                      historiesBeans.add(new HistoriesBean(
+                              data_stories.get(i - 1).getName_user(),
+                              data_stories.get(i - 1).getId_user(),
+                              data_stories.get(i - 1).getPhoto_user(),
+                              story_by_user));
+                      story_by_user.clear();
+                  }
+               }else{
+                   story_by_user.add(data_stories.get(0));
+               }
+            }
             spin_kit.setVisibility(View.GONE);
-            historiesBeans.addAll(data_stories);
             data_object.add(new HistoriesBean());
             data_object.addAll(data);
+            mRecyclerView.setMediaObjects(data_object);
         }
         feedAdapter.setHistoriesBeans(historiesBeans);
         feedAdapter.addData(data_object);
@@ -222,8 +282,8 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         refresh_feed.setRefreshing(false);
         spin_kit.setVisibility(View.GONE);
         ArrayList<HistoriesBean> historiesBeans = new ArrayList<>();
-        if(mPresenter.getMyStories().size()>0){
-            historiesBeans.add(mPresenter.getMyStories().get(0));
+        if(mPresenter.getMyStories().getHistories().size()>0){
+            historiesBeans.add(mPresenter.getMyStories());
         }else{
             historiesBeans.add(new HistoriesBean());
         }
@@ -259,6 +319,28 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     @Override
     public void LikeSuccess() {
 
+    }
+
+    @Override
+    public void noInternet() {
+        refresh_feed.setRefreshing(false);
+        spin_kit.setVisibility(View.GONE);
+        root_no_internet.setVisibility(View.VISIBLE);
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(mRecyclerView!=null)
+            mRecyclerView.onPausePlayer();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(mRecyclerView!=null){}
+           // mRecyclerView.releasePlayer();
     }
 }
 

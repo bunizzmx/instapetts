@@ -16,5 +16,6 @@ public interface LoginContract {
         void registerError();
         void isFirstUser(int id_from_web);
         void UpdateFirsUserCompleted();
+
     }
 }

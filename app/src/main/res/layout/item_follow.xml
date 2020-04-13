@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:id="@+id/root_follows_user"
+    android:background="?attr/selectableItemBackground"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_below="@+id/search_recent_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.bunizz.instapetts.utils.ImagenCircular
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/ic_hand_pet_preload"
+            android:layout_marginRight="10dp"
+            android:id="@+id/image_user_follow"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+        <TextView
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/avenir_black"
+            android:textColor="@color/black"
+            android:text="-"
+            android:layout_toRightOf="@+id/image_user_follow"
+            android:id="@+id/name_follow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:text="Dog . PUG"
+            android:textSize="10dp"
+            android:layout_toRightOf="@+id/image_user_follow"
+            android:layout_below="@+id/name_follow"
+            android:id="@+id/name_propietary_pet_searching"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:padding="10dp"
+        android:id="@+id/delete_recent"
+        android:layout_alignParentRight="true"
+        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textSize="10dp"
+            style="@style/FontNormalTitleSecondary"
+            android:text="Dejar de seguir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+
+</RelativeLayout>

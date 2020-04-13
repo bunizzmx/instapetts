@@ -9,11 +9,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.utils.dilogs.DialogPreviewPost;
+import com.bunizz.instapetts.utils.dilogs.DialogPreviewPostVideo;
 
 import java.util.ArrayList;
 
@@ -33,6 +36,8 @@ import androidx.recyclerview.widget.RecyclerView;
             return listener;
         }
 
+        DialogPreviewPost dialogPreviewPost;
+        DialogPreviewPostVideo dialogPreviewPostVideo;
         public void setListener(changue_fragment_parameters_listener listener) {
             this.listener = listener;
         }
@@ -78,8 +83,13 @@ import androidx.recyclerview.widget.RecyclerView;
             h.root_posts_search_item.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    DialogPreviewPost dialogPreviewPost = new DialogPreviewPost(context,data_parsed);
-                    dialogPreviewPost.show();
+                    if(((PostBean) posts.get(position)).getType_post() == 0) {
+                        dialogPreviewPost = new DialogPreviewPost(context, data_parsed);
+                        dialogPreviewPost.show();
+                    }else{
+                        dialogPreviewPostVideo = new DialogPreviewPostVideo(context,data_parsed,initGlide());
+                        dialogPreviewPostVideo.show();
+                    }
                     return false;
                 }
             });
@@ -100,6 +110,12 @@ import androidx.recyclerview.widget.RecyclerView;
                 multiple_images_posts = itemView.findViewById(R.id.multiple_images_posts);
                 root_posts_search_item = itemView.findViewById(R.id.root_posts_search_item);
             }
+        }
+
+        private RequestManager initGlide() {
+            RequestOptions options = new RequestOptions();
+            return Glide.with(context)
+                    .setDefaultRequestOptions(options);
         }
     }
 

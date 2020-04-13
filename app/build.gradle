@@ -12,6 +12,7 @@ android {
         versionCode 1
         versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -101,6 +102,7 @@ dependencies {
 
     implementation "com.google.android.gms:play-services-vision:19.0.0"
 
+    implementation 'com.google.android.exoplayer:exoplayer:2.7.3'
 
     implementation "com.amazonaws:aws-android-sdk-s3:2.16.8"
     implementation("com.amazonaws:aws-android-sdk-mobile-client:2.16.8")
@@ -109,8 +111,13 @@ dependencies {
     //region Parceler
     implementation ('org.parceler:parceler-api:1.1.12')
     annotationProcessor 'org.parceler:parceler:1.1.12'
+    //noinspection GradleCompatible
+    implementation "com.android.support:support-emoji:26.1.0"
+    implementation "com.android.support:support-emoji-bundled:26.1.0"
+    implementation 'com.googlecode.mp4parser:isoparser:1.1.20'
 
-
+    implementation 'com.github.MasayukiSuda:Mp4Composer-android:v0.3.9'
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
 }
 repositories {
     mavenCentral()

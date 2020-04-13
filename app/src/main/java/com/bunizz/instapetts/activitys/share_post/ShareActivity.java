@@ -198,7 +198,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
     private void change_to_crop_video(FragmentElement fragment,Bundle bundle) {
         tabs_camera.setVisibility(View.GONE);
-        changeStatusBarColor(R.color.black);
+        changeStatusBarColor(R.color.white);
         if (fragment != null) {
             mCurrentFragment = fragment;
             mCurrentFragment.getFragment().setArguments(bundle);
@@ -376,7 +376,6 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
 
     public static File get_dir(){
-       String  filename = "perra" + UUID.randomUUID();
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + "Instapetts");
         if (!file.exists()) {
             file.mkdir();
@@ -389,6 +388,9 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
     @Override
     public void onImageProfileUpdated() {
+        Intent intent = new Intent();
+        intent.putExtra("PET_REQUEST","POST_REQUEST");
+        setResult(RESULT_OK,intent);
        finish();
     }
 

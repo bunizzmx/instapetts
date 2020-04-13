@@ -14,5 +14,7 @@ public interface TipsContract {
 
     interface View{
         void showTips(ArrayList<TipsBean> tips_list);
+        void noInternet();
+        void peticionError();
     }
 }

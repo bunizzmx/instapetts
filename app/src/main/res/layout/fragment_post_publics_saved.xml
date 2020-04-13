@@ -44,6 +44,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
         <include layout="@layout/no_data"/>
+        <com.bunizz.instapetts.utils.loadings.SpinKitView
+            android:id="@+id/progres_image"
+            style="@style/SpinKitView"
+            android:background="?selectableItemBackgroundBorderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:padding="10dp" />
     </RelativeLayout>
 
 </LinearLayout>

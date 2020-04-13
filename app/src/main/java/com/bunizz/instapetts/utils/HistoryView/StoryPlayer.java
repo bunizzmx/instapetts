@@ -103,7 +103,13 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
 
     @Override
     public void on_finish() {
-        view_pager_stories.setCurrentItem(CURRENT_ITEM + 1);
+        Log.e("FINISH_STORY","--->" + CURRENT_ITEM + "/" + adapter.getCount());
+        if(!(CURRENT_ITEM + 1 >= adapter.getCount())){
+            view_pager_stories.setCurrentItem(CURRENT_ITEM + 1);
+        }else{
+            finish();
+        }
+
     }
 
 

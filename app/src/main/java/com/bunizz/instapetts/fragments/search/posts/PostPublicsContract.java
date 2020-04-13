@@ -13,6 +13,8 @@ public interface PostPublicsContract {
 
     interface View{
         void showPosts(ArrayList<PostBean> posts);
+        void noInternet();
+        void peticionError();
     }
 
 }

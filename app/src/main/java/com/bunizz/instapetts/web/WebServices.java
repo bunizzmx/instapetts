@@ -4,6 +4,7 @@ import android.provider.ContactsContract;
 
 import com.bunizz.instapetts.beans.AutenticateBean;
 import com.bunizz.instapetts.beans.HistoriesBean;
+import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
@@ -14,6 +15,7 @@ import com.bunizz.instapetts.web.parameters.PostFriendsBean;
 import com.bunizz.instapetts.web.parameters.PostLikeBean;
 import com.bunizz.instapetts.web.responses.PetsResponse;
 import com.bunizz.instapetts.web.responses.ResponseCatalogo;
+import com.bunizz.instapetts.web.responses.ResponseCodesCountries;
 import com.bunizz.instapetts.web.responses.ResponsePost;
 import com.bunizz.instapetts.web.responses.ResponseProfileUser;
 import com.bunizz.instapetts.web.responses.ResponseTips;
@@ -68,7 +70,7 @@ public interface WebServices {
 
     // STORIES //////////////////////////////////////////////////////////
     @POST("test/newstories")
-    Single<SimpleResponse> newStory( @Body PostBean post );
+    Single<SimpleResponse> newStory( @Body IndividualDataPetHistoryBean history );
     ////////////////////////////////////////////////////////////////////
 
     @POST("test/gettips")
@@ -94,12 +96,12 @@ public interface WebServices {
     ////////////////////////////////////////////////////////////////////
 
 
-    @POST("test/newstories")
-    Single<SimpleResponse> newstory(@Body HistoriesBean historiesBean );
-
 
     @POST("test/follows")
     Single<SimpleResponse> follows(@Body FollowParameter followParameter );
+
+    @POST("test/getcodescountry")
+    Single<ResponseCodesCountries> getCodesCountry(@Body UserBean user);
 
 
 }

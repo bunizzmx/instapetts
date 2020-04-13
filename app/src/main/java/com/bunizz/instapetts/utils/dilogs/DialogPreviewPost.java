@@ -62,12 +62,15 @@ public class DialogPreviewPost extends BaseAlertDialog{
         else
             num_likes_posts_dialog.setText("a " + this.postBean.getLikes() + " personas les gusta esto");
         Glide.with(this.context).load(this.postBean.getUrl_photo_pet()).into(image_pet_dialog);
-        if(!postBean.getAddress().equals("INVALID")) {
-            addres_post_dialog.setVisibility(View.VISIBLE);
-            addres_post_dialog.setText(postBean.getAddress());
-        }
-        else
+        if(postBean.getAddress()!=null) {
+            if (!postBean.getAddress().equals("INVALID")) {
+                addres_post_dialog.setVisibility(View.VISIBLE);
+                addres_post_dialog.setText(postBean.getAddress());
+            } else
+                addres_post_dialog.setVisibility(View.GONE);
+        }else{
             addres_post_dialog.setVisibility(View.GONE);
+        }
 
         dialogBuilder.setView(dialogView);
         dialog = dialogBuilder.create();

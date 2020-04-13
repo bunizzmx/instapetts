@@ -5,4 +5,5 @@ public interface login_listener {
     void loginWithGmail();
     void loginWithFacebook();
     void loginWithEmail(String correo,String password);
+    void sigInWithEmail(String correo,String password);
 }

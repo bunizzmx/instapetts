@@ -4,11 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -17,11 +19,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.core.view.MotionEventCompat;
+import androidx.emoji.widget.EmojiTextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
@@ -38,18 +46,20 @@ import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.postsListener;
 import com.bunizz.instapetts.utils.Dots.DotsIndicator;
 import com.bunizz.instapetts.utils.ImagenCircular;
+import com.bunizz.instapetts.utils.OnSwipeTouchListener;
 import com.bunizz.instapetts.utils.ViewPagerAdapter;
 import com.bunizz.instapetts.utils.double_tap.DoubleTapLikeView;
 import com.bunizz.instapetts.utils.loadings.SpinKitView;
 import com.bunizz.instapetts.utils.loadings.SpriteFactory;
 import com.bunizz.instapetts.utils.loadings.Style;
 import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
+
+import com.bunizz.instapetts.utils.video_player.PlayerViewHolder;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 
 import java.util.ArrayList;
 
 import static com.bunizz.instapetts.fragments.FragmentElement.INSTANCE_PREVIEW_PROFILE;
-import static com.bunizz.instapetts.utils.trimVideo.utils.UIThreadUtil.runOnUiThread;
 
 public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -63,12 +73,21 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     open_camera_histories_listener listener_open_h;
     Style style = Style.values()[6];
     Sprite drawable = SpriteFactory.create(style);
+    private RequestManager requestManager_param;
     public postsListener getListener_post() {
         return listener_post;
     }
     boolean POST_EMPTY = false;
     public void setListener_post(postsListener listener_post) {
         this.listener_post = listener_post;
+    }
+
+    public RequestManager getRequestManager() {
+        return requestManager_param;
+    }
+
+    public void setRequestManager(RequestManager requestManager) {
+        this.requestManager_param = requestManager;
     }
 
     public open_camera_histories_listener getListener_open_h() {
@@ -97,6 +116,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private static final int TYPE_POST=1;
+    private static final int TYPE_POST_VIDEO=4;
     private static final int TYPE_HISTORI = 2;
     private static final int TYPE_EMPTY = 3;
     public FeedAdapter(Context context,ArrayList<Object> data) {
@@ -109,6 +129,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void setHistoriesBeans(ArrayList<HistoriesBean> historiesBeans) {
+        Log.e("HISTORIES_BEANS","-->" + historiesBeans.size());
         this.historiesBeans = historiesBeans;
     }
 
@@ -142,7 +163,11 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }else if(recyclerViewItem instanceof DataEmptyBean){
             return TYPE_EMPTY;
         }else{
-            return TYPE_POST;
+            PostBean validate = (PostBean) data.get(position);
+            if(validate.getType_post() == 0)
+                 return TYPE_POST;
+            else
+                return TYPE_POST_VIDEO;
         }
     }
 
@@ -165,6 +190,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case TYPE_EMPTY:
                 view = getInflatedView(parent, R.layout.no_data_feed1);
                 return new EmptyHolder(view);
+            case TYPE_POST_VIDEO:
+                view = getInflatedView(parent, R.layout.item_feed_post_video);
+                return new PlayerViewHolder(view);
 
             case TYPE_HISTORI:
             default:
@@ -211,6 +239,84 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 e.body_no_data.setText("Te recomendamos a estas hermosas mascotas,porque no les echas un ojo.");
 
                 break;
+
+            case TYPE_POST_VIDEO:
+                PlayerViewHolder vid_h=(PlayerViewHolder)holder;
+                PostBean mo = (PostBean) data.get(position);
+                vid_h.requestManager = requestManager_param;
+                vid_h.parent.setTag(this);
+                if(!mo.getAddress().equals("INVALID")) {
+                    vid_h.addres_post.setVisibility(View.VISIBLE);
+                    vid_h.addres_post.setText(mo.getAddress());
+                }
+                else
+                    vid_h.addres_post.setVisibility(View.GONE);
+                vid_h.icon_like.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(!mo.isLiked()) {
+                            vid_h.layout_double_tap_like.setVisibility(View.VISIBLE);
+                            vid_h.layout_double_tap_like.animate_icon(vid_h.layout_double_tap_like);
+                        }
+                        if(!mo.isLiked()) {
+                            mo.setLiked(true);
+                            vid_h.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
+                            listener_post.onLike(mo.getId_post_from_web(),true);
+                        }else{
+                            mo.setLiked(false);
+                            vid_h.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_w));
+                        }
+                    }
+                });
+                vid_h.root_preview_perfil_click.setOnClickListener(view ->{
+                    Bundle b = new Bundle();
+                    b.putString(BUNDLES.UUID,mo.getUuid());
+                    Log.e("ID_USUARIO_POST","-->" + mo.getId_usuario());
+                    b.putInt(BUNDLES.ID_USUARIO,mo.getId_usuario());
+                    listener.change_fragment_parameter(INSTANCE_PREVIEW_PROFILE,b);
+                });
+                vid_h.name_pet.setText(mo.getName_pet());
+                vid_h.name_user_posts.setText(mo.getName_user());
+                vid_h.num_likes_posts.setText("" + mo.getLikes() );
+                if(mo.getDescription().isEmpty()){
+                    vid_h.description_posts.setVisibility(View.GONE);
+                }else{
+                    vid_h.description_posts.setVisibility(View.VISIBLE);
+                    vid_h.description_posts.setText(mo.getDescription());
+                }
+
+                Glide.with(context).load(mo.getUrl_photo_pet()).into(vid_h.image_pet);
+                Glide.with(context).load(mo.getUrl_photo_user()).into(vid_h.mini_user_photo);
+                vid_h.date_post.setText(App.fecha_lenguaje_humano(mo.getDate_post()));
+                vid_h.save_posts.setOnClickListener(view -> {
+                    if(mo.isSaved()) {
+                        mo.setSaved(false);
+                        listener_post.onDisfavorite(mo.getId_post_from_web());
+                        vid_h.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite_w));
+                    }
+                    else {
+                        mo.setSaved(true);
+                        vid_h.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite_fill));
+                        listener_post.onFavorite(mo.getId_post_from_web(), mo);
+                    }
+                });
+                if(mo.isSaved()){
+                    vid_h.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite_fill));
+                }else{
+                    vid_h.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite_w));
+                }
+
+                if(mo.isLiked()){
+                    vid_h.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
+                }else{
+                    vid_h.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_w));
+                }
+                vid_h.open_options_posts.setOnClickListener(view -> listener_post.openMenuOptions(mo.getId_post_from_web(),mo.getId_usuario(),mo.getUuid()));
+                vid_h.requestManager
+                        .load(mo.getUrls_posts())
+                        .into(vid_h.mediaCoverImage);
+
+                break;
             default:
                 FeedHolder f = (FeedHolder)holder;
                 PostBean data_parsed = (PostBean) data.get(position);
@@ -221,6 +327,10 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 else
                     f.addres_post.setVisibility(View.GONE);
                 if(is_multiple(data_parsed.getUrls_posts())) {
+                    f.card_number_indicator.setVisibility(View.VISIBLE);
+                    String s[]= data_parsed.getUrls_posts().split(",");
+                    int splits_number = s.length;
+                    f.label_number_indicator.setText("1/"+splits_number);
                     f.progres_image.setVisibility(View.GONE);
                     f.root_multiple_image.setVisibility(View.VISIBLE);
                     f.single_image.setVisibility(View.GONE);
@@ -228,6 +338,23 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     if (data_parsed.getUrls_posts() != null)
                         adapter.setUris_not_parsed(data_parsed.getUrls_posts());
                     f.list_fotos.setAdapter(adapter);
+                    f.list_fotos.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                        @Override
+                        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                        }
+
+                        @Override
+                        public void onPageSelected(int position) {
+                            f.label_number_indicator.setText((position + 1) + "/"+splits_number);
+                        }
+
+                        @Override
+                        public void onPageScrollStateChanged(int state) {
+
+                        }
+                    });
+
                     f.dots_indicator.setViewPager(f.list_fotos);
 
                 }else{
@@ -330,7 +457,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         ViewPager list_fotos;
         DotsIndicator dots_indicator;
         RelativeLayout root_preview_perfil_click,open_options_posts;
-        TextView description_posts;
+        EmojiTextView description_posts;
         ImagenCircular image_pet;
         TextView name_pet,name_user_posts,num_likes_posts;
         RelativeLayout root_multiple_image;
@@ -341,8 +468,12 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         SpinKitView progres_image;
         ImagenCircular mini_user_photo;
         TextView addres_post;
+        CardView card_number_indicator;
+        TextView label_number_indicator;
         public FeedHolder(@NonNull View itemView) {
             super(itemView);
+            card_number_indicator = itemView.findViewById(R.id.card_number_indicator);
+            label_number_indicator = itemView.findViewById(R.id.label_number_indicator);
             root_preview_perfil_click = itemView.findViewById(R.id.root_preview_perfil_click);
             dots_indicator = itemView.findViewById(R.id.dots_indicator);
             list_fotos = itemView.findViewById(R.id.list_fotos);
@@ -372,6 +503,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             list_histories = itemView.findViewById(R.id.list_histories);
         }
     }
+
+
 
     public class EmptyHolder extends RecyclerView.ViewHolder{
         RecyclerView list_post_recomended;

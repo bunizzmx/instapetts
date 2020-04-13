@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/AppTheme"
+    android:background="@color/white"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -11,18 +12,23 @@
         android:id="@+id/refresh_feed"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-<androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/feed_list"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+        <com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerView
+            android:background="@color/white"
+            android:nestedScrollingEnabled="true"
+            android:id="@+id/exoPlayerRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:dividerHeight="8dp"
+            />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-    <com.bunizz.instapetts.utils.loadings.SpinKitView
-        android:id="@+id/spin_kit"
-        style="@style/SpinKitView"
-        android:background="?selectableItemBackgroundBorderless"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:padding="10dp" />
+<include layout="@layout/no_internet"></include>
+        <com.bunizz.instapetts.utils.loadings.SpinKitView
+            android:id="@+id/spin_kit"
+            style="@style/SpinKitView"
+            android:background="?selectableItemBackgroundBorderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:padding="10dp" />
 </RelativeLayout>

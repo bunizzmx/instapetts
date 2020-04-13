@@ -18,6 +18,10 @@ import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.search.AdapterGridPosts;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.utils.loadings.SpinKitView;
+import com.bunizz.instapetts.utils.loadings.SpriteFactory;
+import com.bunizz.instapetts.utils.loadings.Style;
+import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import org.parceler.Parcels;
@@ -47,6 +51,10 @@ public class FragmentPostPublicsSaved extends Fragment implements  PostPublicsSa
 
     @BindView(R.id.root_no_data)
     RelativeLayout root_no_data;
+
+    @BindView(R.id.progres_image)
+    SpinKitView progres_image;
+
 
     ArrayList<Object> data_posts = new ArrayList<>();
 
@@ -104,6 +112,10 @@ public class FragmentPostPublicsSaved extends Fragment implements  PostPublicsSa
         list_posts_publics.setLayoutManager(new GridLayoutManager(getContext(),3));
         list_posts_publics.setAdapter(adapter);
         presenter.getPostPublics();
+        Style style = Style.values()[6];
+        Sprite drawable = SpriteFactory.create(style);
+        progres_image.setIndeterminateDrawable(drawable);
+        progres_image.setColor(getContext().getResources().getColor(R.color.primary));
         title_no_data.setText("No tienes post guardados");
         body_no_data.setText("Explora por todo un mundo, de lindas y divertidas mascotas, y guarda las que mas te agraden.");
     }
@@ -115,14 +127,17 @@ public class FragmentPostPublicsSaved extends Fragment implements  PostPublicsSa
     public void showPosts(ArrayList<PostBean> posts) {
         if(posts!=null){
             if(posts.size()>0){
+                progres_image.setVisibility(View.GONE);
                 root_no_data.setVisibility(View.GONE);
                 data_posts.clear();
                 data_posts.addAll(posts);
                 adapter.setPosts(data_posts);
             }else{
+                progres_image.setVisibility(View.GONE);
                 root_no_data.setVisibility(View.VISIBLE);
             }
         }else{
+            progres_image.setVisibility(View.GONE);
             root_no_data.setVisibility(View.VISIBLE);
         }
     }

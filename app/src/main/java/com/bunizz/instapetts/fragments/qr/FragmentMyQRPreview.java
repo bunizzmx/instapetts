@@ -70,7 +70,7 @@ public class FragmentMyQRPreview extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         int width = Utilities.convertDpToPixel(200,getContext());
-        QRGEncoder qrgEncoder = new QRGEncoder("instapets.com", null, QRGContents.Type.TEXT, width);
+        QRGEncoder qrgEncoder = new QRGEncoder("instapets/"+App.read(PREFERENCES.UUID,"INVALID")+"/"+App.read(PREFERENCES.ID_USER_FROM_WEB,0), null, QRGContents.Type.TEXT, width);
         qrgEncoder.setColorBlack(Color.BLACK);
         qrgEncoder.setColorWhite(Color.WHITE);
         // Getting QR-Code as Bitmap

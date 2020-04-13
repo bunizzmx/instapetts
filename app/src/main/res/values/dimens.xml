@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <dimen name="border_thickness">3dp</dimen>
+    <dimen name="corner_thickness">5dp</dimen>
+    <dimen name="guideline_thickness">1px</dimen>
+
+    <dimen name="target_radius">24dp</dimen>
+    <dimen name="snap_radius">3dp</dimen>
+    <dimen name="corner_length">20dp</dimen>
+    <dimen name="default_margin">20dp</dimen>
+    <dimen name="progress_width">10dp</dimen>
+    <dimen name="padding">10dp</dimen>
+
+
+
+    <dimen name="fast_scroller_icon_size">20dp</dimen>
+    <dimen name="fast_scroller_thumb_elevation">2dp</dimen>
+    <dimen name="fast_scroller_thumb_size">32dp</dimen>
+    <dimen name="fast_scroller_default_text_padding">4dp</dimen>
+
     <dimen name="WheelItemTextSize">14sp</dimen>
     <dimen name="WheelSelectedItemTextSize">20sp</dimen>
     <dimen name="WheelItemSpace">12dp</dimen>
@@ -88,4 +107,13 @@
 
     <dimen name="progress_video_line_height">2dp</dimen>
     <dimen name="frames_video_height">40dip</dimen>
+
+    <dimen name="spb_default_stroke_separator_length">4dp</dimen>
+    <dimen name="spb_default_stroke_width">4dp</dimen>
+    <integer name="spb_default_sections_count">4</integer>
+    <integer name="spb_default_interpolator">0</integer>
+    <item name="spb_default_speed" format="float" type="string">1</item>
+    <bool name="spb_default_reversed">false</bool>
+    <bool name="spb_default_mirror_mode">false</bool>
+    <bool name="spb_default_progressiveStart_activated">false</bool>
 </resources>

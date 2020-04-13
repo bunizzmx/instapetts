@@ -14,10 +14,13 @@ import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.main.Main;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.utils.compresor.Compressor;
@@ -57,10 +60,13 @@ public class ImagePostsService extends Service {
     String NAME_PET ="";
     private StorageReference storageReference;
     StorageMetadata metadata;
+    Intent intent_broadcast = new Intent();
     @Override
     public void onCreate() {
         super.onCreate();
         storageReference = FirebaseStorage.getInstance(CONST.BUCKET_POSTS).getReference();
+        Util util = new Util();
+        transferUtility = util.getTransferUtility(this);
     }
 
     @Override
@@ -94,19 +100,17 @@ public class ImagePostsService extends Service {
                     channelId, channelName, importance);
             notificationManager.createNotificationChannel(mChannel);
         }
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
         mBuilder = new NotificationCompat.Builder(getApplicationContext(), channelId);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mBuilder.setSmallIcon(R.mipmap.ic_launcher_foreground)
                     .setContentTitle(TITLE)
                     .setAutoCancel(true)
-                    .setSound(defaultSoundUri)
                     .setContentIntent(pendingIntent);
         }else {
             mBuilder.setSmallIcon(R.mipmap.ic_launcher_foreground)
                     .setContentTitle(TITLE)
                     .setAutoCancel(true)
-                    .setSound(defaultSoundUri)
                     .setContentIntent(pendingIntent);
         }
 
@@ -118,10 +122,6 @@ public class ImagePostsService extends Service {
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
         mBuilder.setContentIntent(resultPendingIntent);
-        mBuilder
-                .setProgress(100,1,false);
-        notificationManager.notify(notificationId, mBuilder.build());
-
         final ArrayList<String> key = intent.getStringArrayListExtra(INTENT_KEY_NAME);
         TransferObserver transferObserver;
         SIZE_OF_FILES = key.size();
@@ -145,36 +145,76 @@ public class ImagePostsService extends Service {
             }else{
                 filename =  App.read(PREFERENCES.UUID,"INVALID") + "/" +  CONST.FOLDER_STORIES + "/" +  splits[index - 1];
             }
-            UploadTask uploadTask;
-                    metadata = new StorageMetadata.Builder()
-                            .setContentType("image/jpeg")
-                            .build();
-                    final StorageReference reference = storageReference.child(filename);
-                    uploadTask  = reference.putFile(Uri.fromFile(file),metadata);
-                    uploadTask.addOnFailureListener(exception -> App.sonar(3)).addOnSuccessListener(taskSnapshot -> {
-                    }).addOnProgressListener(taskSnapshot -> {
-                        int progreso = (int) ((int) (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
-                        mBuilder.setContentText("Progreso " + progreso + "%")
-                                .setProgress(100,progreso,false);
-                        notificationManager.notify(notificationId, mBuilder.build());
-                    });
-                    Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
-                        if (!task.isSuccessful()) {
-                            throw task.getException();
-                        }
-                        return reference.getDownloadUrl();
-                    }).addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            mBuilder.setProgress(100,100,false);
-                            mBuilder.setContentTitle(TITLE_SUCCESS);
-                            notificationManager.notify(notificationId, mBuilder.build());
-                        }
-                    });
+            if( intent.getIntExtra(BUNDLES.POST_TYPE,0) ==1)
+            upload_video(filename);
+            else
+            upload_image(filename);
         }
 
 
         return START_STICKY;
     }
+
+    void upload_image(String filename){
+        UploadTask uploadTask;
+        metadata = new StorageMetadata.Builder()
+                .setContentType("image/jpeg")
+                .build();
+        final StorageReference reference = storageReference.child(filename);
+        uploadTask  = reference.putFile(Uri.fromFile(file),metadata);
+        uploadTask.addOnFailureListener(exception -> {}).addOnSuccessListener(taskSnapshot -> {
+        }).addOnProgressListener(taskSnapshot -> {
+            int progreso = (int) ((int) (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
+            mBuilder.setContentText("Progreso " + progreso + "%")
+                    .setProgress(100,progreso,false);
+            notificationManager.notify(notificationId, mBuilder.build());
+        });
+        Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                throw task.getException();
+            }
+            return reference.getDownloadUrl();
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                mBuilder.setProgress(100,100,false);
+                mBuilder.setContentTitle(TITLE_SUCCESS);
+                notificationManager.notify(notificationId, mBuilder.build());
+            }
+        });
+    }
+
+    void upload_video(String filename){
+        TransferObserver transferObserver;
+        transferObserver = transferUtility.upload(filename, file);
+        transferObserver.setTransferListener(new UploadListener());
+    }
+
+
+
+    public  class UploadListener implements TransferListener {
+        private boolean notifyUploadActivityNeeded = true;
+        @Override
+        public void onError(int id, Exception e) {
+            Log.e(TAG, "onError: " + id, e);
+            if (notifyUploadActivityNeeded) {
+                notifyUploadActivityNeeded = false;
+            }
+        }
+        @Override
+        public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+
+        }
+        @Override
+        public void onStateChanged(int id, TransferState state) {
+            if(state == TransferState.COMPLETED){
+                notificationManager.notify(notificationId, mBuilder.build());
+                intent_broadcast.putExtra("COMPLETED", false);
+                intent_broadcast.setAction(Main.POST_SUCCESFULL);
+                sendBroadcast(intent_broadcast);
+            }
+        }
+    }
+
 
     @Override
     public void onDestroy() {

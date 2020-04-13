@@ -7,11 +7,13 @@ import android.util.Log;
 
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.beans.HistoriesBean;
+import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.RazaBean;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.GenericHelper;
 
 import net.sqlcipher.database.SQLiteConstraintException;
+import net.sqlcipher.database.SQLiteDatabase;
 
 import java.util.ArrayList;
 
@@ -23,7 +25,8 @@ public class MyStoryHelper extends GenericHelper {
     public static final String NOMBRE_PET = "nombre_pet";
     public static final String ID_PET = "id_pet";
     public static final String ID_USER = "id_propietary";
-    public static final String URIS_FOTOS = "uris_photos";
+    public static final String URIS_FOTO_HISTORY = "uri_photo";
+    public static final String URIS_FOTO_PET = "uri_perfil";
 
 
     public static MyStoryHelper getInstance(Context context) {
@@ -35,14 +38,14 @@ public class MyStoryHelper extends GenericHelper {
         super(context);
     }
 
-    public void saveMyStory(HistoriesBean historiesBean) {
-        Log.e("SAVE_MY_STORY",":)" + historiesBean.getUris_stories());
+    public void saveMyStory(IndividualDataPetHistoryBean historiesBean) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(FECHA, historiesBean.getDate_story());
         contentValues.put(NOMBRE_PET, historiesBean.getName_pet());
         contentValues.put(ID_PET, historiesBean.getId_pet());
         contentValues.put(ID_USER, historiesBean.getId_user());
-        contentValues.put(URIS_FOTOS, historiesBean.getUris_stories());
+        contentValues.put(URIS_FOTO_HISTORY, historiesBean.getUrl_photo());
+        contentValues.put(URIS_FOTO_PET, historiesBean.getPhoto_pet());
         try {
             getWritableDatabase().insertOrThrow(TABLE_NAME, null,contentValues);
         } catch (SQLiteConstraintException | IllegalStateException e) {
@@ -50,8 +53,8 @@ public class MyStoryHelper extends GenericHelper {
         }
     }
 
-    public ArrayList<HistoriesBean> getMyStories() {
-        ArrayList<HistoriesBean> histories = new ArrayList<>();
+    public ArrayList<IndividualDataPetHistoryBean> getMyStories() {
+        ArrayList<IndividualDataPetHistoryBean> histories = new ArrayList<>();
         final Cursor cursor = getReadableDatabase().query(
                 TABLE_NAME,
                 null,
@@ -59,14 +62,13 @@ public class MyStoryHelper extends GenericHelper {
                 null, null, null, null, null);
         try {
             while (cursor.moveToNext()) {
-                  HistoriesBean h = new HistoriesBean();
+                IndividualDataPetHistoryBean h = new IndividualDataPetHistoryBean();
                   h.setDate_story(cursor.getString(cursor.getColumnIndex(FECHA)));
                   h.setName_pet(cursor.getString(cursor.getColumnIndex(NOMBRE_PET)));
                   h.setId_pet(cursor.getInt(cursor.getColumnIndex(ID_PET)));
                   h.setId_user(cursor.getInt(cursor.getColumnIndex(ID_USER)));
-                  h.setName_user(App.read(PREFERENCES.NAME_USER,"INVALID"));
-                  h.setUrl_photo_user(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
-                  h.setUris_stories(cursor.getString(cursor.getColumnIndex(URIS_FOTOS)));
+                  h.setUrl_photo(cursor.getString(cursor.getColumnIndex(URIS_FOTO_HISTORY)));
+                  h.setPhoto_pet(cursor.getString(cursor.getColumnIndex(URIS_FOTO_PET)));
                   histories.add(h);
             }
         } catch (SQLiteConstraintException | IllegalStateException e) {
@@ -78,5 +80,14 @@ public class MyStoryHelper extends GenericHelper {
         }
 
         return histories;
+    }
+
+    public void cleanTable() {
+        SQLiteDatabase writableDatabase = getWritableDatabase();
+        try {
+            writableDatabase.delete(TABLE_NAME, null, null);
+        } catch (SQLiteConstraintException ex) {
+            ex.printStackTrace();
+        }
     }
 }

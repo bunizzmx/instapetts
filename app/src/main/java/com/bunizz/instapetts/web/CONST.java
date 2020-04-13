@@ -5,7 +5,7 @@ public interface CONST {
     String BASE_URL_BUCKET ="https://d1jsxczq22wovt.cloudfront.net/";
 
     String BASE_URL_BUCKET_FIRESTORE ="https://firebasestorage.googleapis.com/v0/b/";
-
+     String BASE_URL_HLS_VIDEO ="https://d3oaqf2eoweuy3.cloudfront.net/";
 
     String FOLDER_PROFILE ="PROFILE";
     String FOLDER_PETS = "PETS";

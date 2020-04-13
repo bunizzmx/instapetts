@@ -60,6 +60,8 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
     RelativeLayout new_story;
 
 
+    @BindView(R.id.root_no_internet)
+    RelativeLayout root_no_internet;
 
     @BindView(R.id.refresh_tips)
     SwipeRefreshLayout refresh_tips;
@@ -90,6 +92,7 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
         list_tips.setAdapter(adapter);
         presenter.getTips();
         refresh_tips.setOnRefreshListener(() ->{
+            root_no_internet.setVisibility(View.GONE);
             presenter.getTips();
         });
         Style style = Style.values()[6];
@@ -116,6 +119,18 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
             to_object_data.addAll(tips_list);
             adapter.setData(to_object_data);
         }
+    }
+
+    @Override
+    public void noInternet() {
+        refresh_tips.setRefreshing(false);
+        root_loading.setVisibility(View.GONE);
+        root_no_internet.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void peticionError() {
+       presenter.getTips();
     }
 }
 

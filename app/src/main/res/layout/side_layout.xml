@@ -57,7 +57,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                style="@style/FontNormal"
+                style="@style/FontNormalTitleSecondary"
                 android:layout_marginLeft="20dp"
                 android:text="Guardado"
                 android:layout_width="wrap_content"
@@ -76,24 +76,25 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                style="@style/FontNormal"
+                style="@style/FontNormalTitleSecondary"
                 android:layout_marginLeft="20dp"
                 android:text="Compartir tu Perfil"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/open_my_pet_code"
             android:background="?attr/selectableItemBackground"
             android:paddingBottom="10dp"
             android:paddingTop="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
-                android:src="@drawable/ic_scanner"
+                android:src="@drawable/ic_collar"
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                style="@style/FontNormal"
+                style="@style/FontNormalTitleSecondary"
                 android:layout_marginLeft="20dp"
                 android:text="Tu identificacion"
                 android:layout_width="wrap_content"
@@ -112,7 +113,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                style="@style/FontNormal"
+                style="@style/FontNormalTitleSecondary"
                 android:layout_marginLeft="20dp"
                 android:text="Administrar tu cuenta"
                 android:layout_width="wrap_content"
@@ -136,7 +137,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                style="@style/FontNormal"
+                style="@style/FontNormalTitleSecondary"
                 android:layout_marginLeft="20dp"
                 android:text="Notificaciones push"
                 android:layout_width="wrap_content"
@@ -154,7 +155,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                style="@style/FontNormal"
+                style="@style/FontNormalTitleSecondary"
                 android:layout_marginLeft="20dp"
                 android:text="Centro de Hayuda"
                 android:layout_width="wrap_content"
@@ -171,7 +172,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                style="@style/FontNormal"
+                style="@style/FontNormalTitleSecondary"
                 android:layout_marginLeft="20dp"
                 android:text="Terminos de uso"
                 android:layout_width="wrap_content"
@@ -188,7 +189,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                style="@style/FontNormal"
+                style="@style/FontNormalTitleSecondary"
                 android:layout_marginLeft="20dp"
                 android:text="Politica privacidad"
                 android:layout_width="wrap_content"
@@ -206,7 +207,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                style="@style/FontNormal"
+                style="@style/FontNormalTitleSecondary"
                 android:layout_marginLeft="20dp"
                 android:text="Terminos de uso"
                 android:layout_width="wrap_content"
@@ -235,7 +236,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                style="@style/FontNormal"
+                style="@style/FontNormalTitlePrimary"
                 android:layout_marginLeft="20dp"
                 android:text="Cerrar Session"
                 android:layout_width="wrap_content"
@@ -243,7 +244,7 @@
         </LinearLayout>
         </LinearLayout>
         <TextView
-            style="@style/FontNormal"
+            style="@style/FontNormalTitle"
             android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
             android:id="@+id/version_app"

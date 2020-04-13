@@ -28,6 +28,7 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -44,6 +45,10 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
     RecyclerView list_posts_publics;
 
     ArrayList<Object> data_posts = new ArrayList<>();
+
+
+    @BindView(R.id.root_no_internet)
+    RelativeLayout root_no_internet;
 
 
     @SuppressLint("MissingPermission")
@@ -115,8 +120,7 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
                             Manifest.permission.CAMERA)
                     .subscribe(granted -> {
                         if (granted) {
-                            Intent i = new Intent(getContext() , QrSearchActivity.class);
-                            startActivityForResult( i,REQUEST_CODE_QR_SCAN);
+                            listener.change_fragment_parameter(999,null);
                         } else {
                             App.getInstance().show_dialog_permision(getActivity(),getActivity().getResources().getString(R.string.permision_storage),
                                     getResources().getString(R.string.permision_storage_body),0);
@@ -136,7 +140,15 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
         adapter.setPosts(data_posts);
     }
 
+    @Override
+    public void noInternet() {
+         root_no_internet.setVisibility(View.VISIBLE);
+    }
 
+    @Override
+    public void peticionError() {
+       presenter.getPostPublics();
+    }
 
 
     @Override

@@ -2,7 +2,12 @@ package com.bunizz.instapetts.fragments.share_post.Share;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.emoji.widget.EmojiEditText;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,7 +39,13 @@ import com.bunizz.instapetts.utils.dilogs.DialogNoPets;
 import com.bunizz.instapetts.utils.dilogs.DialogShosePet;
 import com.bunizz.instapetts.web.CONST;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import butterknife.BindView;
@@ -53,7 +65,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     TextView location_user;
     uploads listener;
     @BindView(R.id.description_post)
-    EditText description_post;
+    EmojiEditText description_post;
     String concat_paths="";
     PetHelper helper;
     ArrayList<PetBean> pets_cuerrent = new ArrayList<>();
@@ -72,7 +84,10 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             dialogShosePet.setListener(new chose_pet_listener() {
                 @Override
                 public void chose(String url_foto, int id_pet, String name_pet) {
-                    beginUploadInBackground(paths);
+                    if(is_video==1)
+                        beginUploadInBackground(paths,true);
+                    else
+                        beginUploadInBackground(paths,false);
                     PostBean post = new PostBean();
                     post.setName_pet(name_pet);
                     post.setDescription(description_post.getText().toString());
@@ -85,6 +100,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
                     post.setDate_post(App.formatDateGMT(new Date()));
                     post.setTarget("NEW");
                     post.setId_pet(id_pet);
+                    post.setType_post(is_video);
                     if(App.read(PREFERENCES.ALLOW_LOCATION_POST,true))
                     post.setAddress(App.read(PREFERENCES.ADDRESS_USER,"INVALID"));
                     post.setId_usuario(App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
@@ -134,13 +150,23 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         if(bundle!=null){
             paths.addAll(bundle.getStringArrayList("data_pahs"));
             is_video = bundle.getInt("is_video");
+            Log.e("TYPE_POST","-->" + is_video);
             for (int i =0;i< paths.size();i++){
                 String splits[] = paths.get(i).split("/");
                 int index = splits.length;
-                if(i==0)
-                    concat_paths =App.getInstance().make_uri_bucket_posts(splits[index-1]);
-                else
-                    concat_paths += "," + App.getInstance().make_uri_bucket_posts(splits[index-1]);
+                if(i==0) {
+                    if(is_video == 1) {
+                        concat_paths = App.getInstance().make_uri_video_hls(splits[index - 1]);
+                    }
+                    else
+                        concat_paths = App.getInstance().make_uri_bucket_posts(splits[index - 1]);
+                }
+                else {
+                    if(is_video == 1)
+                        concat_paths = App.getInstance().make_uri_video_hls(splits[index - 1]);
+                    else
+                        concat_paths += "," + App.getInstance().make_uri_bucket_posts(splits[index - 1]);
+                }
 
                 Log.e("URL_SIMPLE","-->" + splits[index-1]);
             }
@@ -194,7 +220,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         location_user.setText(address);
     }
 
-    private void beginUploadInBackground(ArrayList<String> filePaths) {
+    private void beginUploadInBackground(ArrayList<String> filePaths,boolean is_video) {
         if (filePaths == null) {
             Toast.makeText(getContext(), "Could not find the filepath of the selected file",
                     Toast.LENGTH_LONG).show();
@@ -204,9 +230,39 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         Intent intent = new Intent(context, ImagePostsService.class);
         intent.putStringArrayListExtra(ImagePostsService.INTENT_KEY_NAME, filePaths);
         intent.putExtra(BUNDLES.NOTIFICATION_TIPE,0);
+        if(is_video) {
+            Bitmap bMap = ThumbnailUtils.createVideoThumbnail(filePaths.get(0), MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);//MediaStore.Video.Thumbnails.MICRO_KIND
+            if (bMap != null) {
+                try {
+                    Log.e("SAVE_IMAGE","SUCCESS : ");
+                    File newfile = savebitmap(bMap);
+                } catch (IOException e) {
+                    Log.e("SAVE_IMAGE","ERROR : " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+            intent.putExtra(BUNDLES.POST_TYPE, 1);
+        }
+        else
+            intent.putExtra(BUNDLES.POST_TYPE,0);
+
         intent.putExtra(ImagePostsService.INTENT_TRANSFER_OPERATION, ImagePostsService.TRANSFER_OPERATION_UPLOAD);
         context.startService(intent);
         listener.onImageProfileUpdated();
+    }
+
+
+    public  File savebitmap(Bitmap bmp) throws IOException {
+        Log.e("SAVE_IMAGE","ON CAHCE");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
+        File f = new File( getContext().getApplicationContext().getCacheDir()
+                + File.separator + "hlsthiums.jpg");
+        f.createNewFile();
+        FileOutputStream fo = new FileOutputStream(f);
+        fo.write(bytes.toByteArray());
+        fo.close();
+        return f;
     }
 
     @Override

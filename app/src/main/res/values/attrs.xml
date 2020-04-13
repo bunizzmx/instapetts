@@ -1,5 +1,80 @@
 <resources>
 
+    <declare-styleable name="CropVideoView">
+
+        <attr name="guidelines">
+            <enum name="off" value="0"/>
+            <enum name="onTouch" value="1"/>
+            <enum name="on" value="2"/>
+        </attr>
+
+        <attr name="fixAspectRatio" format="boolean"/>
+        <attr name="aspectRatioX" format="integer"/>
+        <attr name="aspectRatioY" format="integer"/>
+
+    </declare-styleable>
+
+    <declare-styleable name="SmoothProgressBar">
+        <attr name="spbStyle" format="reference"/>
+        <attr name="spb_color" format="color"/>
+        <attr name="spb_stroke_width" format="dimension"/>
+        <attr name="spb_stroke_separator_length" format="dimension"/>
+        <attr name="spb_sections_count" format="integer"/>
+        <attr name="spb_speed" format="float"/>
+        <attr name="spb_progressiveStart_speed" format="float"/>
+        <attr name="spb_progressiveStop_speed" format="float"/>
+        <attr name="spb_interpolator" format="enum">
+            <enum name="spb_interpolator_accelerate" value="0"/>
+            <enum name="spb_interpolator_linear" value="1"/>
+            <enum name="spb_interpolator_acceleratedecelerate" value="2"/>
+            <enum name="spb_interpolator_decelerate" value="3"/>
+        </attr>
+        <attr name="spb_reversed" format="boolean"/>
+        <attr name="spb_mirror_mode" format="boolean"/>
+        <attr name="spb_colors" format="reference"/>
+        <attr name="spb_progressiveStart_activated" format="boolean"/>
+        <attr name="spb_background" format="reference"/>
+        <attr name="spb_generate_background_with_colors" format="boolean"/>
+        <attr name="spb_gradients" format="boolean"/>
+    </declare-styleable>
+
+
+    <attr name="indicatorFastScrollerStyle" format="reference" />
+    <attr name="indicatorFastScrollerThumbStyle" format="reference" />
+
+    <declare-styleable name="FastScrollerView">
+        <attr name="iconColor" format="color" />
+        <attr name="android:textAppearance" />
+        <attr name="android:textColor" />
+        <attr name="textPadding" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="FastScrollerThumbView">
+        <attr name="thumbColor" format="color" />
+        <attr name="iconColor" />
+        <attr name="android:textAppearance" />
+        <attr name="android:textColor" />
+    </declare-styleable>
+
+
+
+    <declare-styleable name="CodeScannerView">
+        <attr format="color" name="maskColor"/>
+        <attr format="color" name="frameColor"/>
+        <attr format="color" name="autoFocusButtonColor"/>
+        <attr format="color" name="flashButtonColor"/>
+        <attr format="boolean" name="autoFocusButtonVisible"/>
+        <attr format="boolean" name="flashButtonVisible"/>
+        <attr format="dimension" name="frameThickness"/>
+        <attr format="dimension" name="frameCornersSize"/>
+        <attr format="dimension" name="frameCornersRadius"/>
+        <attr format="float" name="frameAspectRatioWidth"/>
+        <attr format="float" name="frameAspectRatioHeight"/>
+        <attr format="float" name="frameSize"/>
+    </declare-styleable>
+
+
+
     <attr name="SpinKitViewStyle" format="reference" />
 
     <declare-styleable name="SpinKitView">

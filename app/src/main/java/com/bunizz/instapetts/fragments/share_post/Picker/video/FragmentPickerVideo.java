@@ -205,6 +205,7 @@ public class FragmentPickerVideo extends Fragment implements   VideoPickerContra
         ArrayList<String> uri_video = new ArrayList<>();
         uri_video.add(items.get(0).getPath());
         b.putStringArrayList("data_pahs",uri_video);
+        b.putInt("is_video",1);
         if(listener!=null){
             listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
         }
@@ -219,15 +220,17 @@ public class FragmentPickerVideo extends Fragment implements   VideoPickerContra
     public void onItemClick(@NotNull ViewGroup parent, @NotNull View view, int position, @NotNull Video item, boolean selectable) {
         Bundle b = new Bundle();
 
-        if((Integer.valueOf(item.getDuration())/1000) < 30){
+        if((Integer.valueOf(item.getDuration())/1000) < 1){
             Log.e("TAM_VIDEO","EL VIDEO ES CORTO ASI LO SUBO");
             ArrayList url_final = new ArrayList();
             url_final.add(item.getPath());
             b.putStringArrayList("data_pahs",url_final);
+            b.putInt("is_video",1);
             listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE, b);
         }else {
             Log.e("TAM_VIDEO","EL VIDEO ES LARGO LO CORTO");
             b.putString("PATH_TO_CROP",item.getPath());
+            b.putInt("is_video",1);
             Log.e("DURATION","----->"+ item.getDuration());
             b.putInt("DURATION",Integer.valueOf(item.getDuration())/1000);
             listener.change_fragment_parameter(FragmentElement.INSTANCE_CROP_VIDEO, b);

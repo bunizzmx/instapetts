@@ -3,9 +3,11 @@ package com.bunizz.instapetts.fragments.search.posts;
 import android.content.Context;
 import android.util.Log;
 
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.beans.AutenticateBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.login.MainLogin;
 import com.bunizz.instapetts.fragments.profile.ProfileUserContract;
 import com.bunizz.instapetts.web.ApiClient;
@@ -27,7 +29,7 @@ public class PostPublicsPresenter implements   PostPublicsContract.Presenter {
     private CompositeDisposable disposable = new CompositeDisposable();
     private WebServices apiService;
     private static final String TAG = MainLogin.class.getSimpleName();
-
+    int RETRY =0;
     PostPublicsPresenter(PostPublicsContract.View view, Context context) {
         this.mView = view;
         this.mContext = context;
@@ -38,6 +40,7 @@ public class PostPublicsPresenter implements   PostPublicsContract.Presenter {
     @Override
     public void getPostPublics() {
         PostFriendsBean postFriendsBean = new PostFriendsBean();
+        postFriendsBean.setId_one(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         postFriendsBean.setTarget("DISCOVER");
         disposable.add(
                 apiService.getPosts(postFriendsBean)
@@ -53,18 +56,23 @@ public class PostPublicsPresenter implements   PostPublicsContract.Presenter {
                                     post.addAll(responsePost.getList_posts());
                                     mView.showPosts(post);
                                 }  else{
-                                   // mView.peticion_error();
+                                    RETRY ++;
+                                    if(RETRY < 3) {
+                                        mView.peticionError();
+                                    }else{
+                                        mView.noInternet();
+                                    }
+
                                 }
                             }
                             @Override
                             public void onError(Throwable e) {
-                            /*    RETRY ++;
+                               RETRY ++;
                                 if(RETRY < 3) {
-                                    mView.peticion_error();
+                                    mView.peticionError();
                                 }else{
-                                    Log.e("NUMBER_POSTS","-->EROR : " + e.getMessage());
-                                }*/
-
+                                   mView.noInternet();
+                                }
                             }
                         })
         );

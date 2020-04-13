@@ -1,6 +1,7 @@
 package com.bunizz.instapetts.activitys.login;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.fragments.login.MainLogin;
@@ -19,6 +20,7 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     LoginContract.View mView;
     Context mContext;
+    int RETRY =0;
     private CompositeDisposable disposable = new CompositeDisposable();
     private WebServices apiService;
     private static final String TAG = MainLogin.class.getSimpleName();
@@ -62,15 +64,30 @@ public class LoginPresenter implements LoginContract.Presenter {
                         .subscribeWith(new DisposableSingleObserver<SimpleResponseLogin>() {
                             @Override
                             public void onSuccess(SimpleResponseLogin user) {
-                                if(user.getCode_response() ==200)
-                                    mView.UpdateFirsUserCompleted();
-                                else
-                                    mView.isFirstUser(user.getData_user().getId());
+                                if(user!=null) {
+                                    if (user.getCode_response() == 200)
+                                        mView.UpdateFirsUserCompleted();
+                                    else
+                                        mView.isFirstUser(user.getData_user().getId());
+                                }else{
+                                    RETRY ++;
+                                    if(RETRY < 3) {
+                                        updateUser(userBean);
+                                    }else{
+                                        mView.registerError();
+                                    }
+                                }
 
                             }
                             @Override
                             public void onError(Throwable e) {
-                                mView.registerError();
+                                RETRY ++;
+                                if(RETRY < 3) {
+                                    updateUser(userBean);
+                                }else{
+                                    Log.e("NO_INTERNET","-->error" );
+                                    mView.registerError();
+                                }
                             }
                         }));
     }

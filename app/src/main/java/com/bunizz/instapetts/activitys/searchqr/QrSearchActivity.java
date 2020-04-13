@@ -31,6 +31,7 @@ import androidx.fragment.app.FragmentManager;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.UserBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.camera.CameraPreviewStoryFragment;
 import com.bunizz.instapetts.fragments.camera.CameraStoryt;
@@ -195,7 +196,15 @@ public class QrSearchActivity extends AppCompatActivity implements changue_fragm
 
     @Override
     public void change_fragment_parameter(int type_fragment, Bundle data) {
+        if(type_fragment!=FragmentElement.INSTANCE_PREVIEW_PROFILE)
         changeOfInstance(type_fragment,data);
+        else{
+            Intent intent = new Intent();
+            intent.putExtra(BUNDLES.UUID,data.getString(BUNDLES.UUID));
+            intent.putExtra(BUNDLES.ID_USUARIO,data.getInt(BUNDLES.ID_USUARIO));
+            setResult(RESULT_OK,intent);
+            finish();
+        }
     }
 
 

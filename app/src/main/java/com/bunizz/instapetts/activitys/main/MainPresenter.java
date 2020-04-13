@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.beans.HistoriesBean;
+import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.FIRESTORE;
@@ -79,11 +80,11 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void saveMyStory(HistoriesBean historiesBean) {
-        myStoryHelper.saveMyStory(historiesBean);
+    public void saveMyStory(IndividualDataPetHistoryBean history) {
+        myStoryHelper.saveMyStory(history);
         disposable.add(
                 apiService
-                        .newstory(historiesBean)
+                        .newStory(history)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
@@ -257,5 +258,12 @@ public class MainPresenter implements MainContract.Presenter {
                                 }
                             }
                         }));
+    }
+
+    @Override
+    public void logout() {
+        followsHelper.cleanTable();
+        myStoryHelper.cleanTable();
+        petHelper.cleanTable();
     }
 }

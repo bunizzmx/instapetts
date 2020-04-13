@@ -30,6 +30,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
+import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.post.FragmentPostList;
 import com.bunizz.instapetts.fragments.post.adapters.ListAdapter;
@@ -73,7 +74,7 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
 
     story_finished_listener listener;
 
-    ArrayList<String> uris_fotos = new ArrayList<>();
+    ArrayList<IndividualDataPetHistoryBean> uris_fotos = new ArrayList<>();
     HistoriesBean HISTORY_BEAN;
 
     public static FragmentStoriView newInstance() {
@@ -86,14 +87,7 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
         Bundle bundle=getArguments();
         if(bundle!=null) {
             HISTORY_BEAN =  Parcels.unwrap(bundle.getParcelable("HISTORY_PARAMETER"));
-            String uris[] = HISTORY_BEAN.getUris_stories().split(",");
-            if(uris.length == 1){
-                uris_fotos.add(uris[0]);
-            }else{
-                for(int i =0;i < uris.length;i++){
-                    uris_fotos.add(uris[i]);
-                }
-            }
+            uris_fotos = HISTORY_BEAN.getHistories();
         }
     }
 
@@ -112,13 +106,6 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
         initStoryProgressView();
         name.setText(HISTORY_BEAN.getName_user());
         Glide.with(getActivity()).load(HISTORY_BEAN.getUrl_photo_user()).into(imagen_usuario_historia);
-        try {
-            time.setText(App.fecha_lenguaje_humano(HISTORY_BEAN.getDate_story().replace("T"," ").replace("Z","")));
-        }catch (Exception e){
-            time.setText("Hace un momento");
-        }
-
-
     }
 
     private void initStoryProgressView() {
@@ -138,7 +125,6 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
             listener.on_finish();
         }
         Log.e("EEROR_GLIDE","FINISH");
-       // finish();
     }
 
     @Override
@@ -161,7 +147,14 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
             Log.e("AQUI_TOMNE","si");
             return;
         }
-        Glide.with(getContext()).asBitmap().load(uris_fotos.get(index))
+
+        try {
+            time.setText(App.fecha_lenguaje_humano(uris_fotos.get(COUNTER).getDate_story().replace("T"," ").replace("Z","")));
+        }catch (Exception e){
+            time.setText("Hace un momento");
+        }
+
+        Glide.with(getContext()).asBitmap().load(uris_fotos.get(index).getUrl_photo())
                 .into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {

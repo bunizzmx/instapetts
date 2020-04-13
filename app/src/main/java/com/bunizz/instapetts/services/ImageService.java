@@ -127,7 +127,6 @@ public class ImageService extends Service {
         notificationManager.notify(notificationId, mBuilder.build());
 
         final ArrayList<String> key = intent.getStringArrayListExtra(INTENT_KEY_NAME);
-        TransferObserver transferObserver;
         SIZE_OF_FILES = key.size();
         for(int i =0;i<key.size();i++){
             if(TYPE_NOTIFICATION == 2){
@@ -149,35 +148,65 @@ public class ImageService extends Service {
             }else{
                 filename =  App.read(PREFERENCES.UUID,"INVALID") + "/" +  CONST.FOLDER_STORIES + "/" +  splits[index - 1];
             }
-            UploadTask uploadTask;
-                    metadata = new StorageMetadata.Builder()
-                            .setContentType("image/jpeg")
-                            .build();
-                    final StorageReference reference = storageReference.child(filename);
-                    uploadTask  = reference.putFile(Uri.fromFile(file),metadata);
-                    uploadTask.addOnFailureListener(exception -> {}).addOnSuccessListener(taskSnapshot -> {
-                    }).addOnProgressListener(taskSnapshot -> {
-                        int progreso = (int) ((int) (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
-                        mBuilder.setContentText("Progreso " + progreso + "%")
-                                .setProgress(100,progreso,false);
-                        notificationManager.notify(notificationId, mBuilder.build());
-                    });
-                    Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
-                        if (!task.isSuccessful()) {
-                            throw task.getException();
-                        }
-                        return reference.getDownloadUrl();
-                    }).addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            mBuilder.setProgress(100,100,false);
-                            mBuilder.setContentTitle(TITLE_SUCCESS);
-                            notificationManager.notify(notificationId, mBuilder.build());
-                        }
-                    });
+
+            upload_image(filename);
         }
 
 
         return START_STICKY;
+    }
+
+    void upload_image(String filename){
+        UploadTask uploadTask;
+        metadata = new StorageMetadata.Builder()
+                .setContentType("image/jpeg")
+                .build();
+        final StorageReference reference = storageReference.child(filename);
+        uploadTask  = reference.putFile(Uri.fromFile(file),metadata);
+        uploadTask.addOnFailureListener(exception -> {}).addOnSuccessListener(taskSnapshot -> {
+        }).addOnProgressListener(taskSnapshot -> {
+            int progreso = (int) ((int) (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
+            mBuilder.setContentText("Progreso " + progreso + "%")
+                    .setProgress(100,progreso,false);
+            notificationManager.notify(notificationId, mBuilder.build());
+        });
+        Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                throw task.getException();
+            }
+            return reference.getDownloadUrl();
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                mBuilder.setProgress(100,100,false);
+                mBuilder.setContentTitle(TITLE_SUCCESS);
+                notificationManager.notify(notificationId, mBuilder.build());
+            }
+        });
+    }
+
+    void upload_video(String filename){
+        UploadTask uploadTask;
+        final StorageReference reference = storageReference.child(filename);
+        uploadTask  = reference.putFile(Uri.fromFile(file));
+        uploadTask.addOnFailureListener(exception -> {}).addOnSuccessListener(taskSnapshot -> {
+        }).addOnProgressListener(taskSnapshot -> {
+            int progreso = (int) ((int) (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
+            mBuilder.setContentText("Progreso " + progreso + "%")
+                    .setProgress(100,progreso,false);
+            notificationManager.notify(notificationId, mBuilder.build());
+        });
+        Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                throw task.getException();
+            }
+            return reference.getDownloadUrl();
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                mBuilder.setProgress(100,100,false);
+                mBuilder.setContentTitle(TITLE_SUCCESS);
+                notificationManager.notify(notificationId, mBuilder.build());
+            }
+        });
     }
 
     @Override

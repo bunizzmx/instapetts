@@ -13,6 +13,10 @@ public class PostBean {
     @Expose
     String urls_posts;
 
+    @SerializedName("thumb_video")
+    @Expose
+    String thumb_video;
+
     @SerializedName("name_pet")
     @Expose
     String name_pet;
@@ -45,8 +49,6 @@ public class PostBean {
     @Expose
     String uuidbucket;
 
-
-
     @SerializedName("id_usuario")
     @Expose
     int id_usuario;
@@ -58,6 +60,14 @@ public class PostBean {
     @SerializedName("likes")
     @Expose
     int likes;
+
+    @SerializedName("type_post")
+    @Expose
+    int type_post;
+
+    @SerializedName("type_pet")
+    @Expose
+    int type_pet;
 
     @SerializedName("id_post")
     @Expose
@@ -234,6 +244,30 @@ public class PostBean {
 
     public void setUuidbucket(String uuidbucket) {
         this.uuidbucket = uuidbucket;
+    }
+
+    public int getType_post() {
+        return type_post;
+    }
+
+    public void setType_post(int type_post) {
+        this.type_post = type_post;
+    }
+
+    public int getType_pet() {
+        return type_pet;
+    }
+
+    public void setType_pet(int type_pet) {
+        this.type_pet = type_pet;
+    }
+
+    public String getThumb_video() {
+        return thumb_video;
+    }
+
+    public void setThumb_video(String thumb_video) {
+        this.thumb_video = thumb_video;
     }
 }
 

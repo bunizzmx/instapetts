@@ -55,8 +55,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.bunizz.instapetts.utils.trimVideo.utils.UIThreadUtil.runOnUiThread;
-
 public class ImageCropFragment extends Fragment {
 
     String PATH_TEMP="-";
@@ -119,7 +117,7 @@ public class ImageCropFragment extends Fragment {
             paths = bundle.getStringArrayList("PATH_SELECTED");
             Log.e("FROM_PROFILE","--->" + is_from_profile);
             if(cropLayout!=null){
-                runOnUiThread(new Runnable() {
+                getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         cropLayout.setUri(Uri.parse(paths.get(0)));

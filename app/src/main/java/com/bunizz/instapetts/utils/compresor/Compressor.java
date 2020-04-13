@@ -23,7 +23,7 @@ public class Compressor {
     private float maxHeight = 1920.0f;
     private Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.JPEG;
     private Bitmap.Config bitmapConfig = Bitmap.Config.ARGB_8888;
-    private int quality = 80;
+    private int quality = 120;
     private String destinationDirectoryPath;
 
     public Compressor(Context context) {

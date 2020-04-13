@@ -31,6 +31,7 @@ import com.bunizz.instapetts.fragments.side_menus_activities.FragmentConfigEmail
 import com.bunizz.instapetts.fragments.side_menus_activities.FragmentConfigPhone;
 import com.bunizz.instapetts.fragments.side_menus_activities.FragmentNotificacionesConfig;
 import com.bunizz.instapetts.fragments.side_menus_activities.FragmentWebTerms;
+import com.bunizz.instapetts.fragments.side_menus_activities.countries.FragmentCodesCountry;
 import com.bunizz.instapetts.fragments.side_menus_activities.postsSaved.FragmentPostPublicsSaved;
 import com.bunizz.instapetts.fragments.tips.FragmentTipDetail;
 import com.bunizz.instapetts.fragments.tips.FragmentTips;
@@ -50,6 +51,7 @@ public class SideMenusActivities extends AppCompatActivity implements changue_fr
     private Stack<FragmentElement> stack_config_password;
     private Stack<FragmentElement> saved_post;
     private Stack<FragmentElement> stack_push;
+    private Stack<FragmentElement> stack_codes_countries;
     int TYPE_MENU =0;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +64,7 @@ public class SideMenusActivities extends AppCompatActivity implements changue_fr
         stack_config_password = new Stack<>();
         stack_push= new Stack<>();
         saved_post = new Stack<>();
+        stack_codes_countries = new Stack<>();
         Intent iin= getIntent();
         Bundle b = iin.getExtras();
         if(b!=null)
@@ -132,7 +135,28 @@ public class SideMenusActivities extends AppCompatActivity implements changue_fr
             }
         }
 
+        else if (intanceType == FragmentElement.INSTANCE_COUNTRY_CODES) {
+            if (stack_codes_countries.size() == 0) {
+                changue_codes(new FragmentElement<>("", FragmentCodesCountry.newInstance(), FragmentElement.INSTANCE_COUNTRY_CODES),bundle);
+            } else {
+                changue_codes(stack_codes_countries.pop(),bundle);
+            }
+        }
 
+    }
+
+    private void changue_codes(FragmentElement fragment,Bundle bundle) {
+        Log.e("INFLATE_TERMS","siii");
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            if(bundle!=null){
+                mCurrentFragment.getFragment().setArguments(bundle);
+            }
+            if (stack_codes_countries.size() <= 0) {
+                stack_codes_countries.push(mCurrentFragment);
+            }
+        }
+        inflateFragment();
     }
 
     private void change_to_terms(FragmentElement fragment,Bundle bundle) {

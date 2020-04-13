@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.beans.AutenticateBean;
 import com.bunizz.instapetts.beans.HistoriesBean;
+import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.FIRESTORE;
 import com.bunizz.instapetts.constantes.PREFERENCES;
@@ -82,6 +83,7 @@ public class FeedPresenter implements FeedContract.Presenter {
         }else{
             postFriendsBean.setTarget("MULTIPLE");
             postFriendsBean.setIds(followsHelper.getMyFriendsForPost());
+            postFriendsBean.setIds_h(followsHelper.getMyFriendsForPost());
         }
         disposable.add(
                 apiService.getPosts(postFriendsBean)
@@ -111,6 +113,9 @@ public class FeedPresenter implements FeedContract.Presenter {
                                     RETRY ++;
                                     if(RETRY < 3) {
                                         mView.peticion_error();
+                                    }else{
+                                        Log.e("NO_INTERNET","--> tries alcanzados" );
+                                        mView.noInternet();
                                     }
                                     }
                             }
@@ -120,9 +125,9 @@ public class FeedPresenter implements FeedContract.Presenter {
                                 if(RETRY < 3) {
                                     mView.peticion_error();
                                 }else{
-                                    Log.e("NUMBER_POSTS","-->EROR : " + e.getMessage());
+                                    Log.e("NO_INTERNET","-->error" );
+                                  mView.noInternet();
                                 }
-
                             }
                         })
         );
@@ -131,8 +136,8 @@ public class FeedPresenter implements FeedContract.Presenter {
     @Override
     public void geet_feed_recomended(boolean one_user, int id_one) {
         PostFriendsBean postFriendsBean = new PostFriendsBean();
+        postFriendsBean.setId_one(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
          postFriendsBean.setTarget("DISCOVER");
-         postFriendsBean.setId_one(0);
         disposable.add(
                 apiService.getPosts(postFriendsBean)
                         .subscribeOn(Schedulers.io())
@@ -285,7 +290,14 @@ public class FeedPresenter implements FeedContract.Presenter {
     }
 
     @Override
-    public ArrayList<HistoriesBean> getMyStories() {
-      return  myStoryHelper.getMyStories();
+    public HistoriesBean getMyStories() {
+        HistoriesBean bean = new HistoriesBean();
+        ArrayList<IndividualDataPetHistoryBean> historyBeans = new ArrayList<>();
+        historyBeans.addAll(myStoryHelper.getMyStories());
+        bean.setHistories(historyBeans);
+        bean.setName_user(App.read(PREFERENCES.NAME_USER,"INVALID"));
+        bean.setUrl_photo_user(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
+        bean.setId_user(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        return  bean;
     }
 }

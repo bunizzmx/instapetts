@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    >
+    <RelativeLayout
+        android:id="@+id/root_folloes_toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/back_to_main"
+        android:layout_margin="10dp"
+        app:cardElevation="5dp"
+        app:cardCornerRadius="15dp"
+        app:contentPadding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:tint="@color/primary"
+            android:src="@drawable/ic_arrow_back"
+            android:layout_width="15dp"
+            android:layout_height="15dp"/>
+
+    </androidx.cardview.widget.CardView>
+    <TextView
+        android:layout_marginLeft="10dp"
+        android:textSize="18dp"
+        android:text="-"
+        android:id="@+id/name_user_folowers"
+        android:textColor="@color/black"
+        android:fontFamily="@font/avenir_b"
+        android:layout_marginTop="15dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/back_to_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    </RelativeLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_below="@+id/root_folloes_toolbar"
+        android:id="@+id/list_follows"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        tools:listitem="@layout/item_follow"
+        />
+
+    <com.bunizz.instapetts.utils.fastScroll.FastScrollerView
+        android:layout_below="@+id/root_folloes_toolbar"
+        android:layout_alignParentRight="true"
+        android:id="@+id/sample_basic_fastscroller"
+        android:layout_width="32dp"
+        android:layout_height="match_parent"
+        />
+
+    <com.bunizz.instapetts.utils.fastScroll.FastScrollerThumbView
+        android:layout_below="@+id/root_folloes_toolbar"
+        android:layout_toLeftOf="@+id/sample_basic_fastscroller"
+        android:id="@+id/sample_basic_fastscroller_thumb"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="16dp"
+        />
+
+    <include layout="@layout/no_internet"></include>
+    <com.bunizz.instapetts.utils.loadings.SpinKitView
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView"
+        android:background="?selectableItemBackgroundBorderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:padding="10dp" />
+
+</RelativeLayout>

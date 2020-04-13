@@ -21,7 +21,7 @@ public class TipsPresenter implements TipsContract.Presenter {
     private Context mContext;
     private CompositeDisposable disposable = new CompositeDisposable();
     private WebServices apiService;
-
+    int RETRY =0;
     TipsPresenter(TipsContract.View view, Context context) {
         this.mView = view;
         this.mContext = context;
@@ -41,11 +41,27 @@ public class TipsPresenter implements TipsContract.Presenter {
                         .subscribeWith(new DisposableSingleObserver<ResponseTips>() {
                             @Override
                             public void onSuccess(ResponseTips responsePost) {
-                                mView.showTips(responsePost.getList_tips());
+                                if(responsePost.getCode_response()==200) {
+                                    mView.showTips(responsePost.getList_tips());
+                                }else{
+                                    RETRY ++;
+                                    if(RETRY < 3) {
+                                        mView.peticionError();
+                                    }else{
+                                        Log.e("NO_INTERNET","-->request" );
+                                        mView.noInternet();
+                                    }
+                                }
                             }
                             @Override
                             public void onError(Throwable e) {
-                                Log.e("NUMBER_POSTS","-->EROR : " + e.getMessage());
+                                RETRY ++;
+                                if(RETRY < 3) {
+                                    mView.peticionError();
+                                }else{
+                                    Log.e("NO_INTERNET","-->error" );
+                                    mView.noInternet();
+                                }
                             }
                         })
         );

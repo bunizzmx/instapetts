@@ -78,6 +78,7 @@
         android:layout_height="wrap_content">
 
     <ImageView
+        android:visibility="gone"
         android:scaleType="centerCrop"
         android:id="@+id/single_image"
         android:layout_width="match_parent"
@@ -87,6 +88,8 @@
         android:layout_width="match_parent"
         android:layout_height="450dp">
         <androidx.viewpager.widget.ViewPager
+            android:layoutDirection="ltr"
+            android:orientation="horizontal"
             android:id="@+id/list_fotos"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
@@ -107,7 +110,29 @@
             app:progressMode="false"
             app:selectedDotColor="@color/primary"
             />
-
+          <androidx.cardview.widget.CardView
+              android:id="@+id/card_number_indicator"
+              app:cardElevation="1dp"
+             app:contentPaddingLeft="4dp"
+             app:contentPaddingRight="4dp"
+              app:contentPaddingTop="2dp"
+              app:contentPaddingBottom="2dp"
+               android:layout_alignParentRight="true"
+              android:layout_marginTop="10dp"
+              android:layout_marginRight="20dp"
+              app:cardBackgroundColor="@color/primary"
+              app:cardCornerRadius="8dp"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content">
+             <TextView
+                 android:id="@+id/label_number_indicator"
+                 android:textStyle="bold"
+                 android:textSize="12dp"
+                 android:textColor="@color/white"
+                 android:text="1/1"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"/>
+          </androidx.cardview.widget.CardView>
     </RelativeLayout>
         <com.bunizz.instapetts.utils.double_tap.DoubleTapLikeView
             android:visibility="gone"
@@ -119,6 +144,7 @@
             app:icon="@drawable/ic_hand_pet"
             app:doubleTapIn="200" />
         <com.bunizz.instapetts.utils.loadings.SpinKitView
+            android:visibility="gone"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:id="@+id/progres_image"
@@ -159,8 +185,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </RelativeLayout>
-    <TextView
-        style="@style/FontNormal"
+    <androidx.emoji.widget.EmojiTextView
+        android:textSize="14dp"
+        style="@style/FontNormalTitle"
         android:id="@+id/description_posts"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
@@ -176,7 +203,7 @@
         android:layout_height="wrap_content">
         <TextView
             android:id="@+id/date_post"
-            android:text="HACE 20 MIN"
+            android:text="-"
             android:textSize="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -198,10 +225,11 @@
                 android:layout_width="15dp"
                 android:layout_height="15dp"/>
             <TextView
+                style="@style/FontNormalTitleSecondary"
                 android:id="@+id/name_user_posts"
                 android:layout_marginLeft="3dp"
                 android:layout_gravity="center_vertical"
-                android:text="Name User"
+                android:text="-"
                 android:textSize="12dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>

@@ -71,7 +71,7 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
         if(position == 0){
             h.name_pet_item.setText("Tu History");
             if(historiesBeans.get(position)!=null){
-                if(historiesBeans.get(position).getUris_stories()!=null){
+                if(historiesBeans.get(position).getHistories()!=null){
                     h.profile_background.setOnClickListener(view -> {
                             Intent i = new Intent(context, StoryPlayer.class);
                             i.putExtra("sliders", Parcels.wrap(historiesBeans));
@@ -79,7 +79,7 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
                             context.startActivity(i);
                     });
                     h.image_pet_history.setVisibility(View.VISIBLE);
-                    Glide.with(context).load(historiesBeans.get(position).getUris_stories()).into(h.profile_background);
+                    Glide.with(context).load(historiesBeans.get(position).getHistories().get(historiesBeans.get(position).getHistories().size()-1).getUrl_photo()).into(h.profile_background);
                     h.add_story_icon.setVisibility(View.GONE);
                 }else{
                     h.add_story_icon.setVisibility(View.VISIBLE);
@@ -103,7 +103,7 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
             h.add_story_icon.setVisibility(View.GONE);
             h.image_pet_history.setVisibility(View.VISIBLE);
             Glide.with(context).load(historiesBeans.get(position).getUrl_photo_user()).into(h.image_pet_history);
-            Glide.with(context).load(historiesBeans.get(position).getUris_stories()).into(h.profile_background);
+            Glide.with(context).load(historiesBeans.get(position).getHistories().get(historiesBeans.get(position).getHistories().size()-1).getUrl_photo()).into(h.profile_background);
             h.profile_background.setOnClickListener(view -> {
                 Intent i = new Intent(context, StoryPlayer.class);
                 i.putExtra("sliders", Parcels.wrap(historiesBeans));

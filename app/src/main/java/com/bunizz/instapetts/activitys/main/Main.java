@@ -2,7 +2,11 @@ package com.bunizz.instapetts.activitys.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Geocoder;
@@ -11,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.preference.PreferenceManager;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
@@ -18,6 +23,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,10 +37,12 @@ import com.bunizz.instapetts.BuildConfig;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.camera_history.CameraHistoryActivity;
 import com.bunizz.instapetts.activitys.login.LoginActivity;
+import com.bunizz.instapetts.activitys.searchqr.QrSearchActivity;
 import com.bunizz.instapetts.activitys.share_post.ShareActivity;
 import com.bunizz.instapetts.activitys.side_menus_activities.SideMenusActivities;
 import com.bunizz.instapetts.activitys.wizardPets.WizardPetActivity;
 import com.bunizz.instapetts.beans.HistoriesBean;
+import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
@@ -42,6 +50,7 @@ import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
+import com.bunizz.instapetts.fragments.follows.FollowsFragment;
 import com.bunizz.instapetts.fragments.info.InfoPetFragment;
 import com.bunizz.instapetts.fragments.notifications.NotificationsFragment;
 import com.bunizz.instapetts.fragments.post.FragmentListOfPosts;
@@ -65,6 +74,7 @@ import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
 import com.bunizz.instapetts.utils.dilogs.DialogLogout;
 import com.bunizz.instapetts.utils.slidemenu.OnSlideChangedListener;
 import com.bunizz.instapetts.utils.slidemenu.SlideMenuLayout;
+import com.bunizz.instapetts.utils.smoot.SmoothProgressBar;
 import com.bunizz.instapetts.utils.target.TapTarget;
 import com.bunizz.instapetts.utils.target.TapTargetView;
 import com.bunizz.instapetts.web.CONST;
@@ -91,11 +101,13 @@ public class Main extends AppCompatActivity implements change_instance,
         open_camera_histories_listener,
         folowFavoriteListener, open_side_menu {
 
-
+    public static final String POST_SUCCESFULL = "com.bunizz.instapetts.activitys.main.Main.POST_SUCCESFULL";
+    public static final String POST_SENDEND_START = "com.bunizz.instapetts.activitys.main.Main.POST_SENDEND_START";
     private Stack<FragmentElement> stack_feed;
     private Stack<FragmentElement> stack_profile_pet;
     private Stack<FragmentElement> stack_tips;
     private Stack<FragmentElement> stack_serch_pet;
+    private Stack<FragmentElement> stack_follows;
     private Stack<FragmentElement> stack_notifications;
     private Stack<FragmentElement> stack_tip_detail;
     private Stack<FragmentElement> stack_edit_profile;
@@ -112,7 +124,7 @@ public class Main extends AppCompatActivity implements change_instance,
     static final int NEW_POST_REQUEST = 2;
     static final int NEW_PHOTO_UPLOADED= 3;
     static final int NEW_PHOTO_FOR_HISTORY= 4;
-
+    static final int NEW_PHOTO_QR_SCAN= 5;
 
     @BindView(R.id.icon_tips)
     ImageView icon_tips;
@@ -134,6 +146,12 @@ public class Main extends AppCompatActivity implements change_instance,
     @BindView(R.id.text_profile_pet)
     TextView text_profile_pet;
 
+    @BindView(R.id.root_progres_publish)
+    RelativeLayout root_progres_publish;
+
+    @BindView(R.id.smoot_progress)
+    SmoothProgressBar smoot_progress;
+
 
     @BindView(R.id.mainSlideMenu)
     SlideMenuLayout mainSlideMenu;
@@ -143,6 +161,12 @@ public class Main extends AppCompatActivity implements change_instance,
 
     @BindView(R.id.version_app)
     TextView version_app;
+
+    @BindView(R.id.text_smoot)
+    TextView text_smoot;
+
+    @BindView(R.id.close_smoot)
+    RelativeLayout close_smoot;
 
 
     @BindView(R.id.sliding_layout)
@@ -185,6 +209,13 @@ public class Main extends AppCompatActivity implements change_instance,
         startActivity(i);
     }
 
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.open_my_pet_code)
+    void open_my_pet_code() {
+        Intent i = new Intent(this , QrSearchActivity.class);
+        startActivityForResult( i,NEW_PHOTO_QR_SCAN);
+    }
+
 
 
     @SuppressLint("MissingPermission")
@@ -225,13 +256,11 @@ public class Main extends AppCompatActivity implements change_instance,
     @OnClick(R.id.logout)
     void logout() {
         DialogLogout dialogLogout = new DialogLogout(this);
-        dialogLogout.setListener(new logout_listener() {
-            @Override
-            public void logout() {
-                App.getInstance().clear_preferences();
-                Intent i = new Intent(Main.this, LoginActivity.class);
-                startActivity(i);
-            }
+        dialogLogout.setListener(() -> {
+            presenter.logout();
+            App.getInstance().clear_preferences();
+            Intent i = new Intent(Main.this, LoginActivity.class);
+            startActivity(i);
         });
         dialogLogout.show();
     }
@@ -288,6 +317,8 @@ public class Main extends AppCompatActivity implements change_instance,
         changeStatusBarColor(R.color.white);
         Intent iin= getIntent();
         Bundle b = iin.getExtras();
+        IntentFilter server_connected = new IntentFilter(POST_SUCCESFULL);
+        registerReceiver(mainPagerReceiver, server_connected);
         if(b!=null)
         {
             int res  = b.getInt(BUNDLES.DOWNLOADS_INFO);
@@ -307,6 +338,7 @@ public class Main extends AppCompatActivity implements change_instance,
         stack_preview_perfil = new Stack<>();
         stack_posts_publics_search = new Stack<>();
         stack_posts_search_advanced = new Stack<>();
+        stack_follows = new Stack<>();
         setupFirstFragment();
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
@@ -504,6 +536,19 @@ public class Main extends AppCompatActivity implements change_instance,
         ((FragmentListOfPosts) mCurrentFragment.getFragment()).update_lists();
     }
 
+    private void changue_to_follows(FragmentElement fragment,Bundle data) {
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            mCurrentFragment.getFragment().setArguments(data);
+            if (stack_follows.size() <= 0) {
+                stack_follows.push(mCurrentFragment);
+            }
+        }
+        ((FollowsFragment) mCurrentFragment.getFragment()).updateInfo(data);
+        inflateFragment();
+    }
+
+
 
     private void saveFragment() {
         mOldFragment = mCurrentFragment;
@@ -585,7 +630,13 @@ public class Main extends AppCompatActivity implements change_instance,
             } else {
                 change_list_of_posts_advanced(stack_posts_search_advanced.pop(),bundle);
             }
-
+        }
+        else if(intanceType == FragmentElement.INSTANCE_FOLLOWS_USER) {
+            if (stack_follows.size() == 0) {
+                changue_to_follows(new FragmentElement<>("", FollowsFragment.newInstance(), FragmentElement.INSTANCE_FOLLOWS_USER),bundle);
+            } else {
+                changue_to_follows(stack_follows.pop(),bundle);
+            }
         }
     }
 
@@ -686,11 +737,18 @@ public class Main extends AppCompatActivity implements change_instance,
             Log.e("ACTIVITYRES","4");
             if(data!=null) {
                 if(data.getStringExtra("PET_REQUEST")!=null){
-                    Log.e("ACTIVITYRES","2");
-                    Intent i = new Intent(Main.this, WizardPetActivity.class);
-                    startActivityForResult(i, NEW_PET_REQUEST);
+                    if(data.getStringExtra("PET_REQUEST").equals("PET_REQUEST")) {
+                        Log.e("ACTIVITYRES", "2");
+                        Intent i = new Intent(Main.this, WizardPetActivity.class);
+                        startActivityForResult(i, NEW_PET_REQUEST);
+                    }else{
+                        smoot_progress.setVisibility(View.VISIBLE);
+                        root_progres_publish.setVisibility(View.VISIBLE);
+                        close_smoot.setVisibility(View.GONE);
+                        text_smoot.setText("En progreso...");
+                    }
                 }
-                data.getStringArrayListExtra(BUNDLES.URI_FOTO);
+
             }
         }
 
@@ -711,6 +769,16 @@ public class Main extends AppCompatActivity implements change_instance,
                 String name_pet = data.getStringExtra(BUNDLES.NAME_PET);
                 String photo_pet = data.getStringExtra(BUNDLES.URL_PHOTO_PET);
                 upload_story(url,name_pet,id_pet,photo_pet);
+            }
+        }
+
+        else if(requestCode == NEW_PHOTO_QR_SCAN){
+            if(data!=null) {
+                String url =  data.getStringExtra(BUNDLES.UUID);
+                int id_user= data.getIntExtra(BUNDLES.ID_USUARIO,0);
+                Bundle b = new Bundle();
+                b.putInt(BUNDLES.ID_USUARIO,id_user);
+                changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE,b);
             }
         }
 
@@ -777,6 +845,10 @@ public class Main extends AppCompatActivity implements change_instance,
 
     @Override
     public void change_fragment_parameter(int type_fragment, Bundle data) {
+        if(type_fragment==999){
+            Intent i = new Intent(this , QrSearchActivity.class);
+            startActivityForResult( i,NEW_PHOTO_QR_SCAN);
+        }else
         changeOfInstance(type_fragment,data);
     }
 
@@ -853,15 +925,15 @@ public class Main extends AppCompatActivity implements change_instance,
         String filename = splits[index -1];
 
 
-        HistoriesBean historiesBean = new HistoriesBean();
-        historiesBean.setUris_stories(App.getInstance().make_uri_bucket_history(filename));
+        IndividualDataPetHistoryBean historiesBean = new IndividualDataPetHistoryBean();
+        historiesBean.setUrl_photo(App.getInstance().make_uri_bucket_history(filename));
         historiesBean.setName_pet(name_pet);
-        historiesBean.setName_user(App.read(PREFERENCES.NAME_USER,"INVALID"));
         historiesBean.setDate_story(App.formatDateGMT(new Date()));
         historiesBean.setId_user(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         historiesBean.setId_pet(id_pet);
-        historiesBean.setUrl_photo_pet(phohto_pet);
-        historiesBean.setUrl_photo_user(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
+        historiesBean.setPhoto_pet(phohto_pet);
+        historiesBean.setName_user(App.read(PREFERENCES.NAME_USER,"INVALID"));
+        historiesBean.setPhoto_user(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
         presenter.saveMyStory(historiesBean);
     }
 
@@ -1087,5 +1159,32 @@ public class Main extends AppCompatActivity implements change_instance,
                     }
                 });
     }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mainPagerReceiver != null) {
+            Log.e("UNREGISTER","RESERIVER");
+           // this.unregisterReceiver(mainPagerReceiver);
+        }
+    }
+
+    private final BroadcastReceiver mainPagerReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            Log.e("BROADCAST","-->" + action);
+            if (POST_SUCCESFULL.equals(action)) {
+                close_smoot.setVisibility(View.VISIBLE);
+                smoot_progress.setVisibility(View.GONE);
+                text_smoot.setText("COMPLETADO");
+                close_smoot.setOnClickListener(view -> {
+                    root_progres_publish.setVisibility(View.GONE);
+                });
+            }
+        }
+    };
 
 }

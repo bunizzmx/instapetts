@@ -46,6 +46,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -83,6 +84,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     RxPermissions rxPermissions ;
     DialogLoanding dialogLoanding ;
     Intent intent_service ;
+    FirebaseUser user ;
     @SuppressLint("CheckResult")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -289,40 +291,38 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     }
     @Override
     public void loginWithEmail(String correo, String password) {
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        Log.e("CURRENT_USER","-->" + user.getEmail());
 
-        mAuth.createUserWithEmailAndPassword(correo, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+            mAuth.signInWithEmailAndPassword(correo, password)
+                    .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            //Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            if(user!=null){
-                                App.write(PREFERENCES.NAME_USER,user.getDisplayName());
+                            user = mAuth.getCurrentUser();
+                            if(user.isEmailVerified()) {
+                                App.write(PREFERENCES.UUID, user.getUid());
+                                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(LoginActivity.this, instanceIdResult -> {
+                                    String token = instanceIdResult.getToken();
+                                    App.write(PREFERENCES.TOKEN, token);
+                                    generate_user_bean();
+                                });
+                            }else{
+                                Toast.makeText(LoginActivity.this, "VERIFICA TU CORREO", Toast.LENGTH_LONG).show();
                             }
-                            user.sendEmailVerification()
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                Log.d("LOG_IDENTITY", "Email sent.");
-                                            }
-                                        }
-                                    });
-                            //updateUI(user);
                         } else {
-                            Log.d("AUJHFKJH", "createUserWithEmail:success" + task.getException().getMessage());
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
+
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("EEROR_LOGIN", "-->" + e.getMessage());
+                        if (e.getMessage().contains("badly formatted")) {
+                            Toast.makeText(LoginActivity.this, "Correo no valido", Toast.LENGTH_LONG).show();
+                        } else if (e.getMessage().contains("There is no user")) {
+                            Toast.makeText(LoginActivity.this, "Usuario no existe", Toast.LENGTH_LONG).show();
+                        } else if (e.getMessage().contains("The password is invalid")) {
+                            Toast.makeText(LoginActivity.this, "Revisa tus credenciales", Toast.LENGTH_LONG).show();
                         }
 
-                        // ...
-                    }
-                });
-
+                    });
         permision_location();
 
        /* FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -336,6 +336,45 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                     }
                 });
         */
+    }
+
+    @Override
+    public void sigInWithEmail(String correo, String password) {
+        mAuth.createUserWithEmailAndPassword(correo, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if(user!=null){
+                            App.write(PREFERENCES.NAME_USER,user.getDisplayName());
+                        }
+                        user.sendEmailVerification()
+                                .addOnCompleteListener(task1 -> {
+                                    if (task1.isSuccessful()) {
+                                        Toast.makeText(LoginActivity.this,"SE ENVIO UN CORREO DE VERIFICACION",Toast.LENGTH_LONG).show();
+                                        changeOfInstance(FragmentElement.INSTANCE_MAIN_LOGIN);
+                                    }
+                                });
+                    } else {
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                App.getInstance().vibrate();
+                Log.e("EEROR_LOGIN","-->" + e.getMessage());
+                if(e.getMessage().contains("badly formatted")){
+                    Toast.makeText(LoginActivity.this, "Correo no valido", Toast.LENGTH_LONG).show();
+                }else if(e.getMessage().contains("There is no user")){
+                    Toast.makeText(LoginActivity.this, "Usuario no existe" , Toast.LENGTH_LONG).show();
+                }else if(e.getMessage().contains("The password is invalid")){
+                    Toast.makeText(LoginActivity.this, "Revisa tus credenciales" , Toast.LENGTH_LONG).show();
+                }
+                else if(e.getMessage().contains("use by another account")){
+                    Toast.makeText(LoginActivity.this, "Usuario ya existente" , Toast.LENGTH_LONG).show();
+                }
+
+            }
+        });
     }
 
 

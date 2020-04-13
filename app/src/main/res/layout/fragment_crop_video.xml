@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
-    <LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.bunizz.instapetts.utils.trimVideo2.K4LVideoTrimmer
+        android:id="@+id/cropVideoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-    <com.bunizz.instapetts.utils.trimVideo.widget.VideoTrimmerView
-        android:id="@+id/trimmer_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-    </LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </RelativeLayout>

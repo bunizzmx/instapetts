@@ -33,12 +33,14 @@ import com.bunizz.instapetts.activitys.side_menus_activities.SideMenusActivities
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
 import com.bunizz.instapetts.listeners.change_instance;
+import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.folowFavoriteListener;
 import com.bunizz.instapetts.listeners.open_sheet_listener;
 import com.bunizz.instapetts.listeners.open_side_menu;
@@ -61,6 +63,7 @@ import butterknife.OnClick;
 public class FragmentProfileUserPet extends Fragment implements  ProfileUserContract.View {
 
     change_instance listener;
+    changue_fragment_parameters_listener listener_instance;
     FeedAdapter feedAdapter;
 
     ArrayList<Object> data = new ArrayList<>();
@@ -133,6 +136,18 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         i = new Intent(getActivity(), SideMenusActivities.class);
         i.putExtra("TYPE_MENU",2);
         startActivity(i);
+    }
+
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.open_followers)
+    void open_followers() {
+        Log.e("CHANGUE_FOLLOOWS","true");
+        Bundle b = new Bundle();
+         b.putString(BUNDLES.NAME_USUARIO,USERBEAN.getName_user());
+         b.putInt(BUNDLES.ID_USUARIO,USERBEAN.getId());
+         b.putString(BUNDLES.UUID,USERBEAN.getUuid());
+        listener_instance.change_fragment_parameter(FragmentElement.INSTANCE_FOLLOWS_USER,b);
     }
 
 
@@ -246,6 +261,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        listener_instance= (changue_fragment_parameters_listener) context;
         listener= (change_instance) context;
         listener_follow =(folowFavoriteListener)context;
         listener_open_side =(open_side_menu)context;
