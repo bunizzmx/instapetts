@@ -77,7 +77,7 @@
       android:layout_width="match_parent"
       android:layout_height="160dp"/>
 
-  <androidx.emoji.widget.EmojiEditText
+  <EditText
       android:fontFamily="@font/avenir_b"
       android:textSize="24dp"
       android:textAlignment="center"

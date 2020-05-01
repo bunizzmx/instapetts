@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
@@ -15,6 +18,7 @@ import com.bunizz.instapetts.fragments.post.adapters.PostsAdapter;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.postsListener;
+import com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerView;
 
 import org.parceler.Parcels;
 
@@ -31,7 +35,7 @@ import butterknife.ButterKnife;
 
 public class FragmentListOfPosts extends Fragment {
     @BindView(R.id.list_posts_publics_advanced)
-    RecyclerView list_posts_publics_advanced;
+    ExoPlayerRecyclerView list_posts_publics_advanced;
 
     changue_fragment_parameters_listener listener;
     PostsAdapter feedAdapter;
@@ -46,27 +50,7 @@ public class FragmentListOfPosts extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         feedAdapter = new PostsAdapter(getContext());
-        feedAdapter.setListener_post(new postsListener() {
-            @Override
-            public void onLike(int id_post, boolean type_like) {
-
-            }
-
-            @Override
-            public void onFavorite(int id_post, PostBean postBean) {
-
-            }
-
-            @Override
-            public void onDisfavorite(int id_post) {
-
-            }
-
-            @Override
-            public void openMenuOptions(int id_post, int id_usuario, String uuid) {
-
-            }
-        });
+        feedAdapter.setRequestManager(initGlide());
         Bundle bundle=getArguments();
         if(bundle!=null){
             data = Parcels.unwrap(bundle.getParcelable("POSTS"));
@@ -86,7 +70,8 @@ public class FragmentListOfPosts extends Fragment {
         ButterKnife.bind(this, view);
         list_posts_publics_advanced.setLayoutManager(new LinearLayoutManager(getContext()));
         list_posts_publics_advanced.setAdapter(feedAdapter);
-        feedAdapter.setData(data);
+        list_posts_publics_advanced.setMediaObjects(data);
+        feedAdapter.addData(data);
         feedAdapter.setListener(new changue_fragment_parameters_listener() {
             @Override
             public void change_fragment_parameter(int type_fragment, Bundle data) {
@@ -100,8 +85,10 @@ public class FragmentListOfPosts extends Fragment {
         if(bundle!=null){
             data = Parcels.unwrap(bundle.getParcelable("POSTS"));
             Log.e("FROM_PROFILE","--->size  : " + data.size());
-            if(feedAdapter!=null)
-            feedAdapter.addData(data);
+            if(feedAdapter!=null) {
+                list_posts_publics_advanced.setMediaObjects(data);
+                feedAdapter.addData(data);
+            }
         }
     }
 
@@ -111,5 +98,26 @@ public class FragmentListOfPosts extends Fragment {
         super.onAttach(context);
         listener= (changue_fragment_parameters_listener) context;
     }
+
+    private RequestManager initGlide() {
+        RequestOptions options = new RequestOptions();
+        return Glide.with(this)
+                .setDefaultRequestOptions(options);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(list_posts_publics_advanced!=null)
+            list_posts_publics_advanced.onPausePlayer();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(list_posts_publics_advanced!=null){}
+        // mRecyclerView.releasePlayer();
+    }
+
 }
 

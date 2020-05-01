@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_marginBottom="10dp"
     android:layout_height="wrap_content">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -175,17 +174,25 @@
             android:src="@drawable/ic_corazon"
             android:layout_width="25dp"
             android:layout_height="25dp"/>
-        <TextView
-           style="@style/FontNormal"
-            android:id="@+id/num_likes_posts"
+        <ImageView
+            android:id="@+id/icon_commentar"
             android:layout_centerVertical="true"
-            android:text="-"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="20dp"
             android:layout_toRightOf="@+id/icon_like"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:src="@drawable/ic_commentar"
+            android:layout_width="23dp"
+            android:layout_height="23dp"/>
+
     </RelativeLayout>
-    <androidx.emoji.widget.EmojiTextView
+    <TextView
+        android:layout_marginTop="5dp"
+        style="@style/FontNormal"
+        android:id="@+id/num_likes_posts"
+        android:text="-"
+        android:layout_marginLeft="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
         android:textSize="14dp"
         style="@style/FontNormalTitle"
         android:id="@+id/description_posts"

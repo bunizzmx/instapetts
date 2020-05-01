@@ -1,18 +1,18 @@
 package com.bunizz.instapetts.db.helpers;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
-import android.util.Log;
+        import android.content.ContentValues;
+        import android.content.Context;
+        import android.database.Cursor;
+        import android.util.Log;
 
-import com.bunizz.instapetts.beans.HistoriesBean;
-import com.bunizz.instapetts.beans.UserBean;
-import com.bunizz.instapetts.db.GenericHelper;
+        import com.bunizz.instapetts.beans.HistoriesBean;
+        import com.bunizz.instapetts.beans.UserBean;
+        import com.bunizz.instapetts.db.GenericHelper;
 
-import net.sqlcipher.database.SQLiteConstraintException;
-import net.sqlcipher.database.SQLiteDatabase;
+        import net.sqlcipher.database.SQLiteConstraintException;
+        import net.sqlcipher.database.SQLiteDatabase;
 
-import java.util.ArrayList;
+        import java.util.ArrayList;
 
 public class FollowsHelper extends GenericHelper {
 
@@ -73,11 +73,11 @@ public class FollowsHelper extends GenericHelper {
                 "id_user="+id_user,
                 null, null, null, null, null);
         try {
-           if(cursor.moveToFirst()){
-               return true;
-           }else{
-               return  false;
-           }
+            if(cursor.moveToFirst()){
+                return true;
+            }else{
+                return  false;
+            }
         } catch (SQLiteConstraintException | IllegalStateException e) {
             e.printStackTrace();
         } finally {

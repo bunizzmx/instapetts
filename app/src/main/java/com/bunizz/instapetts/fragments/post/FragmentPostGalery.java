@@ -2,6 +2,7 @@ package com.bunizz.instapetts.fragments.post;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +82,8 @@ public class FragmentPostGalery extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        list_galery.setLayoutManager(new GridLayoutManager(getContext(),3));
+        Log.e("ONVIEW_CREATED","galery");
+        list_galery.setLayoutManager(new GridLayoutManager(getContext(),2));
         list_galery.setAdapter(feedAdapter);
         feedAdapter.setListener(new changue_fragment_parameters_listener() {
             @Override

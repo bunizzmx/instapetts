@@ -5,6 +5,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     >
     <RelativeLayout
         android:layout_width="match_parent"
@@ -14,7 +15,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             app:cardElevation="5dp"
-            app:cardCornerRadius="30dp"
+            app:cardCornerRadius="20dp"
             app:contentPadding="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -25,6 +26,7 @@
                 android:layout_height="15dp"/>
         </androidx.cardview.widget.CardView>
         <ImageView
+            android:id="@+id/like_tip"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
@@ -41,12 +43,22 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <ImageView
-                android:scaleType="centerCrop"
-                android:src="@drawable/perro_demo"
+            <androidx.cardview.widget.CardView
+                android:layout_margin="5dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="3dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/image_tip_detail"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/perro_demo"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"/>
+            </androidx.cardview.widget.CardView>
+
             <TextView
+                android:id="@+id/title_detail"
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
@@ -54,11 +66,12 @@
                 android:fontFamily="@font/avenir_black"
                 android:textSize="18dp"
                 android:textColor="@color/black"
-                android:text="Titulo del tipo para tu peeriito varelo"
+                android:text="-"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <TextView
+                android:id="@+id/body_detail"
                 android:lineSpacingExtra="5dp"
                 android:textAlignment="textStart"
                 android:layout_margin="20dp"

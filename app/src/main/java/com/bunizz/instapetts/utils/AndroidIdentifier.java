@@ -9,6 +9,9 @@ import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import com.bunizz.instapetts.App;
+import com.bunizz.instapetts.constantes.PREFERENCES;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
@@ -88,7 +91,11 @@ public class AndroidIdentifier {
     private String getAndroidID() {
         ContentResolver contentResolver = null;
         if (context != null) {
-            contentResolver = context.getContentResolver();
+            try {
+                contentResolver = context.getContentResolver();
+            }catch (Exception e){
+                androidID = App.read(PREFERENCES.ANDROID_ID,"INVALID");
+            }
         }
         if (contentResolver != null) {
             androidID = Secure.getString(contentResolver, Secure.ANDROID_ID);

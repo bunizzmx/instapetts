@@ -161,6 +161,7 @@ class CropLayout @JvmOverloads constructor(
     val animator = GestureAnimator.of(cropImageView, frame, scale)
     val animation = GestureAnimation(cropOverlay, animator)
     animation.start()
+    cropImageView.requestLayout()
   }
 
   fun setBitmap(bitmap: Bitmap) {

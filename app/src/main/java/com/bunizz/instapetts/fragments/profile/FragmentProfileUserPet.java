@@ -16,13 +16,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
@@ -52,6 +55,7 @@ import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
 import com.bunizz.instapetts.utils.tabs2.SmartTabLayout;
 import com.bunizz.instapetts.utils.target.TapTarget;
 import com.bunizz.instapetts.utils.target.TapTargetView;
+import com.google.android.material.appbar.AppBarLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,6 +119,8 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     @BindView(R.id.spinky_loading_profile_info)
     SpinKitView spinky_loading_profile_info;
 
+    @BindView(R.id.refresh_profile)
+    SwipeRefreshLayout refresh_profile;
 
 
     Style style = Style.values()[6];
@@ -196,6 +202,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        title_toolbar.setText(App.read(PREFERENCES.NAME_USER,"USUARIO"));
         icon_toolbar.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_settings));
         list_pets_propietary.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
         petsPropietaryAdapter.setListener(new open_sheet_listener() {
@@ -243,7 +250,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         });
         presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0));
 
-      /*  refresh_profile.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+       refresh_profile.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 UserBean userBean = new UserBean();
@@ -251,10 +258,11 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
                 presenter.getInfoUser(userBean);
                 presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0));
             }
-        });*/
+        });
         UserBean userBean = new UserBean();
         userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         presenter.getInfoUser(userBean);
+
     }
 
 
@@ -315,7 +323,9 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
 
     @Override
     public void showPostUser(ArrayList<PostBean> posts) {
+        refresh_profile.setRefreshing(false);
         Fragment frag = adapter_pager.getItem(0);
+        POSTS.clear();
         POSTS.addAll(posts);
         ArrayList<Object> results = new ArrayList<>();
         results.addAll(POSTS);

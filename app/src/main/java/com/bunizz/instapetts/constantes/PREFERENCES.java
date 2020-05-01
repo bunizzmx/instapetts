@@ -17,8 +17,8 @@ public interface PREFERENCES {
     String NAME_USER ="NAME_USER";
     String IS_FIRST_USER ="IS_FIRST_USER";
     String ID_USER_FROM_WEB ="ID_USER_FROM_WEB";
-
-
+    String ANDROID_ID ="ANDROID_ID";
+    String CP ="CP";
 
     //NOTIFICATIONS PUSH
 

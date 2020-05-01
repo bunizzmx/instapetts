@@ -7,7 +7,7 @@
     android:background="?attr/selectableItemBackground"
     android:foreground="?attr/selectableItemBackground">
     <TextView
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="20sp"
         android:fontFamily="@font/avenir_black"
         android:textColor="#777575"
         android:layout_centerVertical="true"

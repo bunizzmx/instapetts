@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="match_parent">
   <include layout="@layout/tollbar"/>
   <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -8,8 +9,7 @@
       android:id="@+id/refresh_tips"
       android:layout_width="match_parent"
       android:layout_height="match_parent">
-  <androidx.recyclerview.widget.RecyclerView
-
+  <com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerViewTips
       android:id="@+id/list_tips"
       android:layout_width="match_parent"
       android:layout_height="match_parent"/>

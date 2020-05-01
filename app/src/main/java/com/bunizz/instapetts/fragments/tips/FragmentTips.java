@@ -2,6 +2,7 @@ package com.bunizz.instapetts.fragments.tips;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
@@ -24,12 +28,15 @@ import com.bunizz.instapetts.beans.TipsBean;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
 import com.bunizz.instapetts.fragments.post.adapters.GaleryAdapter;
 import com.bunizz.instapetts.fragments.tips.adapters.TipsAdapter;
+import com.bunizz.instapetts.listeners.PlayStopVideoListener;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.utils.loadings.SpinKitView;
 import com.bunizz.instapetts.utils.loadings.SpriteFactory;
 import com.bunizz.instapetts.utils.loadings.Style;
 import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
+import com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerView;
+import com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerViewTips;
 
 import java.util.ArrayList;
 
@@ -38,7 +45,7 @@ import butterknife.ButterKnife;
 
 public class FragmentTips extends Fragment implements  TipsContract.View {
     @BindView(R.id.list_tips)
-    RecyclerView list_tips;
+    ExoPlayerRecyclerViewTips list_tips;
 
     change_instance listener;
     changue_fragment_parameters_listener listener_change;
@@ -62,6 +69,10 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
 
     @BindView(R.id.root_no_internet)
     RelativeLayout root_no_internet;
+
+    @BindView(R.id.open_notifications)
+    RelativeLayout open_notifications;
+
 
     @BindView(R.id.refresh_tips)
     SwipeRefreshLayout refresh_tips;
@@ -90,11 +101,24 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
         ButterKnife.bind(this, view);
         list_tips.setLayoutManager(new LinearLayoutManager(getContext()));
         list_tips.setAdapter(adapter);
+        adapter.setListener_video(new PlayStopVideoListener() {
+            @Override
+            public void StopVideo() {
+                list_tips.onPausePlayer();
+            }
+
+            @Override
+            public void MuteVideo() {
+                list_tips.mute();
+            }
+        });
+        adapter.setRequestManager(initGlide());
         presenter.getTips();
         refresh_tips.setOnRefreshListener(() ->{
             root_no_internet.setVisibility(View.GONE);
             presenter.getTips();
         });
+        open_notifications.setVisibility(View.GONE);
         Style style = Style.values()[6];
         Sprite drawable = SpriteFactory.create(style);
         spin_kit.setIndeterminateDrawable(drawable);
@@ -114,10 +138,12 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
     @Override
     public void showTips(ArrayList<TipsBean> tips_list) {
         if(tips_list!=null) {
+            data.clear();
+            data.addAll(tips_list);
+            refresh_tips.setRefreshing(false);
             root_loading.setVisibility(View.GONE);
-            ArrayList<Object> to_object_data = new ArrayList<>();
-            to_object_data.addAll(tips_list);
-            adapter.setData(to_object_data);
+            list_tips.setMediaObjects(data);
+            adapter.setData(data);
         }
     }
 
@@ -128,9 +154,28 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
         root_no_internet.setVisibility(View.VISIBLE);
     }
 
+    private RequestManager initGlide() {
+        RequestOptions options = new RequestOptions();
+        return Glide.with(this)
+                .setDefaultRequestOptions(options);
+    }
     @Override
     public void peticionError() {
        presenter.getTips();
+    }
+
+
+    @Override
+    public void onStop() {
+        Log.e("LIFECICLE","STOP");
+        super.onStop();
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 }
 

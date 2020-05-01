@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.emoji.widget.EmojiEditText;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -65,15 +64,16 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     TextView location_user;
     uploads listener;
     @BindView(R.id.description_post)
-    EmojiEditText description_post;
+    EditText description_post;
     String concat_paths="";
     PetHelper helper;
     ArrayList<PetBean> pets_cuerrent = new ArrayList<>();
 
     @BindView(R.id.check_location)
     Switch check_location;
-
-
+    PostBean post ;
+    int DURACION =0;
+    String ASPECT="";
 
     @OnClick(R.id.share_post_pet)
     void share_post_pet()
@@ -84,27 +84,24 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             dialogShosePet.setListener(new chose_pet_listener() {
                 @Override
                 public void chose(String url_foto, int id_pet, String name_pet) {
-                    if(is_video==1)
-                        beginUploadInBackground(paths,true);
-                    else
-                        beginUploadInBackground(paths,false);
-                    PostBean post = new PostBean();
+                    post = new PostBean();
                     post.setName_pet(name_pet);
-                    post.setDescription(description_post.getText().toString());
-                    post.setName_user(App.read(PREFERENCES.NAME_USER, "INVALID"));
-                    post.setUrl_photo_pet(url_foto);
-                    post.setUrl_photo_user(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH, "INVALID"));
-                    post.setUrls_posts(concat_paths);
-                    post.setUuidbucket("xx");
-                    post.setUuid(App.read(PREFERENCES.UUID, "INVALID"));
-                    post.setDate_post(App.formatDateGMT(new Date()));
-                    post.setTarget("NEW");
                     post.setId_pet(id_pet);
-                    post.setType_post(is_video);
-                    if(App.read(PREFERENCES.ALLOW_LOCATION_POST,true))
-                    post.setAddress(App.read(PREFERENCES.ADDRESS_USER,"INVALID"));
-                    post.setId_usuario(App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
-                    presenter.sendPost(post);
+                    post.setUrl_photo_pet(url_foto);
+                    post.setCp(App.read(PREFERENCES.CP,0));
+                    post.setLat(App.read(PREFERENCES.LAT,0f));
+                    post.setLon(App.read(PREFERENCES.LON,0f));
+                    Log.e("POSICIONES","--->" + post.getLon() + "/" + post.getLat() + "/" + post.getCp());
+                    if(is_video==1) {
+                        post.setDuracion(DURACION);
+                        post.setAspect(ASPECT);
+                        beginUploadInBackground(paths, true);
+                    }
+                    else {
+                        post.setDuracion(0);
+                        post.setAspect("-");
+                        beginUploadInBackground(paths, false);
+                    }
                 }
 
                 @Override
@@ -150,7 +147,8 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         if(bundle!=null){
             paths.addAll(bundle.getStringArrayList("data_pahs"));
             is_video = bundle.getInt("is_video");
-            Log.e("TYPE_POST","-->" + is_video);
+            DURACION = bundle.getInt(BUNDLES.VIDEO_DURATION,30);
+            ASPECT =   bundle.getString(BUNDLES.VIDEO_ASPECT);
             for (int i =0;i< paths.size();i++){
                 String splits[] = paths.get(i).split("/");
                 int index = splits.length;
@@ -167,10 +165,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
                     else
                         concat_paths += "," + App.getInstance().make_uri_bucket_posts(splits[index - 1]);
                 }
-
-                Log.e("URL_SIMPLE","-->" + splits[index-1]);
             }
-            Log.e("URL_SIMPLE","FInal : " + concat_paths);
         }
         adapter.setData(paths);
         pets_cuerrent = helper.getMyPets();
@@ -231,20 +226,29 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         intent.putStringArrayListExtra(ImagePostsService.INTENT_KEY_NAME, filePaths);
         intent.putExtra(BUNDLES.NOTIFICATION_TIPE,0);
         if(is_video) {
+            String uri_tuhmbh="";
             Bitmap bMap = ThumbnailUtils.createVideoThumbnail(filePaths.get(0), MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);//MediaStore.Video.Thumbnails.MICRO_KIND
             if (bMap != null) {
                 try {
                     Log.e("SAVE_IMAGE","SUCCESS : ");
-                    File newfile = savebitmap(bMap);
+                    File newfile = savebitmap(bMap,filePaths.get(0));
+                    uri_tuhmbh = String.valueOf(newfile.getPath());
+                    post.setThumb_video(App.getInstance().make_uri_bucket_thumbh_video(uri_tuhmbh));
                 } catch (IOException e) {
                     Log.e("SAVE_IMAGE","ERROR : " + e.getMessage());
                     e.printStackTrace();
                 }
             }
+            Log.e("EXTRA_THUMBH " ,"-->"+uri_tuhmbh);
+            intent.putExtra(BUNDLES.PHOTO_TUMBH,uri_tuhmbh);
             intent.putExtra(BUNDLES.POST_TYPE, 1);
+            send_post();
         }
-        else
-            intent.putExtra(BUNDLES.POST_TYPE,0);
+        else {
+            post.setThumb_video("-");
+            intent.putExtra(BUNDLES.POST_TYPE, 0);
+            send_post();
+        }
 
         intent.putExtra(ImagePostsService.INTENT_TRANSFER_OPERATION, ImagePostsService.TRANSFER_OPERATION_UPLOAD);
         context.startService(intent);
@@ -252,12 +256,19 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     }
 
 
-    public  File savebitmap(Bitmap bmp) throws IOException {
-        Log.e("SAVE_IMAGE","ON CAHCE");
+    public  File savebitmap(Bitmap bmp,String name_video) throws IOException {
+        Log.e("SAVE_IMAGE","ON CAHCE" + name_video);
+        String splits[] = name_video.split("/");
+        String name_video_complete = splits[splits.length-1];
+        Log.e("SAVE_IMAGE","--> C : " + name_video_complete);
+        Log.e("SAVE_IMAGE","--> A : " + name_video_complete.replace(".mp4",""));
+        String name_sin_dot = name_video_complete.replace(".mp4","");
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        Log.e("SAVE_IMAGE","--> SIN DOT : "+ name_sin_dot);
+
         bmp.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
         File f = new File( getContext().getApplicationContext().getCacheDir()
-                + File.separator + "hlsthiums.jpg");
+                + File.separator + name_sin_dot +".jpg");
         f.createNewFile();
         FileOutputStream fo = new FileOutputStream(f);
         fo.write(bytes.toByteArray());
@@ -269,6 +280,23 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         listener =(uploads)context;
+    }
+
+
+    void send_post(){
+        post.setDescription(description_post.getText().toString());
+        post.setName_user(App.read(PREFERENCES.NAME_USER, "INVALID"));
+        post.setUrl_photo_user(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH, "INVALID"));
+        post.setUrls_posts(concat_paths);
+        post.setUuidbucket("xx");
+        post.setUuid(App.read(PREFERENCES.UUID, "INVALID"));
+        post.setDate_post(App.formatDateGMT(new Date()));
+        post.setTarget("NEW");
+        post.setType_post(is_video);
+        if(App.read(PREFERENCES.ALLOW_LOCATION_POST,true))
+            post.setAddress(App.read(PREFERENCES.ADDRESS_USER,"INVALID"));
+        post.setId_usuario(App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
+        presenter.sendPost(post);
     }
 }
 

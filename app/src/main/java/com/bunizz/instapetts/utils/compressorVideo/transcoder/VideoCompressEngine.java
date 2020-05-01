@@ -84,14 +84,6 @@ public class VideoCompressEngine {
         this.inputPath = inputPath;
         this.outputPath = outputPath;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            Uri uri = Uri.parse(new File(inputPath).toURI().toString());
-            try {
-                inputFileDescriptor = context.getContentResolver().openFile(uri, "r", null).getFileDescriptor();
-            } catch (FileNotFoundException | NullPointerException e) {
-                e.printStackTrace();
-            }
-        } else {
             //checkers
             if (null == inputPath) {
                 throw new NullPointerException("Input path cannot be null.");
@@ -105,7 +97,7 @@ public class VideoCompressEngine {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+
 
         if (inputFileDescriptor == null) {
             throw new IllegalStateException("Data source is not set.");

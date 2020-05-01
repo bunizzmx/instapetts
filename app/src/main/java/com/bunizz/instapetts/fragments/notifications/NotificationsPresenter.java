@@ -30,4 +30,15 @@ public class NotificationsPresenter implements  NotificationsContract.Presenter 
         notificationBeans = notificationHelper.getAllNotifications();
         mView.showNotifications(notificationBeans);
     }
+
+    @Override
+    public void deleteNotification(int id) {
+        notificationHelper.deleteNotificacion(id);
+    }
+
+    @Override
+    public void deleteAll() {
+         notificationHelper.deleteAll();
+         mView.deleteAllComplete();
+    }
 }

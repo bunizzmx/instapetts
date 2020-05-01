@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.App;
@@ -22,8 +23,10 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.beans.SelectedsImagesBean;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.FragmentElement;
+import com.bunizz.instapetts.fragments.camera.CameraFragment;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.fragments.share_post.Picker.image.ImageListRecyclerViewAdapter;
 import com.bunizz.instapetts.fragments.share_post.Picker.image.ImagePickerContract;
@@ -54,6 +57,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ImageCropFragment extends Fragment {
 
@@ -71,12 +75,26 @@ public class ImageCropFragment extends Fragment {
     int IS_FROM_CAMERA = 0;
 
     uploads listener_uploads;
+    int INDEX_IMAGE=0;
 
     ArrayAdapter albumAdapter;
     boolean IS_CROPED_IMAGE_FINISH = false;
 
-    String PATH_after ="";
+    @OnClick(R.id.changue_to_4_3)
+    void changue_to_4_3()
+    {
+      cropLayout.modify_cropper(1f);
+    }
 
+    @OnClick(R.id.changue_to_4_4)
+    void changue_to_4_4()
+    {
+        cropLayout.modify_cropper(0.5f);
+    }
+
+
+    String PATH_after ="";
+    ArrayList<SelectedsImagesBean> seleccionadas = new ArrayList<>();
     ArrayList<String> paths = new ArrayList<>();
     ImageSelectedAdapter adapter;
     changue_fragment_parameters_listener listener;
@@ -101,7 +119,11 @@ public class ImageCropFragment extends Fragment {
             Log.e("FROM_PROFILE","--->" + is_from_profile);
         }
         adapter = new ImageSelectedAdapter(getContext());
-        adapter.setSeleteds(paths);
+        for(int i =0;i<paths.size();i++){
+            seleccionadas.add(new SelectedsImagesBean(paths.get(i),false));
+        }
+        adapter.setSeleteds(seleccionadas);
+        INDEX_IMAGE = 0;
     }
 
     @Override
@@ -122,7 +144,11 @@ public class ImageCropFragment extends Fragment {
                     public void run() {
                         cropLayout.setUri(Uri.parse(paths.get(0)));
                         if(adapter!=null){
-                            adapter.setSeletedsnew(paths);
+
+                            for(int i =0;i<paths.size();i++){
+                                seleccionadas.add(new SelectedsImagesBean(paths.get(i),false));
+                            }
+                            adapter.setSeletedsnew(seleccionadas);
                         }
                     }
                 });
@@ -154,9 +180,18 @@ public class ImageCropFragment extends Fragment {
                             }
                         }catch (Exception e){}
                     }
-                    if(CURRENT_INDEX < paths.size()){
-                        Log.e("lkjhdfjkdsh","cccccccc");
-                        execute_crop(CURRENT_INDEX);
+                    if(CURRENT_INDEX < paths.size()-1){
+                        CURRENT_INDEX ++;
+                        if(CURRENT_INDEX==paths.size()-1){
+                            crop_now_selected.setText("FINALIZAR");
+                            Log.e("lkjhdfjkdsh","POST");
+                            Bundle b = new Bundle();
+                            b.putStringArrayList("data_pahs",array_list_cropes);
+                            listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
+                            CURRENT_INDEX =0;
+                        }else{
+                            cropLayout.setUri(Uri.parse(paths.get(CURRENT_INDEX)));
+                        }
                     }else{
                         if (App.read(PREFERENCES.FROM_PICKER, "PROFILE").equals("PROFILE")) {
                             Log.e("lkjhdfjkdsh","PROFILE");
@@ -179,21 +214,17 @@ public class ImageCropFragment extends Fragment {
             }
         });
 
-        cropLayout.setUri(Uri.parse(paths.get(0)));
+        cropLayout.setUri(Uri.parse(paths.get(CURRENT_INDEX)));
         crop_now_selected.setOnClickListener(view1 -> {
-
-                Log.e("lkjhdfjkdsh","execute");
-                array_list_cropes.clear();
-                execute_crop(CURRENT_INDEX);
-
+            if(CURRENT_INDEX < paths.size()-1){
+                adapter.update_croped_item(CURRENT_INDEX);
+                cropLayout.crop();
+            }else if(CURRENT_INDEX == paths.size()-1){
+                crop_now_selected.setText("Finalizar");
+                cropLayout.crop();
+            }
         });
 
-    }
-    void execute_crop(int  index){
-        Log.e("CURRENT_CROP","-->" + index);
-        cropLayout.setUri(Uri.parse(paths.get(index)));
-        CURRENT_INDEX ++;
-        cropLayout.crop();
     }
 
 
@@ -248,21 +279,26 @@ public class ImageCropFragment extends Fragment {
 
     public class ImageSelectedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-        ArrayList<String> seleteds = new ArrayList<>();
+        ArrayList<SelectedsImagesBean> seleteds = new ArrayList<>();
         Context context;
 
         public ImageSelectedAdapter(Context context) {
             this.context = context;
         }
 
-        public ArrayList<String> getSeleteds() {
+        public ArrayList<SelectedsImagesBean> getSeleteds() {
             return seleteds;
         }
 
-        public void setSeleteds(ArrayList<String> seleteds) {
+        public void update_croped_item(int index){
+            this.seleteds.get(index).setIs_selected(true);
+            notifyDataSetChanged();
+        }
+
+        public void setSeleteds(ArrayList<SelectedsImagesBean> seleteds) {
             this.seleteds = seleteds;
         }
-        public void setSeletedsnew(ArrayList<String> seleteds) {
+        public void setSeletedsnew(ArrayList<SelectedsImagesBean> seleteds) {
             this.seleteds = seleteds;
             notifyDataSetChanged();
         }
@@ -276,7 +312,12 @@ public class ImageCropFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             ImageSelectedHolder h = (ImageSelectedHolder)holder ;
-            Glide.with(context).load(paths.get(position)).into(h.image_selected);
+            Glide.with(context).load(seleteds.get(position).getPath()).into(h.image_selected);
+            if(seleteds.get(position).isIs_selected()){
+                h.image_croped.setVisibility(View.VISIBLE);
+            }else
+                h.image_croped.setVisibility(View.GONE);
+
         }
 
         @Override
@@ -286,9 +327,11 @@ public class ImageCropFragment extends Fragment {
 
         public class ImageSelectedHolder extends RecyclerView.ViewHolder{
             ImageView image_selected;
+            RelativeLayout image_croped;
             public ImageSelectedHolder(@NonNull View itemView) {
                 super(itemView);
                 image_selected = itemView.findViewById(R.id.image_selected);
+                image_croped = itemView.findViewById(R.id.image_croped);
             }
         }
     }

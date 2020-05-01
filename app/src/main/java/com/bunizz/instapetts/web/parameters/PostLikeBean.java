@@ -8,6 +8,10 @@ public class PostLikeBean {
     @Expose
     int id_post;
 
+    @SerializedName("id_user")
+    @Expose
+    int id_user;
+
     @SerializedName("type_event")
     @Expose
     int type_event;
@@ -47,5 +51,13 @@ public class PostLikeBean {
 
     public void setTarget(String target) {
         this.target = target;
+    }
+
+    public int getId_user() {
+        return id_user;
+    }
+
+    public void setId_user(int id_user) {
+        this.id_user = id_user;
     }
 }

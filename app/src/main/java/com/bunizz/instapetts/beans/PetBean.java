@@ -36,7 +36,7 @@ public class PetBean {
 
     @SerializedName("rate_pet")
     @Expose
-    String rate_pet;
+    float rate_pet;
 
     @SerializedName("name_propietary")
     @Expose
@@ -70,12 +70,18 @@ public class PetBean {
     @Expose
     String uuid;
 
+    @SerializedName("target")
+    @Expose
+    String target;
+
+
+
 
 
     public PetBean() {
     }
 
-    public PetBean(String name_pet, String raza_pet, String peso_pet, String color_pet, String descripcion_pet, String genero_pet, String rate_pet, String name_propietary, int id_propietary, String id_pet, int type_pet) {
+    public PetBean(String name_pet, String raza_pet, String peso_pet, String color_pet, String descripcion_pet, String genero_pet, float rate_pet, String name_propietary, int id_propietary, String id_pet, int type_pet) {
         this.name_pet = name_pet;
         this.raza_pet = raza_pet;
         this.peso_pet = peso_pet;
@@ -129,11 +135,11 @@ public class PetBean {
         this.genero_pet = genero_pet;
     }
 
-    public String getRate_pet() {
+    public float getRate_pet() {
         return rate_pet;
     }
 
-    public void setRate_pet(String rate_pet) {
+    public void setRate_pet(float rate_pet) {
         this.rate_pet = rate_pet;
     }
 
@@ -183,6 +189,14 @@ public class PetBean {
 
     public void setUrl_photo(String url_photo) {
         this.url_photo = url_photo;
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
     }
 
     public ContentValues toContentValues() {
@@ -236,8 +250,13 @@ public class PetBean {
         if (cursor.getColumnIndex(PetHelper.EDAD_PET) != -1)
             this.edad_pet = cursor.getString(cursor.getColumnIndex(PetHelper.EDAD_PET));
 
-        if (cursor.getColumnIndex(PetHelper.RATING_PET) != -1)
-            this.rate_pet = cursor.getString(cursor.getColumnIndex(PetHelper.RATING_PET));
+        if (cursor.getColumnIndex(PetHelper.RATING_PET) != -1) {
+            try {
+                this.rate_pet = Float.parseFloat(cursor.getString(cursor.getColumnIndex(PetHelper.RATING_PET)));
+            }catch (Exception e){
+                this.rate_pet = 0;
+            }
+        }
 
         if (cursor.getColumnIndex(PetHelper.URL_PHOTO) != -1)
             this.url_photo = cursor.getString(cursor.getColumnIndex(PetHelper.URL_PHOTO));
@@ -262,4 +281,5 @@ public class PetBean {
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
+
 }

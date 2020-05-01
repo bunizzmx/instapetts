@@ -71,6 +71,7 @@ public class FragmentPetList extends Fragment implements  PetListContract.View{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e("CRE_FRAGMENT","oncreate");
         adapter = new SearchPetAdapter(getContext());
         presenter = new PetListPresenter(this,getContext());
         helper = new SearchResentHelper(getContext());

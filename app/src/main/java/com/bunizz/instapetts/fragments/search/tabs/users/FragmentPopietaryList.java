@@ -57,17 +57,21 @@ public class FragmentPopietaryList  extends Fragment implements  UserListContrac
 
     public void setData(ArrayList<Object> data) {
         this.data = data;
-         if(this.data.size()>0) {
-             root_no_data.setVisibility(View.GONE);
-             list_propietary_search_recent.setVisibility(View.GONE);
-             list_propietary_search_result.setVisibility(View.VISIBLE);
-             adapter.setHIDE_LABEL(true);
-             adapter.setData(data);
-         }else{
-             root_no_data.setVisibility(View.VISIBLE);
-             list_propietary_search_recent.setVisibility(View.GONE);
-             list_propietary_search_result.setVisibility(View.GONE);
-         }
+        if(root_no_data!=null) {
+            if (this.data.size() > 0) {
+                root_no_data.setVisibility(View.GONE);
+                list_propietary_search_recent.setVisibility(View.GONE);
+                list_propietary_search_result.setVisibility(View.VISIBLE);
+                adapter.setHIDE_LABEL(true);
+                adapter.setData(data);
+            } else {
+                root_no_data.setVisibility(View.VISIBLE);
+                list_propietary_search_recent.setVisibility(View.GONE);
+                list_propietary_search_result.setVisibility(View.GONE);
+            }
+        }else{
+            Log.e("TODO_ES_NULO","SI");
+        }
     }
 
     public static FragmentPopietaryList newInstance() {
@@ -77,6 +81,7 @@ public class FragmentPopietaryList  extends Fragment implements  UserListContrac
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e("CRE_FRAGMENT","oncreate");
         presenter = new UserListPresenter(this,getContext());
         adapter = new SearchUserAdapter(getContext());
         helper = new SearchResentHelper(getContext());
@@ -142,7 +147,7 @@ public class FragmentPopietaryList  extends Fragment implements  UserListContrac
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-
+        Log.e("CRE_FRAGMENT","VISTA");
         list_propietary_search_result.setLayoutManager(new LinearLayoutManager(getContext()));
         list_propietary_search_recent.setLayoutManager(new LinearLayoutManager(getContext()));
         list_propietary_search_result.setAdapter(adapter);

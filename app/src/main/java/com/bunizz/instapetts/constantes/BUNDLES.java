@@ -11,6 +11,7 @@ public interface BUNDLES {
     String URI_FOTO = "URI_FOTO";
     String NOTIFICATION_TIPE = "NOTIFICATION_TIPE";
     String POST_TYPE="POST_TYPE";
+    String ID_POST ="ID_POST";
 
 
     String TITLE = "TITLE";
@@ -38,6 +39,9 @@ public interface BUNDLES {
     String IS_ME ="IS_ME";
 
     String PETBEAN ="PETBEAN";
+
+    String VIDEO_DURATION ="VIDEO_DURATION";
+    String VIDEO_ASPECT ="VIDEO_ASPECT";
 
 
     String DOWNLOADS_INFO ="DOWNLOADS_INFO";

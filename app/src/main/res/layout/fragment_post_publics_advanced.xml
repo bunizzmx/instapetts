@@ -3,6 +3,7 @@
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <com.google.android.material.appbar.AppBarLayout
@@ -57,7 +58,7 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerView
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/list_posts_publics_advanced"
         android:layout_width="match_parent"

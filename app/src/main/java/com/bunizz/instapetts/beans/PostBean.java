@@ -77,6 +77,37 @@ public class PostBean {
     @Expose
     String address;
 
+
+    @SerializedName("aspect")
+    @Expose
+    String aspect;
+
+
+    @SerializedName("duracion")
+    @Expose
+    int duracion;
+
+    @SerializedName("lat")
+    @Expose
+    float lat;
+
+
+    @SerializedName("lon")
+    @Expose
+    float lon;
+
+    @SerializedName("cp")
+    @Expose
+    int cp;
+
+    @SerializedName("can_comment")
+    @Expose
+    int can_comment;
+
+    @SerializedName("num_comentarios")
+    @Expose
+    int num_comentarios;
+
     boolean saved;
     boolean liked;
 
@@ -268,6 +299,62 @@ public class PostBean {
 
     public void setThumb_video(String thumb_video) {
         this.thumb_video = thumb_video;
+    }
+
+    public String getAspect() {
+        return aspect;
+    }
+
+    public void setAspect(String aspect) {
+        this.aspect = aspect;
+    }
+
+    public int getDuracion() {
+        return duracion;
+    }
+
+    public void setDuracion(int duracion) {
+        this.duracion = duracion;
+    }
+
+    public float getLat() {
+        return lat;
+    }
+
+    public void setLat(float lat) {
+        this.lat = lat;
+    }
+
+    public float getLon() {
+        return lon;
+    }
+
+    public void setLon(float lon) {
+        this.lon = lon;
+    }
+
+    public int getCp() {
+        return cp;
+    }
+
+    public void setCp(int cp) {
+        this.cp = cp;
+    }
+
+    public int getCan_comment() {
+        return can_comment;
+    }
+
+    public void setCan_comment(int can_comment) {
+        this.can_comment = can_comment;
+    }
+
+    public int getNum_comentarios() {
+        return num_comentarios;
+    }
+
+    public void setNum_comentarios(int num_comentarios) {
+        this.num_comentarios = num_comentarios;
     }
 }
 

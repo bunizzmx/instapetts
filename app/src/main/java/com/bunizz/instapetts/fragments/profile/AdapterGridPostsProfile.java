@@ -1,19 +1,26 @@
 package com.bunizz.instapetts.fragments.profile;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.utils.dilogs.DialogPreviewPost;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -62,19 +69,35 @@ public class AdapterGridPostsProfile extends RecyclerView.Adapter<RecyclerView.V
         postsPublicsHolder h = (postsPublicsHolder) holder;
         PostBean data_parsed =(PostBean) posts.get(position);
         String splits[]  = data_parsed.getUrls_posts().split(",");
-        if(splits.length == 1){
-            h.multiple_images_posts.setVisibility(View.GONE);
+        h.root_info_item_profile.setVisibility(View.GONE);
+
+
+        if(data_parsed.getType_post()==0) {
+            if(splits.length == 1){
+                h.multiple_images_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_camera));
+            }else{
+                h.multiple_images_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_album));
+            }
+            Glide.with(context).load(splits[0]).into(h.fisrt_stack_foto);
         }else{
-            h.multiple_images_posts.setVisibility(View.VISIBLE);
+            h.multiple_images_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_play));
+            Glide.with(context).load(data_parsed.getThumb_video()).into(h.fisrt_stack_foto);
         }
-        Glide.with(context).load(splits[0]).into(h.fisrt_stack_foto);
         h.root_posts_search_item.setOnClickListener(view -> {
         });
         h.root_posts_search_item.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                DialogPreviewPost dialogPreviewPost = new DialogPreviewPost(context,data_parsed);
-                dialogPreviewPost.show();
+                if(data_parsed.getType_post()==1){
+                    Intent i = new Intent(context, PlayVideoActivity.class);
+                    i.putExtra("TYPE_PLAYER",1);
+                    i.putExtra("BEAN", Parcels.wrap(data_parsed));
+                    context.startActivity(i);
+                }else{
+                    DialogPreviewPost dialogPreviewPost = new DialogPreviewPost(context,data_parsed);
+                    dialogPreviewPost.show();
+                }
+
                 return false;
             }
         });
@@ -96,15 +119,24 @@ public class AdapterGridPostsProfile extends RecyclerView.Adapter<RecyclerView.V
         return posts.size();
     }
 
+
     public class postsPublicsHolder extends RecyclerView.ViewHolder{
         ImageView multiple_images_posts,fisrt_stack_foto;
         CardView root_posts_search_item;
+        LinearLayout root_info_item_profile;
         public postsPublicsHolder(@NonNull View itemView) {
             super(itemView);
             fisrt_stack_foto = itemView.findViewById(R.id.fisrt_stack_foto);
             multiple_images_posts = itemView.findViewById(R.id.multiple_images_posts);
             root_posts_search_item = itemView.findViewById(R.id.root_posts_search_item);
+            root_info_item_profile = itemView.findViewById(R.id.root_info_item_profile);
         }
+    }
+
+    private RequestManager initGlide() {
+        RequestOptions options = new RequestOptions();
+        return Glide.with(context)
+                .setDefaultRequestOptions(options);
     }
 }
 

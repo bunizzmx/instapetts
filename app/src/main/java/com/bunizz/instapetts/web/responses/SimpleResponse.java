@@ -2,9 +2,9 @@ package com.bunizz.instapetts.web.responses;
 
 public class SimpleResponse {
     int code_response;
+    String result_data_extra;
 
-    public SimpleResponse() {
-    }
+    public SimpleResponse() {}
 
     public SimpleResponse(int code_response) {
         this.code_response = code_response;
@@ -16,5 +16,13 @@ public class SimpleResponse {
 
     public void setCode_response(int code_response) {
         this.code_response = code_response;
+    }
+
+    public String getResult_data_extra() {
+        return result_data_extra;
+    }
+
+    public void setResult_data_extra(String result_data_extra) {
+        this.result_data_extra = result_data_extra;
     }
 }

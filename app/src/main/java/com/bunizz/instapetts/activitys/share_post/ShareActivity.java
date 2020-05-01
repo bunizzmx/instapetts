@@ -3,16 +3,21 @@ package com.bunizz.instapetts.activitys.share_post;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
@@ -31,10 +36,11 @@ import com.bunizz.instapetts.fragments.share_post.Picker.image.FragmentPickerGal
 import com.bunizz.instapetts.fragments.share_post.Picker.video.FragmentPickerVideo;
 import com.bunizz.instapetts.fragments.share_post.Share.FragmentSharePost;
 import com.bunizz.instapetts.fragments.share_post.cropImages.ImageCropFragment;
-import com.bunizz.instapetts.fragments.share_post.cropVideo.VideoCropFragment;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.uploads;
+import com.bunizz.instapetts.utils.videoCrop.VideoCropActivity;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,7 +55,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
     private FragmentElement mCurrentFragment;
     private FragmentElement mOldFragment;
-
+    static final int REQUEST_IMAGE_CAPTURE = 1;
     private Stack<FragmentElement> stack_share;
     private Stack<FragmentElement> stack_picker_images;
     private Stack<FragmentElement> stack_picker_videos;
@@ -66,10 +72,9 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
     @BindView(R.id.changue_to_videos)
     RelativeLayout changue_to_videos;
+    String outputPath =  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + "Instapetts/"+"INSTAPETS_" + UUID.randomUUID() + ".mp4";
 
-
-
-
+    int CROP_REQUEST = 200;
 
     @OnClick(R.id.changue_to_pictures)
     void changue_to_pictures()
@@ -145,6 +150,11 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
 
     private synchronized void changeOfInstance(int intanceType,Bundle bundle) {
+        if(intanceType!=FragmentElement.INSTANCE_CROP_IMAGE)
+           runOnUiThread(() -> tabs_camera.setVisibility(View.VISIBLE));
+        else
+            runOnUiThread(() -> tabs_camera.setVisibility(View.GONE));
+
         saveFragment();
         if (intanceType == FragmentElement.INSTANCE_PICKER_IMAGES) {
             if (stack_picker_images.size() == 0) {
@@ -161,11 +171,17 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
             }
         }
         else if (intanceType == FragmentElement.INSTANCE_PICKER_CAMERA) {
-            if (stack_picker_camera.size() == 0) {
+
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+
+          /*  if (stack_picker_camera.size() == 0) {
                 change_picker_camera(new FragmentElement<>("", CameraFragment.newInstace(), FragmentElement.INSTANCE_PICKER_CAMERA),bundle);
             } else {
                 change_picker_camera(stack_picker_camera.pop(),bundle);
-            }
+            }*/
         }
         else if (intanceType == FragmentElement.INSTANCE_SHARE) {
              Log.e("CHANGE_SHARE","yes");
@@ -177,16 +193,10 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
         }
 
         else if (intanceType == FragmentElement.INSTANCE_CROP_VIDEO) {
-
-            if (stack_crop_video.size() == 0) {
-                change_to_crop_video(new FragmentElement<>("", VideoCropFragment.newInstance(), FragmentElement.INSTANCE_CROP_VIDEO),bundle);
-            } else {
-                change_to_crop_video(stack_crop_video.pop(),bundle);
-            }
+            String inputPath = bundle.getString("PATH_TO_CROP");;
+            startActivityForResult(VideoCropActivity.createIntent(this, inputPath, outputPath),CROP_REQUEST);
         }
-
         else if (intanceType == FragmentElement.INSTANCE_CROP_IMAGE) {
-
             if (stack_crop_images.size() == 0) {
                 change_to_crop_image(new FragmentElement<>("", ImageCropFragment.newInstance(), FragmentElement.INSTANCE_CROP_IMAGE),bundle);
             } else {
@@ -336,6 +346,29 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
             changeOfInstance(type_fragment,data);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CROP_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                        int duracion = data.getIntExtra(BUNDLES.VIDEO_DURATION,30);
+                        String aspect =  data.getStringExtra(BUNDLES.VIDEO_ASPECT);
+                        Intent mediaScannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                        Uri fileContentUri = Uri.parse(outputPath);
+                        mediaScannerIntent.setData(fileContentUri);
+                        sendBroadcast(mediaScannerIntent);
+                        Bundle b = new Bundle();
+                        ArrayList<String> uri_videos = new ArrayList<>();
+                        uri_videos.add(outputPath);
+                        b.putStringArrayList("data_pahs",uri_videos);
+                        b.putInt("is_video",1);
+                        b.putString(BUNDLES.VIDEO_ASPECT,aspect);
+                        b.putInt(BUNDLES.VIDEO_DURATION,duracion);
+                        changeOfInstance(FragmentElement.INSTANCE_SHARE,b);
+            }
+        }
+    }
 
     @Override
     public void onBackPressed() {
@@ -357,6 +390,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
         }
 
     }
+
 
 
     @Override
@@ -391,7 +425,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
         Intent intent = new Intent();
         intent.putExtra("PET_REQUEST","POST_REQUEST");
         setResult(RESULT_OK,intent);
-       finish();
+        finish();
     }
 
     @Override
@@ -414,6 +448,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
         setResult(RESULT_OK,intent);
         finish();
     }
+
 
 
 }

@@ -36,7 +36,7 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
     public ImageView save_posts;
     public ImagenCircular mini_user_photo;
     public TextView addres_post;
-
+    public ImageView icon_commentar;
     public View parent;
 
     public PlayerViewHolder(@NonNull View itemView) {
@@ -46,7 +46,6 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
         mediaCoverImage = itemView.findViewById(R.id.ivMediaCoverImage);
         volumeControl = itemView.findViewById(R.id.ivVolumeControl);
         card_view_mute = itemView.findViewById(R.id.card_view_mute);
-
         root_preview_perfil_click = itemView.findViewById(R.id.root_preview_perfil_click);
         image_pet = itemView.findViewById(R.id.image_pet);
         description_posts = itemView.findViewById(R.id.description_posts);
@@ -61,6 +60,7 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
         open_options_posts = itemView.findViewById(R.id.open_options_posts);
         mini_user_photo = itemView.findViewById(R.id.mini_user_photo);
         addres_post = itemView.findViewById(R.id.addres_post);
+        icon_commentar = itemView.findViewById(R.id.icon_commentar);
     }
 
 

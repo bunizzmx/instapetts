@@ -12,10 +12,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.WindowManager;
 
 import com.bumptech.glide.Glide;
+import com.bunizz.instapetts.activitys.login.LoginActivity;
+import com.bunizz.instapetts.beans.AspectBean;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.db.Utilities;
+import com.bunizz.instapetts.utils.AndroidIdentifier;
 import com.bunizz.instapetts.utils.dilogs.DialogPermision;
 import com.bunizz.instapetts.web.CONST;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -32,12 +38,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import androidx.annotation.RequiresApi;
-
-import androidx.core.provider.FontRequest;
-import androidx.emoji.bundled.BundledEmojiCompatConfig;
-import androidx.emoji.text.EmojiCompat;
-import androidx.emoji.text.FontRequestEmojiCompatConfig;
-import iknow.android.utils.BaseUtils;
 
 
 
@@ -59,14 +59,12 @@ public class App extends Application {
     public static Typeface fuente,avenir_black;
     private static FirebaseFirestore db;
 
+    public static final String DATE_FROMAT_FOR_COMMENTS = "yyyy-MM-dd-HH-mm-ss";
+
 
     @Override
     public void onCreate() {
         super.onCreate();
-        initTypeface();
-        EmojiCompat.Config config = new BundledEmojiCompatConfig(this)
-                .setReplaceAll(true);
-        EmojiCompat.init(config);
         SQLiteDatabase.loadLibs(getApplicationContext());
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
@@ -77,7 +75,7 @@ public class App extends Application {
         String idioma = Locale.getDefault().getLanguage();
         Log.e("IDIOMA","-->" + idioma);
         write("IDIOMA",idioma);
-        BaseUtils.init(this);
+        write(PREFERENCES.ANDROID_ID, Utilities.Md5Hash(new AndroidIdentifier(this).generateCombinationID()));
 
     }
 
@@ -106,25 +104,6 @@ public class App extends Application {
         else
             return db = FirebaseFirestore.getInstance();
     }
-
-    private void initTypeface() {
-
-      /*  monserrat_medium = Typeface.createFromAsset(getAssets(), MONSERRAT_MEDIUM);
-        roboto = Typeface.createFromAsset(getAssets(), CANARO_EXTRA_BOLD_PATH);
-        popin_subs = Typeface.createFromAsset(getAssets(), POPIN_SUBS);
-        monserrat_black = Typeface.createFromAsset(getAssets(),MONSERRAT_BLACK);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            refresh_sound = new SoundPool.Builder()
-                    .setMaxStreams(10)
-                    .build();
-        } else {
-            refresh_sound = new SoundPool(10, AudioManager.STREAM_MUSIC, 1);
-        }*/
-
-      //  id_refresh = refresh_sound.load(this, R.raw.sound_refresh, 1);
-
-    }
-
 
     public static  void sonar(int tipo){
 
@@ -234,6 +213,19 @@ public class App extends Application {
         }
     }
 
+
+    public static String formatDateComments(Date date) {
+        if (date != null) {
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat(DATE_FROMAT_FOR_COMMENTS);
+//            formatter.setTimeZone(TimeZone.getDefault());
+            return formatter.format(date);
+        } else {
+            return "N/A";
+        }
+    }
+
+
+
     public static String formatDateSimple(Date date) {
         if (date != null) {
             @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_SIMPLE);
@@ -332,11 +324,10 @@ public class App extends Application {
 
 
     public static Date StringToDate(String fecha, String caracter, int op){
-
+        Log.e("FORAMT_ERROR","--->ccc" +fecha);
         String formatoHora=" HH:mm:ss";
         String formato="yyyy"+caracter+"MM"+caracter+"dd"+formatoHora;
         if(op==1)
-//
             formato="yyyy"+caracter+"dd"+caracter+"MM"+formatoHora;
         else if(op==2)
             formato="MM"+caracter+"yyyy"+caracter+"dd"+formatoHora;
@@ -418,8 +409,10 @@ public class App extends Application {
         return CONST.BASE_URL_BUCKET_FIRESTORE + "bucket_profile/o/" + read(PREFERENCES.UUID,"INVALID") +"%2FSTORIES%2F"+ URI +
                 "?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
     }
-    public String  make_uri_bucket_history_thumbh(String URI){
-        return CONST.BASE_URL_BUCKET_FIRESTORE + "bucket_profile/o/" + read(PREFERENCES.UUID,"INVALID") +"%2FSTORIES%2Fthumb_"+ URI +
+    public String  make_uri_bucket_thumbh_video(String URI){
+        String splits[] = URI.split("/");
+        String file_name = splits[splits.length-1];
+        return CONST.BASE_URL_BUCKET_FIRESTORE + "bucket_tumbh_video/o/" + read(PREFERENCES.UUID,"INVALID") +"%2F"+ file_name +
                 "?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
     }
 
@@ -432,5 +425,31 @@ public class App extends Application {
                 ".jpg?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
     }
 
+
+    public AspectBean getAspect(String aspect){
+        Log.e("ASPECT_PARAM","-->" + aspect);
+        int width=0;
+        int height =0;
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getMetrics(metrics);
+        if(aspect.equals("16_9"))
+        {
+          width=metrics.widthPixels;
+          height = width/2;
+        }else if(aspect.equals("4_3")){
+            width=metrics.widthPixels;
+            height = width - (width/4);
+        }
+        else if(aspect.equals("4_4")){
+            width=metrics.widthPixels;
+            height = width;
+        }
+        else if(aspect.equals("4_5")){
+            width=metrics.widthPixels;
+            height = width + (width/4);
+        }
+      return new AspectBean(width,height);
+    }
 
 }

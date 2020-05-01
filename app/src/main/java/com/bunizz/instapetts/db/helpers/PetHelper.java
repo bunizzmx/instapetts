@@ -39,7 +39,7 @@ public class PetHelper extends GenericHelper {
     public static final String RATING_PET = "rating";
     public static final String URL_PHOTO = "url_foto";
     public static final String URL_PHOTO_THUMBH = "url_photo_tumbh";
-
+    Cursor cursor;
 
 
     public void savePet(PetBean pet) {
@@ -54,7 +54,7 @@ public class PetHelper extends GenericHelper {
 
     public ArrayList<PetBean> getMyPets() {
         ArrayList<PetBean> pets = new ArrayList<>();
-        final Cursor cursor = getReadableDatabase().query(
+        cursor = getReadableDatabase().query(
                 TABLE_NAME,
                 null,
                 null,

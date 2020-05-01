@@ -41,11 +41,14 @@ public class LoginPresenter implements LoginContract.Presenter {
                         .subscribeWith(new DisposableSingleObserver<SimpleResponseLogin>() {
                             @Override
                             public void onSuccess(SimpleResponseLogin user) {
-                                if(user.getCode_response() ==200)
-                                   mView.loginCompleted(user.getData_user());
-                                else
-                                    mView.isFirstUser(user.getData_user().getId());
-
+                                if(user.getData_user()!=null) {
+                                    if (user.getCode_response() == 200)
+                                        mView.loginCompleted(user.getData_user());
+                                    else
+                                        mView.isFirstUser(user.getData_user().getId());
+                                }else{
+                                    mView.registerError();
+                                }
                             }
                             @Override
                             public void onError(Throwable e) {

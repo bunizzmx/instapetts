@@ -44,6 +44,8 @@ public class ImagePostsService extends Service {
     public final static String INTENT_TRANSFER_OPERATION = "transferOperation";
     public final static String TRANSFER_OPERATION_UPLOAD = "upload";
     File file;
+    File file_thumbh;
+    String name_file_thumbh="";
     private final static String TAG = ImagePostsService.class.getSimpleName();
     public static  NotificationManager notificationManager;
     public static int TOTAL_LENGTH_ARCHIVES = 0;
@@ -59,12 +61,14 @@ public class ImagePostsService extends Service {
     public static String BODY="";
     String NAME_PET ="";
     private StorageReference storageReference;
+    private StorageReference storageReference_thumbs;
     StorageMetadata metadata;
     Intent intent_broadcast = new Intent();
     @Override
     public void onCreate() {
         super.onCreate();
         storageReference = FirebaseStorage.getInstance(CONST.BUCKET_POSTS).getReference();
+        storageReference_thumbs = FirebaseStorage.getInstance(CONST.BUCKET_THUMBS_VIDEO).getReference();
         Util util = new Util();
         transferUtility = util.getTransferUtility(this);
     }
@@ -127,10 +131,16 @@ public class ImagePostsService extends Service {
         SIZE_OF_FILES = key.size();
         for(int i =0;i<key.size();i++){
             if(TYPE_NOTIFICATION == 2){
-                Log.e("COMPRESION_IMAGEN","HISTORIA");
                 file = new Compressor(this).compressToFile(new File(key.get(i)));
             }else{
                 file = new File(key.get(i));
+                if(intent.getIntExtra(BUNDLES.POST_TYPE,0) ==1){
+                    file_thumbh = new File(intent.getStringExtra(BUNDLES.PHOTO_TUMBH));
+                    String splits[] =intent.getStringExtra(BUNDLES.PHOTO_TUMBH).split("/");
+                    Log.e("NAME_DEL_TUMBH","--> 1" + intent.getStringExtra(BUNDLES.PHOTO_TUMBH).split("/"));
+                    name_file_thumbh = splits[splits.length-1];
+                    Log.e("NAME_DEL_TUMBH","--> 2" + name_file_thumbh);
+                }
             }
 
             String splits[] = key.get(i).split("/");
@@ -145,8 +155,10 @@ public class ImagePostsService extends Service {
             }else{
                 filename =  App.read(PREFERENCES.UUID,"INVALID") + "/" +  CONST.FOLDER_STORIES + "/" +  splits[index - 1];
             }
-            if( intent.getIntExtra(BUNDLES.POST_TYPE,0) ==1)
-            upload_video(filename);
+            if( intent.getIntExtra(BUNDLES.POST_TYPE,0) ==1) {
+                upload_video(filename);
+                upload_video_image_thumbh(name_file_thumbh);
+            }
             else
             upload_image(filename);
         }
@@ -176,9 +188,30 @@ public class ImagePostsService extends Service {
             return reference.getDownloadUrl();
         }).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                mBuilder.setProgress(100,100,false);
-                mBuilder.setContentTitle(TITLE_SUCCESS);
-                notificationManager.notify(notificationId, mBuilder.build());
+                intent_broadcast.putExtra("COMPLETED", false);
+                intent_broadcast.setAction(Main.POST_SUCCESFULL);
+                sendBroadcast(intent_broadcast);
+            }
+        });
+    }
+
+    void upload_video_image_thumbh(String filename){
+        UploadTask uploadTask;
+        metadata = new StorageMetadata.Builder()
+                .setContentType("image/jpeg")
+                .build();
+        final StorageReference reference = storageReference_thumbs.child(App.read(PREFERENCES.UUID,"INVALID")+"/" + filename);
+        uploadTask  = reference.putFile(Uri.fromFile(file_thumbh),metadata);
+        uploadTask.addOnFailureListener(exception -> {}).addOnSuccessListener(taskSnapshot -> {
+        }).addOnProgressListener(taskSnapshot -> {
+        });
+        Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                throw task.getException();
+            }
+            return reference.getDownloadUrl();
+        }).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
             }
         });
     }
@@ -214,6 +247,7 @@ public class ImagePostsService extends Service {
             }
         }
     }
+
 
 
     @Override

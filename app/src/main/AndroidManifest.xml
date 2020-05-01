@@ -18,9 +18,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
-        android:requestLegacyExternalStorage="true"
+
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:targetApi="q">
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3652627287925800~2029449466" />
@@ -42,10 +43,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activitys.PlayVideo.PlayVideoActivity"/>
+        <activity android:name=".utils.videoCrop.VideoCropActivity"/>
         <activity android:name=".activitys.side_menus_activities.SideMenusActivities"/>
         <activity android:name=".activitys.intro.IntroActivity" />
         <activity android:name=".activitys.login.LoginActivity" />
-        <activity android:name=".activitys.main.Main" android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".activitys.main.Main" android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".activitys.wizardPets.WizardPetActivity" android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".utils.HistoryView.StoryPlayer"/>
         <activity android:name=".activitys.share_post.ShareActivity" android:windowSoftInputMode="adjustPan"/>

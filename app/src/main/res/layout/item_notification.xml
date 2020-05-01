@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/root_notification"
+<RelativeLayout android:id="@+id/root_notification"
     android:padding="10dp"
-    android:background="#2203A9F4"
+    android:background="#22C0C4C6"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <com.bunizz.instapetts.utils.ImagenCircular
         android:id="@+id/ic_notification"
-        android:src="@drawable/perro_demo"
+        android:src="@drawable/ic_hand_pet_preload"
         android:layout_width="40dp"
         android:layout_height="40dp"/>
     <LinearLayout
+        android:layout_toLeftOf="@+id/card_xx"
         android:orientation="vertical"
         android:layout_margin="10dp"
         android:layout_centerVertical="true"
@@ -33,5 +34,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_xx"
+        app:cardCornerRadius="5dp"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:scaleType="centerCrop"
+            android:id="@+id/image_extra"
+            android:layout_width="50dp"
+            android:layout_height="60dp"/>
+    </androidx.cardview.widget.CardView>
+
+
+    <RelativeLayout
+        android:id="@+id/delete_notification"
+        android:layout_alignParentRight="true"
+        android:layout_width="50dp"
+        android:layout_height="30dp">
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_cross"
+            android:layout_width="10dp"
+            android:layout_height="10dp"/>
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -40,6 +40,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -108,7 +109,18 @@ public class FeedPresenter implements FeedContract.Presenter {
                                         else
                                             post.get(i).setLiked(false);
                                     }
-                                    mView.show_feed(post, responsePost.getList_stories());
+                                    if(responsePost.getCode_response()==200) {
+                                        if(post.size()>0)
+                                            mView.show_feed(post, responsePost.getList_stories());
+                                        else {
+                                            Log.e("GET_FEED","RECOMENDED");
+                                            geet_feed_recomended(false, App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
+                                        }
+
+                                    }else{
+                                        Log.e("NO_INTERNET","--> SUS AMIGOS AUN NO PUBLICAN" );
+                                        mView.show_feed_recomended(post);
+                                    }
                                 }  else{
                                     RETRY ++;
                                     if(RETRY < 3) {
@@ -178,6 +190,7 @@ public class FeedPresenter implements FeedContract.Presenter {
         if(!existsin_db) {
             PostLikeBean postLikeBean = new PostLikeBean();
             postLikeBean.setId_post(postActions.getId_post());
+            postLikeBean.setId_user(postActions.getId_usuario());
             postLikeBean.setType_event(Integer.parseInt(postActions.getAcccion()));
             postLikeBean.setTarget("NEW_LIKE");
             disposable.add(
@@ -190,6 +203,19 @@ public class FeedPresenter implements FeedContract.Presenter {
                                     if (responsePost != null) {
                                         if (responsePost.getCode_response() == 200) {
                                             mView.LikeSuccess();
+                                            Map<String, Object> data_notification = new HashMap<>();
+                                            data_notification.put("TOKEN",responsePost.getResult_data_extra());
+                                            data_notification.put("ID_RECURSO",postActions.getId_post());
+                                            data_notification.put("TYPE_NOTIFICATION",0);
+                                            data_notification.put("NAME_REMITENTE",App.read(PREFERENCES.NAME_USER,"USER"));
+                                            data_notification.put("ID_REMITENTE",App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+                                            data_notification.put("URL_EXTRA",postActions.getExtra());
+                                            data_notification.put("FOTO_REMITENTE",App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
+                                            db.collection(FIRESTORE.COLLECTION_NOTIFICATIONS).document()
+                                                    .set(data_notification)
+                                                    .addOnFailureListener(e -> {})
+                                                    .addOnCompleteListener(task -> {})
+                                                    .addOnSuccessListener(aVoid -> {});
                                         } else {
                                             RETRY++;
                                             if (RETRY < 3) {

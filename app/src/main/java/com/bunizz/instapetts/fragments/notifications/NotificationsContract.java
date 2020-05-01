@@ -8,9 +8,12 @@ import java.util.ArrayList;
 public interface NotificationsContract {
     interface Presenter {
       void getNotifications();
+      void deleteNotification(int id);
+      void deleteAll();
     }
 
     interface View{
        void showNotifications(ArrayList<NotificationBean> notificationBeans);
+       void deleteAllComplete();
     }
 }

@@ -8,6 +8,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/root_tip_simple">
+    <RelativeLayout
+        android:id="@+id/general_info_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <androidx.cardview.widget.CardView
         android:layout_centerVertical="true"
         app:cardCornerRadius="10dp"
@@ -41,4 +45,63 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_below="@+id/general_info_tip"
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_centerVertical="true"
+            android:textColor="@color/black"
+            android:textSize="10dp"
+            android:id="@+id/fecha_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_marginRight="20dp"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/ic_corazon_black"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"/>
+                <TextView
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:id="@+id/num_likes"
+                    android:layout_marginTop="2dp"
+                    android:text="10"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginRight="10dp"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/ic_views"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"/>
+                <TextView
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:id="@+id/num_views"
+                    android:layout_marginTop="2dp"
+                    android:text="10"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

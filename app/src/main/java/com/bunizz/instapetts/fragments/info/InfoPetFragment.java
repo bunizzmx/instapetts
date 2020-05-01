@@ -69,6 +69,9 @@ public class InfoPetFragment extends Fragment {
     @BindView(R.id.icon_star_rated)
     ImageView icon_star_rated;
 
+    @BindView(R.id.stars_pet)
+    TextView stars_pet;
+
 
 
     @SuppressLint("MissingPermission")
@@ -115,6 +118,7 @@ public class InfoPetFragment extends Fragment {
         descripcion_pet_profile.setText(petBean.getDescripcion_pet());
         peso_pet_profile.setText(petBean.getPeso_pet() + "kg");
         Glide.with(getContext()).load(petBean.getUrl_photo()).into(image_pet_info);
+        stars_pet.setText(String.format("%.2f", petBean.getRate_pet()));
     }
 
 }

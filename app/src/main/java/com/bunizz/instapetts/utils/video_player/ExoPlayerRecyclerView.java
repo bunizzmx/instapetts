@@ -151,7 +151,6 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                     resetVideoView();
                 }else{
 
-
                 }
             }
         });

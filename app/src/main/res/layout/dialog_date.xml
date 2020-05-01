@@ -17,7 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
-            android:padding="16dp"
+            android:background="@color/white"
+            android:padding="16sp"
             android:id="@+id/btn_dialog_date_cancel"
             android:text="cancel"
             android:textColor="@color/com_ycuwq_datepicker_selectedTextColor"
@@ -25,7 +26,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content" />
         <Button
-            android:padding="16dp"
+            android:background="@color/white"
+            android:padding="16sp"
             android:id="@+id/btn_dialog_date_decide"
             android:text="ok"
             android:textColor="@color/com_ycuwq_datepicker_selectedTextColor"

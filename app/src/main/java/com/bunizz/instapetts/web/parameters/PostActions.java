@@ -5,12 +5,13 @@ public class PostActions {
     int id_post;
     String acccion;
     String valor;
-    String id_usuario;
+    String extra;
+    int id_usuario;
 
     public PostActions() {
     }
 
-    public PostActions(int id_post, String acccion, String valor, String id_usuario) {
+    public PostActions(int id_post, String acccion, String valor, int id_usuario) {
         this.id_post = id_post;
         this.acccion = acccion;
         this.valor = valor;
@@ -41,11 +42,19 @@ public class PostActions {
         this.valor = valor;
     }
 
-    public String getId_usuario() {
+    public int getId_usuario() {
         return id_usuario;
     }
 
-    public void setId_usuario(String id_usuario) {
+    public void setId_usuario(int id_usuario) {
         this.id_usuario = id_usuario;
+    }
+
+    public String getExtra() {
+        return extra;
+    }
+
+    public void setExtra(String extra) {
+        this.extra = extra;
     }
 }

@@ -33,6 +33,7 @@ import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.FollowsHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
@@ -139,15 +140,16 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         });
         feedAdapter.setListener_post(new postsListener() {
             @Override
-            public void onLike(int id_post,boolean type_like) {
+            public void onLike(int id_post,boolean type_like,int id_usuario,String url_image) {
                 PostActions postActions = new PostActions();
                 postActions.setId_post(id_post);
                 if(type_like)
                 postActions.setAcccion("1");
                 else
                 postActions.setAcccion("2");
-                postActions.setId_usuario(App.read(PREFERENCES.UUID,"INVALID"));
+                postActions.setId_usuario(id_usuario);
                 postActions.setValor("1");
+                postActions.setExtra(url_image);
                 mPresenter.likePost(postActions);
             }
 
@@ -156,7 +158,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
                 PostActions postActions = new PostActions();
                 postActions.setId_post(id_post);
                 postActions.setAcccion("FAVORITE");
-                postActions.setId_usuario("MYIDXXXX");
+                postActions.setId_usuario(postBean.getId_usuario());
                 postActions.setValor("1");
                 mPresenter.saveFavorite(postActions,postBean);
             }
@@ -177,6 +179,13 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
                 });
                 optionsPosts.show();
             }
+
+            @Override
+            public void commentPost(int id_post) {
+                Bundle b = new Bundle();
+                b.putInt(BUNDLES.ID_POST,id_post);
+                listener.change_fragment_parameter(FragmentElement.INSTANCE_COMENTARIOS,b);
+            }
         });
 
 
@@ -192,14 +201,10 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-
-        /*feed_list.setLayoutManager(new LinearLayoutManager(getContext()));
-        feed_list.setAdapter(feedAdapter);*/
         feedAdapter.setRequestManager(initGlide());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(feedAdapter);
-
         refresh_feed.setOnRefreshListener(() ->{
             root_no_internet.setVisibility(View.GONE);
             if(followsHelper.getMyFriendsForPost().size()>0)
@@ -217,14 +222,10 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         Sprite drawable = SpriteFactory.create(style);
         spin_kit.setIndeterminateDrawable(drawable);
         spin_kit.setColor(getContext().getResources().getColor(R.color.primary));
-        if(HAS_FRIENDS){
+        if(HAS_FRIENDS)
             mPresenter.get_feed(false, App.read(PREFERENCES.ID_USER_FROM_WEB,0));
-        }else{
+        else
             mPresenter.geet_feed_recomended(false, App.read(PREFERENCES.ID_USER_FROM_WEB,0));
-        }
-
-
-
     }
     private RequestManager initGlide() {
         RequestOptions options = new RequestOptions();
@@ -341,6 +342,12 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         super.onResume();
         if(mRecyclerView!=null){}
            // mRecyclerView.releasePlayer();
+    }
+
+
+    public void stop_player(){
+        if(mRecyclerView!=null)
+            mRecyclerView.onPausePlayer();
     }
 }
 

@@ -1,5 +1,20 @@
 <resources>
 
+    <declare-styleable name="PreviewSeekBar">
+        <attr name="previewFrameLayout" format="reference" />
+    </declare-styleable>
+
+
+    <declare-styleable name="VideoTrimmerView">
+        <attr name="vtv_window_left_bar" format="reference" />
+        <attr name="vtv_window_right_bar" format="reference" />
+        <attr name="vtv_window_bar_width" format="dimension" />
+        <attr name="vtv_window_border_width" format="dimension" />
+        <attr name="vtv_window_border_color" format="color" />
+        <attr name="vtv_overlay_color" format="color" />
+    </declare-styleable>
+
+
     <declare-styleable name="CropVideoView">
 
         <attr name="guidelines">

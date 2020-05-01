@@ -4,9 +4,11 @@ public class NotificationBean {
 String title;
 String body;
 String url_resource;
+String url_image_extra;
 int type_notification;
 int id_usuario;
-boolean is_open ;
+boolean is_open;
+int id_database;
 
     public NotificationBean() {
     }
@@ -65,5 +67,21 @@ boolean is_open ;
 
     public void setId_usuario(int id_usuario) {
         this.id_usuario = id_usuario;
+    }
+
+    public int getId_database() {
+        return id_database;
+    }
+
+    public void setId_database(int id_database) {
+        this.id_database = id_database;
+    }
+
+    public String getUrl_image_extra() {
+        return url_image_extra;
+    }
+
+    public void setUrl_image_extra(String url_image_extra) {
+        this.url_image_extra = url_image_extra;
     }
 }

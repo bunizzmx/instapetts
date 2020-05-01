@@ -487,7 +487,8 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     @Override
     public void registerError() {
-
+        dialogLoanding.dismiss();
+         Toast.makeText(LoginActivity.this,"Intentalo Nuevamente",Toast.LENGTH_LONG).show();
     }
 
     @Override

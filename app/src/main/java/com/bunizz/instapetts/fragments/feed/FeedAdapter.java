@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -21,12 +22,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.MotionEventCompat;
-import androidx.emoji.widget.EmojiTextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
@@ -36,6 +35,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.beans.AspectBean;
 import com.bunizz.instapetts.beans.DataEmptyBean;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
@@ -245,27 +245,30 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 PostBean mo = (PostBean) data.get(position);
                 vid_h.requestManager = requestManager_param;
                 vid_h.parent.setTag(this);
+                Glide.with(context).load(mo.getThumb_video()).into(vid_h.mediaCoverImage);
+                vid_h.mediaCoverImage.setVisibility(View.VISIBLE);
                 if(!mo.getAddress().equals("INVALID")) {
                     vid_h.addres_post.setVisibility(View.VISIBLE);
                     vid_h.addres_post.setText(mo.getAddress());
                 }
                 else
                     vid_h.addres_post.setVisibility(View.GONE);
-                vid_h.icon_like.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if(!mo.isLiked()) {
-                            vid_h.layout_double_tap_like.setVisibility(View.VISIBLE);
-                            vid_h.layout_double_tap_like.animate_icon(vid_h.layout_double_tap_like);
-                        }
-                        if(!mo.isLiked()) {
-                            mo.setLiked(true);
-                            vid_h.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
-                            listener_post.onLike(mo.getId_post_from_web(),true);
-                        }else{
-                            mo.setLiked(false);
-                            vid_h.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_w));
-                        }
+                AspectBean aspectBean = new AspectBean();
+                aspectBean = App.getInstance().getAspect(mo.getAspect());
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(aspectBean.getWidth(), aspectBean.getHeight());
+                vid_h.root_multiple_image.setLayoutParams(layoutParams);
+                vid_h.icon_like.setOnClickListener(view -> {
+                    if(!mo.isLiked()) {
+                        vid_h.layout_double_tap_like.setVisibility(View.VISIBLE);
+                        vid_h.layout_double_tap_like.animate_icon(vid_h.layout_double_tap_like);
+                    }
+                    if(!mo.isLiked()) {
+                        mo.setLiked(true);
+                        vid_h.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
+                        listener_post.onLike(mo.getId_post_from_web(),true,mo.getId_usuario(),mo.getThumb_video());
+                    }else{
+                        mo.setLiked(false);
+                        vid_h.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
                     }
                 });
                 vid_h.root_preview_perfil_click.setOnClickListener(view ->{
@@ -292,7 +295,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     if(mo.isSaved()) {
                         mo.setSaved(false);
                         listener_post.onDisfavorite(mo.getId_post_from_web());
-                        vid_h.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite_w));
+                        vid_h.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite));
                     }
                     else {
                         mo.setSaved(true);
@@ -303,19 +306,17 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 if(mo.isSaved()){
                     vid_h.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite_fill));
                 }else{
-                    vid_h.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite_w));
+                    vid_h.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite));
                 }
 
                 if(mo.isLiked()){
                     vid_h.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
                 }else{
-                    vid_h.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_w));
+                    vid_h.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
                 }
                 vid_h.open_options_posts.setOnClickListener(view -> listener_post.openMenuOptions(mo.getId_post_from_web(),mo.getId_usuario(),mo.getUuid()));
-                vid_h.requestManager
-                        .load(mo.getUrls_posts())
-                        .into(vid_h.mediaCoverImage);
 
+                vid_h.icon_commentar.setOnClickListener(v -> listener_post.commentPost(mo.getId_post_from_web()));
                 break;
             default:
                 FeedHolder f = (FeedHolder)holder;
@@ -326,6 +327,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
                 else
                     f.addres_post.setVisibility(View.GONE);
+
+                f.icon_commentar.setOnClickListener(v -> listener_post.commentPost(data_parsed.getId_post_from_web()));
+
                 if(is_multiple(data_parsed.getUrls_posts())) {
                     f.card_number_indicator.setVisibility(View.VISIBLE);
                     String s[]= data_parsed.getUrls_posts().split(",");
@@ -377,21 +381,23 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }).into(f.single_image);
 
                 }
-                f.icon_like.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if(!data_parsed.isLiked()) {
-                            f.layout_double_tap_like.setVisibility(View.VISIBLE);
-                            f.layout_double_tap_like.animate_icon(f.layout_double_tap_like);
-                        }
-                        if(!data_parsed.isLiked()) {
-                            data_parsed.setLiked(true);
-                            f.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
-                            listener_post.onLike(data_parsed.getId_post_from_web(),true);
+                f.icon_like.setOnClickListener(view -> {
+                    if(!data_parsed.isLiked()) {
+                        f.layout_double_tap_like.setVisibility(View.VISIBLE);
+                        f.layout_double_tap_like.animate_icon(f.layout_double_tap_like);
+                    }
+                    if(!data_parsed.isLiked()) {
+                        data_parsed.setLiked(true);
+                        f.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
+                        if(is_multiple(data_parsed.getUrls_posts())) {
+                            String s[]= data_parsed.getUrls_posts().split(",");
+                            listener_post.onLike(data_parsed.getId_post_from_web(), true, data_parsed.getId_usuario(), s[0]);
                         }else{
-                            data_parsed.setLiked(false);
-                            f.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
+                            listener_post.onLike(data_parsed.getId_post_from_web(), true, data_parsed.getId_usuario(), data_parsed.getUrls_posts());
                         }
+                    }else{
+                        data_parsed.setLiked(false);
+                        f.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
                     }
                 });
                 f.root_preview_perfil_click.setOnClickListener(view ->{
@@ -457,7 +463,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         ViewPager list_fotos;
         DotsIndicator dots_indicator;
         RelativeLayout root_preview_perfil_click,open_options_posts;
-        EmojiTextView description_posts;
+        TextView description_posts;
         ImagenCircular image_pet;
         TextView name_pet,name_user_posts,num_likes_posts;
         RelativeLayout root_multiple_image;
@@ -470,6 +476,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         TextView addres_post;
         CardView card_number_indicator;
         TextView label_number_indicator;
+        ImageView icon_commentar;
         public FeedHolder(@NonNull View itemView) {
             super(itemView);
             card_number_indicator = itemView.findViewById(R.id.card_number_indicator);
@@ -492,6 +499,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             open_options_posts = itemView.findViewById(R.id.open_options_posts);
             mini_user_photo = itemView.findViewById(R.id.mini_user_photo);
             addres_post = itemView.findViewById(R.id.addres_post);
+            icon_commentar = itemView.findViewById(R.id.icon_commentar);
         }
     }
 

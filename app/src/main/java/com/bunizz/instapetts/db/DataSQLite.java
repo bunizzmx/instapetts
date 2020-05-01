@@ -15,7 +15,7 @@ import net.sqlcipher.database.SQLiteOpenHelper;
  */
 public class DataSQLite extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "DB_INSTAPETTS";
+    public static final String DATABASE_NAME = "DB_INSTAPETTS.db";
     public static final int ACTIVE = 0;
 
 
@@ -34,7 +34,7 @@ public class DataSQLite extends SQLiteOpenHelper {
     }
 
     private DataSQLite(Context context) {
-        super(context, DATABASE_NAME, null, 2);
+        super(context, DATABASE_NAME, null, 1);
         this.context = context;
     }
 
@@ -52,13 +52,12 @@ public class DataSQLite extends SQLiteOpenHelper {
         db.execSQL(context.getString(R.string.table_notifications));
         db.execSQL(context.getString(R.string.table_relacion_follows));
         db.execSQL(context.getString(R.string.table_search_recents));
+        db.execSQL(context.getString(R.string.table_likes_comments));
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onCreate(db);
-
-
     }
 }

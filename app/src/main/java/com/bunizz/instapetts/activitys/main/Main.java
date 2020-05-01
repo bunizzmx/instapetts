@@ -32,6 +32,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
+import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.BuildConfig;
 import com.bunizz.instapetts.R;
@@ -49,6 +50,7 @@ import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
+import com.bunizz.instapetts.fragments.comentarios.ComentariosFragment;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.fragments.follows.FollowsFragment;
 import com.bunizz.instapetts.fragments.info.InfoPetFragment;
@@ -70,6 +72,7 @@ import com.bunizz.instapetts.listeners.open_side_menu;
 import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.services.FetchAddressIntentService;
 import com.bunizz.instapetts.services.ImageService;
+import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
 import com.bunizz.instapetts.utils.dilogs.DialogLogout;
 import com.bunizz.instapetts.utils.slidemenu.OnSlideChangedListener;
@@ -114,7 +117,7 @@ public class Main extends AppCompatActivity implements change_instance,
     private Stack<FragmentElement> stack_preview_perfil;
     private Stack<FragmentElement> stack_posts_publics_search;
     private Stack<FragmentElement> stack_posts_search_advanced;
-
+    private Stack<FragmentElement> stack_comentarios;
 
     private FragmentElement mCurrentFragment;
 
@@ -135,7 +138,7 @@ public class Main extends AppCompatActivity implements change_instance,
     @BindView(R.id.icon_search_pet)
     ImageView icon_search_pet;
     @BindView(R.id.icon_profile_pet)
-    ImageView icon_profile_pet;
+    ImagenCircular icon_profile_pet;
 
     @BindView(R.id.text_tips)
     TextView text_tips;
@@ -168,6 +171,8 @@ public class Main extends AppCompatActivity implements change_instance,
     @BindView(R.id.close_smoot)
     RelativeLayout close_smoot;
 
+    @BindView(R.id.root_bottom_nav)
+    RelativeLayout root_bottom_nav;
 
     @BindView(R.id.sliding_layout)
     SlidingUpPanelLayout mLayout;
@@ -313,6 +318,7 @@ public class Main extends AppCompatActivity implements change_instance,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ButterKnife.bind(this);
+        presenter = new MainPresenter(this,this);
         i = new Intent(Main.this, SideMenusActivities.class);
         changeStatusBarColor(R.color.white);
         Intent iin= getIntent();
@@ -339,6 +345,7 @@ public class Main extends AppCompatActivity implements change_instance,
         stack_posts_publics_search = new Stack<>();
         stack_posts_search_advanced = new Stack<>();
         stack_follows = new Stack<>();
+        stack_comentarios = new Stack<>();
         setupFirstFragment();
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
@@ -358,7 +365,7 @@ public class Main extends AppCompatActivity implements change_instance,
                 }
             }
         });
-        presenter = new MainPresenter(this,this);
+
         if(DOWNLOAD_INFO)
             download_pets();
 
@@ -393,6 +400,8 @@ public class Main extends AppCompatActivity implements change_instance,
             U_TOK.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
             presenter.update_token(U_TOK);
         });
+
+        Glide.with(Main.this).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID")).placeholder(getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(icon_profile_pet);
     }
 
     void download_pets(){
@@ -430,13 +439,15 @@ public class Main extends AppCompatActivity implements change_instance,
         inflateFragment();
     }
 
-    private void change_detail_tip(FragmentElement fragment) {
+    private void change_detail_tip(FragmentElement fragment,Bundle data) {
         if (fragment != null) {
             mCurrentFragment = fragment;
+            mCurrentFragment.getFragment().setArguments(data);
             if (stack_tip_detail.size() <= 0) {
                 stack_tip_detail.push(mCurrentFragment);
             }
         }
+        ((FragmentTipDetail) mCurrentFragment.getFragment()).refill_data(data);
         inflateFragment();
     }
 
@@ -548,6 +559,18 @@ public class Main extends AppCompatActivity implements change_instance,
         inflateFragment();
     }
 
+    private void change_to_comentarios(FragmentElement fragment,Bundle data) {
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            mCurrentFragment.getFragment().setArguments(data);
+            if (stack_comentarios.size() <= 0) {
+                stack_comentarios.push(mCurrentFragment);
+            }
+        }
+       ((ComentariosFragment) mCurrentFragment.getFragment()).refresh_coments();
+        inflateFragment();
+    }
+
 
 
     private void saveFragment() {
@@ -556,6 +579,15 @@ public class Main extends AppCompatActivity implements change_instance,
 
     private synchronized void changeOfInstance(int intanceType,Bundle bundle) {
         saveFragment();
+
+        if(intanceType!=FragmentElement.INSTANCE_COMENTARIOS)
+            runOnUiThread(() -> root_bottom_nav.setVisibility(View.VISIBLE));
+        else
+            runOnUiThread(() -> root_bottom_nav.setVisibility(View.GONE));
+
+        if(mOldFragment.getInstanceType()==FragmentElement.INSTANCE_FEED){
+            ((FeedFragment) mOldFragment.getFragment()).stop_player();
+        }
         if (intanceType == FragmentElement.INSTANCE_FEED) {
             if (stack_feed.size() == 0) {
                 change_main(new FragmentElement<>("", FeedFragment.newInstance(), FragmentElement.INSTANCE_LOGIN));
@@ -593,9 +625,9 @@ public class Main extends AppCompatActivity implements change_instance,
         }
         else if (intanceType == FragmentElement.INSTANCE_TIP_DETAIL) {
             if (stack_tip_detail.size() == 0) {
-                change_detail_tip(new FragmentElement<>("", FragmentTipDetail.newInstance(), FragmentElement.INSTANCE_TIP_DETAIL));
+                change_detail_tip(new FragmentElement<>("", FragmentTipDetail.newInstance(), FragmentElement.INSTANCE_TIP_DETAIL),bundle);
             } else {
-                change_detail_tip(stack_tip_detail.pop());
+                change_detail_tip(stack_tip_detail.pop(),bundle);
             }
         }
 
@@ -636,6 +668,13 @@ public class Main extends AppCompatActivity implements change_instance,
                 changue_to_follows(new FragmentElement<>("", FollowsFragment.newInstance(), FragmentElement.INSTANCE_FOLLOWS_USER),bundle);
             } else {
                 changue_to_follows(stack_follows.pop(),bundle);
+            }
+        }
+        else if(intanceType == FragmentElement.INSTANCE_COMENTARIOS) {
+            if (stack_comentarios.size() == 0) {
+                change_to_comentarios(new FragmentElement<>("", ComentariosFragment.newInstance(), FragmentElement.INSTANCE_COMENTARIOS),bundle);
+            } else {
+                change_to_comentarios(stack_comentarios.pop(),bundle);
             }
         }
     }
@@ -734,11 +773,9 @@ public class Main extends AppCompatActivity implements change_instance,
                 }
             }
         }else if(requestCode == NEW_POST_REQUEST){
-            Log.e("ACTIVITYRES","4");
             if(data!=null) {
                 if(data.getStringExtra("PET_REQUEST")!=null){
                     if(data.getStringExtra("PET_REQUEST").equals("PET_REQUEST")) {
-                        Log.e("ACTIVITYRES", "2");
                         Intent i = new Intent(Main.this, WizardPetActivity.class);
                         startActivityForResult(i, NEW_PET_REQUEST);
                     }else{
@@ -748,7 +785,6 @@ public class Main extends AppCompatActivity implements change_instance,
                         text_smoot.setText("En progreso...");
                     }
                 }
-
             }
         }
 
@@ -786,11 +822,10 @@ public class Main extends AppCompatActivity implements change_instance,
 
     private void repaint_nav(int id ){
         icon_tips.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_food_pet));
-        icon_profile_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_usuario));
         icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_camera));
         icon_feed_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_home_pet));
         icon_search_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_search));
-
+        icon_profile_pet.setBorderColor(getResources().getColor(R.color.white));
         text_profile_pet.setTextColor(Color.BLACK);
         text_tips.setTextColor(Color.BLACK);
         text_search_pet.setTextColor(Color.BLACK);
@@ -802,7 +837,7 @@ public class Main extends AppCompatActivity implements change_instance,
         }
         else if(id == R.id.tab_profile_pet){
             text_profile_pet.setTextColor(this.getResources().getColor(R.color.primary));
-            icon_profile_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_usuario_fill));
+            icon_profile_pet.setBorderColor(getResources().getColor(R.color.primary));
         }
         else if(id == R.id.tab_feed) {
             text_feed_pet.setTextColor(this.getResources().getColor(R.color.primary));
@@ -1121,6 +1156,22 @@ public class Main extends AppCompatActivity implements change_instance,
             String splits_addres[];
             splits_addres = addressOutput.split(",");
             if(splits_addres.length >=3){
+                int CP=0;
+                String splits_cp[] = splits_addres[splits_addres.length-3].split(" ");
+                if(splits_cp.length >1){
+                    try {
+                        CP = Integer.parseInt(splits_cp[0]);
+                    } catch (NumberFormatException nfe){
+                        try {
+                            CP = Integer.parseInt(splits_cp[1]);
+                        }catch (NumberFormatException ex){
+                            CP = 0;
+                        }
+                    }
+                }else{
+                    CP =0 ;
+                }
+                App.write(PREFERENCES.CP,CP);
                 DOM_CUT = splits_addres [splits_addres.length-3] + " " + splits_addres[splits_addres.length-2] + " " + splits_addres[splits_addres.length-1] ;
             }else if(splits_addres.length == 2){
                 DOM_CUT = splits_addres[splits_addres.length-2] + " " + splits_addres[splits_addres.length-1] ;
@@ -1166,7 +1217,7 @@ public class Main extends AppCompatActivity implements change_instance,
         super.onDestroy();
         if (mainPagerReceiver != null) {
             Log.e("UNREGISTER","RESERIVER");
-           // this.unregisterReceiver(mainPagerReceiver);
+            this.unregisterReceiver(mainPagerReceiver);
         }
     }
 
@@ -1186,5 +1237,8 @@ public class Main extends AppCompatActivity implements change_instance,
             }
         }
     };
+
+
+
 
 }

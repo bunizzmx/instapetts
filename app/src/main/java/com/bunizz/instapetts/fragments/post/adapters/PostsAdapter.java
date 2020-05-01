@@ -14,15 +14,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.beans.AspectBean;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
+import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.feed.FeedAdapterHistories;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
@@ -31,6 +34,7 @@ import com.bunizz.instapetts.utils.Dots.DotsIndicator;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.ViewPagerAdapter;
 import com.bunizz.instapetts.utils.double_tap.DoubleTapLikeView;
+import com.bunizz.instapetts.utils.video_player.PlayerViewHolder;
 
 import java.util.ArrayList;
 
@@ -50,7 +54,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     changue_fragment_parameters_listener listener;
     postsListener listener_post;
     open_camera_histories_listener listener_open_h;
-
+    private RequestManager requestManager_param;
     public postsListener getListener_post() {
         return listener_post;
     }
@@ -58,6 +62,16 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void setListener_post(postsListener listener_post) {
         this.listener_post = listener_post;
     }
+
+    public RequestManager getRequestManager() {
+        return requestManager_param;
+    }
+
+    public void setRequestManager(RequestManager requestManager) {
+        this.requestManager_param = requestManager;
+    }
+
+
 
     public open_camera_histories_listener getListener_open_h() {
         return listener_open_h;
@@ -76,7 +90,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     private static final int TYPE_POST=1;
-    private static final int TYPE_HISTORI = 2;
+    private static final int TYPE_POST_VIDEO=2;
 
     public PostsAdapter(Context context) {
         this.context = context;
@@ -99,7 +113,11 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemViewType(int position) {
-        return TYPE_POST;
+        PostBean validate = (PostBean) data.get(position);
+        if(validate.getType_post() == 0)
+            return TYPE_POST;
+        else
+            return TYPE_POST_VIDEO;
     }
 
 
@@ -114,8 +132,14 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
+        switch (viewType){
+            case TYPE_POST_VIDEO:
+                view = getInflatedView(parent, R.layout.item_feed_post_video);
+                return new PlayerViewHolder(view);
+            default:
                 view = getInflatedView(parent, R.layout.item_feed_post);
                 return new FeedHolder(view);
+        }
     }
 
 
@@ -124,6 +148,86 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         int viewtype = getItemViewType(position);
         switch (viewtype) {
+
+            case TYPE_POST_VIDEO:
+                PlayerViewHolder vid_h=(PlayerViewHolder)holder;
+                PostBean mo = (PostBean) data.get(position);
+                vid_h.requestManager = requestManager_param;
+                vid_h.parent.setTag(this);
+                Glide.with(context).load(mo.getThumb_video()).into(vid_h.mediaCoverImage);
+                vid_h.mediaCoverImage.setVisibility(View.VISIBLE);
+                if(!mo.getAddress().equals("INVALID")) {
+                    vid_h.addres_post.setVisibility(View.VISIBLE);
+                    vid_h.addres_post.setText(mo.getAddress());
+                }
+                else
+                    vid_h.addres_post.setVisibility(View.GONE);
+
+                AspectBean aspectBean = new AspectBean();
+                aspectBean = App.getInstance().getAspect(mo.getAspect());
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(aspectBean.getWidth(), aspectBean.getHeight());
+                vid_h.root_multiple_image.setLayoutParams(layoutParams);
+
+                vid_h.icon_like.setOnClickListener(view -> {
+                    if(!mo.isLiked()) {
+                        vid_h.layout_double_tap_like.setVisibility(View.VISIBLE);
+                        vid_h.layout_double_tap_like.animate_icon(vid_h.layout_double_tap_like);
+                    }
+                    if(!mo.isLiked()) {
+                        mo.setLiked(true);
+                        vid_h.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
+                        listener_post.onLike(mo.getId_post_from_web(), true, mo.getId_usuario(), mo.getThumb_video());
+                    }else{
+                        mo.setLiked(false);
+                        vid_h.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
+                    }
+                });
+                vid_h.root_preview_perfil_click.setOnClickListener(view ->{
+                    Bundle b = new Bundle();
+                    b.putString(BUNDLES.UUID,mo.getUuid());
+                    Log.e("ID_USUARIO_POST","-->" + mo.getId_usuario());
+                    b.putInt(BUNDLES.ID_USUARIO,mo.getId_usuario());
+                    listener.change_fragment_parameter(INSTANCE_PREVIEW_PROFILE,b);
+                });
+                vid_h.name_pet.setText(mo.getName_pet());
+                vid_h.name_user_posts.setText(mo.getName_user());
+                vid_h.num_likes_posts.setText("" + mo.getLikes() );
+                if(mo.getDescription().isEmpty()){
+                    vid_h.description_posts.setVisibility(View.GONE);
+                }else{
+                    vid_h.description_posts.setVisibility(View.VISIBLE);
+                    vid_h.description_posts.setText(mo.getDescription());
+                }
+
+                Glide.with(context).load(mo.getUrl_photo_pet()).into(vid_h.image_pet);
+                Glide.with(context).load(mo.getUrl_photo_user()).into(vid_h.mini_user_photo);
+                vid_h.date_post.setText(App.fecha_lenguaje_humano(mo.getDate_post()));
+                vid_h.save_posts.setOnClickListener(view -> {
+                    if(mo.isSaved()) {
+                        mo.setSaved(false);
+                        listener_post.onDisfavorite(mo.getId_post_from_web());
+                        vid_h.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite));
+                    }
+                    else {
+                        mo.setSaved(true);
+                        vid_h.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite_fill));
+                        listener_post.onFavorite(mo.getId_post_from_web(), mo);
+                    }
+                });
+                if(mo.isSaved()){
+                    vid_h.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite_fill));
+                }else{
+                    vid_h.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite));
+                }
+
+                if(mo.isLiked()){
+                    vid_h.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
+                }else{
+                    vid_h.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
+                }
+                vid_h.open_options_posts.setOnClickListener(view -> listener_post.openMenuOptions(mo.getId_post_from_web(),mo.getId_usuario(),mo.getUuid()));
+
+                break;
             default:
                 FeedHolder f = (FeedHolder)holder;
                 PostBean data_parsed = (PostBean) data.get(position);
@@ -174,7 +278,12 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         if(!data_parsed.isLiked()) {
                             data_parsed.setLiked(true);
                             f.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
-                            listener_post.onLike(data_parsed.getId_post_from_web(),true);
+                            if(is_multiple(data_parsed.getUrls_posts())) {
+                                String s[]= data_parsed.getUrls_posts().split(",");
+                                listener_post.onLike(data_parsed.getId_post_from_web(), true, data_parsed.getId_usuario(), s[0]);
+                            }else{
+                                listener_post.onLike(data_parsed.getId_post_from_web(), true, data_parsed.getId_usuario(), data_parsed.getUrls_posts());
+                            }
                         }else{
                             data_parsed.setLiked(false);
                             f.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));

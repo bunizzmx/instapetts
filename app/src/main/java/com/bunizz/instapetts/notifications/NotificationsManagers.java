@@ -8,22 +8,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.main.Main;
+import com.bunizz.instapetts.beans.NotificationBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
+import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.db.helpers.NotificationHelper;
 import com.bunizz.instapetts.services.NotificationsService;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 public class NotificationsManagers extends FirebaseMessagingService {
-
+    NotificationHelper notificationHelper;
+    NotificationBean notificationBean;
 
     public NotificationsManagers() {
+
     }
 
 
@@ -31,20 +38,33 @@ public class NotificationsManagers extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
+        Log.e("ONCREATE_APP","SERVICE NOTIF");
+        notificationHelper = new NotificationHelper(this);
         String title = remoteMessage.getNotification().getTitle();
         String body =  remoteMessage.getNotification().getBody();
         String type_notification = remoteMessage.getData().get("type_notification");
         String url_resource = remoteMessage.getData().get("url_foto");
         String id_usuario = remoteMessage.getData().get("id_usuario");
+        String url_extra = remoteMessage.getData().get("url_extra");
 
-        Intent intent = new Intent(this, NotificationsService.class);
-        intent.putExtra(BUNDLES.TITLE, title);
-        intent.putExtra(BUNDLES.BODY, body);
-        intent.putExtra(BUNDLES.TYPE_NOTIFICACION, Integer.parseInt(type_notification));
-        intent.putExtra(BUNDLES.URL_RESOURCE, url_resource);
-        intent.putExtra(BUNDLES.ID_USUARIO, Integer.parseInt(id_usuario));
-        this.startService(intent);
-        buildNotification(title,body);
+        notificationBean = new NotificationBean();
+        notificationBean.setBody(body);
+        notificationBean.setTitle(title);
+        notificationBean.setType_notification( Integer.parseInt(type_notification));
+        notificationBean.setId_usuario( Integer.parseInt(id_usuario));
+        notificationBean.setUrl_resource(url_resource);
+        notificationBean.setUrl_image_extra(url_extra);
+        notificationHelper.saveNotification(notificationBean);
+
+        switch (notificationBean.getType_notification()){
+            case 0:
+                if(App.read(PREFERENCES.PUSH_ME_GUSTAS,true))
+                    buildNotification(title,body);
+                else
+                    Log.e("PUSH_BLOQUEADA","ME GUSTAST");
+                break;
+        }
+
     }
 
     @Override
@@ -75,7 +95,7 @@ public class NotificationsManagers extends FirebaseMessagingService {
         }
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), channelId)
-                .setSmallIcon(R.drawable.ic_notification)
+                .setSmallIcon(R.drawable.ic_hand_pet_preload)
                 .setContentTitle(title)
                 .setContentText(body)
                 .setAutoCancel(true)
