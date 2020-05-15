@@ -1,6 +1,7 @@
 package com.bunizz.instapetts.activitys.main;
 
 import com.bunizz.instapetts.beans.HistoriesBean;
+import com.bunizz.instapetts.beans.IdentificadoresHistoriesBean;
 import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.UserBean;
@@ -19,6 +20,10 @@ public interface MainContract {
         void have_pets();
         void update_token(UserBean userBean);
         void logout();
+        void getIdentificadoresHistories();
+        ArrayList<Integer> getIdsFolows();
+        void sendFileBackup();
+        void getFileBackup();
     }
 
     interface View{

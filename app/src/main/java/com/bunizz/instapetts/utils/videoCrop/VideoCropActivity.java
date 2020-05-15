@@ -149,7 +149,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
                 .setExtraDragSpace(Utilities.convertDpToPixel(2f,VideoCropActivity.this))
                 .setOnSelectedRangeChangedListener(this)
                 .setMaxDuration(30000)
-                .setMinDuration(10000)
+                .setMinDuration(5000)
                 .show();
     }
 
@@ -362,6 +362,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
     private void playVideo(Long startMillis,  Long endMillis) {
         STARTCROP = startMillis;
         mVideoPlayer.seekTo(startMillis);
+        mVideoPlayer.play(true);
     }
 
     @Override

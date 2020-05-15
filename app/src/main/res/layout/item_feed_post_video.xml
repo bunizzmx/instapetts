@@ -168,7 +168,7 @@
         <ImageView
             android:id="@+id/icon_commentar"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_toRightOf="@+id/icon_like"
             android:src="@drawable/ic_commentar"
             android:layout_width="23dp"
@@ -182,16 +182,43 @@
         android:layout_marginLeft="20sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+    <LinearLayout
+    android:layout_marginTop="10dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:layout_marginEnd="8sp"
+        android:src="@drawable/ic_quotes"
+        android:layout_width="10dp"
+        android:layout_height="10dp"/>
     <TextView
-        android:textSize="14dp"
+        android:textSize="14sp"
         style="@style/FontNormalTitle"
         android:id="@+id/description_posts"
-        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <ImageView
+        android:layout_marginStart="8sp"
+        android:src="@drawable/ic_quotes_reverse"
+        android:layout_width="10dp"
+        android:layout_height="10dp"/>
+</LinearLayout>
+    <LinearLayout
+        android:id="@+id/num_comments_layout"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:text="-"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
+        <TextView
+            android:textColor="#9C9C9C"
+            android:id="@+id/num_coments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
     <RelativeLayout
         android:paddingBottom="10dp"
         android:layout_marginTop="5dp"

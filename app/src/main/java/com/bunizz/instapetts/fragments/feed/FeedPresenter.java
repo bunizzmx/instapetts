@@ -15,8 +15,10 @@ import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.FIRESTORE;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.FollowsHelper;
+import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
 import com.bunizz.instapetts.db.helpers.LikePostHelper;
 import com.bunizz.instapetts.db.helpers.MyStoryHelper;
+import com.bunizz.instapetts.db.helpers.NotificationHelper;
 import com.bunizz.instapetts.db.helpers.SavedPostHelper;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
@@ -37,10 +39,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -62,6 +66,8 @@ public class FeedPresenter implements FeedContract.Presenter {
     int RETRY =0;
     FirebaseFirestore db;
     FollowsHelper followsHelper;
+    NotificationHelper notificationHelper;
+    IdsUsersHelper idsUsersHelper;
 
     FeedPresenter(FeedContract.View view, Context context) {
         this.mView = view;
@@ -72,6 +78,8 @@ public class FeedPresenter implements FeedContract.Presenter {
         likePostHelper = new LikePostHelper(this.mContext);
         myStoryHelper = new MyStoryHelper(this.mContext);
         followsHelper = new FollowsHelper(this.mContext);
+        notificationHelper = new NotificationHelper(mContext);
+        idsUsersHelper = new IdsUsersHelper(mContext);
         db = App.getIntanceFirestore();
     }
 
@@ -83,8 +91,8 @@ public class FeedPresenter implements FeedContract.Presenter {
             postFriendsBean.setTarget("ONE");
         }else{
             postFriendsBean.setTarget("MULTIPLE");
-            postFriendsBean.setIds(followsHelper.getMyFriendsForPost());
-            postFriendsBean.setIds_h(followsHelper.getMyFriendsForPost());
+            postFriendsBean.setIds(idsUsersHelper.getMyFriendsForPost());
+            postFriendsBean.setIds_h(idsUsersHelper.getMyFriendsForPost());
         }
         disposable.add(
                 apiService.getPosts(postFriendsBean)
@@ -317,13 +325,32 @@ public class FeedPresenter implements FeedContract.Presenter {
 
     @Override
     public HistoriesBean getMyStories() {
+        String concat_stories="";
         HistoriesBean bean = new HistoriesBean();
-        ArrayList<IndividualDataPetHistoryBean> historyBeans = new ArrayList<>();
-        historyBeans.addAll(myStoryHelper.getMyStories());
-        bean.setHistories(historyBeans);
+        ArrayList<IndividualDataPetHistoryBean> historiesBeans = new ArrayList<>();
+        historiesBeans.addAll(myStoryHelper.getMyStories());
+        for(int i =0; i< historiesBeans.size();i++){
+            concat_stories +=
+                    historiesBeans.get(i).getName_pet()+";" +
+                            historiesBeans.get(i).getPhoto_pet() +";" +
+                            historiesBeans.get(i).getId_pet() +";" +
+                            historiesBeans.get(i).getTumbh_video() + ";" +
+                            historiesBeans.get(i).getUrl_photo() + ";" +
+                            historiesBeans.get(i).getIdentificador() +",";
+        }
+        bean.setHistorias(concat_stories);
         bean.setName_user(App.read(PREFERENCES.NAME_USER,"INVALID"));
-        bean.setUrl_photo_user(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
+        bean.setPhoto_user(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
         bean.setId_user(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         return  bean;
+    }
+
+    @Override
+    public void haveNotificatiosn() {
+        if(notificationHelper.getNoViewsNotifications()){
+            mView.showBadge(true);
+        }
+        else
+            mView.showBadge(false);
     }
 }

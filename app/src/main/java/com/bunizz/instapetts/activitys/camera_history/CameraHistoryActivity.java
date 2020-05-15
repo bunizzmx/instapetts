@@ -244,6 +244,7 @@ public class CameraHistoryActivity extends AppCompatActivity implements  changue
 
     @Override
     public void chose_complete(Bundle bundle) {
+        Log.e("FRAGMENT_HISTORY","chose completed");
         Intent data = new Intent();
         data.putExtra(BUNDLES.URI_FOTO,bundle.getString(BUNDLES.PATH_SELECTED));
         data.putExtra(BUNDLES.ID_PET,bundle.getInt(BUNDLES.ID_PET));

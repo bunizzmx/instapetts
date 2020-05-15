@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
         android:layout_marginTop="30dp"
@@ -9,24 +10,46 @@
         android:layout_centerHorizontal="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.bunizz.instapetts.utils.ImagenCircular
-            android:id="@+id/image_pet_edit"
+
+        <androidx.cardview.widget.CardView
+            android:layout_marginTop="5dp"
+            android:id="@+id/change_photo"
+            app:contentPadding="5dp"
+            app:cardCornerRadius="5dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_hand_pet_preload"
-            android:layout_width="120dp"
-            android:layout_height="120dp"/>
-        <TextView
-            android:id="@+id/change_photo_pet"
-            android:fontFamily="@font/avenir_b"
-            android:padding="20dp"
-            android:layout_gravity="center_horizontal"
-            android:text="Elegir foto"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <com.bunizz.instapetts.utils.ImagenCircular
+                    android:id="@+id/image_pet_edit"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_hand_pet_preload"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"/>
+                <TextView
+                    android:textSize="12dp"
+                    android:fontFamily="@font/avenir_b"
+                    android:padding="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/chose_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
         <LinearLayout
+            android:layout_marginTop="20dp"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <TextView
+                android:layout_marginLeft="30dp"
+                android:textSize="10dp"
+                android:text="Escribe un nombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
             <EditText
                 android:maxLines="1"
                 android:id="@+id/configure_name_pet"
@@ -36,7 +59,7 @@
                 android:layout_gravity="center_vertical"
                 android:fontFamily="@font/avenir_b"
                 android:inputType="text"
-                android:hint="Nombre de tu mascota..."
+                android:hint="El Firulais..."
                 android:padding="10dp"
                 android:background="#00FFFFFF"
                 android:layout_width="match_parent"
@@ -52,18 +75,23 @@
 
         </LinearLayout>
 
-
+        <TextView
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="30dp"
+            android:textSize="10dp"
+            android:text="Describe los gustos de tu mascota"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
         <EditText
             android:lines="5"
             android:maxLines="5"
             android:id="@+id/descripcion_pet"
-            android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_gravity="center_vertical"
             android:fontFamily="@font/avenir_b"
             android:inputType="textMultiLine"
-            android:hint="Que le gusta a tu mascota?"
+            android:hint="Mis mascota es muy buena haciendo..."
             android:padding="10dp"
             android:background="#00FFFFFF"
             android:layout_width="match_parent"

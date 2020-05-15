@@ -16,16 +16,18 @@ public interface FeedContract {
         void deleteFavorite(int id_post);
         void deletePost(PostBean postBean);
         HistoriesBean getMyStories();
+        void haveNotificatiosn();
 
     }
 
     interface View{
-        void show_feed(ArrayList<PostBean> data, ArrayList<IndividualDataPetHistoryBean> data_stories);
+        void show_feed(ArrayList<PostBean> data, ArrayList<HistoriesBean> data_stories);
         void show_feed_recomended(ArrayList<PostBean> data);
         void peticion_error();
         void deletePostError(boolean deleted);
         void LikeEror();
         void LikeSuccess();
         void noInternet();
+        void showBadge(boolean show);
     }
 }

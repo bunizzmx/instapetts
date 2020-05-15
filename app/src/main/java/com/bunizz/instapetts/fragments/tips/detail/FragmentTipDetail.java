@@ -1,38 +1,28 @@
-package com.bunizz.instapetts.fragments.tips;
+package com.bunizz.instapetts.fragments.tips.detail;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.beans.HistoriesBean;
-import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.FragmentElement;
-import com.bunizz.instapetts.fragments.tips.adapters.TipsAdapter;
 import com.bunizz.instapetts.listeners.change_instance;
-import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FragmentTipDetail extends Fragment {
+public class FragmentTipDetail extends Fragment implements  DetailContract.View{
 
     change_instance listener;
     String body_tip="";
@@ -54,6 +44,7 @@ public class FragmentTipDetail extends Fragment {
     ImageView like_tip;
     boolean is_like=false;
 
+    DetailtPresenter presenter;
     @SuppressLint("MissingPermission")
     @OnClick(R.id.back_to_main)
     void back_to_main() {
@@ -69,6 +60,7 @@ public class FragmentTipDetail extends Fragment {
         }else{
             is_like =true;
             like_tip.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_corazon_black));
+            presenter.like(id);
         }
     }
 
@@ -82,6 +74,7 @@ public class FragmentTipDetail extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle=getArguments();
+        presenter = new DetailtPresenter(this,getContext());
         if(bundle!=null){
             body_tip = bundle.getString("BODY_TIP");
             url = bundle.getString("PHOTO_TIP");
@@ -103,6 +96,13 @@ public class FragmentTipDetail extends Fragment {
         body_detail.setText(body_tip);
         title_detail.setText(title_tip);
         Glide.with(getContext()).load(url).into(image_tip_detail);
+        presenter.view(id);
+        if(presenter.is_liked(id)){
+                like_tip.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_corazon_black));
+        }
+        else{
+             like_tip.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_corazon));
+        }
     }
 
     public void refill_data(Bundle data){
@@ -115,6 +115,13 @@ public class FragmentTipDetail extends Fragment {
                 body_detail.setText(body_tip);
                 title_detail.setText(title_tip);
                 Glide.with(getContext()).load(url).into(image_tip_detail);
+                presenter.view(id);
+                if(presenter.is_liked(id)){
+                    like_tip.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_corazon_black));
+                }
+                else{
+                    like_tip.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_corazon));
+                }
             }
         }
     }

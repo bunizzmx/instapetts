@@ -6,7 +6,11 @@ import com.google.gson.annotations.SerializedName;
 import org.parceler.Parcel;
 
 @Parcel
-public class IndividualDataPetHistoryBean implements  Comparable<IndividualDataPetHistoryBean> {
+public class IndividualDataPetHistoryBean {
+
+    @SerializedName("tumbh_video")
+    @Expose
+    String tumbh_video;
 
     @SerializedName("url_photo")
     @Expose
@@ -24,65 +28,30 @@ public class IndividualDataPetHistoryBean implements  Comparable<IndividualDataP
     @Expose
     int id_pet;
 
-    @SerializedName("id_user")
-    @Expose
-    int id_user;
-
     @SerializedName("date_story")
     @Expose
     String date_story;
 
-    @SerializedName("photo_user")
+    @SerializedName("identificador")
     @Expose
-    String photo_user;
+    String identificador;
 
-    @SerializedName("name_user")
-    @Expose
-    String name_user;
-
-    @SerializedName("views")
-    @Expose
     int views;
+    int likes;
 
     public IndividualDataPetHistoryBean() {
     }
 
 
-    public IndividualDataPetHistoryBean(String url_photo, String name_pet, String photo_pet, int id_pet, int id_user, String date_story, String photo_user, String name_user, int views) {
+    public IndividualDataPetHistoryBean(String url_photo, String name_pet, String photo_pet, int id_pet, String date_story, int views) {
         this.url_photo = url_photo;
         this.name_pet = name_pet;
         this.photo_pet = photo_pet;
         this.id_pet = id_pet;
-        this.id_user = id_user;
         this.date_story = date_story;
-        this.photo_user = photo_user;
-        this.name_user = name_user;
         this.views = views;
     }
 
-    public String getPhoto_user() {
-        return photo_user;
-    }
-
-    public void setPhoto_user(String photo_user) {
-        this.photo_user = photo_user;
-    }
-
-    public String getName_user() {
-        return name_user;
-    }
-
-    public void setName_user(String name_user) {
-        this.name_user = name_user;
-    }
-
-    public int getId_user() {
-        return id_user;
-    }
-
-    public void setId_user(int id_user) {
-        this.id_user = id_user;
-    }
 
     public int getId_pet() {
         return id_pet;
@@ -132,10 +101,27 @@ public class IndividualDataPetHistoryBean implements  Comparable<IndividualDataP
         this.photo_pet = photo_pet;
     }
 
+    public String getTumbh_video() {
+        return tumbh_video;
+    }
 
-    @Override
-    public int compareTo(IndividualDataPetHistoryBean individualDataPetHistoryBean) {
-        return (this.getId_user() < individualDataPetHistoryBean.getId_user() ? -1 :
-                (this.getId_user() == individualDataPetHistoryBean.getId_user() ? 0 : 1));
+    public void setTumbh_video(String tumbh_video) {
+        this.tumbh_video = tumbh_video;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public String getIdentificador() {
+        return identificador;
+    }
+
+    public void setIdentificador(String identificador) {
+        this.identificador = identificador;
     }
 }

@@ -29,7 +29,7 @@
             android:tint="@color/black"
             android:src="@drawable/ic_cross"
             android:layout_width="15dp"
-            android:layout_height="15dp"></ImageView>
+            android:layout_height="15dp"/>
         <LinearLayout
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -40,6 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <com.bunizz.instapetts.utils.ImagenCircular
+                android:id="@+id/image_crop_video"
                 android:layout_gravity="center_horizontal"
                 android:src="@drawable/perro_demo"
                 android:layout_width="70dp"
@@ -70,7 +71,7 @@
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
                 android:layout_marginTop="10dp"
-                android:text="3 Pets"
+                android:text=""
                 android:textAlignment="center"
                 android:textSize="20dp" />
         </LinearLayout>

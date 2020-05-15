@@ -219,7 +219,7 @@ public class PetBean {
 
     public PetBean(Cursor cursor) {
         if (cursor.getColumnIndex(PetHelper.ID) != -1)
-            this.id_pet =String.valueOf(cursor.getInt(cursor.getColumnIndex(PetHelper.ID)));
+            this.id_pet =String.valueOf(cursor.getInt(cursor.getColumnIndex(PetHelper.ID_PET)));
 
 
         if (cursor.getColumnIndex(PetHelper.NAME_PET) != -1)

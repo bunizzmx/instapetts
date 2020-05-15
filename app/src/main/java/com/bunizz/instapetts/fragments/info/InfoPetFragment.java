@@ -7,11 +7,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -26,7 +30,9 @@ import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.listeners.RatePetListener;
+import com.bunizz.instapetts.listeners.delete;
 import com.bunizz.instapetts.utils.ImagenCircular;
+import com.bunizz.instapetts.utils.dilogs.DialogDeletes;
 import com.bunizz.instapetts.utils.dilogs.DialogRatePet;
 
 import org.parceler.Parcels;
@@ -40,14 +46,15 @@ import butterknife.OnClick;
 
 import static com.bunizz.instapetts.constantes.BUNDLES.PETBEAN;
 
-public class InfoPetFragment extends Fragment {
+public class InfoPetFragment extends Fragment implements InfoPetContract.View {
 
 
     public static InfoPetFragment newInstance() {
         return new InfoPetFragment();
     }
-   String ID_PET="";
-    String NAME_PET="";
+
+    String ID_PET = "";
+    String NAME_PET = "";
     PetHelper petHelper;
     PetBean petBean;
 
@@ -72,26 +79,109 @@ public class InfoPetFragment extends Fragment {
     @BindView(R.id.stars_pet)
     TextView stars_pet;
 
+    @BindView(R.id.delete_trash)
+    RelativeLayout delete_trash;
+
+    @BindView(R.id.acerca_de_pet)
+    TextView acerca_de_pet;
+
+    @BindView(R.id.name_raza_pet)
+    TextView name_raza_pet;
+
+    @BindView(R.id.edad_pet)
+    TextView edad_pet;
+
+    @BindView(R.id.icon_type_pet_info_pet)
+    ImageView icon_type_pet_info_pet;
+
+    @BindView(R.id.icon_genero_pet)
+    ImageView icon_genero_pet;
+
+    @BindView(R.id.rate_pet_card)
+    CardView rate_pet_card;
+
+    @BindView(R.id.edit_photo_pet)
+    CardView edit_photo_pet;
+
+    @BindView(R.id.root_imagen_and_pencil)
+    RelativeLayout root_imagen_and_pencil;
+
+    @BindView(R.id.new_peso_pet)
+    EditText new_peso_pet;
+
+    @BindView(R.id.new_descripcion_pet)
+    EditText new_descripcion_pet;
+    InfoPetPresenter presenter;
+    boolean IN_EDICION = false;
+
 
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.rate_pet_card)
     void rate_pet_card() {
-        DialogRatePet dialogRatePet = new DialogRatePet(getContext(),petBean);
-        dialogRatePet.setListener(new RatePetListener() {
-            @Override
-            public void onRate(double rate, String comment, int id_pet, int id_usuario, String uuid) {
+        if(petBean.getId_propietary() ==  App.read(PREFERENCES.ID_USER_FROM_WEB,0)){
+            if(IN_EDICION == false) {
+                IN_EDICION = true;
+                icon_star_rated.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_available));
+            } else{
+                icon_star_rated.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_editar));
+                IN_EDICION = false;
+            }
+            if(IN_EDICION) {
+                peso_pet_profile.setVisibility(View.GONE);
+                descripcion_pet_profile.setVisibility(View.GONE);
+                new_peso_pet.setVisibility(View.VISIBLE);
+                new_descripcion_pet.setVisibility(View.VISIBLE);
+                new_peso_pet.setText("" + petBean.getPeso_pet());
+                new_descripcion_pet.setText("" + petBean.getDescripcion_pet());
+            }else{
+                petBean.setPeso_pet(new_peso_pet.getText().toString());
+                petBean.setDescripcion_pet(new_descripcion_pet.getText().toString());
+                peso_pet_profile.setText(new_peso_pet.getText().toString() + " kg");
+                descripcion_pet_profile.setText(new_descripcion_pet.getText().toString());
+                peso_pet_profile.setVisibility(View.VISIBLE);
+                descripcion_pet_profile.setVisibility(View.VISIBLE);
+                new_peso_pet.setVisibility(View.GONE);
+                new_descripcion_pet.setVisibility(View.GONE);
+                presenter.updatePet(petBean);
+            }
+        }else{
+            DialogRatePet dialogRatePet = new DialogRatePet(getContext(),petBean);
+            dialogRatePet.setListener((rate, comment, id_pet, id_usuario, uuid) -> {
                 icon_star_rated.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_estrella_black));
+                presenter.ratePet(Integer.valueOf(petBean.getId_pet()),(int)rate);
+            });
+            dialogRatePet.show();
+
+        }
+
+    }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.delete_trash)
+    void delete_trash() {
+        DialogDeletes  delete_pet = new DialogDeletes(getContext(),0,3);
+        delete_pet.setListener(new delete() {
+            @Override
+            public void delete(boolean delete) {
+                presenter.delete(Integer.parseInt(petBean.getId_pet()));
+            }
+            @Override
+            public void deleteOne(int id) {
+
             }
         });
-        dialogRatePet.show();
+        delete_pet.show();
     }
+
+
 
   boolean IS_ME=false;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle=getArguments();
+        presenter = new InfoPetPresenter(this,getContext());
         if(bundle!=null){
             int is_who = bundle.getInt(BUNDLES.IS_ME);
                     if(is_who == 0)
@@ -119,7 +209,69 @@ public class InfoPetFragment extends Fragment {
         peso_pet_profile.setText(petBean.getPeso_pet() + "kg");
         Glide.with(getContext()).load(petBean.getUrl_photo()).into(image_pet_info);
         stars_pet.setText(String.format("%.2f", petBean.getRate_pet()));
+        Log.e("PENDDD","-->" + petBean.getId_propietary() + "/" + App.read(PREFERENCES.ID_USER_FROM_WEB,0) );
+        if(petBean.getId_propietary() == App.read(PREFERENCES.ID_USER_FROM_WEB,0)){
+            delete_trash.setVisibility(View.VISIBLE);
+            icon_star_rated.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_editar));
+            edit_photo_pet.setVisibility(View.VISIBLE);
+            root_imagen_and_pencil.setOnClickListener(v -> {
+
+            });
+        }else{
+            rate_pet_card.setVisibility(View.VISIBLE);
+            delete_trash.setVisibility(View.GONE);
+            edit_photo_pet.setVisibility(View.GONE);
+        }
+        acerca_de_pet.setText("Acerca de " + petBean.getName_pet());
+        switch (petBean.getType_pet()){
+            case 1:
+                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_perro));
+                break;
+            case 2:
+                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_gato));
+                break;
+            case 3:
+                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mascota_perico));
+                break;
+            case 4:
+                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mascota_conejo));
+                break;
+            case 5:
+                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mascota_hamster));
+                break;
+            case 6:break;
+            case 7:break;
+            case 8:break;
+            case 9:break;
+            case 10:break;
+            case 11:break;
+            case 12:break;
+            case 13:break;
+            case 14:break;
+            case 15:break;
+            case 16:break;
+            default:break;
+
+        }
+
+        name_raza_pet.setText(petBean.getRaza_pet());
+        if(petBean.getGenero_pet().equals("M")){
+            icon_genero_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_macho));
+        }else{
+            icon_genero_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_hembra));
+        }
+
+        edad_pet.setText(App.fecha_lenguaje_humano(petBean.getEdad_pet().replace("T"," ").replace("Z","")));
     }
 
+    @Override
+    public void petRated() {
+
+    }
+
+    @Override
+    public void petUpdated() {
+        Toast.makeText(getActivity(),"Mascota Actualizada",Toast.LENGTH_LONG).show();
+    }
 }
 

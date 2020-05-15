@@ -52,6 +52,12 @@ public class PetHelper extends GenericHelper {
     }
 
 
+    public void deletePet(int id){
+        Log.e("DELETE_NOTIFICATION","--->" + id);
+        getWritableDatabase().delete(TABLE_NAME, ID_PET + "=" +id, null) ;
+    }
+
+
     public ArrayList<PetBean> getMyPets() {
         ArrayList<PetBean> pets = new ArrayList<>();
         cursor = getReadableDatabase().query(

@@ -92,7 +92,7 @@ public class SearchUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         else
             h.delete_recent.setVisibility(View.GONE);
 
-
+        h.name_propietary_pet_searching.setText("@" + data_parsed.getUser_tag());
         h.name_pet_searching.setText(data_parsed.getName_user() );
         Glide.with(context).load(data_parsed.getUrl_photo()).into(h.image_pet_searching);
         h.root_pet_searching.setOnClickListener(view -> {
@@ -110,7 +110,7 @@ public class SearchUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public class SearchPetHolder extends RecyclerView.ViewHolder{
-        TextView name_pet_searching,search_recent_label;
+        TextView name_pet_searching,search_recent_label,name_propietary_pet_searching;
         ImagenCircular image_pet_searching;
         RelativeLayout root_pet_searching,delete_recent;
         public SearchPetHolder(@NonNull View itemView) {
@@ -120,6 +120,7 @@ public class SearchUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             root_pet_searching = itemView.findViewById(R.id.root_pet_searching);
             search_recent_label = itemView.findViewById(R.id.search_recent_label);
             delete_recent = itemView.findViewById(R.id.delete_recent);
+            name_propietary_pet_searching = itemView.findViewById(R.id.name_propietary_pet_searching);
         }
     }
 }

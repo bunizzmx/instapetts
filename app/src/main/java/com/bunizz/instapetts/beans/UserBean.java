@@ -72,6 +72,10 @@ public class UserBean {
 
     String target;
 
+    @SerializedName("name_tag")
+    @Expose
+    String name_tag;
+
     public UserBean() {
     }
 
@@ -235,5 +239,13 @@ public class UserBean {
 
     public void setPhoto_user_thumbh(String photo_user_thumbh) {
         this.photo_user_thumbh = photo_user_thumbh;
+    }
+
+    public String getName_tag() {
+        return name_tag;
+    }
+
+    public void setName_tag(String name_tag) {
+        this.name_tag = name_tag;
     }
 }

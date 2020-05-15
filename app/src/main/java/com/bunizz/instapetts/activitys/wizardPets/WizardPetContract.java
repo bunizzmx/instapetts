@@ -15,6 +15,6 @@ public interface WizardPetContract {
     }
 
     interface View{
-        void petSaved();
+        void petSaved(int id_pet_from_web);
     }
 }

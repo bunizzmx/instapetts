@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/num_pets"
+                    android:id="@+id/num_rate_pets"
                     android:layout_gravity="center_horizontal"
                     android:fontFamily="@font/avenir_black"
                     android:textSize="18dp"

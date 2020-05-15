@@ -119,10 +119,10 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
             presenter.getTips();
         });
         open_notifications.setVisibility(View.GONE);
-        Style style = Style.values()[6];
+        Style style = Style.values()[14];
         Sprite drawable = SpriteFactory.create(style);
         spin_kit.setIndeterminateDrawable(drawable);
-        spin_kit.setColor(getContext().getResources().getColor(R.color.primary));
+        spin_kit.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         label_toolbar.setText("Tips y Noticias");
         new_story.setVisibility(View.GONE);
     }

@@ -6,18 +6,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Geocoder;
-import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.preference.PreferenceManager;
+import android.security.keystore.KeyGenParameterSpec;
 import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -43,6 +40,7 @@ import com.bunizz.instapetts.activitys.share_post.ShareActivity;
 import com.bunizz.instapetts.activitys.side_menus_activities.SideMenusActivities;
 import com.bunizz.instapetts.activitys.wizardPets.WizardPetActivity;
 import com.bunizz.instapetts.beans.HistoriesBean;
+import com.bunizz.instapetts.beans.IdentificadoresHistoriesBean;
 import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.UserBean;
@@ -61,12 +59,11 @@ import com.bunizz.instapetts.fragments.profile.FragmentEditProfileUser;
 import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.fragments.search.FragmentSearchPet;
 import com.bunizz.instapetts.fragments.search.posts.FragmentPostPublics;
-import com.bunizz.instapetts.fragments.tips.FragmentTipDetail;
+import com.bunizz.instapetts.fragments.tips.detail.FragmentTipDetail;
 import com.bunizz.instapetts.fragments.tips.FragmentTips;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.folowFavoriteListener;
-import com.bunizz.instapetts.listeners.logout_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.open_side_menu;
 import com.bunizz.instapetts.listeners.uploads;
@@ -75,7 +72,6 @@ import com.bunizz.instapetts.services.ImageService;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
 import com.bunizz.instapetts.utils.dilogs.DialogLogout;
-import com.bunizz.instapetts.utils.slidemenu.OnSlideChangedListener;
 import com.bunizz.instapetts.utils.slidemenu.SlideMenuLayout;
 import com.bunizz.instapetts.utils.smoot.SmoothProgressBar;
 import com.bunizz.instapetts.utils.target.TapTarget;
@@ -87,13 +83,19 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import org.parceler.Parcels;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Stack;
+import java.util.UUID;
 
-import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
-import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
+import androidx.security.crypto.EncryptedFile;
+import androidx.security.crypto.MasterKeys;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -183,8 +185,10 @@ public class Main extends AppCompatActivity implements change_instance,
     MainPresenter presenter;
     PetHelper petHelper;
     Intent i ;
+    int is_login_again =0;
     boolean DOWNLOAD_INFO =false;
     boolean IS_SHEET_OPEN =false;
+    boolean NEW_USER=false;
     boolean SIDE_OPEN=false;
 
     String addressOutput="";
@@ -221,7 +225,11 @@ public class Main extends AppCompatActivity implements change_instance,
         startActivityForResult( i,NEW_PHOTO_QR_SCAN);
     }
 
-
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.back_to_main_sliding)
+    void back_to_main_sliding() {
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+    }
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.menu_side_guardado)
@@ -328,11 +336,21 @@ public class Main extends AppCompatActivity implements change_instance,
         if(b!=null)
         {
             int res  = b.getInt(BUNDLES.DOWNLOADS_INFO);
+            int is_login_again = b.getInt("LOGIN_AGAIN");
+            int new_u = b.getInt("NEW_USER");
+            if(new_u == 1)
+                NEW_USER =true;
+            else
+                NEW_USER = false;
             if(res == 1){
                 petHelper = new PetHelper(this);
                 DOWNLOAD_INFO = true;
             }
+            if(is_login_again == 1){
+                presenter.getFileBackup();
+            }
         }
+
         rxPermissions = new RxPermissions(this);
         stack_feed = new Stack<>();
         stack_profile_pet = new Stack<>();
@@ -369,7 +387,7 @@ public class Main extends AppCompatActivity implements change_instance,
         if(DOWNLOAD_INFO)
             download_pets();
 
-        app_name_user.setText("@" + App.read(PREFERENCES.NAME_USER,"INVALID"));
+        app_name_user.setText("@" + App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"INVALID"));
         version_app.setText("Version : " + BuildConfig.VERSION_NAME);
 
         mainSlideMenu.addOnSlideChangedListener((slideMenu, isLeftSlideOpen, isRightSlideOpen) -> {
@@ -390,8 +408,6 @@ public class Main extends AppCompatActivity implements change_instance,
             return;
         }
         Log.e("LAT_LON","-->" + App.read(PREFERENCES.LAT,0f) + "/" + App.read(PREFERENCES.LON,0f));
-        // Start service and update UI to reflect new location
-        startIntentService();
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
             String token = instanceIdResult.getToken();
             UserBean U_TOK = new UserBean();
@@ -402,6 +418,22 @@ public class Main extends AppCompatActivity implements change_instance,
         });
 
         Glide.with(Main.this).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID")).placeholder(getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(icon_profile_pet);
+        presenter.getIdentificadoresHistories();
+
+        if(App.read(PREFERENCES.FECHA_BACKUP_FILE,"-").equals("-"))
+        {
+            Log.e("SEND_FILE","1");
+            GenerateFileTask tskFile = new GenerateFileTask();
+            tskFile.execute();
+        }else{
+            if(App.read(PREFERENCES.FECHA_BACKUP_FILE,"-").equals(App.formatDateSimple(new Date()))){
+                Log.e("SEND_FILE","2");
+            }else{
+                Log.e("SEND_FILE","3");
+                GenerateFileTask tskFile = new GenerateFileTask();
+                tskFile.execute();
+            }
+        }
     }
 
     void download_pets(){
@@ -580,10 +612,13 @@ public class Main extends AppCompatActivity implements change_instance,
     private synchronized void changeOfInstance(int intanceType,Bundle bundle) {
         saveFragment();
 
-        if(intanceType!=FragmentElement.INSTANCE_COMENTARIOS)
+        if(intanceType!=FragmentElement.INSTANCE_COMENTARIOS && intanceType!=FragmentElement.INSTANCE_EDIT_PROFILE_USER) {
+            Log.e("OCULTO_PORQUE","-->debo" + intanceType);
             runOnUiThread(() -> root_bottom_nav.setVisibility(View.VISIBLE));
-        else
+        }
+        else {
             runOnUiThread(() -> root_bottom_nav.setVisibility(View.GONE));
+        }
 
         if(mOldFragment.getInstanceType()==FragmentElement.INSTANCE_FEED){
             ((FeedFragment) mOldFragment.getFragment()).stop_player();
@@ -888,11 +923,6 @@ public class Main extends AppCompatActivity implements change_instance,
     }
 
 
-    void share_images(){
-
-    }
-
-
     @SuppressLint("CheckResult")
     @Override
     public void onImageProfileUpdated() {
@@ -935,6 +965,7 @@ public class Main extends AppCompatActivity implements change_instance,
         userBean.setPhoto_user(bundle.getString(BUNDLES.PHOTO));
         userBean.setPhoto_user_thumbh(bundle.getString(BUNDLES.PHOTO_TUMBH));
         userBean.setTarget("UPDATE");
+        userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         userBean.setUuid(App.read(PREFERENCES.UUID,"INVALID"));
         presenter.UpdateProfile(userBean);
         changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET,bundle);
@@ -959,21 +990,21 @@ public class Main extends AppCompatActivity implements change_instance,
         int index  = splits.length;
         String filename = splits[index -1];
 
-
         IndividualDataPetHistoryBean historiesBean = new IndividualDataPetHistoryBean();
         historiesBean.setUrl_photo(App.getInstance().make_uri_bucket_history(filename));
         historiesBean.setName_pet(name_pet);
         historiesBean.setDate_story(App.formatDateGMT(new Date()));
-        historiesBean.setId_user(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         historiesBean.setId_pet(id_pet);
         historiesBean.setPhoto_pet(phohto_pet);
-        historiesBean.setName_user(App.read(PREFERENCES.NAME_USER,"INVALID"));
-        historiesBean.setPhoto_user(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
+        historiesBean.setIdentificador(""+UUID.randomUUID());
         presenter.saveMyStory(historiesBean);
     }
 
     @Override
     public void psuccessProfileUpdated() {
+        if (mCurrentFragment.getFragment() instanceof FragmentProfileUserPet) {
+            ((FragmentProfileUserPet) mCurrentFragment.getFragment()).change_descripcion_profile();
+        }
          Toast.makeText(Main.this,"PERFIL ACTUALIZADO",Toast.LENGTH_LONG).show();
     }
 
@@ -982,7 +1013,6 @@ public class Main extends AppCompatActivity implements change_instance,
         if(petHelper!=null) {
             if (pets != null){
                 petHelper.cleanTable();
-                Log.e("DONLOAD_MY_PETS","si" + pets.size());
                 for (int i = 0; i < pets.size(); i++)
                     petHelper.savePet(pets.get(i));
             }
@@ -999,32 +1029,39 @@ public class Main extends AppCompatActivity implements change_instance,
     @Override
     public void havePetsResult(boolean result) {
         if(!result) {
-            final SpannableString spannedDesc = new SpannableString("Que tal una primera publicacion de tu mascota?");
-            TapTargetView.showFor(this, TapTarget.forView(findViewById(R.id.tab_profile_pet), "Hey que tal!!", spannedDesc)
-                    .cancelable(false)
-                    .drawShadow(true)
-                    .tintTarget(false), new TapTargetView.Listener() {
-                @SuppressLint("CheckResult")
-                @Override
-                public void onTargetClick(TapTargetView view) {
-                    super.onTargetClick(view);
-                    changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null);
-                    repaint_nav(R.id.tab_profile_pet);
-                }
+            if (NEW_USER) {
+                Log.e("ES_NUEVO","LO MUESTRO");
+                final SpannableString spannedDesc = new SpannableString("Que tal una primera publicacion de tu mascota?");
+                TapTargetView.showFor(this, TapTarget.forView(findViewById(R.id.tab_profile_pet), "Hey que tal!!", spannedDesc)
+                        .cancelable(false)
+                        .drawShadow(true)
+                        .tintTarget(false), new TapTargetView.Listener() {
+                    @SuppressLint("CheckResult")
+                    @Override
+                    public void onTargetClick(TapTargetView view) {
+                        super.onTargetClick(view);
+                        changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null);
+                        repaint_nav(R.id.tab_profile_pet);
+                    }
 
-                @Override
-                public void onOuterCircleClick(TapTargetView view) {
-                    super.onOuterCircleClick(view);
-                    Toast.makeText(view.getContext(), "You clicked the outer circle!", Toast.LENGTH_SHORT).show();
-                }
+                    @Override
+                    public void onOuterCircleClick(TapTargetView view) {
+                        super.onOuterCircleClick(view);
+                        view.dismiss(true);
+                    }
 
-                @Override
-                public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
-                    Log.d("TapTargetViewSample", "You dismissed me :(");
-                }
-            });
+                    @Override
+                    public void onTargetDismissed(TapTargetView view, boolean userInitiated) {
+                        Log.d("TapTargetViewSample", "You dismissed me :(");
+                    }
+                });
+            }else{
+                Log.e("ES_NUEVO","NO LO MUESTRO PORQUE YA ES USUARIO");
+            }
         }
     }
+
+
 
     @SuppressLint("CheckResult")
     @Override
@@ -1181,7 +1218,8 @@ public class Main extends AppCompatActivity implements change_instance,
             }
             Log.e("ADDRES","OUTPUT: " + addressOutput);
             Log.e("ADDRES","CUT: " + DOM_CUT);
-            App.write(PREFERENCES.ADDRESS_USER,DOM_CUT);
+            if(!DOM_CUT.equals(R.string.no_address_found))
+             App.write(PREFERENCES.ADDRESS_USER,DOM_CUT);
             // Show a toast message if an address was found.
             if (resultCode == CONST.SUCCESS_RESULT) {
                 Log.e("ADDRES","ENCONTRADO");
@@ -1204,6 +1242,7 @@ public class Main extends AppCompatActivity implements change_instance,
                                 if(location!=null){
                                     App.write(PREFERENCES.LAT,(float)location.getLatitude());
                                     App.write(PREFERENCES.LON,(float)location.getLongitude());
+                                    startIntentService();
                                 }
                             }
                         });
@@ -1237,6 +1276,60 @@ public class Main extends AppCompatActivity implements change_instance,
             }
         }
     };
+
+
+
+    private class GenerateFileTask extends AsyncTask<Void, Integer, Boolean> {
+       ArrayList<Integer> list_ids = new ArrayList<>();
+        @Override
+        protected void onPreExecute() {
+
+        }
+        @Override
+        protected Boolean doInBackground(Void... params) {
+                String fileToWrite = App.read(PREFERENCES.UUID, "INVALID") + ".txt";
+                File file = new File(fileToWrite);
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
+                    try {
+                        list_ids = presenter.getIdsFolows();
+                        if(list_ids.size()>0) {
+                            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput(fileToWrite, Context.MODE_PRIVATE));
+                            for (int i = 0; i < list_ids.size(); i++) {
+                                if (i==list_ids.size()-1)
+                                    outputStreamWriter.write(list_ids.get(i) + "");
+                                else
+                                    outputStreamWriter.write(list_ids.get(i) + ",");
+                            }
+                            outputStreamWriter.close();
+                            return  true;
+                        }else{
+                            return  false;
+                        }
+                    }
+                    catch (IOException e) {
+                        Log.e("SEND_FILE","error: " + e.getMessage());
+                        Log.e("Exception", "File write failed: " + e.toString());
+                        return  false;
+                    }
+        }
+
+        // actualiza el progreso
+        @Override
+        protected void onProgressUpdate(Integer... values) {}
+
+        // despues de ejecutar el hilo secundario principal
+        @Override
+        protected void onPostExecute(Boolean result) {
+           if(result){
+               Log.e("SEND_FILE","REGRESO TRUE");
+               presenter.sendFileBackup();
+           }else{
+               Log.e("SEND_FILE","REGRESO FALSO");
+           }
+        }
+    }
 
 
 

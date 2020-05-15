@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -36,6 +37,7 @@ import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.FollowsHelper;
+import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.login.login.FragmentLogin;
 import com.bunizz.instapetts.listeners.actions_dialog_profile;
@@ -76,6 +78,8 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     @BindView(R.id.root_no_internet)
     RelativeLayout root_no_internet;
 
+    @BindView(R.id.badge_notification)
+    CardView badge_notification;
 
     changue_fragment_parameters_listener listener;
     FeedAdapter feedAdapter;
@@ -84,7 +88,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     SwipeRefreshLayout refresh_feed;
 
     open_camera_histories_listener listener_open_camera_h;
-     FollowsHelper followsHelper;
+     IdsUsersHelper followsHelper;
     ArrayList<Object> data = new ArrayList<>();
     boolean HAS_FRIENDS =false;
 
@@ -112,14 +116,14 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter = new FeedPresenter(this, getContext());
-        followsHelper = new FollowsHelper(getContext());
+        followsHelper = new IdsUsersHelper(getContext());
         if(followsHelper.getMyFriendsForPost().size()>0)
             HAS_FRIENDS =true;
         else
             HAS_FRIENDS=false;
 
         HistoriesBean my_storie_bean = new HistoriesBean();
-        if(mPresenter.getMyStories().getHistories().size()>0) {
+        if(!mPresenter.getMyStories().getHistorias().isEmpty()) {
             my_storie_bean = mPresenter.getMyStories();
             data.add(my_storie_bean);
         }else {
@@ -181,9 +185,10 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
             }
 
             @Override
-            public void commentPost(int id_post) {
+            public void commentPost(int id_post,boolean can_comment) {
                 Bundle b = new Bundle();
                 b.putInt(BUNDLES.ID_POST,id_post);
+                b.putBoolean(BUNDLES.CAN_COMMENT,can_comment);
                 listener.change_fragment_parameter(FragmentElement.INSTANCE_COMENTARIOS,b);
             }
         });
@@ -218,14 +223,15 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
                 mPresenter.geet_feed_recomended(false, App.read(PREFERENCES.ID_USER_FROM_WEB,0));
             }
         });
-        Style style = Style.values()[6];
+        Style style = Style.values()[14];
         Sprite drawable = SpriteFactory.create(style);
         spin_kit.setIndeterminateDrawable(drawable);
-        spin_kit.setColor(getContext().getResources().getColor(R.color.primary));
+        spin_kit.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         if(HAS_FRIENDS)
             mPresenter.get_feed(false, App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         else
             mPresenter.geet_feed_recomended(false, App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        mPresenter.haveNotificatiosn();
     }
     private RequestManager initGlide() {
         RequestOptions options = new RequestOptions();
@@ -241,39 +247,21 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     }
 
     @Override
-    public void show_feed(ArrayList<PostBean> data,ArrayList<IndividualDataPetHistoryBean> data_stories) {
-        ArrayList<IndividualDataPetHistoryBean> story_by_user=new ArrayList<>();
+    public void show_feed(ArrayList<PostBean> data,ArrayList<HistoriesBean> data_stories) {
+        Log.e("SHOW_FEED","SI");
         refresh_feed.setRefreshing(false);
         ArrayList<HistoriesBean> historiesBeans = new ArrayList<>();
         ArrayList<Object> data_object= new ArrayList<>();
-        if(mPresenter.getMyStories().getHistories().size()>0){
+        if(!mPresenter.getMyStories().getHistorias().isEmpty()){
             historiesBeans.add(mPresenter.getMyStories());
         }else{
             historiesBeans.add(new HistoriesBean());
         }
-        if(data_stories!=null) {
-            Collections.sort(data_stories);
-            for(int i =0;i<data_stories.size();i++){
-               if(i>1){
-                  if(data_stories.get(i).getId_user() == data_stories.get(i - 1).getId_user()){
-                      story_by_user.add(data_stories.get(i));
-                  }else{
-                      historiesBeans.add(new HistoriesBean(
-                              data_stories.get(i - 1).getName_user(),
-                              data_stories.get(i - 1).getId_user(),
-                              data_stories.get(i - 1).getPhoto_user(),
-                              story_by_user));
-                      story_by_user.clear();
-                  }
-               }else{
-                   story_by_user.add(data_stories.get(0));
-               }
-            }
-            spin_kit.setVisibility(View.GONE);
-            data_object.add(new HistoriesBean());
-            data_object.addAll(data);
-            mRecyclerView.setMediaObjects(data_object);
-        }
+        historiesBeans.addAll(data_stories);
+        spin_kit.setVisibility(View.GONE);
+        data_object.add(new HistoriesBean());
+        data_object.addAll(data);
+        mRecyclerView.setMediaObjects(data_object);
         feedAdapter.setHistoriesBeans(historiesBeans);
         feedAdapter.addData(data_object);
     }
@@ -283,7 +271,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         refresh_feed.setRefreshing(false);
         spin_kit.setVisibility(View.GONE);
         ArrayList<HistoriesBean> historiesBeans = new ArrayList<>();
-        if(mPresenter.getMyStories().getHistories().size()>0){
+        if(!mPresenter.getMyStories().getHistorias().isEmpty()){
             historiesBeans.add(mPresenter.getMyStories());
         }else{
             historiesBeans.add(new HistoriesBean());
@@ -327,6 +315,14 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         refresh_feed.setRefreshing(false);
         spin_kit.setVisibility(View.GONE);
         root_no_internet.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showBadge(boolean show) {
+        if(show)
+           badge_notification.setVisibility(View.VISIBLE);
+        else
+            badge_notification.setVisibility(View.GONE);
     }
 
 

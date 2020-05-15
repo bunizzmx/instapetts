@@ -300,6 +300,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                             user = mAuth.getCurrentUser();
                             if(user.isEmailVerified()) {
                                 App.write(PREFERENCES.UUID, user.getUid());
+                                App.write(PREFERENCES.NAME_PRE_USER,user.getDisplayName());
                                 FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(LoginActivity.this, instanceIdResult -> {
                                     String token = instanceIdResult.getToken();
                                     App.write(PREFERENCES.TOKEN, token);
@@ -416,6 +417,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         App.write(PREFERENCES.UUID,user.getUid());
+                        App.write(PREFERENCES.NAME_USER,user.getDisplayName());
                         Log.e("ERROR_LOGIN","-->TODO BIEN" +user.getUid());
                         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
                             String token = instanceIdResult.getToken();
@@ -466,6 +468,8 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
             App.write(IS_LOGUEDD,true);
             Intent i ;
             i = new Intent(LoginActivity.this, Main.class);
+            i.putExtra("LOGIN_AGAIN",1);
+            i.putExtra("NEW_USER",1);
             startActivity(i);
 
     }
@@ -478,10 +482,13 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         App.write(PREFERENCES.DESCRIPCCION,userBean.getDescripcion());
         App.write(PREFERENCES.NAME_USER,userBean.getName_user());
         App.write(PREFERENCES.ID_USER_FROM_WEB,userBean.getId());
+        App.write(PREFERENCES.NAME_TAG_INSTAPETTS,userBean.getName_tag());
         App.write(IS_LOGUEDD,true);
         Intent i ;
         i = new Intent(LoginActivity.this, Main.class);
+        i.putExtra("LOGIN_AGAIN",1);
         i.putExtra(BUNDLES.DOWNLOADS_INFO,1);
+        i.putExtra("NEW_USER",0);
         startActivity(i);
     }
 
@@ -510,6 +517,8 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         App.write(IS_LOGUEDD,true);
         Intent i ;
         i = new Intent(LoginActivity.this, Main.class);
+        i.putExtra("LOGIN_AGAIN",1);
+        i.putExtra("NEW_USER",1);
         startActivity(i);
     }
 
@@ -563,7 +572,9 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         userBean.setPhoto_user(App.read(PREFERENCES.FOTO_PROFILE_USER,"INVALID"));
         userBean.setPhoto_user_thumbh(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
         userBean.setUuid(App.read(PREFERENCES.UUID,"INVALID"));
-        userBean.setTarget("UPDATE");
+        userBean.setName_tag(App.read("NAME_TAG_INSTAPETTS","INVALID"));
+        userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        userBean.setTarget("COMPLETE_INFO");
         try {
             dialogLoanding.show();
         }catch (Exception e){}

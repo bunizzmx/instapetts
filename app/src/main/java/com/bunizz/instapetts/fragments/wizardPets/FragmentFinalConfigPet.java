@@ -41,7 +41,7 @@ public class FragmentFinalConfigPet extends Fragment {
     @OnClick(R.id.finalice_pet)
     void finalice_pet()
     {
-       if(!configure_name_pet.getText().toString().isEmpty() &&  !descripcion_pet.getText().toString().isEmpty()){
+       if(!configure_name_pet.getText().toString().isEmpty() &&  !descripcion_pet.getText().toString().isEmpty() && URL_PET.length() > 5){
            if(listener!=null){
                Log.e("PET_FINALICE",":)");
                Bundle b = new Bundle();
@@ -59,12 +59,15 @@ public class FragmentFinalConfigPet extends Fragment {
 
          if(descripcion_pet.getText().toString().isEmpty())
                Toast.makeText(getContext(),"Que le gusta a tu mascota?",Toast.LENGTH_LONG).show();
+
+           if(URL_PET.length() < 5)
+               Toast.makeText(getContext(),"Elige una foto",Toast.LENGTH_LONG).show();
        }
 
     }
 
     @SuppressLint("MissingPermission")
-    @OnClick(R.id.change_photo_pet)
+    @OnClick(R.id.change_photo)
     void change_photo_pet()
     {
         uploads_listener.onImageProfileUpdated();

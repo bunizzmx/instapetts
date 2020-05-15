@@ -2,7 +2,10 @@ package com.bunizz.instapetts.fragments.comentarios;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,28 +65,49 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
     @BindView(R.id.body_no_data)
     TextView body_no_data;
 
+    @BindView(R.id.text_label)
+    TextView text_label;
+
+    @BindView(R.id.desactivate_comments)
+    RelativeLayout desactivate_comments;
+
+    @BindView(R.id.layout_commentarios)
+    RelativeLayout layout_commentarios;
+
+    @BindView(R.id.comment_now)
+    RelativeLayout comment_now;
 
     CommentsAdapter adapter;
 
     ComentariosPresenter presenter;
 
     int ID_POST=0;
+    boolean CAN_COMMENT =true;
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.back_to_main)
+    void back_to_main() {
+      getActivity().onBackPressed();
+    }
 
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.comment_now)
     void comment_now() {
-        CommentariosBean commentariosBean = new CommentariosBean();
-        commentariosBean.setFecha_comentario(App.formatDateGMT(new Date()));
-        commentariosBean.setId_user(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
-        commentariosBean.setFoto_user(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
-        commentariosBean.setId_post(ID_POST);
-        commentariosBean.setCommentario(input_commentarios.getText().toString());
-        commentariosBean.setName_user(App.read(PREFERENCES.NAME_USER,"INVALID"));
-        commentariosBean.setLikes(0);
-        presenter.comment(commentariosBean);
-        input_commentarios.setText("");
-        adapter.addBelow(commentariosBean);
+       if( input_commentarios.getText().toString().trim().length()>0){
+            root_no_data.setVisibility(View.GONE);
+            CommentariosBean commentariosBean = new CommentariosBean();
+            commentariosBean.setFecha_comentario(App.formatDateGMT(new Date()));
+            commentariosBean.setId_user(App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
+            commentariosBean.setFoto_user(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH, "INVALID"));
+            commentariosBean.setId_post(ID_POST);
+            commentariosBean.setCommentario(input_commentarios.getText().toString());
+            commentariosBean.setName_user(App.read(PREFERENCES.NAME_USER, "INVALID"));
+            commentariosBean.setLikes(0);
+            presenter.comment(commentariosBean);
+            input_commentarios.setText("");
+            adapter.addBelow(commentariosBean);
+        }
 
     }
 
@@ -99,13 +123,17 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
         adapter.setListener(new ListenerComments() {
             @Override
             public void onLike(int post, String document) {
-                presenter.likeComment(post,document);
+                if(document!=null && !document.isEmpty())
+                  presenter.likeComment(post,document);
+                else
+                    Log.e("DOCUMENTO_NULO","no se envia el like");
             }
         });
         presenter = new ComentariosPresenter(this,getContext());
         Bundle bundle=getArguments();
         if(bundle!=null){
            ID_POST = bundle.getInt(BUNDLES.ID_POST);
+           CAN_COMMENT = bundle.getBoolean(BUNDLES.CAN_COMMENT);
         }
     }
 
@@ -115,10 +143,24 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
             Bundle bundle = getArguments();
             if (bundle != null) {
                 ID_POST = bundle.getInt(BUNDLES.ID_POST);
+                CAN_COMMENT = bundle.getBoolean(BUNDLES.CAN_COMMENT);
             }
             adapter.clear();
             presenter.getComentarios(ID_POST);
-            Glide.with(getContext()).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID")).into(image_user_comment);
+            Glide.with(getContext()).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"))
+                    .placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload))
+                    .error(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload))
+                    .into(image_user_comment);
+            if(!CAN_COMMENT){
+                comment_now.setVisibility(View.GONE);
+                input_commentarios.setVisibility(View.GONE);
+                desactivate_comments.setVisibility(View.VISIBLE);
+            }else
+            {
+                comment_now.setVisibility(View.VISIBLE);
+                input_commentarios.setVisibility(View.VISIBLE);
+                desactivate_comments.setVisibility(View.GONE);
+            }
         }else{
             Log.e("AUN_NO_ESTA_CONSTRUIDO","EJECUTO ONCREATE");
         }
@@ -144,7 +186,42 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                 presenter.getComentarios(ID_POST);
             }
         });
-        Glide.with(getContext()).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID")).into(image_user_comment);
+        Glide.with(getContext())
+                .load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"))
+                .placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload))
+                .error(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload))
+                .into(image_user_comment);
+
+        if(!CAN_COMMENT){
+            comment_now.setVisibility(View.GONE);
+            input_commentarios.setVisibility(View.GONE);
+            desactivate_comments.setVisibility(View.VISIBLE);
+        }else
+        {
+            comment_now.setVisibility(View.VISIBLE);
+            input_commentarios.setVisibility(View.VISIBLE);
+            desactivate_comments.setVisibility(View.GONE);
+        }
+
+        input_commentarios.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if(input_commentarios.getText().toString().trim().length()>0)
+                    text_label.setTextColor(getContext().getResources().getColor(R.color.primary));
+                else
+                    text_label.setTextColor(Color.parseColor("#888888"));
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(input_commentarios.getText().toString().trim().length()>0)
+                    text_label.setTextColor(getContext().getResources().getColor(R.color.primary));
+                else
+                    text_label.setTextColor(Color.parseColor("#888888"));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
     }
 
     @Override
@@ -220,7 +297,10 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                 h.icon_like_comment.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_like_comment_off));
 
             h.item_comentarios_name.setText(data.get(position).getName_user());
-            Glide.with(context).load(data.get(position).getFoto_user()).into(h.imagen_user_comment);
+            Glide.with(context).load(data.get(position).getFoto_user())
+                    .placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload))
+                    .error(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload))
+                    .into(h.imagen_user_comment);
             h.item_comentarios_comentario.setText(data.get(position).getCommentario());
             h.fecha_comment.setText(App.fecha_lenguaje_humano(data.get(position).getFecha_comentario()));
             h.like_comment.setOnClickListener(new View.OnClickListener() {

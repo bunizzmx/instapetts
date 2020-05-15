@@ -3,12 +3,16 @@ package com.bunizz.instapetts.fragments.login.first_user;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -27,7 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FragmentFirstUser extends Fragment {
+public class FragmentFirstUser extends Fragment implements  FirstUserContract.View{
 
 
 
@@ -40,12 +44,24 @@ public class FragmentFirstUser extends Fragment {
     @BindView(R.id.descripcion_user)
     EditText descripcion_user;
 
+    @BindView(R.id.user_instapetts)
+    EditText user_instapetts;
+
     @BindView(R.id.image_userd_edit)
     ImageView image_userd_edit;
+
+    @BindView(R.id.status_icon_name_tag)
+    ImageView status_icon_name_tag;
+
+    @BindView(R.id.label_tag_instapets)
+    TextView label_tag_instapets;
+
 
 
     String URL_UPDATED="INVALID";
     String URL_LOCAL="INVALID";
+
+    FirstUserPresenter firstUserPresenter;
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.change_photo)
@@ -59,7 +75,7 @@ public class FragmentFirstUser extends Fragment {
     @OnClick(R.id.save_info_perfil)
     void save_info_perfil()
     {
-        if(!descripcion_user.getText().toString().isEmpty() && !configure_name.getText().toString().isEmpty() && !URL_LOCAL.equals("INVALID")) {
+        if(!descripcion_user.getText().toString().isEmpty() && !configure_name.getText().toString().isEmpty() && !URL_LOCAL.equals("INVALID") && user_instapetts.getText().toString().trim().length() > 3) {
             String URI_FINAL = App.getInstance().make_uri_bucket_profile();
             String URI_FINAL_THUMBH = App.getInstance().make_uri_bucket_profile_tumbh();
             App.write(PREFERENCES.DESCRIPCCION, descripcion_user.getText().toString());
@@ -70,6 +86,7 @@ public class FragmentFirstUser extends Fragment {
             b.putString("DESCRIPCION", descripcion_user.getText().toString());
             b.putString("PHOTO", URI_FINAL);
             b.putString("PHOTO_LOCAL", URL_LOCAL);
+            App.write("NAME_TAG_INSTAPETTS",user_instapetts.getText().toString().trim());
             listener_uploads.UpdateProfile(b);
         }else{
             if(descripcion_user.getText().toString().length() < 5){
@@ -77,6 +94,12 @@ public class FragmentFirstUser extends Fragment {
             }
             if(URL_LOCAL.equals("INVALID")){
                 Toast.makeText(getContext(),"Elige una foto primero",Toast.LENGTH_LONG).show();
+            }
+            if(user_instapetts.getText().toString().trim().length() <= 3){
+                status_icon_name_tag.setVisibility(View.VISIBLE);
+                status_icon_name_tag.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_no_available));
+                label_tag_instapets.setVisibility(View.VISIBLE);
+                label_tag_instapets.setText("Debe tener mas de 3 caracteres");
             }
         }
     }
@@ -90,6 +113,7 @@ public class FragmentFirstUser extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        firstUserPresenter = new FirstUserPresenter(this,getContext());
     }
 
     @Nullable
@@ -106,6 +130,31 @@ public class FragmentFirstUser extends Fragment {
         }else{
             configure_name.setText(App.read(PREFERENCES.NAME_USER,"-"));
         }
+
+        user_instapetts.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.e("TEXT_CAMBIADO","-->:" + s + "/" + start + "/" + before +"/" + count);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(user_instapetts.getText().toString().trim().length() > 3) {
+                    status_icon_name_tag.setVisibility(View.GONE);
+                    label_tag_instapets.setVisibility(View.GONE);
+                    firstUserPresenter.getNameAvailable(user_instapetts.getText().toString().trim());
+                }
+                else {
+                    label_tag_instapets.setVisibility(View.VISIBLE);
+                    label_tag_instapets.setText("Debe tener mas de 3 caracteres");
+                }
+            }
+        });
     }
 
 
@@ -123,5 +172,15 @@ public class FragmentFirstUser extends Fragment {
         super.onAttach(context);
         listener= (change_instance) context;
         listener_uploads =(uploads)context;
+    }
+
+    @Override
+    public void showUsersAvailables(boolean available) {
+        Log.e("AVAILABLE_NAME","--->:" + available);
+        if(available)
+            status_icon_name_tag.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_available));
+        else
+            status_icon_name_tag.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_no_available));
+        status_icon_name_tag.setVisibility(View.VISIBLE);
     }
 }

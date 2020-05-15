@@ -28,7 +28,7 @@
           android:layout_centerHorizontal="true"
           android:layout_centerVertical="true"
           android:tint="#858585"
-          android:src="@drawable/ic_camera"
+          android:src="@drawable/ic_upload_story"
           android:layout_width="20dp"
           android:layout_height="20dp"/>
 

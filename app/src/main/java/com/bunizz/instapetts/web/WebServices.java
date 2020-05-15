@@ -9,13 +9,19 @@ import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.web.parameters.CatalogoParameters;
+import com.bunizz.instapetts.web.parameters.EventsPetsBean;
+import com.bunizz.instapetts.web.parameters.EventsTipsBean;
 import com.bunizz.instapetts.web.parameters.FollowParameter;
+import com.bunizz.instapetts.web.parameters.IdentificadorHistoryParameter;
+import com.bunizz.instapetts.web.parameters.ParameterAvailableNames;
 import com.bunizz.instapetts.web.parameters.ParameterSearching;
 import com.bunizz.instapetts.web.parameters.PostFriendsBean;
 import com.bunizz.instapetts.web.parameters.PostLikeBean;
+import com.bunizz.instapetts.web.responses.IdentificadoresHistoriesResponse;
 import com.bunizz.instapetts.web.responses.PetsResponse;
 import com.bunizz.instapetts.web.responses.ResponseCatalogo;
 import com.bunizz.instapetts.web.responses.ResponseCodesCountries;
+import com.bunizz.instapetts.web.responses.ResponseNamesAvailables;
 import com.bunizz.instapetts.web.responses.ResponsePost;
 import com.bunizz.instapetts.web.responses.ResponseProfileUser;
 import com.bunizz.instapetts.web.responses.ResponseTips;
@@ -70,11 +76,17 @@ public interface WebServices {
 
     // STORIES //////////////////////////////////////////////////////////
     @POST("test/newstories")
-    Single<SimpleResponse> newStory( @Body IndividualDataPetHistoryBean history );
+    Single<SimpleResponse> newStory( @Body HistoriesBean historiesBean );
     ////////////////////////////////////////////////////////////////////
 
     @POST("test/gettips")
     Single<ResponseTips> getTips(@Body AutenticateBean autenticateBean);
+
+    @POST("test/newtips")
+    Single<SimpleResponse> newLikeTip(@Body EventsTipsBean eventsTipsBean);
+
+    @POST("test/newtips")
+    Single<SimpleResponse> newViewTip(@Body EventsTipsBean eventsTipsBean);
 
     @POST("test/catalogo")
     Single<ResponseCatalogo> getCatalogos(@Body CatalogoParameters catalogoParameters);
@@ -82,6 +94,14 @@ public interface WebServices {
     // PETS //////////////////////////////////////////////////////////
     @POST("test/newpets")
     Single<SimpleResponse> newPet( @Body PetBean pet );
+
+    @POST("test/newpets")
+    Single<SimpleResponse> deletePet( @Body EventsPetsBean eventsPetsBean );
+
+    @POST("test/newpets")
+    Single<SimpleResponse> ratePet( @Body EventsPetsBean eventsPetsBean );
+    @POST("test/newpets")
+    Single<SimpleResponse> updatePet( @Body PetBean petBean );
 
     @POST("test/getpets")
     Single<PetsResponse> getPets(@Body UserBean userBean);
@@ -102,6 +122,23 @@ public interface WebServices {
 
     @POST("test/getcodescountry")
     Single<ResponseCodesCountries> getCodesCountry(@Body UserBean user);
+
+
+
+    @POST("test/ids-histories")
+    Single<SimpleResponse> newViewHistoryUser(@Body IdentificadorHistoryParameter identificadorHistoryParameter);
+
+    @POST("test/ids-histories")
+    Single<SimpleResponse> newLikeHistoryUser(@Body IdentificadorHistoryParameter identificadorHistoryParameter);
+
+    @POST("test/ids-histories")
+    Single<IdentificadoresHistoriesResponse> getIdentificadoresHistories(@Body IdentificadorHistoryParameter identificadorHistoryParameter);
+
+
+    @POST("test/userstags")
+    Single<ResponseNamesAvailables> getNamesAvailables(@Body ParameterAvailableNames parameterAvailableNames);
+
+
 
 
 }

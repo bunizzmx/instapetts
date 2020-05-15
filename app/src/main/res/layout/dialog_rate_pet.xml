@@ -24,11 +24,11 @@
             android:layout_width="15dp"
             android:layout_height="15dp"/>
         <LinearLayout
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:layout_below="@+id/close_dialog"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <TextView
                 android:layout_marginTop="10dp"
@@ -60,7 +60,7 @@
                 android:numStars="5"
                 android:id="@+id/ratingBar"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="60dp" />
 
             <EditText
                 android:id="@+id/input_comment_rate_pet"
@@ -68,7 +68,7 @@
                 android:paddingRight="10dp"
                 android:gravity="center"
                 android:textAlignment="center"
-                android:lines="5"
+                android:lines="4"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"

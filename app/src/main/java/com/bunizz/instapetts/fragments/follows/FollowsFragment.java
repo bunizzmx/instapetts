@@ -140,10 +140,10 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
             if(listener!=null)
                 listener.change_fragment_parameter(type_fragment,data);
         });
-        Style style = Style.values()[6];
+        Style style = Style.values()[14];
         Sprite drawable = SpriteFactory.create(style);
         spin_kit.setIndeterminateDrawable(drawable);
-        spin_kit.setColor(getContext().getResources().getColor(R.color.primary));
+        spin_kit.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         spin_kit.setVisibility(View.VISIBLE);
         name_user_folowers.setText(name_user);
         sample_basic_fastscroller.setupWithRecyclerView(list_follows, (position) -> new FastScrollItemIndicator.Text(

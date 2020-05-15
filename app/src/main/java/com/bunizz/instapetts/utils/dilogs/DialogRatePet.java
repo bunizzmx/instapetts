@@ -33,6 +33,7 @@ public class DialogRatePet extends BaseAlertDialog{
     Button rate_now;
     EditText input_comment_rate_pet;
     RatingBar ratingBar;
+    ImageView close_dialog;
     public RatePetListener getListener() {
         return listener;
     }
@@ -50,23 +51,21 @@ public class DialogRatePet extends BaseAlertDialog{
         name_pet_rate = dialogView.findViewById(R.id.name_pet_rate);
         input_comment_rate_pet = dialogView.findViewById(R.id.input_comment_rate_pet);
         ratingBar = dialogView.findViewById(R.id.ratingBar);
+        close_dialog = dialogView.findViewById(R.id.close_dialog);
         image_pet_rate = dialogView.findViewById(R.id.image_pet_rate);
         rate_now = dialogView.findViewById(R.id.rate_now);
-        rate_now.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(listener!=null) {
-                    double rate_number = ratingBar.getRating();
-                    if(rate_number>0) {
-                        listener.onRate(rate_number, input_comment_rate_pet.getText().toString(), Integer.parseInt(petBean.getId_pet()), petBean.getId_propietary(), petBean.getUuid());
-                        dismiss();
-                    }else{
-                        Toast.makeText(context,"Debes calificar primero",Toast.LENGTH_LONG).show();
-                    }
+        rate_now.setOnClickListener(view -> {
+            if(listener!=null) {
+                double rate_number = ratingBar.getRating();
+                if(rate_number>0) {
+                    listener.onRate(rate_number, input_comment_rate_pet.getText().toString(), Integer.parseInt(petBean.getId_pet()), petBean.getId_propietary(), petBean.getUuid());
+                    dismiss();
+                }else{
+                    Toast.makeText(context,"Debes calificar primero",Toast.LENGTH_LONG).show();
                 }
-
             }
         });
+        close_dialog.setOnClickListener(v -> dismiss());
         Glide.with(this.context).load(PETBEAN.getUrl_photo_tumbh()).into(image_pet_rate);
         name_pet_rate.setText(PETBEAN.getName_pet());
         dialogBuilder.setView(dialogView);

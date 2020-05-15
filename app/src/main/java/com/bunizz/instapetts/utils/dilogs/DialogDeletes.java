@@ -26,6 +26,10 @@ public class DialogDeletes extends BaseAlertDialog{
     LinearLayout delete_now_layout;
     delete listener;
     TextView text_delete_dialog;
+    LinearLayout layout_delete_algo;
+    TextView description_deletes;
+    TextView confirm_deletes;
+    TextView confirm_decline;
 
     public delete getListener() {
         return listener;
@@ -42,21 +46,46 @@ public class DialogDeletes extends BaseAlertDialog{
         dialogView = inflater.inflate(R.layout.dialog_deletes, null);
         delete_now_layout = dialogView.findViewById(R.id.delete_now_layout);
         text_delete_dialog = dialogView.findViewById(R.id.text_delete_dialog);
-        if(type_dialog == 0)
+        description_deletes = dialogView.findViewById(R.id.description_deletes);
+        confirm_deletes = dialogView.findViewById(R.id.confirm_deletes);
+        confirm_decline = dialogView.findViewById(R.id.confirm_decline);
+        layout_delete_algo = dialogView.findViewById(R.id.layout_delete_algo);
+        if(type_dialog == 0) {
+            layout_delete_algo.setVisibility(View.GONE);
             text_delete_dialog.setText("Eliminar");
-        else
-            text_delete_dialog.setText("Eliminar todas");
-
-        delete_now_layout.setOnClickListener(v -> {
-            if(listener!=null) {
-                if(type_dialog == 0) {
-                    listener.delete(true);
-                }else{
-                    listener.deleteOne(id);
+            delete_now_layout.setOnClickListener(v -> {
+                if(listener!=null) {
+                    if(type_dialog == 0) {
+                        listener.delete(true);
+                    }else{
+                        listener.deleteOne(id);
+                    }
+                    dismiss();
                 }
-                dismiss();
-            }
-        });
+            });
+        }
+        else if(type_dialog == 1) {
+            layout_delete_algo.setVisibility(View.GONE);
+            text_delete_dialog.setText("Eliminar todas");
+            delete_now_layout.setOnClickListener(v -> {
+                if(listener!=null) {
+                    if(type_dialog == 0) {
+                        listener.delete(true);
+                    }else{
+                        listener.deleteOne(id);
+                    }
+                    dismiss();
+                }
+            });
+        }
+        else {
+            layout_delete_algo.setVisibility(View.VISIBLE);
+            text_delete_dialog.setText("Quieres eliminar a tu mascota?");
+            description_deletes.setText("Recuerda que los perfiles y contenido de tu mascota son tus recuerdos que siempre estaran disponibles para ti en Instappets no necesitas eliminarla definitivamente.");
+            confirm_deletes.setOnClickListener(v -> listener.delete(true));
+            confirm_decline.setOnClickListener(v -> dismiss());
+        }
+
         dialogBuilder.setView(dialogView);
         dialog = dialogBuilder.create();
         this.dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

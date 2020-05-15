@@ -9,119 +9,169 @@
         android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-  <com.bunizz.instapetts.utils.ImagenCircular
-      android:id="@+id/image_pet_info"
-      android:layout_marginTop="10dp"
-      android:layout_centerHorizontal="true"
-      android:src="@drawable/perro_demo"
-      android:layout_width="70dp"
-      android:layout_height="70dp"/>
-    <LinearLayout
-        android:padding="10dp"
-        android:id="@+id/layout_info_names"
-        android:layout_below="@+id/image_pet_info"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/pet_name_profile"
-            android:fontFamily="@font/avenir_black"
-            android:textSize="18dp"
-            android:textColor="@color/black"
-            android:text="Name pet firulais"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <TextView
-            android:textSize="12dp"
-            android:id="@+id/name_property_pet_profile"
-            android:layout_gravity="center_horizontal"
-            android:text="El gran Poncheman"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-    <RelativeLayout
-        android:id="@+id/layout_follows"
-        android:layout_below="@+id/layout_info_names"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-      <Button
-          android:textAllCaps="false"
-          android:layout_marginBottom="5dp"
-          android:layout_marginTop="5dp"
-          android:layout_toLeftOf="@+id/layout_favorites_pet"
-          android:layout_marginLeft="20dp"
-          android:textSize="10dp"
-          android:textColor="@color/white"
-          android:text="Favoritos"
-          android:background="@drawable/button_follow"
-          android:layout_width="wrap_content"
-          android:layout_height="40dp"/>
-        <LinearLayout
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:id="@+id/layout_favorites_pet"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <TextView
-                android:textSize="16dp"
-                android:textStyle="bold"
-                android:fontFamily="@font/avenir_b"
-                android:textColor="@color/black"
-                android:text="125K"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:text="Favoritos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-        <androidx.cardview.widget.CardView
-            android:id="@+id/rate_pet_card"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@+id/layout_favorites_pet"
-            app:contentPaddingRight="30dp"
-            app:contentPaddingBottom="10dp"
-            app:contentPaddingTop="10dp"
-            app:contentPaddingLeft="30dp"
-            app:cardElevation="3dp"
-            app:cardCornerRadius="4dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/delete_trash"
+            android:background="?attr/selectableItemBackground"
+            android:layout_alignParentRight="true"
+            android:layout_width="50dp"
+            android:layout_height="50dp">
             <ImageView
-                android:id="@+id/icon_star_rated"
-                android:src="@drawable/ic_estrella"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_trash"
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
-        </androidx.cardview.widget.CardView>
-    </RelativeLayout>
+        </RelativeLayout>
+        <TextView
+            android:textStyle="bold"
+            android:text="Perfil Mascota"
+            android:layout_marginTop="15dp"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <RelativeLayout
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="50dp"
+            android:id="@+id/fixas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:id="@+id/root_imagen_and_pencil"
+                android:layout_width="70dp"
+                android:layout_height="70dp">
+                <com.bunizz.instapetts.utils.ImagenCircular
+                    android:id="@+id/image_pet_info"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/perro_demo"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"/>
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/edit_photo_pet"
+                    android:layout_marginRight="5dp"
+                    app:cardCornerRadius="10dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    app:contentPadding="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:src="@drawable/ic_editar"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"/>
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_toLeftOf="@+id/rate_pet_card"
+                android:padding="10dp"
+                android:id="@+id/layout_info_names"
+                android:layout_toRightOf="@+id/root_imagen_and_pencil"
+                android:orientation="vertical"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:tint="@color/colorPrimaryDark"
+                        android:src="@drawable/ic_hand_pet"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"/>
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:id="@+id/pet_name_profile"
+                            android:fontFamily="@font/avenir_black"
+                            android:textSize="18dp"
+                            android:textColor="@color/black"
+                            android:text="Name pet firulais"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    </RelativeLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_marginLeft="10dp"
+                        android:tint="@color/colorPrimaryDark"
+                        android:src="@drawable/ic_usuario"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"/>
+                    <TextView
+                        android:layout_marginLeft="5dp"
+                        android:textSize="12dp"
+                        android:id="@+id/name_property_pet_profile"
+                        android:layout_gravity="center_horizontal"
+                        android:text="El gran Poncheman"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
 
+            </LinearLayout>
+            <androidx.cardview.widget.CardView
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:layout_alignParentRight="true"
+                android:id="@+id/rate_pet_card"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                app:contentPaddingRight="30dp"
+                app:contentPaddingBottom="10dp"
+                app:contentPaddingTop="10dp"
+                app:contentPaddingLeft="30dp"
+                app:cardElevation="3dp"
+                app:cardCornerRadius="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/icon_star_rated"
+                    android:src="@drawable/ic_estrella"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"/>
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
 <LinearLayout
     android:padding="20dp"
-    android:layout_below="@+id/layout_follows"
+    android:layout_below="@+id/fixas"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
+        android:id="@+id/acerca_de_pet"
         android:textStyle="bold"
         android:textColor="@color/black"
-        android:text="Acerca del firulais"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-    <TextView
-        android:id="@+id/descripcion_pet_profile"
-        android:layout_marginTop="10dp"
-        android:text="-"
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/descripcion_pet_profile"
+            android:layout_marginTop="10dp"
+            android:text="-"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <EditText
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            android:id="@+id/new_descripcion_pet"
+            android:textSize="14dp"
+            android:hint="Cambia la descripcion..."
+            android:padding="10dp"
+            android:background="@drawable/eddittext_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
     <include layout="@layout/include_info_pet_list"/>
 </LinearLayout>
     </RelativeLayout>

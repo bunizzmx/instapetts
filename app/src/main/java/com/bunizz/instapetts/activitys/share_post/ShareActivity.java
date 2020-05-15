@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -70,6 +72,15 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
     @BindView(R.id.tabs_camera)
     LinearLayout tabs_camera;
 
+    @BindView(R.id.ic_picker_galery)
+    ImageView ic_picker_galery;
+
+    @BindView(R.id.ic_picker_video)
+    ImageView ic_picker_video;
+
+    @BindView(R.id.ic_camera)
+    ImageView ic_camera;
+
     @BindView(R.id.changue_to_videos)
     RelativeLayout changue_to_videos;
     String outputPath =  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + "Instapetts/"+"INSTAPETS_" + UUID.randomUUID() + ".mp4";
@@ -83,6 +94,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
             ((CameraFragment) mCurrentFragment.getFragment()).stop_camera();
         }
         changeOfInstance(FragmentElement.INSTANCE_PICKER_IMAGES,null);
+        repaint_nav(R.id.changue_to_pictures);
     }
 
     @OnClick(R.id.changue_to_videos)
@@ -92,12 +104,14 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
             ((CameraFragment) mCurrentFragment.getFragment()).stop_camera();
         }
         changeOfInstance(FragmentElement.INSTANCE_PICKER_VIDEOS,null);
+        repaint_nav(R.id.changue_to_videos);
     }
 
     @OnClick(R.id.changue_to_camera)
     void changue_to_camera()
     {
         changeOfInstance(FragmentElement.INSTANCE_PICKER_CAMERA,null);
+        repaint_nav(R.id.changue_to_camera);
     }
 
     @SuppressLint("CheckResult")
@@ -146,11 +160,12 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
     private void setupFirstFragment() {
         mCurrentFragment = new FragmentElement<>(null, FragmentPickerGalery.newInstance(), FragmentElement.INSTANCE_PICKER_IMAGES, true);
         change_picker(mCurrentFragment,null);
+        repaint_nav(R.id.changue_to_pictures);
     }
 
 
     private synchronized void changeOfInstance(int intanceType,Bundle bundle) {
-        if(intanceType!=FragmentElement.INSTANCE_CROP_IMAGE)
+        if(intanceType!=FragmentElement.INSTANCE_CROP_IMAGE && intanceType!=FragmentElement.INSTANCE_SHARE)
            runOnUiThread(() -> tabs_camera.setVisibility(View.VISIBLE));
         else
             runOnUiThread(() -> tabs_camera.setVisibility(View.GONE));
@@ -204,19 +219,6 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
             }
         }
 
-    }
-
-    private void change_to_crop_video(FragmentElement fragment,Bundle bundle) {
-        tabs_camera.setVisibility(View.GONE);
-        changeStatusBarColor(R.color.white);
-        if (fragment != null) {
-            mCurrentFragment = fragment;
-            mCurrentFragment.getFragment().setArguments(bundle);
-            if (stack_crop_video.size() <= 0) {
-                stack_crop_video.push(mCurrentFragment);
-            }
-        }
-        inflateFragment();
     }
 
     private void change_to_crop_image(FragmentElement fragment,Bundle bundle) {
@@ -376,16 +378,20 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
             super.onBackPressed();
            finish();
         }else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_CROP_IMAGE){
+            repaint_nav(R.id.changue_to_pictures);
             changeOfInstance(FragmentElement.INSTANCE_PICKER_IMAGES,null);
         }else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_CROP_VIDEO){
             changeOfInstance(FragmentElement.INSTANCE_PICKER_VIDEOS,null);
+            repaint_nav(R.id.changue_to_videos);
         }else{
             tabs_camera.setVisibility(View.VISIBLE);
             if(paths_themp.size()>0){
                 delete_files();
                 changeOfInstance(FragmentElement.INSTANCE_PICKER_IMAGES,null);
+                repaint_nav(R.id.changue_to_pictures);
             }else{
                 changeOfInstance(FragmentElement.INSTANCE_PICKER_IMAGES,null);
+                repaint_nav(R.id.changue_to_pictures);
             }
         }
 
@@ -447,6 +453,23 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
         intent.putExtra("PET_REQUEST","PET_REQUEST");
         setResult(RESULT_OK,intent);
         finish();
+    }
+
+
+    private void repaint_nav(int id ){
+        ic_picker_galery.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_picker_galery));
+        ic_picker_video.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_picker_video));
+        ic_camera.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_camera));
+
+        if(id == R.id.changue_to_pictures) {
+            ic_picker_galery.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_picker_galery_onn));
+        }
+        else if(id == R.id.changue_to_videos){
+            ic_picker_video.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_picker_video_onn));
+        }
+        else if(id == R.id.changue_to_camera) {
+            ic_camera.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_camera_onn));
+        }
     }
 
 

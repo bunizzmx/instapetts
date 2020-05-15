@@ -88,8 +88,8 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     @BindView(R.id.num_posts)
     TextView num_posts;
 
-    @BindView(R.id.num_pets)
-    TextView num_pets;
+    @BindView(R.id.num_rate_pets)
+    TextView num_rate_pets;
 
     @BindView(R.id.num_followers)
     TextView num_followers;
@@ -112,7 +112,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
 
 
 
-    Style style = Style.values()[6];
+    Style style = Style.values()[14];
     Sprite drawable = SpriteFactory.create(style);
     folowFavoriteListener listener_follow;
 
@@ -151,7 +151,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         petsPropietaryAdapter = new PetsPropietaryAdapter(getContext());
-        adapter_pager = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
+        adapter_pager = new ViewPagerAdapter(getChildFragmentManager());
         adapter_pager.addFragment(new FragmentPostGalery(), "Post");
         adapter_pager.addFragment(new FragmentPostGalery(), "Favoritos");
         adapter_pager.addFragment(new FragmentPostGalery(), "Post Privados");
@@ -210,14 +210,14 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         viewpager_profile.setAdapter(adapter_pager);
         tabs_profile_propietary.setViewPager(viewpager_profile);
         spinky_loading_profile_info.setIndeterminateDrawable(drawable);
-        spinky_loading_profile_info.setColor(getContext().getResources().getColor(R.color.primary));
+        spinky_loading_profile_info.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         loanding_preview_root.setVisibility(View.VISIBLE);
         root_info_ptofile.setVisibility(View.GONE);
         paint_buttons();
         loanding_preview_root.setVisibility(View.VISIBLE);
         root_info_ptofile.setVisibility(View.GONE);
         spinky_loading_profile_info.setIndeterminateDrawable(drawable);
-        spinky_loading_profile_info.setColor(getContext().getResources().getColor(R.color.primary));
+        spinky_loading_profile_info.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         userBean.setId(ID_USER_PARAMETER);
         userBean.setUuid("xxxx");
         presenter.getInfoUser(userBean);
@@ -311,6 +311,12 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         root_info_ptofile.setVisibility(View.VISIBLE);
         PETS.clear();
         PETS.addAll(pets);
+        float RATE_PETS=0;
+        float ACOMULATIVO_RATE=0;
+        for(int i=0;i <pets.size();i++){
+            ACOMULATIVO_RATE +=pets.get(i).getRate_pet();
+        }
+        RATE_PETS = ACOMULATIVO_RATE / pets.size();
 
         USERBEAN = userBean;
         Log.e("USER_BEAN","-->TOKEN:" + USERBEAN.getToken() );
@@ -320,7 +326,10 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         petsPropietaryAdapter.setPetsforOtherUser(PETS);
         title_name_preview.setText(USERBEAN.getName_user());
         num_posts.setText(String.valueOf(USERBEAN.getNum_pets()));
-        num_pets.setText(String.valueOf(USERBEAN.getRate_pets()));
+        if(RATE_PETS <=0)
+            num_rate_pets.setText("0.0");
+        else
+            num_rate_pets.setText(String.valueOf(RATE_PETS));
         num_followers.setText(String.valueOf(USERBEAN.getFolowers()));
 
     }

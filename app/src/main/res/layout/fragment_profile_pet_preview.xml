@@ -5,7 +5,7 @@
     android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/AppTheme"
+  android:background="@color/white"
     android:gravity="bottom">
     <com.google.android.material.appbar.AppBarLayout
         android:background="@color/white"

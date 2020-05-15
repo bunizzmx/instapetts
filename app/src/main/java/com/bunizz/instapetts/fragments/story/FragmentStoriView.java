@@ -3,8 +3,6 @@ package com.bunizz.instapetts.fragments.story;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,17 +10,15 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -30,15 +26,14 @@ import com.bumptech.glide.request.transition.Transition;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
+import com.bunizz.instapetts.beans.IdentificadoresHistoriesBean;
 import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
-import com.bunizz.instapetts.beans.PostBean;
-import com.bunizz.instapetts.fragments.post.FragmentPostList;
-import com.bunizz.instapetts.fragments.post.adapters.ListAdapter;
-import com.bunizz.instapetts.listeners.change_instance;
+
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.listeners.story_finished_listener;
-import com.bunizz.instapetts.utils.HistoryView.StoryPlayer;
 import com.bunizz.instapetts.utils.HistoryView.StoryPlayerProgressView;
 import com.bunizz.instapetts.utils.ImagenCircular;
+import com.bunizz.instapetts.utils.double_tap.DoubleTapLikeView;
 
 import org.parceler.Parcels;
 
@@ -70,13 +65,39 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
     @BindView(R.id.imagen_usuario_historia)
     ImagenCircular imagen_usuario_historia;
 
+    @BindView(R.id.info_of_likes_views)
+    LinearLayout info_of_likes_views;
 
+    @BindView(R.id.like_history_layout)
+    RelativeLayout like_history_layout;
+
+    @BindView(R.id.icon_like_history)
+    ImageView icon_like_history;
+
+    @BindView(R.id.layout_double_tap_like)
+    DoubleTapLikeView layout_double_tap_like;
+
+
+    @BindView(R.id.imagen_mascota_history)
+    ImagenCircular imagen_mascota_history;
+
+    @BindView(R.id.name_mascota_history)
+    TextView name_mascota_history;
+
+    @BindView(R.id.num_likes_story)
+    TextView num_likes_story;
+
+
+    @BindView(R.id.num_views_story)
+    TextView num_views_story;
 
     story_finished_listener listener;
 
     ArrayList<IndividualDataPetHistoryBean> uris_fotos = new ArrayList<>();
     HistoriesBean HISTORY_BEAN;
+    String unparseableStories="";
 
+   boolean AUTOPLAY =false;
     public static FragmentStoriView newInstance() {
         return new FragmentStoriView();
     }
@@ -87,7 +108,8 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
         Bundle bundle=getArguments();
         if(bundle!=null) {
             HISTORY_BEAN =  Parcels.unwrap(bundle.getParcelable("HISTORY_PARAMETER"));
-            uris_fotos = HISTORY_BEAN.getHistories();
+            unparseableStories = HISTORY_BEAN.getHistorias();
+            AUTOPLAY = bundle.getBoolean("AUTOPLAY");
         }
     }
 
@@ -102,11 +124,56 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         storyPlayerProgressView.setSingleStoryDisplayTime(6000);
+        Log.e("HISTORIES_BEAN","--->:::::" + unparseableStories);
+        storyPlayerProgressView.cancelAnimation();
+
+        if(HISTORY_BEAN.getId_user() == App.read(PREFERENCES.ID_USER_FROM_WEB,0)) {
+            like_history_layout.setVisibility(View.GONE);
+            info_of_likes_views.setVisibility(View.VISIBLE);
+        }
+        else {
+            like_history_layout.setVisibility(View.VISIBLE);
+            info_of_likes_views.setVisibility(View.GONE);
+            like_history_layout.setOnClickListener(v -> {
+                listener.onItemLiked(uris_fotos.get(COUNTER).getIdentificador(),HISTORY_BEAN.getId_user());
+                layout_double_tap_like.setVisibility(View.VISIBLE);
+                layout_double_tap_like.animate_icon(layout_double_tap_like);
+                icon_like_history.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_corazon_black));
+            });
+        }
+
+
+        String splitsItems[] = unparseableStories.split(",");
+        for(int i=0;i<=splitsItems.length - 1;i++){
+           String splitsSubItems[] = splitsItems[i].split(";");
+           IndividualDataPetHistoryBean item = new IndividualDataPetHistoryBean();
+            item.setName_pet(splitsSubItems[0]);
+            item.setPhoto_pet(splitsSubItems[1]);
+            item.setId_pet(Integer.parseInt(splitsSubItems[2]));
+            item.setTumbh_video(splitsSubItems[3]);
+            item.setUrl_photo(splitsSubItems[4]);
+            item.setIdentificador(splitsSubItems[5]);
+           uris_fotos.add(item);
+        }
         PROGRESS_COUNT=uris_fotos.size();
-        initStoryProgressView();
+
         name.setText(HISTORY_BEAN.getName_user());
-        Glide.with(getActivity()).load(HISTORY_BEAN.getUrl_photo_user()).into(imagen_usuario_historia);
+        Glide.with(getActivity()).load(HISTORY_BEAN.getPhoto_user()).into(imagen_usuario_historia);
+
+
     }
+
+    public void startProgressAnimation(){
+        Log.e("START_ANIMATION","SI");
+        initStoryProgressView();
+        storyPlayerProgressView.resumeProgress();
+    }
+
+    public void StopProgressAnimation(){
+        if(storyPlayerProgressView!=null)
+        storyPlayerProgressView.pauseProgress();
+    }
+
 
     private void initStoryProgressView() {
         storyPlayerProgressView.setStoryPlayerListener(this);
@@ -130,15 +197,19 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
     @Override
     public void onResume() {
         super.onResume();
-        Log.e("EEROR_GLIDE","ON RESUME");
-        storyPlayerProgressView.resumeProgress();
+        Bundle bundle=getArguments();
+        if(bundle!=null)
+            AUTOPLAY = bundle.getBoolean("AUTOPLAY");
+
+        if(AUTOPLAY) {
+            Log.e("AUTOPLAY","SI");
+            startProgressAnimation();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.e("EEROR_GLIDE","ON PAUSE");
-        storyPlayerProgressView.pauseProgress();
     }
 
     private void loadImage(int index) {
@@ -148,20 +219,34 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
             return;
         }
 
+        if(HISTORY_BEAN.getId_user() == App.read(PREFERENCES.ID_USER_FROM_WEB,0)) {
+            IdentificadoresHistoriesBean ide  = listener.getIdenTificador(uris_fotos.get(COUNTER).getIdentificador());
+            int num_likes = ide.getNum_likes();
+            num_likes_story.setText("" + num_likes);
+            int num_views = ide.getNum_views();
+            num_views_story.setText("" + num_views);
+        }
+        else
+            info_of_likes_views.setVisibility(View.GONE);
+
+        Glide.with(getActivity()).load(uris_fotos.get(COUNTER).getPhoto_pet()).into(imagen_mascota_history);
+        name_mascota_history.setText(uris_fotos.get(COUNTER).getName_pet());
+
+        listener.onItemView(uris_fotos.get(index).getIdentificador(),HISTORY_BEAN.getId_user());
         try {
             time.setText(App.fecha_lenguaje_humano(uris_fotos.get(COUNTER).getDate_story().replace("T"," ").replace("Z","")));
         }catch (Exception e){
             time.setText("Hace un momento");
         }
 
-        Glide.with(getContext()).asBitmap().load(uris_fotos.get(index).getUrl_photo())
+        Glide.with(getContext()).asBitmap().load(App.getInstance().getBucketUriHistorie(uris_fotos.get(index).getUrl_photo()))
                 .into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         try {
                             progress_top.setVisibility(View.GONE);
                             Log.e("SCALE_HEIGHT","-->" +resource.getHeight() );
-                            if(resource.getHeight() > 1200){
+                            if(resource.getHeight() > 900){
                                 image_story.setScaleType(ImageView.ScaleType.CENTER_CROP);
                             }else{
                                 image_story.setScaleType(ImageView.ScaleType.FIT_CENTER);

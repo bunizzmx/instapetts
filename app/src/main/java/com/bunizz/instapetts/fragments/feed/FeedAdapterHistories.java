@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,11 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.activitys.camera_history.CameraHistoryActivity;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
-import com.bunizz.instapetts.utils.HistoryView.StoryPlayer;
+import com.bunizz.instapetts.activitys.story_player.StoryPlayer;
 import com.bunizz.instapetts.utils.ImagenCircular;
 
 import org.parceler.Parcels;
@@ -71,7 +69,7 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
         if(position == 0){
             h.name_pet_item.setText("Tu History");
             if(historiesBeans.get(position)!=null){
-                if(historiesBeans.get(position).getHistories()!=null){
+                if(historiesBeans.get(position).getHistorias()!=null){
                     h.profile_background.setOnClickListener(view -> {
                             Intent i = new Intent(context, StoryPlayer.class);
                             i.putExtra("sliders", Parcels.wrap(historiesBeans));
@@ -79,7 +77,9 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
                             context.startActivity(i);
                     });
                     h.image_pet_history.setVisibility(View.VISIBLE);
-                    Glide.with(context).load(historiesBeans.get(position).getHistories().get(historiesBeans.get(position).getHistories().size()-1).getUrl_photo()).into(h.profile_background);
+                    String splitItems[] = historiesBeans.get(position).getHistorias().split(",");
+                    String splitSubitems[] = splitItems[splitItems.length-1].split(";");
+                    Glide.with(context).load(App.getInstance().getBucketUriHistorie(splitSubitems[4])).into(h.profile_background);
                     h.add_story_icon.setVisibility(View.GONE);
                 }else{
                     h.add_story_icon.setVisibility(View.VISIBLE);
@@ -102,11 +102,20 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
         }else{
             h.add_story_icon.setVisibility(View.GONE);
             h.image_pet_history.setVisibility(View.VISIBLE);
-            Glide.with(context).load(historiesBeans.get(position).getUrl_photo_user()).into(h.image_pet_history);
-            Glide.with(context).load(historiesBeans.get(position).getHistories().get(historiesBeans.get(position).getHistories().size()-1).getUrl_photo()).into(h.profile_background);
+            Log.e("HISTORIAS_COMPANERO","-->:" + historiesBeans.get(position).getHistorias());
+            String splitItems[] = historiesBeans.get(position).getHistorias().split(",");
+            String splitSubitems[] = splitItems[splitItems.length-1].split(";");
+            Log.e("HISTORIAS_COMPANERO","-->preview:" + App.getInstance().getBucketUriHistorie(splitSubitems[4]));
+            Glide.with(context).load(App.getInstance().getBucketUriHistorie(splitSubitems[4])).into(h.profile_background);
+            Glide.with(context).load(historiesBeans.get(position).getPhoto_user()).into(h.image_pet_history);
             h.profile_background.setOnClickListener(view -> {
                 Intent i = new Intent(context, StoryPlayer.class);
+                if(historiesBeans.get(0).getHistorias()!=null)
                 i.putExtra("sliders", Parcels.wrap(historiesBeans));
+                else{
+                    historiesBeans.remove(0);
+                    i.putExtra("sliders", Parcels.wrap(historiesBeans));
+                }
                 i.putExtra("SELECTED_POSITION", position);
                 context.startActivity(i);
             });

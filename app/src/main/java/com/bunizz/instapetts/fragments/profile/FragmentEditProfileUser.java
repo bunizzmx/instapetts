@@ -4,12 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -46,6 +49,15 @@ public class FragmentEditProfileUser extends Fragment {
         listener.onImageProfileUpdated();
     }
 
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.back_to_main_edit_profile)
+    void back_to_main_edit_profile()
+    {
+      getActivity().onBackPressed();
+    }
+
+
+
     @BindView(R.id.image_userd_edit)
     ImageView image_userd_edit;
 
@@ -54,10 +66,13 @@ public class FragmentEditProfileUser extends Fragment {
     AutoCompleteTextView configure_name;
 
     @BindView(R.id.descripcion_user)
-    AutoCompleteTextView descripcion_user;
+    EditText descripcion_user;
 
     @BindView(R.id.name_user)
     TextView name_user;
+
+    @BindView(R.id.num_caracteres_description)
+    TextView num_caracteres_description;
 
     @BindView(R.id.save_info_perfil)
     Button save_info_perfil;
@@ -77,7 +92,6 @@ public class FragmentEditProfileUser extends Fragment {
         b.putString("PHOTO",URI_FINAL);
         b.putString("PHOTO_TUMBH",URI_FINAL_TUMBH);
         b.putString("PHOTO_LOCAL",URL_LOCAL);
-
         listener.UpdateProfile(b);
     }
 
@@ -118,10 +132,22 @@ public class FragmentEditProfileUser extends Fragment {
         }
         if(!App.read(PREFERENCES.DESCRIPCCION,"INVALID").equals("INVALID")){
             descripcion_user.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
+            num_caracteres_description.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID").toString().length() +"/"+ "255");
         }
         URL_UPDATED = App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID");
         Glide.with(getContext()).load(URL_UPDATED).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_userd_edit);
         Log.e("URL_GUARDADA","-->" + URL_UPDATED);
+        descripcion_user.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                num_caracteres_description.setText(descripcion_user.getText().toString().length() +"/"+ "255");
+            }
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
     }
 
 

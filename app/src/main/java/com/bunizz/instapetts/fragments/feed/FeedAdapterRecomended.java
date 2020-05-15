@@ -1,6 +1,7 @@
 package com.bunizz.instapetts.fragments.feed;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,11 +58,20 @@ public class FeedAdapterRecomended extends RecyclerView.Adapter<RecyclerView.Vie
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         RecomendedHolder h =(RecomendedHolder)holder;
         PostBean data_parsed = (PostBean) data.get(position);
-        if(is_multiple(data_parsed.getUrls_posts())) {
-            String splits[]  = data_parsed.getUrls_posts().split(",");
-            Glide.with(context).load(splits[0]).into(h.image_post_recomended);
+        if(data_parsed.getType_post() !=1) {
+            if (is_multiple(data_parsed.getUrls_posts())) {
+                String splits[] = data_parsed.getUrls_posts().split(",");
+                Glide.with(context).load(splits[0]).into(h.image_post_recomended);
+                h.multiple_images_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_album));
+            } else {
+                h.multiple_images_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_camera));
+                Log.e("IMAGEN_DE_LA_PREVIEW","-->:" + data_parsed.getUrls_posts());
+                Glide.with(context).load(data_parsed.getUrls_posts()).into(h.image_post_recomended);
+            }
         }else{
-            Glide.with(context).load(((PostBean) data.get(position)).getUrls_posts()).into(h.image_post_recomended);
+            Log.e("IMAGEN_DE_LA_PREVIEW","-->:" + data_parsed.getThumb_video());
+            h.multiple_images_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_play));
+            Glide.with(context).load(data_parsed.getThumb_video()).into(h.image_post_recomended);
         }
         Glide.with(context).load(data_parsed.getUrl_photo_user()).into(h.image_user_recomended);
         h.name_user_recomended.setText(data_parsed.getName_user());
@@ -71,6 +81,38 @@ public class FeedAdapterRecomended extends RecyclerView.Adapter<RecyclerView.Vie
                 listener.onSelectUser(data_parsed.getId_usuario(),data_parsed.getUuid());
             }
         });
+
+        switch (data_parsed.getType_pet()){
+            case 1:
+                h.icon_type_mascota.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_perro));
+                break;
+            case 2:
+                h.icon_type_mascota.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_gato));
+                break;
+            case 3:
+                h.icon_type_mascota.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_mascota_perico));
+                break;
+            case 4:
+                h.icon_type_mascota.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_mascota_conejo));
+                break;
+            case 5:
+                h.icon_type_mascota.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_mascota_hamster));
+                break;
+            case 6:break;
+            case 7:break;
+            case 8:break;
+            case 9:break;
+            case 10:break;
+            case 11:break;
+            case 12:break;
+            case 13:break;
+            case 14:break;
+            case 15:break;
+            case 16:break;
+            default:break;
+
+        }
+
     }
 
     @Override
@@ -79,16 +121,18 @@ public class FeedAdapterRecomended extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     public class RecomendedHolder extends RecyclerView.ViewHolder{
-       ImageView image_post_recomended;
+       ImageView image_post_recomended,multiple_images_posts,icon_type_mascota;
        ImagenCircular image_user_recomended;
-       TextView name_user_recomended;
+       TextView name_user_recomended,label_first_recomended;
        RelativeLayout root_simple_recomended_user;
         public RecomendedHolder(@NonNull View itemView) {
             super(itemView);
+            multiple_images_posts =itemView.findViewById(R.id.multiple_images_posts);
             image_post_recomended = itemView.findViewById(R.id.image_post_recomended);
             image_user_recomended = itemView.findViewById(R.id.image_user_recomended);
             name_user_recomended = itemView.findViewById(R.id.name_user_recomended);
             root_simple_recomended_user = itemView.findViewById(R.id.root_simple_recomended_user);
+            icon_type_mascota = itemView.findViewById(R.id.icon_type_mascota);
         }
     }
 

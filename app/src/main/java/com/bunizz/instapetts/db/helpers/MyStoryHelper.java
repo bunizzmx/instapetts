@@ -24,10 +24,9 @@ public class MyStoryHelper extends GenericHelper {
     public static final String FECHA = "fecha";
     public static final String NOMBRE_PET = "nombre_pet";
     public static final String ID_PET = "id_pet";
-    public static final String ID_USER = "id_propietary";
     public static final String URIS_FOTO_HISTORY = "uri_photo";
     public static final String URIS_FOTO_PET = "uri_perfil";
-
+    public static final String IDENTIFICADOR = "identificador";
 
     public static MyStoryHelper getInstance(Context context) {
         return new MyStoryHelper(context);
@@ -43,9 +42,10 @@ public class MyStoryHelper extends GenericHelper {
         contentValues.put(FECHA, historiesBean.getDate_story());
         contentValues.put(NOMBRE_PET, historiesBean.getName_pet());
         contentValues.put(ID_PET, historiesBean.getId_pet());
-        contentValues.put(ID_USER, historiesBean.getId_user());
         contentValues.put(URIS_FOTO_HISTORY, historiesBean.getUrl_photo());
         contentValues.put(URIS_FOTO_PET, historiesBean.getPhoto_pet());
+        contentValues.put(IDENTIFICADOR, historiesBean.getIdentificador());
+
         try {
             getWritableDatabase().insertOrThrow(TABLE_NAME, null,contentValues);
         } catch (SQLiteConstraintException | IllegalStateException e) {
@@ -66,9 +66,9 @@ public class MyStoryHelper extends GenericHelper {
                   h.setDate_story(cursor.getString(cursor.getColumnIndex(FECHA)));
                   h.setName_pet(cursor.getString(cursor.getColumnIndex(NOMBRE_PET)));
                   h.setId_pet(cursor.getInt(cursor.getColumnIndex(ID_PET)));
-                  h.setId_user(cursor.getInt(cursor.getColumnIndex(ID_USER)));
                   h.setUrl_photo(cursor.getString(cursor.getColumnIndex(URIS_FOTO_HISTORY)));
                   h.setPhoto_pet(cursor.getString(cursor.getColumnIndex(URIS_FOTO_PET)));
+                  h.setIdentificador(cursor.getString(cursor.getColumnIndex(IDENTIFICADOR)));
                   histories.add(h);
             }
         } catch (SQLiteConstraintException | IllegalStateException e) {

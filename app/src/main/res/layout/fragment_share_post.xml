@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/AppTheme">
+    android:background="@color/white">
   <LinearLayout
+      android:id="@+id/top_settings_post"
       android:layout_alignParentTop="true"
-      android:layout_above="@+id/location_layouts"
       android:orientation="vertical"
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
@@ -69,15 +69,15 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"/>
     </LinearLayout>
-
-
   <androidx.recyclerview.widget.RecyclerView
       android:layout_marginTop="10dp"
       android:id="@+id/list_image_selected"
       android:layout_width="match_parent"
       android:layout_height="160dp"/>
-
+  </LinearLayout>
   <EditText
+      android:layout_below="@+id/top_settings_post"
+      android:layout_above="@+id/location_layouts"
       android:fontFamily="@font/avenir_b"
       android:textSize="24dp"
       android:textAlignment="center"
@@ -90,12 +90,10 @@
       android:hint="Escribe algo..."
       android:textColorHint="#777777"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"/>
-  </LinearLayout>
+      android:layout_height="match_parent"/>
   <RelativeLayout
       android:id="@+id/location_layouts"
-      android:layout_marginBottom="10dp"
-      android:layout_alignParentBottom="true"
+      android:layout_above="@+id/layout_turn_mesagges"
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
     <ImageView
@@ -137,7 +135,6 @@
         android:layout_height="wrap_content"/>
   </RelativeLayout>
   <RelativeLayout
-      android:visibility="gone"
       android:layout_marginBottom="10dp"
       android:id="@+id/layout_turn_mesagges"
       android:layout_alignParentBottom="true"
@@ -146,7 +143,7 @@
     <ImageView
         android:layout_marginLeft="10dp"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_comentario"
+        android:src="@drawable/ic_commentar"
         android:id="@+id/icon_apagar_comments"
         android:layout_width="15dp"
         android:layout_height="15dp"/>
@@ -169,7 +166,7 @@
       <TextView
           android:layout_marginTop="10dp"
           android:textSize="14dp"
-          android:text="Pedes apagar los comentarios y volverlos activarlos si asi lo deceas"
+          android:text="Los usuarios no podran hacer comentarios en esta publicacion"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"/>
     </LinearLayout>

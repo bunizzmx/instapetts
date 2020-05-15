@@ -68,9 +68,6 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
 
     change_instance listener;
     changue_fragment_parameters_listener listener_instance;
-    FeedAdapter feedAdapter;
-
-    ArrayList<Object> data = new ArrayList<>();
 
     @BindView(R.id.list_pets_propietary)
     RecyclerView list_pets_propietary;
@@ -96,8 +93,8 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     @BindView(R.id.num_posts)
     TextView num_posts;
 
-    @BindView(R.id.num_pets)
-    TextView num_pets;
+    @BindView(R.id.num_rate_pets)
+    TextView num_rate_pets;
 
     @BindView(R.id.num_followers)
     TextView num_followers;
@@ -123,10 +120,8 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     SwipeRefreshLayout refresh_profile;
 
 
-    Style style = Style.values()[6];
+    Style style = Style.values()[14];
     Sprite drawable = SpriteFactory.create(style);
-
-
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.open_side_menu)
@@ -183,9 +178,8 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
             if(my_pets_database.size()>0){
                 PETS.addAll(my_pets_database);
             }
-            PETS.add(new PetBean());
+           PETS.add(new PetBean());
             petsPropietaryAdapter.setPets(PETS);
-            Log.e("RFRESH_PETS","3");
         adapter_pager = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
         adapter_pager.addFragment(new FragmentPostGalery(), "Post");
         adapter_pager.addFragment(new FragmentPostGalery(), "Favoritos");
@@ -220,11 +214,11 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         viewpager_profile.setAdapter(adapter_pager);
         tabs_profile_propietary.setViewPager(viewpager_profile);
         spinky_loading_profile_info.setIndeterminateDrawable(drawable);
-        spinky_loading_profile_info.setColor(getContext().getResources().getColor(R.color.primary));
+        spinky_loading_profile_info.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         loanding_preview_root.setVisibility(View.VISIBLE);
         root_info_ptofile.setVisibility(View.GONE);
         title_toolbar.setText(App.read(PREFERENCES.NAME_USER,"USUARIO"));
-        name_property_pet.setText("@" + App.read(PREFERENCES.NAME_USER,"USUARIO"));
+        name_property_pet.setText("@" + App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"USUARIO"));
             follow_edit.setText(R.string.edit_profile);
             follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_edit_profile));
             follow_edit.setTextColor(Color.BLACK);
@@ -283,6 +277,11 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         }
     }
 
+    public void change_descripcion_profile(){
+        if(descripcion_perfil_user!=null)
+          descripcion_perfil_user.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
+    }
+
     public void refresh_list_pets(){
         ArrayList<PetBean> my_pets_database = new ArrayList<>();
         my_pets_database.addAll(petHelper.getMyPets());
@@ -300,23 +299,38 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
 
     @Override
     public void showInfoUser(UserBean userBean, ArrayList<PetBean> pets) {
+        Log.e("NO TIENES_PETS","PETS" + pets.size());
         loanding_preview_root.setVisibility(View.GONE);
         root_info_ptofile.setVisibility(View.VISIBLE);
-        if(PETS.size()==1) {
+        float RATE_PETS=0;
+        float ACOMULATIVO_RATE=0;
+        if(pets.size()>0) {
+            PETS.clear();
             PETS.addAll(pets);
+            PETS.add(new PetBean());
+        }
+        if(PETS.size()==1) {
             if(pets.size()<1 && PETS.size() ==1){
                 Log.e("NO TIENES_PETS",":(");
                 fist_pet();
             }
         }
+        for(int i=0;i <pets.size();i++){
+            ACOMULATIVO_RATE +=pets.get(i).getRate_pet();
+        }
+        RATE_PETS = ACOMULATIVO_RATE / pets.size();
         USERBEAN = userBean;
         title_toolbar.setText(USERBEAN.getName_user());
-        name_property_pet.setText("@" + USERBEAN.getName_user());
+        if(USERBEAN.getName_tag()!=null)
+            name_property_pet.setText("@" + USERBEAN.getName_tag());
+        else
+            name_property_pet.setText("@" + App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"INVALID"));
+
         descripcion_perfil_user.setText(USERBEAN.getDescripcion());
         Glide.with(getContext()).load(USERBEAN.getPhoto_user()).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);
         petsPropietaryAdapter.setPets(PETS);
         num_posts.setText(String.valueOf(USERBEAN.getPosts()));
-        num_pets.setText(String.valueOf(USERBEAN.getRate_pets()));
+        num_rate_pets.setText(String.valueOf(RATE_PETS));
         num_followers.setText(String.valueOf(USERBEAN.getFolowers()));
     }
 

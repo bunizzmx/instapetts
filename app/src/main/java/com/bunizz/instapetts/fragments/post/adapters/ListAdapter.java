@@ -61,7 +61,7 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public ListAdapter(Context context) {
         this.context = context;
     }
-    Style style = Style.values()[6];
+    Style style = Style.values()[14];
     Sprite drawable = SpriteFactory.create(style);
 
     public ArrayList<Object> getData() {
@@ -137,8 +137,11 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 });
                 f.name_pet.setText(data_parsed.getName_pet());
                 f.name_user_posts.setText(data_parsed.getName_user());
-                f.num_likes_posts.setText("a " + data_parsed.getLikes() + " usuarios les gusta esto");
-                if(data_parsed.getDescription().isEmpty()){
+        if(data_parsed.getLikes()>0)
+            f.num_likes_posts.setText("a " + data_parsed.getLikes() + " usuarios les gusta esto");
+        else
+            f.num_likes_posts.setText("Se el primero en darle me gusta");
+        if(data_parsed.getDescription().isEmpty()){
                     f.description_posts.setVisibility(View.GONE);
                 }else{
                     f.description_posts.setVisibility(View.VISIBLE);

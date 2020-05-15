@@ -109,13 +109,13 @@ public class FragmentPostPublicsSaved extends Fragment implements  PostPublicsSa
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        list_posts_publics.setLayoutManager(new GridLayoutManager(getContext(),3));
+        list_posts_publics.setLayoutManager(new GridLayoutManager(getContext(),2));
         list_posts_publics.setAdapter(adapter);
         presenter.getPostPublics();
-        Style style = Style.values()[6];
+        Style style = Style.values()[14];
         Sprite drawable = SpriteFactory.create(style);
         progres_image.setIndeterminateDrawable(drawable);
-        progres_image.setColor(getContext().getResources().getColor(R.color.primary));
+        progres_image.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         title_no_data.setText("No tienes post guardados");
         body_no_data.setText("Explora por todo un mundo, de lindas y divertidas mascotas, y guarda las que mas te agraden.");
     }

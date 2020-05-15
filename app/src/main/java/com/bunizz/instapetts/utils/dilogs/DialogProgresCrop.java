@@ -11,7 +11,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.utils.ImagenCircular;
 
 import java.util.List;
 
@@ -28,15 +32,8 @@ public class DialogProgresCrop extends BaseAlertDialog{
     Activity context;
     int tipo_permision;
      TextView percentage;
+     ImagenCircular image_crop_video;
 
-
-    public int getTipo_permision() {
-        return tipo_permision;
-    }
-
-    public void setTipo_permision(int tipo_permision) {
-        this.tipo_permision = tipo_permision;
-    }
 
     public DialogProgresCrop(Activity context){
         this.context = context;
@@ -44,7 +41,12 @@ public class DialogProgresCrop extends BaseAlertDialog{
         LayoutInflater inflater = LayoutInflater.from(this.context);
         dialogView = inflater.inflate(R.layout.dialog_progress_crop, null);
         percentage = dialogView.findViewById(R.id.percentage);
+        image_crop_video = dialogView.findViewById(R.id.image_crop_video);
         percentage.setText("0 %");
+        Glide.with(context).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"))
+                .placeholder(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
+                .error(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
+                .into(image_crop_video);
         dialogBuilder.setView(dialogView);
         dialog = dialogBuilder.create();
         this.dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -53,13 +55,7 @@ public class DialogProgresCrop extends BaseAlertDialog{
     }
 
   public   void set_progress_percentage(double progress){
-      Log.e("LOG_DEL_DIALOH","-->" +progress);
-      context.runOnUiThread(new Runnable() {
-          @Override
-          public void run() {
-              percentage.setText("" + (int) progress + " %");
-          }
-      });
+      context.runOnUiThread(() -> percentage.setText("" + (int) progress + " %"));
 
     }
 
@@ -79,56 +75,10 @@ public class DialogProgresCrop extends BaseAlertDialog{
         }
     }
 
-    public void setTitulo(List<String> titulo){
-        try {
-            setTitleVisable(true);
-
-        }catch (NullPointerException e){
-            e.printStackTrace();
-        }
-    }
-
-
-    public void setTitleVisable(boolean show){
-        try{
-
-        }catch (NullPointerException e){
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * set the description visibility.
-     *
-     * @param show if true visibility will be VISIBLE, if false it will be set to GONE.
-     */
-    public void setDescriptionVisable(boolean show){
-        try{
-
-        }catch (NullPointerException e){
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     *
-     * Getters and Setters.
-     *
-     */
-
-
     @Override
     public Context getContext() {
         return context;
     }
-
-   /* public TextView getTitle() {
-        return title;
-    }
-
-   /* public ListView getListView() {
-        return listView;
-    }*/
 
 
     @Override

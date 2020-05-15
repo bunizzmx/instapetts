@@ -82,6 +82,7 @@ public class NotificationsManagers extends FirebaseMessagingService {
     void buildNotification(String title,String body){
         Intent intent;
         intent = new Intent(this, Main.class);
+        intent.putExtra("LOGIN_AGAIN",0);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         int notificationId = 1;

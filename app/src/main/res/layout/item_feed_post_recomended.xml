@@ -13,11 +13,34 @@
         android:id="@+id/card_recomended"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <ImageView
-            android:scaleType="centerCrop"
-            android:id="@+id/image_post_recomended"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp"/>
+            android:layout_height="250dp">
+            <ImageView
+                android:scaleType="centerCrop"
+                android:id="@+id/image_post_recomended"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"/>
+            <ImageView
+                android:id="@+id/multiple_images_posts"
+                android:tint="@color/white"
+                android:src="@drawable/ic_album"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="10dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+
+            <ImageView
+                android:id="@+id/icon_type_mascota"
+                android:layout_margin="5dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:src="@drawable/ic_perro"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+        </RelativeLayout>
+
     </androidx.cardview.widget.CardView>
    <RelativeLayout
        android:padding="10dp"
@@ -30,12 +53,13 @@
            android:layout_width="30dp"
            android:layout_height="30dp"/>
        <TextView
-           style="@style/FontNormal"
+           android:textStyle="bold"
            android:id="@+id/name_user_recomended"
            android:layout_marginLeft="10dp"
            android:layout_centerVertical="true"
            android:layout_toRightOf="@+id/image_user_recomended"
-           android:text="Name de user"
+           android:text=""
+           android:textSize="12dp"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"/>
    </RelativeLayout>

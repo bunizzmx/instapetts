@@ -1,4 +1,4 @@
-package com.bunizz.instapetts.utils.HistoryView;
+package com.bunizz.instapetts.activitys.story_player;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
@@ -22,6 +22,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
+import com.bunizz.instapetts.beans.IdentificadoresHistoriesBean;
+import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.fragments.story.FragmentStoriView;
 import com.bunizz.instapetts.listeners.story_finished_listener;
 import com.bunizz.instapetts.utils.ViewPagerHistory.DepthPageTransformer;
@@ -30,11 +33,12 @@ import com.bunizz.instapetts.utils.tabs.SlidingFragmentPagerAdapter;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class StoryPlayer extends AppCompatActivity implements story_finished_listener {
+public class StoryPlayer extends AppCompatActivity implements story_finished_listener,StoryPlayerContract.View {
     public static final String STORY_IMAGE_KEY = "storyImages";
     @BindView(R.id.view_pager_stories)
     ViewPager view_pager_stories;
@@ -42,6 +46,7 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
     int CURRENT_ITEM =0;
     int SELECTED_POSITION =0;
     ArrayList<HistoriesBean> historiesBeans = new ArrayList<>();
+    StoryPlapyerPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +54,31 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
         setContentView(R.layout.story_activity);
         ButterKnife.bind(this);
         changeStatusBarColor(R.color.black);
+        presenter = new StoryPlapyerPresenter(this,this);
         if (getIntent() != null) {
             historiesBeans = Parcels.unwrap(getIntent().getParcelableExtra("sliders"));
             SELECTED_POSITION = getIntent().getIntExtra("SELECTED_POSITION",0);
         }
-        adapter = new TabAdapter(getSupportFragmentManager(), this,historiesBeans);
+        Log.e("STORY_PLAYER","-->:Num Histories: " + historiesBeans.size());
+        Log.e("STORY_PLAYER","-->:Num position: " + SELECTED_POSITION);
+        adapter = new TabAdapter(getSupportFragmentManager(), this);
+        for(int i =0;i<historiesBeans.size();i++){
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("HISTORY_PARAMETER", Parcels.wrap(this.historiesBeans.get(i)));
+            Log.e("AUTPLAY_SELECTED","-->" + SELECTED_POSITION + "/" +i);
+            if(SELECTED_POSITION == i)
+            bundle.putBoolean("AUTOPLAY",true);
+            else
+            bundle.putBoolean("AUTOPLAY",false);
+            Fragment f = new FragmentStoriView();
+            f.setArguments(bundle);
+            adapter.addFragment(f);
+        }
+        CURRENT_ITEM = SELECTED_POSITION;
         view_pager_stories.setAdapter(adapter);
         view_pager_stories.setOffscreenPageLimit(0);
+        view_pager_stories.setPageTransformer(true, new DepthPageTransformer());
+        view_pager_stories.setCurrentItem(SELECTED_POSITION);
         view_pager_stories.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -64,7 +87,8 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
 
             @Override
             public void onPageSelected(int position) {
-                 CURRENT_ITEM = position;
+                CURRENT_ITEM = position;
+                ((FragmentStoriView) adapter.getItem(CURRENT_ITEM)).startProgressAnimation();
             }
 
             @Override
@@ -72,14 +96,14 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
 
             }
         });
-        view_pager_stories.setPageTransformer(true, new DepthPageTransformer());
-        view_pager_stories.setCurrentItem(SELECTED_POSITION);
     }
 
 
     @Override
     protected void onPause() {
         super.onPause();
+        ((FragmentStoriView) adapter.getItem(CURRENT_ITEM)).StopProgressAnimation();
+
     }
 
 
@@ -103,39 +127,66 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
 
     @Override
     public void on_finish() {
-        Log.e("FINISH_STORY","--->" + CURRENT_ITEM + "/" + adapter.getCount());
         if(!(CURRENT_ITEM + 1 >= adapter.getCount())){
-            view_pager_stories.setCurrentItem(CURRENT_ITEM + 1);
+            Log.e("PAGER_HISTORIES","LA QUE SIGUE");
+            if(SELECTED_POSITION != historiesBeans.size()-1) {
+                Log.e("PAGER_HISTORIES","la que sigue porque no es la ultima :" +(CURRENT_ITEM + 1));
+                view_pager_stories.setCurrentItem(CURRENT_ITEM + 1);
+            }
+            else {
+                Log.e("PAGER_HISTORIES","es la ultima lo termino");
+                finish();
+            }
         }else{
+            Log.e("PAGER_HISTORIES","a la verga");
             finish();
         }
 
     }
 
+    @Override
+    public void onItemView(String identificador, int id_usuario) {
+        presenter.ViewHistory(identificador,id_usuario);
+    }
+
+    @Override
+    public void onItemLiked(String identificador, int id_usuario) {
+       presenter.LikeHistory(identificador,id_usuario);
+    }
+
+    @Override
+    public IdentificadoresHistoriesBean getIdenTificador(String identificador) {
+        return presenter.getIdentificador(identificador);
+    }
+
+    @Override
+    public void show_feed(ArrayList<PostBean> data, ArrayList<HistoriesBean> data_stories) {
+
+    }
+
 
     public class TabAdapter extends SlidingFragmentPagerAdapter {
-      ArrayList<HistoriesBean> historiesBeans = new ArrayList<>();
+        private final List<Fragment> mFragmentList = new ArrayList<>();
         private Context context;
 
-        public TabAdapter(FragmentManager fm, Context context,ArrayList<HistoriesBean> historiesBeans) {
+        public TabAdapter(FragmentManager fm, Context context) {
             super(fm);
             this.context = context;
-            this.historiesBeans = historiesBeans;
         }
+
+        public void addFragment(Fragment fragment) {
+            mFragmentList.add(fragment);
+        }
+
 
         @Override
         public Fragment getItem(int position) {
-            Bundle bundle = new Bundle();
-            bundle.putParcelable("HISTORY_PARAMETER", Parcels.wrap(this.historiesBeans.get(position)));
-            Fragment fragment;
-            fragment = new FragmentStoriView();
-            fragment.setArguments(bundle);
-            return fragment;
+            return mFragmentList.get(position);
         }
 
         @Override
         public int getCount() {
-            return  this.historiesBeans.size();
+            return mFragmentList.size();
         }
 
 

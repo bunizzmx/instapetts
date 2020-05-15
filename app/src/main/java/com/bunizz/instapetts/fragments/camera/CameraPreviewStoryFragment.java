@@ -53,6 +53,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.app.Activity.RESULT_OK;
+
 public class CameraPreviewStoryFragment extends Fragment {
 
 
@@ -82,6 +84,14 @@ public class CameraPreviewStoryFragment extends Fragment {
     hisotry_listener listenr_uploads;
 
     ArrayList<Object> data = new ArrayList<>();
+
+    @OnClick(R.id.close_camera)
+    void close_camera()
+    {
+        getActivity().onBackPressed();
+    }
+
+
 
     public static CameraPreviewStoryFragment newInstance() {
         return new CameraPreviewStoryFragment();
@@ -201,7 +211,6 @@ public class CameraPreviewStoryFragment extends Fragment {
                 b.putString(BUNDLES.PATH_SELECTED,PATH_TEMP.replace("file:",""));
                 b.putString(BUNDLES.NAME_PET,NAME_PET);
                 b.putString(BUNDLES.URL_PHOTO_PET,URL_FOTO_PET);
-
                 listenr_uploads.chose_complete(b);
             }catch (Exception e){
                 Log.e("ERROR_BROADCAST",":)");

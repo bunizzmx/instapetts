@@ -12,6 +12,7 @@ public interface BUNDLES {
     String NOTIFICATION_TIPE = "NOTIFICATION_TIPE";
     String POST_TYPE="POST_TYPE";
     String ID_POST ="ID_POST";
+    String CAN_COMMENT ="CAN_COMMENT";
 
 
     String TITLE = "TITLE";

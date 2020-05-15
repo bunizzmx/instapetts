@@ -102,10 +102,10 @@ public class FragmentCodesCountry extends Fragment implements  CodesCountryContr
                     }
                 }
         );
-        Style style = Style.values()[6];
+        Style style = Style.values()[14];
         Sprite drawable = SpriteFactory.create(style);
         spin_kit.setIndeterminateDrawable(drawable);
-        spin_kit.setColor(getContext().getResources().getColor(R.color.primary));
+        spin_kit.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         spin_kit.setVisibility(View.VISIBLE);
 
         sample_basic_fastscroller_thumb.setupWithFastScroller(sample_basic_fastscroller);

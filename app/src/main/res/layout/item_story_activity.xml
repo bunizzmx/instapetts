@@ -84,5 +84,105 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/like_history_layout"
+            android:padding="20dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/icon_like_history"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/ic_corazon_w"
+                android:layout_width="30dp"
+                android:layout_height="30dp"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/info_of_likes_views"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_marginRight="20dp"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/ic_corazon_black"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"/>
+                <TextView
+                    android:textColor="@color/white"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:id="@+id/num_likes_story"
+                    android:layout_marginTop="2dp"
+                    android:text="-"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginRight="10dp"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:tint="@color/white"
+                    android:src="@drawable/ic_views"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"/>
+                <TextView
+                    android:textColor="@color/white"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    android:id="@+id/num_views_story"
+                    android:layout_marginTop="2dp"
+                    android:text="-"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.bunizz.instapetts.utils.double_tap.DoubleTapLikeView
+            android:visibility="gone"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/layout_double_tap_like"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            app:icon="@drawable/ic_hand_pet"
+            app:doubleTapIn="200" />
+
+        <RelativeLayout
+            android:layout_alignParentBottom="true"
+            android:layout_margin="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <com.bunizz.instapetts.utils.ImagenCircular
+                android:id="@+id/imagen_mascota_history"
+                android:src="@drawable/ic_hand_pet_preload"
+                android:layout_width="30dp"
+                android:layout_height="30dp"/>
+            <TextView
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/imagen_mascota_history"
+                android:id="@+id/name_mascota_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

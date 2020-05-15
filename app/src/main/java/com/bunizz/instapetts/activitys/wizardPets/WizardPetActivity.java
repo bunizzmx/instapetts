@@ -231,7 +231,6 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
         NEW_PET.setUuid(App.read(PREFERENCES.UUID,"INVALID"));
         NEW_PET.setName_propietary(App.read(PREFERENCES.NAME_USER,"INVALID"));
         NEW_PET.setTarget("NEW");
-        petHelper.savePet(NEW_PET);
         presenter.newPet(NEW_PET);
     }
 
@@ -323,7 +322,10 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
     }
 
     @Override
-    public void petSaved() {
+    public void petSaved(int id_pet_from_web) {
+        Log.e("SAVE_PET_DATABASE","-->" + id_pet_from_web);
+        NEW_PET.setId_pet(String.valueOf(id_pet_from_web));
+        petHelper.savePet(NEW_PET);
         Intent data = new Intent();
         data.putExtra("pet_saved",true);
         setResult(RESULT_OK,data);

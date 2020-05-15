@@ -46,18 +46,21 @@ public class FragmentPostGalery extends Fragment {
     public void setData_posts(ArrayList<Object> data_posts) {
         if(data_posts !=null){
             if(data_posts.size()>0){
+                Log.e("DATAPOST_GRID","DATA POS menor a 0 ");
                 this.data_posts = data_posts;
                 if(feedAdapter!=null)
                     feedAdapter.setPosts(this.data_posts);
                 if(root_no_data!=null)
                 root_no_data.setVisibility(View.GONE);
             }else{
+                Log.e("DATAPOST_GRID","DATA POS mayor 0");
                 if(root_no_data!=null)
                 root_no_data.setVisibility(View.VISIBLE);
             }
         }else{
+            Log.e("DATAPOST_GRID","DATA POS NULL");
             if(root_no_data!=null)
-            root_no_data.setVisibility(View.VISIBLE);
+               root_no_data.setVisibility(View.VISIBLE);
         }
 
     }

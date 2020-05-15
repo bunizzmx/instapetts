@@ -16,6 +16,7 @@ public interface CONST {
 
     String BUCKET_PROFILE ="gs://bucket_profile/";
     String BUCKET_POSTS="gs://instapetts-posts/";
+    String BUCKET_FILES_BACKUP="gs://instapetts_backup_files/";
     String BUCKET_THUMBS_VIDEO="gs://bucket_tumbh_video/";
 
 

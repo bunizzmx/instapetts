@@ -42,15 +42,15 @@ public class WizardPetPresenter implements WizardPetContract.Presenter {
                         .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
                             @Override
                             public void onSuccess(SimpleResponse user) {
-                                if(user.getCode_response() ==1)
-                                    mView.petSaved();
+                                if(user.getCode_response() ==200)
+                                    mView.petSaved(Integer.valueOf(user.getResult_data_extra()));
                                 else
-                                    mView.petSaved();
+                                    mView.petSaved(Integer.valueOf(user.getResult_data_extra()));
 
                             }
                             @Override
                             public void onError(Throwable e) {
-                                mView.petSaved();
+                               // mView.petSaved(Integer.valueOf(user.getResult_data_extra()));
                             }
                         }));
     }

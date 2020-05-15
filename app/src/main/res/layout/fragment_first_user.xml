@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    style="@style/AppTheme"
+    android:background="@color/white"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -14,15 +14,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <LinearLayout
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:orientation="vertical"
         android:layout_centerHorizontal="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <androidx.cardview.widget.CardView
+            android:layout_marginTop="5dp"
             android:id="@+id/change_photo"
-            app:contentPadding="10dp"
-            app:cardCornerRadius="10dp"
+            app:contentPadding="5dp"
+            app:cardCornerRadius="5dp"
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -34,11 +35,12 @@
             android:id="@+id/image_userd_edit"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/ic_hand_pet_preload"
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:layout_width="70dp"
+            android:layout_height="70dp"/>
         <TextView
+            android:textSize="12dp"
             android:fontFamily="@font/avenir_b"
-            android:padding="20dp"
+            android:padding="10dp"
             android:layout_gravity="center_horizontal"
             android:text="@string/chose_photo"
             android:layout_width="wrap_content"
@@ -50,20 +52,31 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <EditText
-                android:maxLines="1"
-                android:id="@+id/configure_name"
+            <TextView
+                android:layout_marginLeft="30dp"
+                android:textSize="10dp"
+                android:text="Nombre real"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <RelativeLayout
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_gravity="center_vertical"
-                android:fontFamily="@font/avenir_b"
-                android:inputType="text"
-                android:hint="@string/write_name"
-                android:padding="10dp"
-                android:background="#00FFFFFF"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
+                <EditText
+                    android:maxLines="1"
+                    android:id="@+id/configure_name"
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="@font/avenir_b"
+                    android:inputType="textEmailAddress"
+                    android:hint="@string/write_name"
+                    android:padding="10dp"
+                    android:background="#00FFFFFF"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
+
             <RelativeLayout
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
@@ -72,13 +85,80 @@
                 android:background="@drawable/corner_line"
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"/>
+
+            <TextView
+                android:layout_marginLeft="30dp"
+                android:textSize="10dp"
+                android:text="Nombre de Usuario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <RelativeLayout
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textColor="#A5A5A5"
+                    android:fontFamily="@font/avenir_b"
+                    android:layout_centerVertical="true"
+                    android:text="(@)"
+                    android:id="@+id/arroba_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <EditText
+                    android:layout_toRightOf="@+id/arroba_user"
+                    android:layout_marginRight="20dp"
+                    android:layout_toLeftOf="@+id/status_icon_name_tag"
+                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890._"
+                    android:id="@+id/user_instapetts"
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="@font/avenir_b"
+                    android:inputType="text"
+                    android:hint="Usuario Instapetts"
+                    android:padding="10dp"
+                    android:background="#00FFFFFF"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/status_icon_name_tag"
+                    android:layout_marginRight="10dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_no_available"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/corner_line"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"/>
+            <TextView
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/primary"
+                android:layout_marginLeft="30dp"
+                android:textSize="10dp"
+                android:id="@+id/label_tag_instapets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="30dp"
+            android:textSize="10dp"
+            android:text="Una breve descripcion de ti"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
         <EditText
             android:maxLines="4"
             android:lines="4"
             android:id="@+id/descripcion_user"
-            android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_gravity="center_vertical"

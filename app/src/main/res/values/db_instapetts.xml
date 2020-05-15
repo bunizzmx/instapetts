@@ -2,7 +2,7 @@
 <resources>
     <!-- Database name:FC version:1 -->
     <string name="table_historias_vistas" translatable="false">CREATE TABLE IF NOT EXISTS histories_views (id INTEGER PRIMARY KEY AUTOINCREMENT  , id_history TEXT, visto INT(2),num_fotos INT(2))</string>
-    <string name="histories" translatable="false">CREATE TABLE IF NOT EXISTS histories (id INTEGER PRIMARY KEY AUTOINCREMENT  , id_history TEXT, fecha TEXT,nombre_pet TEXT,id_pet TEXT,id_propietary TEXT,uri_photo TEXT,uri_perfil TEXT)</string>
+    <string name="histories" translatable="false">CREATE TABLE IF NOT EXISTS histories (id INTEGER PRIMARY KEY AUTOINCREMENT,fecha TEXT,nombre_pet TEXT,id_pet INTEGER,uri_photo TEXT,uri_perfil TEXT,identificador TEXT)</string>
     <string name="pets_table" translatable="false">CREATE TABLE IF NOT EXISTS pets (id INTEGER PRIMARY KEY AUTOINCREMENT  , id_pet TEXT, name_pet TEXT,id_propietary int,name_propietary TEXT,raza TEXT,peso TEXT,genero TEXT,
     descripcion TEXT,edad TEXT,rating INT,type_pet INT,url_foto TEXT,url_photo_tumbh TEXT)</string>
     <string name="propietary" translatable="false">CREATE TABLE IF NOT EXISTS propietary (id INTEGER PRIMARY KEY  AUTOINCREMENT  ,id_propietary TEXT,name_propietary TEXT,
@@ -10,10 +10,12 @@
     <string name="table_razas" translatable="false">CREATE TABLE IF NOT EXISTS razas (id INTEGER PRIMARY KEY AUTOINCREMENT   , name_eng TEXT, nam_esp TEXT,id_type_pet INT,photo TEXT)</string>
     <string name="table_saved_posts">CREATE TABLE IF NOT EXISTS saved_posts(id  INTEGER PRIMARY KEY AUTOINCREMENT,id_from_web INT, name_pet TEXT,name_user TEXT,urls_posts TEXT, url_photo_user TEXT, description TEXT,date_post TEXT)</string>
     <string name="table_liked_post">CREATE TABLE IF NOT EXISTS liked_posts(id_from_web INT)</string>
-    <string name="table_notifications">CREATE TABLE IF NOT EXISTS notifications(id INTEGER PRIMARY KEY AUTOINCREMENT ,title TEXT,body TEXT,url_resource TEXT, type_notification INT,id_usuario INT,url_image_extra TEXT)</string>
+    <string name="table_notifications">CREATE TABLE IF NOT EXISTS notifications(id INTEGER PRIMARY KEY AUTOINCREMENT ,title TEXT,body TEXT,url_resource TEXT, type_notification INT,id_usuario INT,url_image_extra TEXT,vista INTEGER)</string>
     <string name="table_relacion_follows">CREATE TABLE IF NOT EXISTS relacion_follows (id_document TEXT,url_photo_user TEXT,name_user,uuid_user TEXT, id_user INT,name_nip_user TEXT)</string>
     <string name="table_relacion_favorite_pets">CREATE TABLE IF NOT EXISTS relacion_favorite_pets (id_document TEXT,url_photo_user TEXT,name_user TEXT,uuid_user TEXT, id_user INT,name_nip_user TEXT,id_pet INT,name_pet TEXT,url_photo_pet TEXT)</string>
-    <string name="table_search_recents">CREATE TABLE IF NOT EXISTS search_recents (id INTEGER PRIMARY KEY AUTOINCREMENT ,url_photo TEXT,name TEXT, type_mascota INT,name_raza TEXT,type_save INT,id_usuario int,uuid_usuario TEXT, id_mascota INT,name_pet TEXT)</string>
+    <string name="table_search_recents">CREATE TABLE IF NOT EXISTS search_recents (id INTEGER PRIMARY KEY AUTOINCREMENT ,url_photo TEXT,name TEXT, type_mascota INT,name_raza TEXT,type_save INT,id_usuario int,uuid_usuario TEXT, id_mascota INT,name_pet TEXT,name_tag TEXT)</string>
     <string name="table_likes_comments">CREATE TABLE IF NOT EXISTS likes_comentarios(id INTEGER PRIMARY KEY AUTOINCREMENT, id_document TEXT)</string>
-
+    <string name="table_likes_tips">CREATE TABLE IF NOT EXISTS likes_tips(id INTEGER PRIMARY KEY AUTOINCREMENT, id_tip INTEGER)</string>
+    <string name="table_ids_users_follows">CREATE TABLE IF NOT EXISTS ids_users_follows(id INTEGER PRIMARY KEY AUTOINCREMENT, id_user INTEGER)</string>
+    <string name="table_identificadores_histories">CREATE TABLE IF NOT EXISTS identificadores_histories(id INTEGER PRIMARY KEY AUTOINCREMENT, num_likes INTEGER,num_views INTEGER,identificador TEXT)</string>
 </resources>

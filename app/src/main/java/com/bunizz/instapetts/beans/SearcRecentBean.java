@@ -11,6 +11,7 @@ public class SearcRecentBean {
 
     String url_photo;
     String name;
+    String name_tag;
     String name_pet;
     int id_mascota;
     int type_mascota;
@@ -102,6 +103,14 @@ public class SearcRecentBean {
         this.id_mascota = id_mascota;
     }
 
+    public String getName_tag() {
+        return name_tag;
+    }
+
+    public void setName_tag(String name_tag) {
+        this.name_tag = name_tag;
+    }
+
     public SearcRecentBean(Cursor cursor) {
         if (cursor.getColumnIndex(SearchResentHelper.ID_USUARIO) != -1)
             this.id_usuario =cursor.getInt(cursor.getColumnIndex(SearchResentHelper.ID_USUARIO));
@@ -129,6 +138,9 @@ public class SearcRecentBean {
 
         if (cursor.getColumnIndex(SearchResentHelper.ID_MASCOTA) != -1)
             this.id_mascota = cursor.getInt(cursor.getColumnIndex(SearchResentHelper.ID_MASCOTA));
+
+        if (cursor.getColumnIndex(SearchResentHelper.NAME_TAG) != -1)
+            this.name_tag = cursor.getString(cursor.getColumnIndex(SearchResentHelper.NAME_TAG));
 
     }
 

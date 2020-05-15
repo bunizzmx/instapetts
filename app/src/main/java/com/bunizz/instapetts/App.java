@@ -255,9 +255,42 @@ public class App extends Application {
     }
 
     public static String diferenciaHorasDias(long horas){
-          if((horas/24)>6){
-
-              return "Hace " + ((horas/24)/4)  + " semanas";
+        int meses =0;
+        if((horas/24)>6){
+               if(horas > 8064) {
+                   int years = (int) (horas / 8064);
+                   int residuo = (int) horas % 8064;
+                   if(residuo > 672){
+                        meses  = residuo / 872;
+                        if(years==1) {
+                            if(meses > 1)
+                                return years + " año " + " y  " + meses + " meses";
+                            else {
+                                if(meses ==0)
+                                   return years + " año ";
+                                else
+                                    return years + " año " + " y  " + meses + " mes";
+                            }
+                        }
+                        else {
+                            if(meses > 1)
+                                return years + " años " + " y  " + meses + " meses";
+                            else {
+                                 if(meses==0)
+                                     return years + " años ";
+                                 else
+                                     return years + " años " + " y  " + meses + " mes";
+                            }
+                        }
+                   }else{
+                       if(years==1)
+                         return  years + " año";
+                       else
+                           return  years + " años ";
+                   }
+               }
+               else
+                   return "Hace " + ((horas/24)/4)  + " semanas";
           }else{
               return "Hace " + (horas/24)  + " dias";
           }
@@ -324,7 +357,7 @@ public class App extends Application {
 
 
     public static Date StringToDate(String fecha, String caracter, int op){
-        Log.e("FORAMT_ERROR","--->ccc" +fecha);
+        Log.e("FORMAT_DATE_CONVERTIR","--->ccc" +fecha);
         String formatoHora=" HH:mm:ss";
         String formato="yyyy"+caracter+"MM"+caracter+"dd"+formatoHora;
         if(op==1)
@@ -380,7 +413,6 @@ public class App extends Application {
         }
     }
 
-
     public String  make_uri_bucket_profile(){
         return CONST.BASE_URL_BUCKET_FIRESTORE + "bucket_profile/o/" + read(PREFERENCES.UUID,"INVALID") +"%2FPROFILE%2F"+ read(PREFERENCES.UUID,"INVALID")+
         ".jpg?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
@@ -390,24 +422,19 @@ public class App extends Application {
                 ".jpg?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
     }
 
-
-    public String  make_uri_bucket_posts_thumbh(String URI){
-        return CONST.BASE_URL_BUCKET_FIRESTORE + "instapetts-posts/o/" + read(PREFERENCES.UUID,"INVALID") +"%2FPOSTS%2Fthumb_"+ URI +
-                "?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
-    }
     public String  make_uri_bucket_posts(String URI){
         return CONST.BASE_URL_BUCKET_FIRESTORE + "instapetts-posts/o/" + read(PREFERENCES.UUID,"INVALID") +"%2FPOSTS%2F"+ URI +
                 "?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
     }
-
     public String  make_uri_video_hls(String URI){
         return CONST.BASE_URL_HLS_VIDEO  + URI.replace(".mp4","") + "video_640_640.m3u8";
     }
 
-
     public String  make_uri_bucket_history(String URI){
-        return CONST.BASE_URL_BUCKET_FIRESTORE + "bucket_profile/o/" + read(PREFERENCES.UUID,"INVALID") +"%2FSTORIES%2F"+ URI +
-                "?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
+        return read(PREFERENCES.UUID,"INVALID") +"%2FSTORIES%2F" +URI + "?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
+    }
+    public String getBucketUriHistorie(String URI){
+        return CONST.BASE_URL_BUCKET_FIRESTORE + "bucket_profile/o/"+ URI ;
     }
     public String  make_uri_bucket_thumbh_video(String URI){
         String splits[] = URI.split("/");

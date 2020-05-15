@@ -31,6 +31,7 @@ public class SearchResentHelper extends GenericHelper {
     public static final String ID = "id";
     public static final String URL = "url_photo";
     public static final String NAME = "name";
+    public static final String NAME_TAG = "name_tag";
     public static final String TYPE_PET = "type_mascota";
     public static final String RAZA_MASCOTA = "name_raza";
     public static final String TYPE_SAVE = "type_save";
@@ -42,7 +43,7 @@ public class SearchResentHelper extends GenericHelper {
 
 
     public void saveSearch(SearcRecentBean search) {
-        Log.e("SAVE_SEARCH",":)");
+        Log.e("SAVE_SEARCH",":)" + search.getName_tag());
         ContentValues contentValues = new ContentValues();
         contentValues.put(URL, search.getUrl_photo());
         contentValues.put(TYPE_PET, search.getType_mascota());
@@ -53,6 +54,7 @@ public class SearchResentHelper extends GenericHelper {
         contentValues.put(UUID_USUARIO, search.getUuid_usuario());
         contentValues.put(NAME_PET, search.getName_pet());
         contentValues.put(ID_MASCOTA, search.getId_mascota());
+        contentValues.put(NAME_TAG,search.getName_tag());
         try {
             getWritableDatabase().insertOrThrow(TABLE_NAME, null,contentValues);
         } catch (SQLiteConstraintException | IllegalStateException e) {

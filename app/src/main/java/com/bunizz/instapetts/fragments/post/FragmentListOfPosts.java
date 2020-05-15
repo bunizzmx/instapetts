@@ -12,13 +12,20 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
+import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
+import com.bunizz.instapetts.fragments.FragmentElement;
+import com.bunizz.instapetts.fragments.feed.FeedContract;
+import com.bunizz.instapetts.fragments.feed.FeedPresenter;
 import com.bunizz.instapetts.fragments.post.adapters.GaleryAdapter;
 import com.bunizz.instapetts.fragments.post.adapters.PostsAdapter;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.postsListener;
+import com.bunizz.instapetts.utils.dilogs.DialogOptionsPosts;
 import com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerView;
+import com.bunizz.instapetts.web.parameters.PostActions;
 
 import org.parceler.Parcels;
 
@@ -33,12 +40,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FragmentListOfPosts extends Fragment {
+public class FragmentListOfPosts extends Fragment implements FeedContract.View {
     @BindView(R.id.list_posts_publics_advanced)
     ExoPlayerRecyclerView list_posts_publics_advanced;
 
     changue_fragment_parameters_listener listener;
     PostsAdapter feedAdapter;
+    FeedListPresenter mPresenter;
 
     ArrayList<Object> data = new ArrayList<>();
 
@@ -49,7 +57,59 @@ public class FragmentListOfPosts extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPresenter = new FeedListPresenter(this,getContext());
         feedAdapter = new PostsAdapter(getContext());
+        feedAdapter.setListener_post(new postsListener() {
+            @Override
+            public void onLike(int id_post,boolean type_like,int id_usuario,String url_image) {
+                PostActions postActions = new PostActions();
+                postActions.setId_post(id_post);
+                if(type_like)
+                    postActions.setAcccion("1");
+                else
+                    postActions.setAcccion("2");
+                postActions.setId_usuario(id_usuario);
+                postActions.setValor("1");
+                postActions.setExtra(url_image);
+                mPresenter.likePost(postActions);
+            }
+
+            @Override
+            public void onFavorite(int id_post,PostBean postBean) {
+                PostActions postActions = new PostActions();
+                postActions.setId_post(id_post);
+                postActions.setAcccion("FAVORITE");
+                postActions.setId_usuario(postBean.getId_usuario());
+                postActions.setValor("1");
+                mPresenter.saveFavorite(postActions,postBean);
+            }
+
+            @Override
+            public void onDisfavorite(int id_post) {
+
+            }
+
+            @Override
+            public void openMenuOptions(int id_post,int id_usuario,String uuid) {
+                DialogOptionsPosts optionsPosts = new DialogOptionsPosts(getContext(),id_post,id_usuario,uuid);
+                optionsPosts.setListener(id_post1 -> {
+                    PostBean postBean = new PostBean();
+                    postBean.setId_post_from_web(id_post1);
+                    postBean.setTarget("DELETE");
+                    mPresenter.deletePost(postBean);
+                });
+                optionsPosts.show();
+            }
+
+            @Override
+            public void commentPost(int id_post,boolean can_comment) {
+                Bundle b = new Bundle();
+                b.putInt(BUNDLES.ID_POST,id_post);
+                b.putBoolean(BUNDLES.CAN_COMMENT,can_comment);
+                listener.change_fragment_parameter(FragmentElement.INSTANCE_COMENTARIOS,b);
+            }
+        });
+
         feedAdapter.setRequestManager(initGlide());
         Bundle bundle=getArguments();
         if(bundle!=null){
@@ -119,5 +179,32 @@ public class FragmentListOfPosts extends Fragment {
         // mRecyclerView.releasePlayer();
     }
 
+    @Override
+    public void show_feed(ArrayList<PostBean> data, ArrayList<HistoriesBean> data_stories) { }
+
+    @Override
+    public void show_feed_recomended(ArrayList<PostBean> data) { }
+
+    @Override
+    public void peticion_error() { }
+
+    @Override
+    public void deletePostError(boolean deleted) { }
+
+    @Override
+    public void LikeEror() { }
+
+    @Override
+    public void LikeSuccess() { }
+
+    @Override
+    public void noInternet() {
+
+    }
+
+    @Override
+    public void showBadge(boolean show) {
+        
+    }
 }
 

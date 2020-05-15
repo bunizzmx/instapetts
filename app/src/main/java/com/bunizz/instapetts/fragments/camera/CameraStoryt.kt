@@ -36,6 +36,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.camera.core.*
 import androidx.camera.core.ImageCapture.Metadata
@@ -74,6 +75,7 @@ class CameraStoryt : Fragment() {
       val IMMERSIVE_FLAG_TIMEOUT = 500L
     private lateinit var container: RelativeLayout
     private lateinit var viewFinder: PreviewView
+    private lateinit var close_dialog :ImageView
     private lateinit var outputDirectory: File
     private lateinit var broadcastManager: LocalBroadcastManager
      val ANIMATION_FAST_MILLIS = 50L
@@ -172,6 +174,7 @@ class CameraStoryt : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         container = view as RelativeLayout
         viewFinder = container.findViewById(R.id.view_finder)
+        close_dialog = container.findViewById(R.id.close_dialog)
         broadcastManager = LocalBroadcastManager.getInstance(view.context)
 
         // Set up the intent filter that will receive events from our main activity
@@ -197,6 +200,10 @@ class CameraStoryt : Fragment() {
 
         open_galery_story.setOnClickListener {
                 listener!!.change_fragment_parameter(FragmentElement.INSTANCE_PICKER_IMAGES, null)
+        }
+        close_dialog.setOnClickListener {
+            stop_camera()
+            activity?.onBackPressed()
         }
     }
 

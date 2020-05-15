@@ -23,16 +23,10 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity;
 import com.bunizz.instapetts.beans.AspectBean;
-import com.bunizz.instapetts.beans.HistoriesBean;
-import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.TipsBean;
 import com.bunizz.instapetts.fragments.FragmentElement;
-import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.listeners.PlayStopVideoListener;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
-import com.bunizz.instapetts.utils.HistoryView.StoryPlayer;
-import com.bunizz.instapetts.utils.ImagenCircular;
-import com.bunizz.instapetts.utils.double_tap.DoubleTapLikeView;
 
 import org.parceler.Parcels;
 

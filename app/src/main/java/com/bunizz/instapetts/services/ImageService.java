@@ -130,7 +130,7 @@ public class ImageService extends Service {
         SIZE_OF_FILES = key.size();
         for(int i =0;i<key.size();i++){
             if(TYPE_NOTIFICATION == 2){
-                Log.e("COMPRESION_IMAGEN","HISTORIA");
+                Log.e("COMPRESION_IMAGEN","HISTORIA :" + key.get(i));
                 file = new Compressor(this).compressToFile(new File(key.get(i)));
             }else{
                 file = new File(key.get(i));

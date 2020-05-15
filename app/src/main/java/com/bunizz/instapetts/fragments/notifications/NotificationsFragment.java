@@ -63,8 +63,8 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
     @BindView(R.id.body_no_data)
     TextView body_no_data;
 
-
-
+    @BindView(R.id.delete_trash)
+    RelativeLayout delete_trash;
 
 
     @SuppressLint("MissingPermission")
@@ -146,12 +146,14 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
     public void showNotifications(ArrayList<NotificationBean> notificationBeans) {
         refresh_notificacions.setRefreshing(false);
         if(notificationBeans.size()>0) {
+            delete_trash.setVisibility(View.VISIBLE);
             Log.e("NOTIFICATIOSN","SI HAY");
             refresh_notificacions.setVisibility(View.VISIBLE);
             notificationsAdapter.setNotificationBeans(notificationBeans);
             a1.setVisibility(View.GONE);
         }
         else{
+            delete_trash.setVisibility(View.GONE);
             Log.e("NOTIFICATIOSN","NO HAY");
             body_no_data.setText("Cuando alguien te siga,comente o publique algo nuevo apareceran notificaciones en este apartado.");
             title_no_data.setText("No hay notificaciones aun");

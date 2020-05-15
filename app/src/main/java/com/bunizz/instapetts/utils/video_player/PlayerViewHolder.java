@@ -3,6 +3,7 @@ package com.bunizz.instapetts.utils.video_player;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,6 +39,8 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
     public TextView addres_post;
     public ImageView icon_commentar;
     public View parent;
+    public TextView num_coments;
+    public LinearLayout num_comments_layout;
 
     public PlayerViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -61,6 +64,8 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
         mini_user_photo = itemView.findViewById(R.id.mini_user_photo);
         addres_post = itemView.findViewById(R.id.addres_post);
         icon_commentar = itemView.findViewById(R.id.icon_commentar);
+        num_coments = itemView.findViewById(R.id.num_coments);
+        num_comments_layout = itemView.findViewById(R.id.num_comments_layout);
     }
 
 

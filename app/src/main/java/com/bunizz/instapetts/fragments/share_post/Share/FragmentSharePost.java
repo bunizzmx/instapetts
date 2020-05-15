@@ -71,6 +71,10 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
 
     @BindView(R.id.check_location)
     Switch check_location;
+
+    @BindView(R.id.check_apagar_comments)
+    Switch check_apagar_comments;
+
     PostBean post ;
     int DURACION =0;
     String ASPECT="";
@@ -91,6 +95,11 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
                     post.setCp(App.read(PREFERENCES.CP,0));
                     post.setLat(App.read(PREFERENCES.LAT,0f));
                     post.setLon(App.read(PREFERENCES.LON,0f));
+                    if(check_apagar_comments.isChecked())
+                        post.setCan_comment(1);
+                    else
+                        post.setCan_comment(0);
+
                     Log.e("POSICIONES","--->" + post.getLon() + "/" + post.getLat() + "/" + post.getCp());
                     if(is_video==1) {
                         post.setDuracion(DURACION);
@@ -194,6 +203,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             else
                 App.write(PREFERENCES.ALLOW_LOCATION_POST,false);
         });
+
         presenter.getLocation();
     }
 

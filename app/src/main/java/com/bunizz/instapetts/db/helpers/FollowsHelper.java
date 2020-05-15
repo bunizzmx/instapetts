@@ -39,8 +39,6 @@ public class FollowsHelper extends GenericHelper {
         contentValues.put(UUID, userBean.getUuid());
         contentValues.put(NAME_NIP_USER, userBean.getName_user());
         contentValues.put(ID_USER, userBean.getId());
-
-        Log.e("SELECTIONS_aRGS","-->" + userBean.getUuid());
         final Cursor cursor = getReadableDatabase().query(
                 TABLE_NAME,
                 null,

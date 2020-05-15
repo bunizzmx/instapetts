@@ -26,6 +26,7 @@ public class Splash extends AppCompatActivity {
             if(App.read(IS_LOGUEDD,false)) {
                 Log.e("STATUS_USER","IS LOGUEADO");
                 i = new Intent(Splash.this, Main.class);
+                i.putExtra("LOGIN_AGAIN",0);
             }else{
                 Log.e("STATUS_USER","NO ESTA LOGUEADO");
                 i = new Intent(Splash.this, LoginActivity.class);

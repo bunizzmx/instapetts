@@ -115,6 +115,7 @@ public class FragmentPopietaryList  extends Fragment implements  UserListContrac
                 searcRecentBean.setType_save(type_search);
                 searcRecentBean.setUrl_photo(searchUserBean.getUrl_photo());
                 searcRecentBean.setUuid_usuario(searchUserBean.getUudi());
+                searcRecentBean.setName_tag(searchUserBean.getUser_tag());
                 presenter.saveSearch(searcRecentBean);
             }
 
@@ -131,7 +132,7 @@ public class FragmentPopietaryList  extends Fragment implements  UserListContrac
                         searcRecentBeans.get(i).getUuid_usuario(),
                         searcRecentBeans.get(i).getUrl_photo(),
                         searcRecentBeans.get(i).getName(),
-                        searcRecentBeans.get(i).getName_raza()
+                        searcRecentBeans.get(i).getName_tag()
                 ));
             }
 

@@ -25,7 +25,7 @@ public class NotificationHelper extends GenericHelper {
     public static final String ID_USUARIO = "id_usuario";
     public static final String URL_RESOURCE = "url_resource";
     public static final String URL_EXTRA_IMAGE = "url_image_extra";
-
+    public static final String NOTIFICATION_VIEW = "vista";
 
     public static NotificationHelper getInstance(Context context) {
         return new NotificationHelper(context);
@@ -53,6 +53,7 @@ public class NotificationHelper extends GenericHelper {
         contentValues.put(ID_USUARIO, notificationBean.getId_usuario());
         contentValues.put(URL_RESOURCE, notificationBean.getUrl_resource());
         contentValues.put(URL_EXTRA_IMAGE, notificationBean.getUrl_image_extra());
+        contentValues.put(NOTIFICATION_VIEW,0);
 
         try {
             getWritableDatabase().insertOrThrow(TABLE_NAME, null,contentValues);
@@ -69,6 +70,24 @@ public class NotificationHelper extends GenericHelper {
     public void deleteAll(){
         Log.e("DELETE_NOTIFICATION","---> All");
         getWritableDatabase().delete(TABLE_NAME, null, null) ;
+    }
+
+    public void updateViews(){
+        Log.e("UPDATEALL","---> All");
+        getWritableDatabase().execSQL("UPDATE "+TABLE_NAME+"  SET vista=1");
+    }
+
+    public boolean getNoViewsNotifications(){
+        Log.e("UPDATEALL","---> All");
+        final Cursor cursor = getReadableDatabase().query(
+                TABLE_NAME,
+                new String[] { NOTIFICATION_VIEW},
+                NOTIFICATION_VIEW + "=1",
+                null, null, null, null, null);
+       if(cursor.moveToFirst())
+           return  true;
+       else
+           return  false;
     }
 
 
@@ -91,6 +110,7 @@ public class NotificationHelper extends GenericHelper {
                 n.setUrl_resource(cursor.getString(cursor.getColumnIndex(URL_RESOURCE)));
                 n.setUrl_image_extra(cursor.getString(cursor.getColumnIndex(URL_EXTRA_IMAGE)));
                 notifications.add(n);
+                updateViews();
             }
         } catch (SQLiteConstraintException | IllegalStateException e) {
             e.printStackTrace();

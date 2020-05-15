@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
         android:layout_marginTop="30dp"
@@ -9,20 +10,35 @@
         android:layout_centerHorizontal="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.bunizz.instapetts.utils.ImagenCircular
-            android:id="@+id/image_userd_edit"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_hand_pet_preload"
-            android:layout_width="120dp"
-            android:layout_height="120dp"/>
-        <TextView
+        <androidx.cardview.widget.CardView
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="5dp"
             android:id="@+id/change_photo"
-            android:fontFamily="@font/avenir_b"
-            android:padding="20dp"
+            app:contentPadding="5dp"
+            app:cardCornerRadius="5dp"
             android:layout_gravity="center_horizontal"
-            android:text="Cambiar foto "
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <com.bunizz.instapetts.utils.ImagenCircular
+                    android:id="@+id/image_userd_edit"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_hand_pet_preload"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"/>
+                <TextView
+                    android:textSize="12dp"
+                    android:fontFamily="@font/avenir_b"
+                    android:padding="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/chose_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -32,8 +48,7 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/avenir_b"
                 android:textColor="@color/black"
-                android:text="NAME USER"
-                android:textSize="24dp"
+                android:textSize="20dp"
                 android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -59,25 +74,50 @@
 
         </RelativeLayout>
 
-
-
-        <androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView
-            android:id="@+id/descripcion_user"
-            android:lines="5"
-            android:maxLines="5"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
-            android:inputType="textMultiLine"
+        <TextView
             android:layout_marginTop="20dp"
-            android:fontFamily="@font/avenir_b"
-            android:hint="Escribe algo sobre ti..."
-            android:paddingRight="20dp"
-            android:paddingLeft="20dp"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
-            android:background="@drawable/eddittext_background"
-            android:layout_width="match_parent"
+            android:text="Actualiza tu frase."
+            android:layout_marginLeft="40dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+        <RelativeLayout
+            android:paddingRight="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="12dp"
+                android:id="@+id/num_caracteres_description"
+                style="@style/FontNormalTitleSecondary"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:text="0/0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <EditText
+                android:maxLines="8"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:inputType="textMultiLine"
+                android:id="@+id/descripcion_user"
+                android:layout_marginTop="10dp"
+                android:textSize="14dp"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/avenir_b"
+                android:hint="Escribe algo sobre ti..."
+                android:padding="10dp"
+                android:background="#00FFFFFF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/corner_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"/>
 
         <Button
             android:id="@+id/save_info_perfil"
@@ -95,7 +135,7 @@
 
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/back_to_main"
+        android:id="@+id/back_to_main_edit_profile"
         android:layout_margin="10dp"
         app:cardElevation="5dp"
         app:cardCornerRadius="20dp"

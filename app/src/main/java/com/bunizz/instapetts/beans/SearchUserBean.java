@@ -21,9 +21,9 @@ public class SearchUserBean {
     @Expose
     String name_user;
 
-    @SerializedName("name_tag")
+    @SerializedName("user_tag")
     @Expose
-    String name_tag;
+    String user_tag;
 
     public SearchUserBean() {
     }
@@ -33,7 +33,7 @@ public class SearchUserBean {
         this.uudi = uudi;
         this.url_photo = url_photo;
         this.name_user = name_user;
-        this.name_tag = name_tag;
+        this.user_tag = name_tag;
     }
 
     public String getId_user() {
@@ -68,13 +68,11 @@ public class SearchUserBean {
         this.name_user = name_user;
     }
 
-    public String getName_tag() {
-        return name_tag;
+    public String getUser_tag() {
+        return user_tag;
     }
 
-    public void setName_tag(String name_tag) {
-        this.name_tag = name_tag;
+    public void setUser_tag(String user_tag) {
+        this.user_tag = user_tag;
     }
-
-
 }

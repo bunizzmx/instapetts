@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -16,16 +15,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.fragments.FragmentElement;
-import com.bunizz.instapetts.fragments.feed.FeedFragment;
-import com.bunizz.instapetts.fragments.notifications.NotificationsFragment;
-import com.bunizz.instapetts.fragments.post.FragmentListOfPosts;
-import com.bunizz.instapetts.fragments.previewProfile.FragmentProfileUserPetPreview;
-import com.bunizz.instapetts.fragments.profile.FragmentEditProfileUser;
-import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
-import com.bunizz.instapetts.fragments.search.FragmentSearchPet;
-import com.bunizz.instapetts.fragments.search.posts.FragmentPostPublics;
 import com.bunizz.instapetts.fragments.side_menus_activities.FragmentAdministrateAccount;
 import com.bunizz.instapetts.fragments.side_menus_activities.FragmentConfigEmail;
 import com.bunizz.instapetts.fragments.side_menus_activities.FragmentConfigPhone;
@@ -33,10 +23,7 @@ import com.bunizz.instapetts.fragments.side_menus_activities.FragmentNotificacio
 import com.bunizz.instapetts.fragments.side_menus_activities.FragmentWebTerms;
 import com.bunizz.instapetts.fragments.side_menus_activities.countries.FragmentCodesCountry;
 import com.bunizz.instapetts.fragments.side_menus_activities.postsSaved.FragmentPostPublicsSaved;
-import com.bunizz.instapetts.fragments.tips.FragmentTipDetail;
-import com.bunizz.instapetts.fragments.tips.FragmentTips;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
-import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
 
 import java.util.Stack;
 
