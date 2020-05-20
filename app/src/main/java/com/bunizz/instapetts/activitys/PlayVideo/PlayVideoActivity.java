@@ -17,8 +17,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.TipsBean;
+import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.utils.AnalogTv.AnalogTvNoise;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.slidemenu.SlideMenuLayout;
@@ -26,6 +28,7 @@ import com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerView;
 import com.bunizz.instapetts.utils.video_player.PreviewTimeBar;
 import com.bunizz.instapetts.utils.video_player.PreviewTumbh.ExoPlayerManager;
 import com.bunizz.instapetts.utils.video_player.PreviewView;
+import com.bunizz.instapetts.web.parameters.PostActions;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
@@ -33,13 +36,16 @@ import com.google.android.exoplayer2.ui.PlayerView;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class PlayVideoActivity extends AppCompatActivity implements PreviewView.OnPreviewChangeListener {
+public class PlayVideoActivity extends AppCompatActivity implements PreviewView.OnPreviewChangeListener,PlayVideoContract.View {
 
 
     @BindView(R.id.exoplayer_play_video)
@@ -73,19 +79,83 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
     @BindView(R.id.noise)
     AnalogTvNoise noise;
 
-    private ExoPlayerManager exoPlayerManager;
+    @BindView(R.id.icon_like_video)
+    ImageView icon_like_video;
 
-    private static final String AppName = "Android ExoPlayer";
-    private ExoPlayer exoPlayer;
+
+    @BindView(R.id.icon_save_on_favorites)
+    ImageView icon_save_on_favorites;
+
+
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.like_video_post)
+    void like_video_post() {
+        PostActions postActions = new PostActions();
+        postActions.setId_post(POST_BEAN.getId_post_from_web());
+        if(!POST_BEAN.isLiked()){
+            POST_BEAN.setLiked(true);
+            postActions.setAcccion("1");
+        }
+        else {
+            POST_BEAN.setLiked(false);
+            postActions.setAcccion("2");
+        }
+        postActions.setId_usuario(POST_BEAN.getId_usuario());
+        postActions.setValor("1");
+        postActions.setExtra(POST_BEAN.getThumb_video());
+
+        if(POST_BEAN.isLiked())
+            icon_like_video.setImageDrawable(getResources().getDrawable(R.drawable.ic_corazon_w));
+        else
+            icon_like_video.setImageDrawable(getResources().getDrawable(R.drawable.ic_corazon_black));
+
+        presenter.likeVideo(postActions);
+    }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.save_on_favorites)
+    void save_on_favorites() {
+        PostActions postActions = new PostActions();
+        postActions.setId_post(POST_BEAN.getId_post_from_web());
+        if(!POST_BEAN.isSaved()){
+            POST_BEAN.setSaved(true);
+            postActions.setAcccion("1");
+        }
+        else {
+            POST_BEAN.setSaved(false);
+            postActions.setAcccion("2");
+        }
+
+        postActions.setId_usuario(POST_BEAN.getId_usuario());
+        postActions.setValor("1");
+        postActions.setExtra(POST_BEAN.getThumb_video());
+
+        if(presenter.isSaved(POST_BEAN.getId_post_from_web()))
+            icon_save_on_favorites.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_w));
+        else
+            icon_save_on_favorites.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_fill));
+
+        if(POST_BEAN.isSaved())
+            presenter.saveFavorite(postActions, POST_BEAN);
+        else
+            presenter.deleteFavorite(POST_BEAN.getId_post_from_web());
+    }
+
+
+
+    private ExoPlayerManager exoPlayerManager;
     TipsBean TIPS_BEAN;
     PostBean POST_BEAN;
     private PreviewTimeBar previewTimeBar;
     int TYPE_PLAYER=0;
+    PlayVideoPresenter presenter;
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_video);
         ButterKnife.bind(this);
+        presenter = new PlayVideoPresenter(this,this);
         if (getIntent() != null) {
             TYPE_PLAYER = getIntent().getIntExtra("TYPE_PLAYER",0);
             if(TYPE_PLAYER == 0)
@@ -94,6 +164,24 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
                 POST_BEAN = Parcels.unwrap(getIntent().getParcelableExtra("BEAN"));
 
         }
+        if(presenter.isLiked(POST_BEAN.getId_post_from_web()))
+            POST_BEAN.setLiked(true);
+        else
+            POST_BEAN.setLiked(false);
+
+
+
+        if(presenter.isSaved(POST_BEAN.getId_post_from_web()))
+            icon_save_on_favorites.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_w));
+        else
+            icon_save_on_favorites.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_fill));
+
+
+        if(POST_BEAN.isLiked())
+            icon_like_video.setImageDrawable(getResources().getDrawable(R.drawable.ic_corazon_black));
+        else
+            icon_like_video.setImageDrawable(getResources().getDrawable(R.drawable.ic_corazon_w));
+
         changeStatusBarColor(R.color.background_video_color);
         if(TYPE_PLAYER ==0) {
             title_video_play.setText(TIPS_BEAN.getTitle_tip());
@@ -126,7 +214,7 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
         }
         previewTimeBar.setPreviewLoader(exoPlayerManager);
         videoSurfaceView.showController();
-        videoSurfaceView.setControllerShowTimeoutMs(3000);
+        videoSurfaceView.setControllerShowTimeoutMs(5000);
         videoSurfaceView.setControllerVisibilityListener(visibility -> {
             if(visibility ==0){
                 hide_controls();
@@ -254,7 +342,13 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
                 .alpha(1f)
                 .setDuration(600);
     }
+
+
+    @Override
+    public void LikeSuccess() {
+
     }
+}
 
 
 

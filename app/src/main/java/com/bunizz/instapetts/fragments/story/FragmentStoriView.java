@@ -234,9 +234,9 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
 
         listener.onItemView(uris_fotos.get(index).getIdentificador(),HISTORY_BEAN.getId_user());
         try {
-            time.setText(App.fecha_lenguaje_humano(uris_fotos.get(COUNTER).getDate_story().replace("T"," ").replace("Z","")));
+            time.setText(App.getInstance().fecha_lenguaje_humano(uris_fotos.get(COUNTER).getDate_story().replace("T"," ").replace("Z","")));
         }catch (Exception e){
-            time.setText("Hace un momento");
+            time.setText(getContext().getResources().getString(R.string.now));
         }
 
         Glide.with(getContext()).asBitmap().load(App.getInstance().getBucketUriHistorie(uris_fotos.get(index).getUrl_photo()))

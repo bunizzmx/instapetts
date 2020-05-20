@@ -2,15 +2,18 @@ package com.bunizz.instapetts.fragments.post.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,6 +31,7 @@ import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.feed.FeedAdapterHistories;
+import com.bunizz.instapetts.fragments.feed.UnifiedAddHolder;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.postsListener;
@@ -40,6 +44,9 @@ import com.bunizz.instapetts.utils.loadings.SpriteFactory;
 import com.bunizz.instapetts.utils.loadings.Style;
 import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
 import com.bunizz.instapetts.utils.video_player.PlayerViewHolder;
+import com.google.android.gms.ads.formats.NativeAd;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 
 import java.util.ArrayList;
 
@@ -49,6 +56,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
+import retrofit2.http.POST;
 
 import static com.bunizz.instapetts.fragments.FragmentElement.INSTANCE_PREVIEW_PROFILE;
 
@@ -62,7 +70,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     open_camera_histories_listener listener_open_h;
     private RequestManager requestManager_param;
 
-    Style style = Style.values()[14];
+    Style style = Style.values()[12];
     Sprite drawable = SpriteFactory.create(style);
     public postsListener getListener_post() {
         return listener_post;
@@ -100,6 +108,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private static final int TYPE_POST=1;
     private static final int TYPE_POST_VIDEO=2;
+    private static final int TYPE_ADD = 3;
 
     public PostsAdapter(Context context) {
         this.context = context;
@@ -122,11 +131,17 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemViewType(int position) {
-        PostBean validate = (PostBean) data.get(position);
-        if(validate.getType_post() == 0)
-            return TYPE_POST;
-        else
-            return TYPE_POST_VIDEO;
+        Object recyclerViewItem = data.get(position);
+        if(recyclerViewItem instanceof PostBean){
+            PostBean validate = (PostBean) data.get(position);
+            if(validate.getType_post() == 0)
+                return TYPE_POST;
+            else
+                return TYPE_POST_VIDEO;
+        }else{
+            return TYPE_ADD;
+        }
+
     }
 
 
@@ -145,6 +160,9 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             case TYPE_POST_VIDEO:
                 view = getInflatedView(parent, R.layout.item_feed_post_video);
                 return new PlayerViewHolder(view);
+            case TYPE_ADD:
+                view = getInflatedView(parent, R.layout.ad_unified);
+                return new UnifiedAddHolder(view);
             default:
                 view = getInflatedView(parent, R.layout.item_feed_post);
                 return new FeedHolder(view);
@@ -210,7 +228,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                 Glide.with(context).load(mo.getUrl_photo_pet()).into(vid_h.image_pet);
                 Glide.with(context).load(mo.getUrl_photo_user()).into(vid_h.mini_user_photo);
-                vid_h.date_post.setText(App.fecha_lenguaje_humano(mo.getDate_post()));
+                vid_h.date_post.setText(App.getInstance().fecha_lenguaje_humano(mo.getDate_post()));
                 vid_h.save_posts.setOnClickListener(view -> {
                     if(mo.isSaved()) {
                         mo.setSaved(false);
@@ -349,7 +367,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 if(data_parsed.getLikes()>0)
                     f.num_likes_posts.setText("a " + data_parsed.getLikes() + " usuarios les gusta esto");
                 else
-                    f.num_likes_posts.setText("Se el primero en darle me gusta");
+                    f.num_likes_posts.setText(context.getResources().getString(R.string.first_like));
                 if(data_parsed.getDescription().isEmpty()){
                     f.description_posts.setVisibility(View.GONE);
                 }else{
@@ -365,7 +383,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         .placeholder(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
                         .error(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
                         .into(f.mini_user_photo);
-                f.date_post.setText(App.fecha_lenguaje_humano(data_parsed.getDate_post()));
+                f.date_post.setText(App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()));
                 f.save_posts.setOnClickListener(view -> {
                     if(data_parsed.isSaved()) {
                         data_parsed.setSaved(false);
@@ -393,7 +411,9 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                 break;
 
-
+            case TYPE_ADD:
+                UnifiedNativeAd nativeAd = (UnifiedNativeAd) data.get(position);
+                populateNativeAdView(nativeAd, ((UnifiedAddHolder) holder).getAdView());
         }
 
 
@@ -467,5 +487,55 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             return  true;
         else
             return false;
+    }
+
+    private void populateNativeAdView(UnifiedNativeAd nativeAd,
+                                      UnifiedNativeAdView adView) {
+        // Some assets are guaranteed to be in every UnifiedNativeAd.
+        ((TextView) adView.getHeadlineView()).setText(nativeAd.getHeadline());
+        ((TextView) adView.getBodyView()).setText(nativeAd.getBody());
+        ((Button) adView.getCallToActionView()).setText(nativeAd.getCallToAction());
+        ((Button) adView.getCallToActionView()).setBackground(context.getResources().getDrawable(R.drawable.button_create_acount));
+        ((Button) adView.getCallToActionView()).setTextColor(Color.WHITE);
+        NativeAd.Image icon = nativeAd.getIcon();
+
+        if (icon == null) {
+            adView.getIconView().setVisibility(View.INVISIBLE);
+        } else {
+            ((ImageView) adView.getIconView()).setImageDrawable(icon.getDrawable());
+            adView.getIconView().setVisibility(View.VISIBLE);
+        }
+
+        if (nativeAd.getPrice() == null) {
+            adView.getPriceView().setVisibility(View.INVISIBLE);
+        } else {
+            adView.getPriceView().setVisibility(View.VISIBLE);
+            ((TextView) adView.getPriceView()).setText(nativeAd.getPrice());
+        }
+
+        if (nativeAd.getStore() == null) {
+            adView.getStoreView().setVisibility(View.INVISIBLE);
+        } else {
+            adView.getStoreView().setVisibility(View.VISIBLE);
+            ((TextView) adView.getStoreView()).setText(nativeAd.getStore());
+        }
+
+        if (nativeAd.getStarRating() == null) {
+            adView.getStarRatingView().setVisibility(View.INVISIBLE);
+        } else {
+            ((RatingBar) adView.getStarRatingView())
+                    .setRating(nativeAd.getStarRating().floatValue());
+            adView.getStarRatingView().setVisibility(View.VISIBLE);
+        }
+
+        if (nativeAd.getAdvertiser() == null) {
+            adView.getAdvertiserView().setVisibility(View.INVISIBLE);
+        } else {
+            ((TextView) adView.getAdvertiserView()).setText(nativeAd.getAdvertiser());
+            adView.getAdvertiserView().setVisibility(View.VISIBLE);
+        }
+
+        // Assign native ad object to the native view.
+        adView.setNativeAd(nativeAd);
     }
 }

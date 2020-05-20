@@ -102,7 +102,7 @@ public class FragmentCodesCountry extends Fragment implements  CodesCountryContr
                     }
                 }
         );
-        Style style = Style.values()[14];
+        Style style = Style.values()[12];
         Sprite drawable = SpriteFactory.create(style);
         spin_kit.setIndeterminateDrawable(drawable);
         spin_kit.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));

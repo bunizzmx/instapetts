@@ -21,6 +21,7 @@ import com.bunizz.instapetts.web.responses.IdentificadoresHistoriesResponse;
 import com.bunizz.instapetts.web.responses.PetsResponse;
 import com.bunizz.instapetts.web.responses.ResponseCatalogo;
 import com.bunizz.instapetts.web.responses.ResponseCodesCountries;
+import com.bunizz.instapetts.web.responses.ResponseListReports;
 import com.bunizz.instapetts.web.responses.ResponseNamesAvailables;
 import com.bunizz.instapetts.web.responses.ResponsePost;
 import com.bunizz.instapetts.web.responses.ResponseProfileUser;
@@ -138,6 +139,9 @@ public interface WebServices {
     @POST("test/userstags")
     Single<ResponseNamesAvailables> getNamesAvailables(@Body ParameterAvailableNames parameterAvailableNames);
 
+
+    @POST("test/reports")
+    Single<ResponseListReports> getListReports(@Body UserBean userBean);
 
 
 

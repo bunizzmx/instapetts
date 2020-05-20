@@ -23,13 +23,6 @@
         android:background="@drawable/round_white"
         android:clickable="true"
         android:orientation="vertical">
-        <ImageView
-           android:layout_marginLeft="10dp"
-            android:id="@+id/close_dialog"
-            android:tint="@color/black"
-            android:src="@drawable/ic_cross"
-            android:layout_width="15dp"
-            android:layout_height="15dp"/>
         <LinearLayout
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -42,7 +35,7 @@
             <com.bunizz.instapetts.utils.ImagenCircular
                 android:id="@+id/image_crop_video"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/perro_demo"
+                android:src="@drawable/ic_hand_pet_preload"
                 android:layout_width="70dp"
                 android:layout_height="70dp"/>
             <com.bunizz.instapetts.utils.textgradient.AnimatedGradientTextView

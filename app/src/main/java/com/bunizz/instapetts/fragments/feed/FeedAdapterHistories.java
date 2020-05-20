@@ -67,7 +67,7 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         FeedHistoriesHolder h =(FeedHistoriesHolder)holder;
         if(position == 0){
-            h.name_pet_item.setText("Tu History");
+            h.name_pet_item.setText(context.getResources().getString(R.string.you_history));
             if(historiesBeans.get(position)!=null){
                 if(historiesBeans.get(position).getHistorias()!=null){
                     h.profile_background.setOnClickListener(view -> {

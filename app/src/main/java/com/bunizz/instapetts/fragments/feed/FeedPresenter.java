@@ -219,6 +219,7 @@ public class FeedPresenter implements FeedContract.Presenter {
                                             data_notification.put("ID_REMITENTE",App.read(PREFERENCES.ID_USER_FROM_WEB,0));
                                             data_notification.put("URL_EXTRA",postActions.getExtra());
                                             data_notification.put("FOTO_REMITENTE",App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
+                                            data_notification.put("FECHA",App.formatDateGMT(new Date()));
                                             db.collection(FIRESTORE.COLLECTION_NOTIFICATIONS).document()
                                                     .set(data_notification)
                                                     .addOnFailureListener(e -> {})
@@ -270,6 +271,13 @@ public class FeedPresenter implements FeedContract.Presenter {
         data_post_saved.put("id_post_from_web",postBean.getId_post_from_web());
         data_post_saved.put("saved",postBean.isSaved());
         data_post_saved.put("liked",postBean.isLiked());
+        data_post_saved.put("thumb_video",postBean.getThumb_video());
+        data_post_saved.put("address",postBean.getAddress());
+        data_post_saved.put("aspect",postBean.getAspect());
+        data_post_saved.put("can_comment",postBean.getCan_comment());
+        data_post_saved.put("cp",postBean.getCp());
+        data_post_saved.put("type_post",postBean.getType_post());
+        data_post_saved.put("type_pet",postBean.getType_pet());
         db.collection(FIRESTORE.R_POSTS_SAVED).document(App.read(PREFERENCES.UUID,"INVALID")).collection(FIRESTORE.POSTS)
                 .document(String.valueOf(postBean.getId_post_from_web()))
                 .set(data_post_saved)
@@ -296,6 +304,27 @@ public class FeedPresenter implements FeedContract.Presenter {
     @Override
     public void deleteFavorite(int id_post) {
         savedPostHelper.deleteSavedPost(id_post);
+        db.collection(FIRESTORE.R_POSTS_SAVED).document(App.read(PREFERENCES.UUID,"INVALID")).collection(FIRESTORE.POSTS)
+                .document(""+id_post)
+                .delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.e("DELETED_FAVORITE","ON COMPLETE");
+                    }
+                })
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.e("DELETED_FAVORITE","ON SUCCESS");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
     }
 
     @SuppressLint("CheckResult")

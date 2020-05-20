@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    android:layout_below="@+id/root_toolbar"
     android:background="@color/white"
     android:visibility="gone"
     android:padding="20dp"

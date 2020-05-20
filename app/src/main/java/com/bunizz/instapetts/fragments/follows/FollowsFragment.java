@@ -140,7 +140,7 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
             if(listener!=null)
                 listener.change_fragment_parameter(type_fragment,data);
         });
-        Style style = Style.values()[14];
+        Style style = Style.values()[12];
         Sprite drawable = SpriteFactory.create(style);
         spin_kit.setIndeterminateDrawable(drawable);
         spin_kit.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));

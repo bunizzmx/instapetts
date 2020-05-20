@@ -14,7 +14,7 @@
         android:layout_height="wrap_content">
     <TextView
         style="@style/FontNormalTitle"
-        android:text="Tip Importante"
+        android:text="@string/tip_import"
         android:layout_margin="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
@@ -127,7 +127,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="40dp"
-        android:text="Cosas interesantes"
+        android:text="@string/cosas_interesantes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

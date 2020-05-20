@@ -52,7 +52,7 @@
                 <ImageView
                     android:id="@+id/image_tip_detail"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/perro_demo"
+                    android:src="@drawable/ic_hand_pet_preload"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"/>
             </androidx.cardview.widget.CardView>

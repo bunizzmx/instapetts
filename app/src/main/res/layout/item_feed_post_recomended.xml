@@ -49,7 +49,7 @@
        android:layout_height="wrap_content">
        <com.bunizz.instapetts.utils.ImagenCircular
            android:id="@+id/image_user_recomended"
-           android:src="@drawable/perro_demo"
+           android:src="@drawable/ic_hand_pet_preload"
            android:layout_width="30dp"
            android:layout_height="30dp"/>
        <TextView

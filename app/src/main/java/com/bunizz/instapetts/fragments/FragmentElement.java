@@ -54,6 +54,9 @@ public class FragmentElement<T extends Fragment> {
     public static final int INSTANCE_FOLLOWS_USER = 36;
     public static final int INSTANCE_COUNTRY_CODES= 37;
     public static final int INSTANCE_COMENTARIOS =38;
+
+    public static final int INSTANCE_REPORTS_LIST =39;
+    public static final int INSTANCE_FINAL_REPORT =40;
     //endregion
     private String mTitle;
     private T fragment;

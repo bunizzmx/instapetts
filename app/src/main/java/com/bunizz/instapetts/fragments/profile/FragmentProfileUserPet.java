@@ -120,7 +120,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     SwipeRefreshLayout refresh_profile;
 
 
-    Style style = Style.values()[14];
+    Style style = Style.values()[12];
     Sprite drawable = SpriteFactory.create(style);
 
     @SuppressLint("MissingPermission")
@@ -180,16 +180,21 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
             }
            PETS.add(new PetBean());
             petsPropietaryAdapter.setPets(PETS);
-        adapter_pager = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
-        adapter_pager.addFragment(new FragmentPostGalery(), "Post");
-        adapter_pager.addFragment(new FragmentPostGalery(), "Favoritos");
-        adapter_pager.addFragment(new FragmentPostGalery(), "Post Privados");
+        adapter_pager = new ViewPagerAdapter(getChildFragmentManager());
+        adapter_pager.addFragment(new FragmentPostGalery(), "Publicaciones");
+        adapter_pager.addFragment(new FragmentPostGalery(), "Solo Videos");
+        adapter_pager.addFragment(new FragmentPostGalery(), "Fotos y galerias");
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_profile_pet, container, false);
+    }
+
+    public void reloadMyData(){
+        if(adapter_pager!=null && list_pets_propietary!=null)
+           presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0),POSITION_PAGER);
     }
 
     @Override
@@ -212,6 +217,33 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         });
         list_pets_propietary.setAdapter(petsPropietaryAdapter);
         viewpager_profile.setAdapter(adapter_pager);
+        viewpager_profile.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                POSITION_PAGER = position;
+                Fragment frag = adapter_pager.getItem(POSITION_PAGER);
+                if (frag instanceof FragmentPostGalery) {
+                    if(!((FragmentPostGalery) frag).isDataAdded()) {
+                        Log.e("DATOS_ADDEDS","POST_PROFILES : " + POSITION_PAGER);
+                        presenter.getPostUser(true, App.read(PREFERENCES.ID_USER_FROM_WEB, 0), POSITION_PAGER);
+                    }
+                    else
+                        Log.e("DATOS_ADDEDS","POST_PROFILES");
+
+                }
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         tabs_profile_propietary.setViewPager(viewpager_profile);
         spinky_loading_profile_info.setIndeterminateDrawable(drawable);
         spinky_loading_profile_info.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
@@ -226,23 +258,8 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         descripcion_perfil_user.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
         URL_UPDATED = App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID");
         Glide.with(getContext()).load(URL_UPDATED).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);
-        viewpager_profile.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                POSITION_PAGER = position;
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-        presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0),POSITION_PAGER);
 
        refresh_profile.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -250,7 +267,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
                 UserBean userBean = new UserBean();
                 userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
                 presenter.getInfoUser(userBean);
-                presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+                presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0),POSITION_PAGER);
             }
         });
         UserBean userBean = new UserBean();
@@ -316,6 +333,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
             }
         }
         for(int i=0;i <pets.size();i++){
+            presenter.updateMyPetLocal(pets.get(i));
             ACOMULATIVO_RATE +=pets.get(i).getRate_pet();
         }
         RATE_PETS = ACOMULATIVO_RATE / pets.size();
@@ -338,13 +356,16 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     @Override
     public void showPostUser(ArrayList<PostBean> posts) {
         refresh_profile.setRefreshing(false);
-        Fragment frag = adapter_pager.getItem(0);
+        Fragment frag = adapter_pager.getItem(POSITION_PAGER);
         POSTS.clear();
         POSTS.addAll(posts);
         ArrayList<Object> results = new ArrayList<>();
         results.addAll(POSTS);
         if (frag instanceof FragmentPostGalery) {
+            Log.e("SHIW_POSTXXX","-->" + posts.size());
             ((FragmentPostGalery) frag).setData_posts(results);
+        }else{
+            Log.e("SHIW_POSTXXX","--> NO ES INSTANCIA" + posts.size());
         }
     }
 
@@ -398,8 +419,8 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
 
 
     void fist_pet(){
-        final SpannableString spannedDesc = new SpannableString("Configura a tu mascota para asignarle un perfil.");
-        TapTargetView.showFor(getActivity(), TapTarget.forView(getView().findViewById(R.id.list_pets_propietary), "Agrega una mascota", spannedDesc)
+        final SpannableString spannedDesc = new SpannableString(getContext().getResources().getString(R.string.config_pet_step));
+        TapTargetView.showFor(getActivity(), TapTarget.forView(getView().findViewById(R.id.list_pets_propietary), getContext().getResources().getString(R.string.add_pet), spannedDesc)
                 .cancelable(false)
                 .drawShadow(true)
                 .tintTarget(false), new TapTargetView.Listener() {

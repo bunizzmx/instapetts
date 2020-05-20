@@ -26,6 +26,7 @@ import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
+import com.bunizz.instapetts.fragments.camera.CameraFragment;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.fragments.profile.FragmentEditProfileUser;
 import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
@@ -110,6 +111,7 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
             mCurrentFragment.getFragment().setArguments(data);
             if(stack_search_raza_pet.size()<=0){stack_search_raza_pet.push(mCurrentFragment);}
         }
+        ((FragmentSearchPet) mCurrentFragment.getFragment()).research_raza();
         inflateFragment();
     }
     private void change_data_pet(FragmentElement fragment) {

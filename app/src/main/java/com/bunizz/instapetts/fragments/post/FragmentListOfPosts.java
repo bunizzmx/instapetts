@@ -1,6 +1,7 @@
 package com.bunizz.instapetts.fragments.post;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.reports.ReportActiviy;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PostBean;
@@ -20,6 +22,7 @@ import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.fragments.feed.FeedPresenter;
 import com.bunizz.instapetts.fragments.post.adapters.GaleryAdapter;
 import com.bunizz.instapetts.fragments.post.adapters.PostsAdapter;
+import com.bunizz.instapetts.listeners.actions_dialog_profile;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.postsListener;
@@ -92,11 +95,20 @@ public class FragmentListOfPosts extends Fragment implements FeedContract.View {
             @Override
             public void openMenuOptions(int id_post,int id_usuario,String uuid) {
                 DialogOptionsPosts optionsPosts = new DialogOptionsPosts(getContext(),id_post,id_usuario,uuid);
-                optionsPosts.setListener(id_post1 -> {
-                    PostBean postBean = new PostBean();
-                    postBean.setId_post_from_web(id_post1);
-                    postBean.setTarget("DELETE");
-                    mPresenter.deletePost(postBean);
+                optionsPosts.setListener(new actions_dialog_profile() {
+                    @Override
+                    public void delete_post(int id_post) {
+                        PostBean postBean = new PostBean();
+                        postBean.setId_post_from_web(id_post);
+                        postBean.setTarget("DELETE");
+                        mPresenter.deletePost(postBean);
+                    }
+
+                    @Override
+                    public void reportPost(int id_post) {
+                        Intent reportIntent = new Intent(getActivity(), ReportActiviy.class);
+                        startActivity(reportIntent);
+                    }
                 });
                 optionsPosts.show();
             }

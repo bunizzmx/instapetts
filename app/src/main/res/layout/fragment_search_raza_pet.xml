@@ -87,4 +87,14 @@
         android:id="@+id/list_words_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+    <com.bunizz.instapetts.utils.loadings.SpinKitView
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView"
+        android:background="?selectableItemBackgroundBorderless"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:padding="10dp" />
 </RelativeLayout>

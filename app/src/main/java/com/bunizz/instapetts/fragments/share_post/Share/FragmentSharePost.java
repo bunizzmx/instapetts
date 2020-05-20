@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,6 +64,10 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
 
     @BindView(R.id.location_user)
     TextView location_user;
+
+    @BindView(R.id.caracteres_share_post)
+    TextView caracteres_share_post;
+
     uploads listener;
     @BindView(R.id.description_post)
     EditText description_post;
@@ -204,6 +210,23 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
                 App.write(PREFERENCES.ALLOW_LOCATION_POST,false);
         });
 
+        description_post.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                caracteres_share_post.setText(description_post.getText().toString().length() +  "/" + "180");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         presenter.getLocation();
     }
 
@@ -267,6 +290,14 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
 
 
     public  File savebitmap(Bitmap bmp,String name_video) throws IOException {
+
+        File file = new File(getContext().getApplicationContext().getCacheDir() + File.separator + "THUMBS_VIDEOS");
+        if (!file.exists()) {
+            Log.e("CREO_CARPETA_VIDEO",getContext().getApplicationContext().getCacheDir() + File.separator + "THUMBS_VIDEOS");
+            file.mkdirs();
+        }
+
+
         Log.e("SAVE_IMAGE","ON CAHCE" + name_video);
         String splits[] = name_video.split("/");
         String name_video_complete = splits[splits.length-1];
@@ -277,7 +308,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         Log.e("SAVE_IMAGE","--> SIN DOT : "+ name_sin_dot);
 
         bmp.compress(Bitmap.CompressFormat.JPEG, 60, bytes);
-        File f = new File( getContext().getApplicationContext().getCacheDir()
+        File f = new File( getContext().getApplicationContext().getCacheDir() + File.separator + "THUMBS_VIDEOS"
                 + File.separator + name_sin_dot +".jpg");
         f.createNewFile();
         FileOutputStream fo = new FileOutputStream(f);

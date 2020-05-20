@@ -1,4 +1,7 @@
 <resources>
+    <string name="app_admob">ca-app-pub-3652627287925800~2029449466</string>
+
+
     <string name="app_name">Instapetts</string>
     <string name="config">Configurar</string>
     <string name="next">Siguiente</string>
@@ -160,4 +163,85 @@
     <string name="pager_more_views">Lo más visto</string>
     <string name="pager_adorable">Adorables</string>
     <string name="pager_recent">Lo mas reciente</string>
+
+
+    <string name="password">Contraseña</string>
+    <string name="confirm_password">Confirmar contraseña</string>
+    <string name="no_account">No tienes una cuenta?</string>
+    <string name="mail">Correo</string>
+    <string name="login">Entrar</string>
+    <string name="register_account">Crear tu cuenta</string>
+    <string name="login_or">Entrar o registrarce con</string>
+    <string name="register">Registrarte</string>
+
+<string name="tip_import">Tip Reelevante</string>
+    <string name="tips_notice">Tips y Noticias</string>
+    <string name="cosas_interesantes">Cosas interesantes</string>
+
+    <string name="month">mes</string>
+    <string name="months">meses</string>
+    <string name="day">día</string>
+    <string name="days">días</string>
+    <string name="year">año</string>
+    <string name="years">años</string>
+    <string name="week">semana</string>
+    <string name="weeks">semanas</string>
+    <string name="hour">hora</string>
+    <string name="hours">horas</string>
+    <string name="now">Justo ahora</string>
+    <string name="minute"> minuto</string>
+    <string name="minutes"> minutos</string>
+    <string name="hace">Hace</string>
+    <string name="first_like">Se el primero en darle me gusta</string>
+    <string name="first_comment">"Se el primero en hacer un comentario en esta publicacion."</string>
+    <string name="no_commnets">No hay comentarios aun.</string>
+    <string name="notifications">Notificaciones</string>
+    <string name="you_history">Tu Historia</string>
+
+
+    <!-- STEPPS /////////////////////////////////////////-->
+    <string name="add_pet">Agrega una mascota</string>
+    <string name="config_pet_step">Configura tu primera mascota para empezar a compartir contenido.</string>
+
+    <string name="add_first_photo">Vamos por tu primera foto!</string>
+    <string name="config_fist_foto">Con una mascota lista ya podras empezar a subir contenido.</string>
+
+    <string name="firt_follow_pets">Empieza siguiendo a estas mascotas...</string>
+
+    <string name="account">Cuenta</string>
+    <string name="saved">Guardado</string>
+    <string name="post_saved">Publicaciones guardados</string>
+
+    <string name="share_profile">Compartir tu perfil</string>
+    <string name="share">Compartir</string>
+    <string name="your_identity">Tu identificacion</string>
+    <string name="administrate_account">Administrar tu cuenta</string>
+    <string name="general">General</string>
+
+
+    <string name="center_help">Centro de Hayuda</string>
+
+    <string name="terms">Terminos de uso</string>
+
+    <string name="politicas_privacy">Politica privacidad</string>
+
+    <string name="close_session">Cerrar Session</string>
+
+    <string name="post_private">Post Privados</string>
+    <string name="favorite">Favoritos</string>
+
+    <string name="post">Publicaciones</string>
+    <string name="new_post">Nueva Publicacion</string>
+
+    <string name="full_comments">Son todos los comentarios</string>
+    <string name="likes"> Me gusta</string>
+
+
+
+    <!-- STRING FOR PUSH /////////////////// -->
+    <string name="title_follow">Nuevo me gusta</string>
+    <string name="body_follow"> le ha gustado tu publicación,sigue impresionando con tu mascota!!!</string>
+
+    <string name="title_comment">Nuevo comentario</string>
+    <string name="body_comment">  a comentado tu publicacion, ve de que se trata!!!</string>
 </resources>

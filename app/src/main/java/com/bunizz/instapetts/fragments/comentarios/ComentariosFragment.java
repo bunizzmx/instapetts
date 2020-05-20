@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.App;
@@ -24,6 +25,10 @@ import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.utils.ImagenCircular;
+import com.bunizz.instapetts.utils.loadings.SpinKitView;
+import com.bunizz.instapetts.utils.loadings.SpriteFactory;
+import com.bunizz.instapetts.utils.loadings.Style;
+import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -77,13 +82,27 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
     @BindView(R.id.comment_now)
     RelativeLayout comment_now;
 
+    @BindView(R.id.layout_loanding_comments)
+    RelativeLayout layout_loanding_comments;
+
+
+
     CommentsAdapter adapter;
 
     ComentariosPresenter presenter;
 
+    Style style = Style.values()[12];
+    Sprite drawable = SpriteFactory.create(style);
+
+
+    @BindView(R.id.spin_kit)
+    SpinKitView spin_kit;
+
     int ID_POST=0;
     boolean CAN_COMMENT =true;
 
+    private boolean loading =true;
+    private boolean IS_ALL = false;
     @SuppressLint("MissingPermission")
     @OnClick(R.id.back_to_main)
     void back_to_main() {
@@ -107,6 +126,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
             presenter.comment(commentariosBean);
             input_commentarios.setText("");
             adapter.addBelow(commentariosBean);
+           scrolbottom();
         }
 
     }
@@ -177,6 +197,8 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this,view);
+        spin_kit.setIndeterminateDrawable(drawable);
+        spin_kit.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         list_comentarios.setLayoutManager(new LinearLayoutManager(getContext()));
         list_comentarios.setAdapter(adapter);
         presenter.getComentarios(ID_POST);
@@ -222,10 +244,41 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
             @Override
             public void afterTextChanged(Editable s) { }
         });
+
+        list_comentarios.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleItemCount = recyclerView.getLayoutManager().getChildCount();
+                int totalItemCount = recyclerView.getLayoutManager().getItemCount();
+                int pastVisiblesItems = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                if (dy > 0) {
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                        if(loading){
+                            loading = false;
+                            if(IS_ALL == false) {
+                                layout_loanding_comments.setVisibility(View.VISIBLE);
+                                Log.e("DONWLOAD_MORE_COMMENTS","SI");
+                                refresh_commentarios.setVisibility(View.VISIBLE);
+                                presenter.loadNextComments(ID_POST);
+                            }else {
+                                Log.e("DONWLOAD_MORE_COMMENTS","NO");
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override
     public void showComments(ArrayList<CommentariosBean> commentariosBeans) {
+        spin_kit.setVisibility(View.GONE);
         refresh_commentarios.setRefreshing(false);
         if(commentariosBeans.size()>0){
             root_no_data.setVisibility(View.GONE);
@@ -233,12 +286,28 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
             adapter.setData(commentariosBeans);
         }else
         {
-            body_no_data.setText("Se el primero en hacer un comentario en esta publicacion.");
-            title_no_data.setText("No hay comentarios aun");
+            body_no_data.setText(getContext().getResources().getString(R.string.first_comment));
+            title_no_data.setText(getContext().getResources().getString(R.string.no_commnets));
             root_no_data.setVisibility(View.VISIBLE);
             no_comments.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    @Override
+    public void showNextComments(ArrayList<CommentariosBean> commentariosBeans) {
+        spin_kit.setVisibility(View.GONE);
+        loading =true;
+        refresh_commentarios.setRefreshing(false);
+        layout_loanding_comments.setVisibility(View.GONE);
+        if(commentariosBeans.size()>0){
+            root_no_data.setVisibility(View.GONE);
+            no_comments.setVisibility(View.GONE);
+            adapter.setDataBelow(commentariosBeans);
+        }else{
+            IS_ALL =true;
+            Toast.makeText(getContext(),getContext().getResources().getString(R.string.full_comments),Toast.LENGTH_LONG).show();
+        }
     }
 
 
@@ -259,6 +328,12 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
 
         public void setData(ArrayList<CommentariosBean> data) {
             this.data = data;
+            notifyDataSetChanged();
+        }
+
+        public void setDataBelow(ArrayList<CommentariosBean> data) {
+            Log.e("INSERT_DATA_BELOW","TRUE: " + data.size());
+            this.data.addAll(data);
             notifyDataSetChanged();
         }
 
@@ -302,7 +377,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                     .error(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload))
                     .into(h.imagen_user_comment);
             h.item_comentarios_comentario.setText(data.get(position).getCommentario());
-            h.fecha_comment.setText(App.fecha_lenguaje_humano(data.get(position).getFecha_comentario()));
+            h.fecha_comment.setText(App.getInstance().fecha_lenguaje_humano(data.get(position).getFecha_comentario()));
             h.like_comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -355,5 +430,9 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
 
     public interface ListenerComments{
         void onLike(int post,String document);
+    }
+
+    private void scrolbottom(){
+        list_comentarios.scrollToPosition(adapter.getItemCount() - 1);
     }
 }

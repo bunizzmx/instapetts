@@ -10,7 +10,7 @@
     <string name="table_razas" translatable="false">CREATE TABLE IF NOT EXISTS razas (id INTEGER PRIMARY KEY AUTOINCREMENT   , name_eng TEXT, nam_esp TEXT,id_type_pet INT,photo TEXT)</string>
     <string name="table_saved_posts">CREATE TABLE IF NOT EXISTS saved_posts(id  INTEGER PRIMARY KEY AUTOINCREMENT,id_from_web INT, name_pet TEXT,name_user TEXT,urls_posts TEXT, url_photo_user TEXT, description TEXT,date_post TEXT)</string>
     <string name="table_liked_post">CREATE TABLE IF NOT EXISTS liked_posts(id_from_web INT)</string>
-    <string name="table_notifications">CREATE TABLE IF NOT EXISTS notifications(id INTEGER PRIMARY KEY AUTOINCREMENT ,title TEXT,body TEXT,url_resource TEXT, type_notification INT,id_usuario INT,url_image_extra TEXT,vista INTEGER)</string>
+    <string name="table_notifications">CREATE TABLE IF NOT EXISTS notifications(id INTEGER PRIMARY KEY AUTOINCREMENT ,title TEXT,body TEXT,url_resource TEXT, type_notification INT,id_usuario INT,url_image_extra TEXT,vista INTEGER,id_document_notification TEXT)</string>
     <string name="table_relacion_follows">CREATE TABLE IF NOT EXISTS relacion_follows (id_document TEXT,url_photo_user TEXT,name_user,uuid_user TEXT, id_user INT,name_nip_user TEXT)</string>
     <string name="table_relacion_favorite_pets">CREATE TABLE IF NOT EXISTS relacion_favorite_pets (id_document TEXT,url_photo_user TEXT,name_user TEXT,uuid_user TEXT, id_user INT,name_nip_user TEXT,id_pet INT,name_pet TEXT,url_photo_pet TEXT)</string>
     <string name="table_search_recents">CREATE TABLE IF NOT EXISTS search_recents (id INTEGER PRIMARY KEY AUTOINCREMENT ,url_photo TEXT,name TEXT, type_mascota INT,name_raza TEXT,type_save INT,id_usuario int,uuid_usuario TEXT, id_mascota INT,name_pet TEXT,name_tag TEXT)</string>

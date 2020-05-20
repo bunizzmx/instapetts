@@ -140,41 +140,61 @@
             android:id="@+id/progres_image"
             style="@style/SpinKitView"
             android:background="?selectableItemBackgroundBorderless"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
     </RelativeLayout>
     <RelativeLayout
         android:layout_marginTop="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/save_posts"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/ic_favorite"
-            android:layout_width="25dp"
-            android:layout_height="25dp"/>
-        <ImageView
-            android:id="@+id/icon_like"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_alignParentLeft="true"
-            android:src="@drawable/ic_corazon"
-            android:layout_width="25dp"
-            android:layout_height="25dp"/>
-        <ImageView
-            android:id="@+id/icon_commentar"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="20dp"
-            android:layout_toRightOf="@+id/icon_like"
-            android:src="@drawable/ic_commentar"
-            android:layout_width="23dp"
-            android:layout_height="23dp"/>
+        android:layout_height="40dp">
+        <RelativeLayout
+            android:layout_toRightOf="@+id/l_icon_like"
+            android:id="@+id/l_icon_commentar"
+            android:background="?attr/selectableItemBackground"
+            android:layout_width="50dp"
+            android:layout_height="match_parent">
 
+            <ImageView
+                android:id="@+id/icon_commentar"
+                android:layout_width="20dp"
+                android:layout_height="22dp"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/ic_commentar" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/l_icon_like"
+            android:background="?attr/selectableItemBackground"
+            android:layout_width="50dp"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/icon_like"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/ic_corazon"
+                android:layout_width="25dp"
+                android:layout_height="25dp"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_alignParentRight="true"
+            android:id="@+id/l_saved_post"
+            android:layout_gravity="end"
+            android:background="?attr/selectableItemBackground"
+            android:layout_width="50dp"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_centerHorizontal="true"
+                android:id="@+id/save_posts"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/ic_favorite"
+                android:layout_width="25dp"
+                android:layout_height="25dp"/>
+        </RelativeLayout>
     </RelativeLayout>
+
     <TextView
         android:layout_marginTop="5dp"
         style="@style/FontNormal"
@@ -238,7 +258,7 @@
             android:layout_height="wrap_content">
             <com.bunizz.instapetts.utils.ImagenCircular
                 android:id="@+id/mini_user_photo"
-                android:src="@drawable/perro_demo"
+                android:src="@drawable/ic_hand_pet_preload"
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <ImageView
@@ -249,7 +269,7 @@
                 android:layout_width="15dp"
                 android:layout_height="15dp"/>
             <TextView
-                style="@style/FontNormalTitleSecondary"
+                style="@style/FontNormal"
                 android:id="@+id/name_user_posts"
                 android:layout_marginLeft="3dp"
                 android:layout_gravity="center_vertical"

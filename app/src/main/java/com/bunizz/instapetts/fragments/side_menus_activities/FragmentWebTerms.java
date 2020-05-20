@@ -52,7 +52,7 @@ public class FragmentWebTerms extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        Style style = Style.values()[14];
+        Style style = Style.values()[12];
         Sprite drawable = SpriteFactory.create(style);
         progres_image.setIndeterminateDrawable(drawable);
         progres_image.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));

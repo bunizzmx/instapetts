@@ -29,7 +29,7 @@
             android:layout_height="wrap_content">
             <com.bunizz.instapetts.utils.ImagenCircular
                 android:id="@+id/image_video_tumbh"
-                android:src="@drawable/perro_demo"
+                android:src="@drawable/ic_hand_pet_preload"
                 android:layout_width="35dp"
                 android:layout_height="35dp"/>
             <TextView
@@ -42,13 +42,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
-        <TextView
+        <LinearLayout
             android:layout_marginTop="10dp"
-            android:id="@+id/title_video_play"
-            android:textSize="18dp"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:tint="@color/white"
+                android:src="@drawable/ic_quotes"
+                android:layout_width="15dp"
+                android:layout_height="15dp"/>
+            <TextView
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:id="@+id/title_video_play"
+                android:textSize="18dp"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:tint="@color/white"
+                android:src="@drawable/ic_quotes_reverse"
+                android:layout_width="15dp"
+                android:layout_height="15dp"/>
+        </LinearLayout>
+
     </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"
@@ -58,19 +76,23 @@
         android:layout_width="match_parent"
         android:layout_height="70dp">
         <RelativeLayout
+            android:id="@+id/like_video_post"
             android:layout_marginLeft="20dp"
             android:layout_width="50dp"
             android:layout_height="match_parent">
             <ImageView
+                android:id="@+id/icon_like_video"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_corazon_w"
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
         </RelativeLayout>
         <RelativeLayout
+            android:id="@+id/save_on_favorites"
             android:layout_width="50dp"
             android:layout_height="match_parent">
             <ImageView
+                android:id="@+id/icon_save_on_favorites"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_favorite_w"
                 android:layout_width="20dp"
@@ -98,11 +120,12 @@
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
+
                 <ImageView
-                    android:tint="@color/white"
-                    android:src="@drawable/ic_views"
                     android:layout_width="15dp"
-                    android:layout_height="15dp"/>
+                    android:layout_height="12dp"
+                    android:src="@drawable/ic_views"
+                    android:tint="@color/white" />
                 <TextView
                     android:textColor="@color/white"
                     android:textStyle="bold"

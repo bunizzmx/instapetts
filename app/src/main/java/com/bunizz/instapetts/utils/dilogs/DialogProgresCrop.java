@@ -26,7 +26,7 @@ import androidx.appcompat.app.AlertDialog;
  */
 public class DialogProgresCrop extends BaseAlertDialog{
     private boolean allowAnimation = true;
-    private boolean cancelable = true;
+    private boolean cancelable = false;
     private boolean isLocked = false;
     private boolean showActionIcons = true;
     Activity context;

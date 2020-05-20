@@ -41,10 +41,13 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
     public View parent;
     public TextView num_coments;
     public LinearLayout num_comments_layout;
-
+    public RelativeLayout l_icon_like,l_icon_commentar,l_saved_post;
     public PlayerViewHolder(@NonNull View itemView) {
         super(itemView);
         parent = itemView;
+        l_icon_commentar = itemView.findViewById(R.id.l_icon_commentar);
+        l_icon_like = itemView.findViewById(R.id.l_icon_like);
+        l_saved_post = itemView.findViewById(R.id.l_saved_post);
         mediaContainer = itemView.findViewById(R.id.mediaContainer);
         mediaCoverImage = itemView.findViewById(R.id.ivMediaCoverImage);
         volumeControl = itemView.findViewById(R.id.ivVolumeControl);

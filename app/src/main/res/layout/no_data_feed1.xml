@@ -36,7 +36,7 @@
         android:layout_marginTop="30dp"
         android:id="@+id/label_first_recomended"
         android:textStyle="bold"
-        android:text="Empieza siguiendo a estas mascotas..."
+        android:text="@string/firt_follow_pets"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <androidx.recyclerview.widget.RecyclerView

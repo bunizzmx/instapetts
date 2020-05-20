@@ -64,6 +64,13 @@ public class FragmentPostGalery extends Fragment {
         }
 
     }
+
+    public boolean isDataAdded(){
+        if(this.data_posts.size()>0)
+            return  true;
+        else
+            return  false;
+    }
     public static FragmentPostGalery newInstance() {
         return new FragmentPostGalery();
     }

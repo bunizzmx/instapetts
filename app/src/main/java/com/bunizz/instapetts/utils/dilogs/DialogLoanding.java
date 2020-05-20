@@ -28,7 +28,7 @@ public class DialogLoanding extends BaseAlertDialog{
         LayoutInflater inflater = LayoutInflater.from(this.context);
         dialogView = inflater.inflate(R.layout.dialog_loading, null);
         progres_image = dialogView.findViewById(R.id.progres_image);
-        Style style = Style.values()[14];
+        Style style = Style.values()[12];
         Sprite drawable = SpriteFactory.create(style);
         progres_image.setIndeterminateDrawable(drawable);
         progres_image.setColor(context.getResources().getColor(R.color.colorPrimaryDark));

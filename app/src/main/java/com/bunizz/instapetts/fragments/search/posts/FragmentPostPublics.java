@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,10 +46,9 @@ import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.http.POST;
 
 public class FragmentPostPublics  extends Fragment implements  PostPublicsContract.View {
-
-
 
 
     ArrayList<Object> data_posts = new ArrayList<>();
@@ -67,22 +67,23 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
     SwipeRefreshLayout refresh_search;
 
     ViewPagerAdapter adapter_pager;
+
     @SuppressLint("MissingPermission")
     @OnClick(R.id.root_search_pets_users)
-    void root_search_pets_users()
-    {
-      listener.change_fragment_parameter(FragmentElement.INSTANCE_SEARCH,null);
+    void root_search_pets_users() {
+        listener.change_fragment_parameter(FragmentElement.INSTANCE_SEARCH, null);
     }
 
-    String URL_UPDATED="INVALID";
-    String URL_LOCAL="INVALID";
+    String URL_UPDATED = "INVALID";
+    String URL_LOCAL = "INVALID";
 
 
     PostPublicsPresenter presenter;
-    int IS_FORM_SAVED_POST =0;
+    int IS_FORM_SAVED_POST = 0;
     @BindView(R.id.search_by_qr)
     RelativeLayout search_by_qr;
     private static final int REQUEST_CODE_QR_SCAN = 101;
+   int POSITION_PAGER  =0;
 
     changue_fragment_parameters_listener listener;
     RxPermissions rxPermissions;
@@ -100,7 +101,6 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
         adapter_pager = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
         adapter_pager.addFragment(new FragmentListGalery(), getString(R.string.pager_discover));
         adapter_pager.addFragment(new FragmentListGalery(), getString(R.string.pager_more_views));
-        adapter_pager.addFragment(new FragmentListGalery(), getString(R.string.pager_adorable));
         adapter_pager.addFragment(new FragmentListGalery(), getString(R.string.pager_recent));
 
         presenter = new PostPublicsPresenter(this,getContext());
@@ -120,7 +120,7 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        presenter.getPostPublics();
+        presenter.getPostPublics(POSITION_PAGER);
         search_by_qr.setOnClickListener(view1 -> {
             rxPermissions
                     .request(Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -141,7 +141,31 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
         refresh_search.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                presenter.getPostPublics();
+                presenter.getPostPublics(POSITION_PAGER);
+            }
+        });
+        viewpager_profile.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                POSITION_PAGER = position;
+                Fragment frag = adapter_pager.getItem(POSITION_PAGER);
+                if (frag instanceof FragmentListGalery) {
+                    if(!((FragmentListGalery) frag).is_data_charged())
+                        presenter.getPostPublics(POSITION_PAGER);
+                    else
+                        Log.e("DATOS_CARGADOS","YA_CARGUE_DATOS_AQUI");
+                }
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
     }
@@ -154,7 +178,7 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
         refresh_search.setRefreshing(false);
         data_posts.clear();
         data_posts.addAll(posts);
-        Fragment frag = adapter_pager.getItem(0);
+        Fragment frag = adapter_pager.getItem(POSITION_PAGER);
         if (frag instanceof FragmentListGalery) {
             ((FragmentListGalery) frag).setData_posts(data_posts);
         }
@@ -167,7 +191,7 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
 
     @Override
     public void peticionError() {
-       presenter.getPostPublics();
+       presenter.getPostPublics(POSITION_PAGER);
     }
 
 

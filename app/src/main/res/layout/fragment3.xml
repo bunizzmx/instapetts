@@ -10,16 +10,20 @@
         android:src="@drawable/intro_3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+    <RelativeLayout
+        android:background="@drawable/degradado_f1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
     <LinearLayout
         android:paddingLeft="40dp"
         android:paddingRight="20dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="200dp"
+       android:layout_alignParentBottom="true"
+        android:layout_marginBottom="100dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:fontFamily="@font/avenir_black"
+            style="@style/titleapp"
             android:textColor="@color/white"
             android:text="@string/intro_title_3"
             android:textAlignment="center"
@@ -30,6 +34,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
+            style="@style/FontNormal"
+            android:textStyle="bold"
             android:textColor="@color/white"
             android:text="@string/intro_body_3"
             android:textSize="18dp"

@@ -165,10 +165,6 @@ public class ImageService extends Service {
         uploadTask  = reference.putFile(Uri.fromFile(file),metadata);
         uploadTask.addOnFailureListener(exception -> {}).addOnSuccessListener(taskSnapshot -> {
         }).addOnProgressListener(taskSnapshot -> {
-            int progreso = (int) ((int) (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
-            mBuilder.setContentText("Progreso " + progreso + "%")
-                    .setProgress(100,progreso,false);
-            notificationManager.notify(notificationId, mBuilder.build());
         });
         Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
             if (!task.isSuccessful()) {
@@ -184,30 +180,6 @@ public class ImageService extends Service {
         });
     }
 
-    void upload_video(String filename){
-        UploadTask uploadTask;
-        final StorageReference reference = storageReference.child(filename);
-        uploadTask  = reference.putFile(Uri.fromFile(file));
-        uploadTask.addOnFailureListener(exception -> {}).addOnSuccessListener(taskSnapshot -> {
-        }).addOnProgressListener(taskSnapshot -> {
-            int progreso = (int) ((int) (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
-            mBuilder.setContentText("Progreso " + progreso + "%")
-                    .setProgress(100,progreso,false);
-            notificationManager.notify(notificationId, mBuilder.build());
-        });
-        Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
-            if (!task.isSuccessful()) {
-                throw task.getException();
-            }
-            return reference.getDownloadUrl();
-        }).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                mBuilder.setProgress(100,100,false);
-                mBuilder.setContentTitle(TITLE_SUCCESS);
-                notificationManager.notify(notificationId, mBuilder.build());
-            }
-        });
-    }
 
     @Override
     public void onDestroy() {

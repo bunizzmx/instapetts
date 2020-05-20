@@ -13,10 +13,12 @@ public interface ComentariosContract {
        void comment(CommentariosBean commentariosBean);
        void getComentarios(int id_post);
        void likeComment(int id_post,String id_document);
+       void loadNextComments(int id_post);
 
     }
 
     interface View{
         void showComments(ArrayList<CommentariosBean> commentariosBeans);
+        void showNextComments(ArrayList<CommentariosBean> commentariosBeans);
     }
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="60dp">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/back_to_main"
+        android:layout_margin="10dp"
+        app:cardElevation="5dp"
+        app:cardCornerRadius="15dp"
+        app:contentPadding="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+      <ImageView
+          android:tint="@color/primary"
+          android:src="@drawable/ic_arrow_back"
+          android:layout_width="15dp"
+          android:layout_height="15dp"/>
+
+    </androidx.cardview.widget.CardView>
+    <TextView
+        android:text="Denunciar"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+  </RelativeLayout>
+  <FrameLayout
+      android:id="@+id/root_reports"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"/>
+</LinearLayout>

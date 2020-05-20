@@ -2,14 +2,17 @@ package com.bunizz.instapetts.fragments.tips.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,8 +28,12 @@ import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity;
 import com.bunizz.instapetts.beans.AspectBean;
 import com.bunizz.instapetts.beans.TipsBean;
 import com.bunizz.instapetts.fragments.FragmentElement;
+import com.bunizz.instapetts.fragments.feed.UnifiedAddHolder;
 import com.bunizz.instapetts.listeners.PlayStopVideoListener;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.google.android.gms.ads.formats.NativeAd;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 
 import org.parceler.Parcels;
 
@@ -38,6 +45,7 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_TIP_TOP=1;
     private static final int TYPE_TIP_NORMAL = 2;
     private static final int TYPE_VIDEO = 3;
+    private static final int TYPE_ADD = 4;
     private RequestManager requestManager_param;
     ArrayList<Object> data = new ArrayList<>();
     changue_fragment_parameters_listener listener;
@@ -87,14 +95,19 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (position ==0) {
             return TYPE_TIP_TOP;
         }else{
-            if(recyclerViewItem instanceof TipsBean){
-                TipsBean data_parsed = (TipsBean) recyclerViewItem;
-                if(data_parsed.getType_tip() == 0)
+            if(recyclerViewItem instanceof UnifiedNativeAd){
+                return  TYPE_ADD;
+            }else{
+                if(recyclerViewItem instanceof TipsBean){
+                    TipsBean data_parsed = (TipsBean) recyclerViewItem;
+                    if(data_parsed.getType_tip() == 0)
+                        return TYPE_TIP_NORMAL;
+                    else
+                        return TYPE_VIDEO;
+                }else
                     return TYPE_TIP_NORMAL;
-                else
-                    return TYPE_VIDEO;
-            }else
-                return TYPE_TIP_NORMAL;
+
+            }
         }
     }
 
@@ -116,6 +129,11 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case TYPE_VIDEO:
                 view = getInflatedView(parent, R.layout.item_tips_video);
                 return new TipsHolderVideo(view);
+
+            case TYPE_ADD:
+                view = getInflatedView(parent, R.layout.ad_unified);
+                return new UnifiedAddHolder(view);
+
             case TYPE_TIP_NORMAL:
             default:
                 view = LayoutInflater.from(
@@ -135,7 +153,7 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 TipsBean data_parsed = (TipsBean) data.get(position);
                 h.boty_tip_top.setText(data_parsed.getBody_tip().substring(0,250) + "...");
                 h.title_tip_top.setText(data_parsed.getTitle_tip());
-                h.fecha_tip.setText(App.fecha_lenguaje_humano(data_parsed.getFecha_tip().replace("Z","").replace("T"," ")));
+                h.fecha_tip.setText(App.getInstance().fecha_lenguaje_humano(data_parsed.getFecha_tip().replace("Z","").replace("T"," ")));
                 h.num_views.setText("" + data_parsed.getViews_tip());
                 h.num_likes.setText(""+ data_parsed.getLikes_tip());
                 h.root_tip_simple.setOnClickListener(new View.OnClickListener() {
@@ -164,7 +182,7 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 hv.root_multiple_image.setLayoutParams(layoutParams);
                 hv.title_tip.setText(data_parsed_video.getTitle_tip());
                 Glide.with(context).load(data_parsed_video.getPhoto_tumbh_tip()).into(hv.mediaCoverImage);
-                hv.fecha_tip.setText(App.fecha_lenguaje_humano(data_parsed_video.getFecha_tip().replace("Z","").replace("T"," ")));
+                hv.fecha_tip.setText(App.getInstance().fecha_lenguaje_humano(data_parsed_video.getFecha_tip().replace("Z","").replace("T"," ")));
                 hv.root_multiple_image.setOnLongClickListener(v -> {
                     listener_video.StopVideo();
                     Intent i = new Intent(context, PlayVideoActivity.class);
@@ -194,7 +212,7 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         }
                     }
                 });
-                f.fecha_tip.setText(App.fecha_lenguaje_humano(data_parsed_n.getFecha_tip().replace("Z","").replace("T"," ")));
+                f.fecha_tip.setText(App.getInstance().fecha_lenguaje_humano(data_parsed_n.getFecha_tip().replace("Z","").replace("T"," ")));
                 f.num_views.setText("" + data_parsed_n.getViews_tip());
                 f.num_likes.setText(""+ data_parsed_n.getLikes_tip());
                 if(data_parsed_n.getBody_tip().length() > 200)
@@ -203,6 +221,9 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     f.body_tip_short.setText(data_parsed_n.getBody_tip());
                 f.title_tip_short.setText(data_parsed_n.getTitle_tip());
                 break;
+            case TYPE_ADD:
+                UnifiedNativeAd nativeAd = (UnifiedNativeAd) data.get(position);
+                populateNativeAdView(nativeAd, ((UnifiedAddHolder) holder).getAdView());
         }
 
     }
@@ -266,5 +287,57 @@ TextView title_tip_short;
             root_multiple_image = itemView.findViewById(R.id.root_multiple_image);
             progressBar = itemView.findViewById(R.id.progressBar);
         }
+    }
+
+
+
+    private void populateNativeAdView(UnifiedNativeAd nativeAd,
+                                      UnifiedNativeAdView adView) {
+        // Some assets are guaranteed to be in every UnifiedNativeAd.
+        ((TextView) adView.getHeadlineView()).setText(nativeAd.getHeadline());
+        ((TextView) adView.getBodyView()).setText(nativeAd.getBody());
+        ((Button) adView.getCallToActionView()).setText(nativeAd.getCallToAction());
+        ((Button) adView.getCallToActionView()).setBackground(context.getResources().getDrawable(R.drawable.button_create_acount));
+        ((Button) adView.getCallToActionView()).setTextColor(Color.WHITE);
+        NativeAd.Image icon = nativeAd.getIcon();
+
+        if (icon == null) {
+            adView.getIconView().setVisibility(View.INVISIBLE);
+        } else {
+            ((ImageView) adView.getIconView()).setImageDrawable(icon.getDrawable());
+            adView.getIconView().setVisibility(View.VISIBLE);
+        }
+
+        if (nativeAd.getPrice() == null) {
+            adView.getPriceView().setVisibility(View.INVISIBLE);
+        } else {
+            adView.getPriceView().setVisibility(View.VISIBLE);
+            ((TextView) adView.getPriceView()).setText(nativeAd.getPrice());
+        }
+
+        if (nativeAd.getStore() == null) {
+            adView.getStoreView().setVisibility(View.INVISIBLE);
+        } else {
+            adView.getStoreView().setVisibility(View.VISIBLE);
+            ((TextView) adView.getStoreView()).setText(nativeAd.getStore());
+        }
+
+        if (nativeAd.getStarRating() == null) {
+            adView.getStarRatingView().setVisibility(View.INVISIBLE);
+        } else {
+            ((RatingBar) adView.getStarRatingView())
+                    .setRating(nativeAd.getStarRating().floatValue());
+            adView.getStarRatingView().setVisibility(View.VISIBLE);
+        }
+
+        if (nativeAd.getAdvertiser() == null) {
+            adView.getAdvertiserView().setVisibility(View.INVISIBLE);
+        } else {
+            ((TextView) adView.getAdvertiserView()).setText(nativeAd.getAdvertiser());
+            adView.getAdvertiserView().setVisibility(View.VISIBLE);
+        }
+
+        // Assign native ad object to the native view.
+        adView.setNativeAd(nativeAd);
     }
 }

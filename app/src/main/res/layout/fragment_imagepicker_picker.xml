@@ -20,6 +20,7 @@
                         android:layout_height="match_parent"
                         android:padding="10dp" />
                     <Button
+                        android:visibility="gone"
                         android:id="@+id/crop_now"
                         android:layout_marginRight="10dp"
                         android:layout_centerVertical="true"

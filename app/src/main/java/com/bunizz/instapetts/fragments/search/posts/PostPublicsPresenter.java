@@ -38,10 +38,22 @@ public class PostPublicsPresenter implements   PostPublicsContract.Presenter {
     }
 
     @Override
-    public void getPostPublics() {
+    public void getPostPublics(int type_search) {
         PostFriendsBean postFriendsBean = new PostFriendsBean();
         postFriendsBean.setId_one(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
-        postFriendsBean.setTarget("DISCOVER");
+        switch (type_search){
+            case 0:
+                postFriendsBean.setTarget("DISCOVER");
+                break;
+            case 1:
+                postFriendsBean.setTarget("MORE_VIEWS");
+                break;
+            case 2:
+                postFriendsBean.setTarget("RECENT");
+                break;
+            default:break;
+        }
+
         disposable.add(
                 apiService.getPosts(postFriendsBean)
                         .subscribeOn(Schedulers.io())

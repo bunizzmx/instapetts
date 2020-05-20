@@ -29,7 +29,10 @@ import com.bunizz.instapetts.activitys.main.Main;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.NotificationBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
+import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
+import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.delete;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.dilogs.DialogDeletes;
@@ -65,6 +68,8 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
 
     @BindView(R.id.delete_trash)
     RelativeLayout delete_trash;
+
+    changue_fragment_parameters_listener listener;
 
 
     @SuppressLint("MissingPermission")
@@ -134,6 +139,7 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        notificationsAdapter.setListener_changue_instance((type_fragment, data) -> listener.change_fragment_parameter(type_fragment,data));
         list_notifications.setLayoutManager(new LinearLayoutManager(getContext()));
         list_notifications.setAdapter(notificationsAdapter);
         presenter.getNotifications();
@@ -151,8 +157,22 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
             refresh_notificacions.setVisibility(View.VISIBLE);
             notificationsAdapter.setNotificationBeans(notificationBeans);
             a1.setVisibility(View.GONE);
+            presenter.getNotificationsFromWeb();
         }
         else{
+          presenter.getNotificationsFromWeb();
+        }
+    }
+
+    @Override
+    public void showNotificationaFromWeb(ArrayList<NotificationBean> notificationBeans) {
+        if(notificationBeans.size()> 0){
+            delete_trash.setVisibility(View.VISIBLE);
+            Log.e("NOTIFICATIOSN","SI HAY");
+            refresh_notificacions.setVisibility(View.VISIBLE);
+            notificationsAdapter.setNotificationBeans(notificationBeans);
+            a1.setVisibility(View.GONE);
+        }else{
             delete_trash.setVisibility(View.GONE);
             Log.e("NOTIFICATIOSN","NO HAY");
             body_no_data.setText("Cuando alguien te siga,comente o publique algo nuevo apareceran notificaciones en este apartado.");
@@ -177,6 +197,15 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
         ArrayList<NotificationBean> notificationBeans = new ArrayList<>();
         Context context;
         notifications_events listener;
+        changue_fragment_parameters_listener listener_changue_instance;
+
+        public changue_fragment_parameters_listener getListener_changue_instance() {
+            return listener_changue_instance;
+        }
+
+        public void setListener_changue_instance(changue_fragment_parameters_listener listener_changue_instance) {
+            this.listener_changue_instance = listener_changue_instance;
+        }
 
         public notifications_events getListener() {
             return listener;
@@ -223,9 +252,14 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             notificationsHOlder h = (notificationsHOlder)holder;
+            if(notificationBeans.get(position).getBody().length() > 80) {
+                h.body_notification.setText(notificationBeans.get(position).getBody().substring(0,78) + "...");
+            }else{
                 h.body_notification.setText(notificationBeans.get(position).getBody());
+            }
+
+            h.fecha_notificacion.setText(notificationBeans.get(position).getFecha());
                 h.title_notification.setText(notificationBeans.get(position).getTitle());
-                Glide.with(context).load(notificationBeans.get(position).getUrl_resource()).into(h.ic_notification);
                 h.delete_notification.setOnClickListener(v -> {
                     if(listener!=null)
                         listener.delete(notificationBeans.get(position).getId_database());
@@ -247,6 +281,43 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
                     h.delete_notification.setVisibility(View.VISIBLE);
                     h.image_extra.setVisibility(View.GONE);
                 }
+                if(notificationBeans.get(position).getType_notification() >=3){
+                   h.ic_notification.setImageDrawable(context.getResources().getDrawable(R.drawable.logo));
+                }else{
+                    Glide.with(context).load(notificationBeans.get(position).getUrl_resource()).into(h.ic_notification);
+                }
+
+                h.root_notification.setOnClickListener(v -> {
+                    Bundle b = new Bundle();
+                    b.putInt(BUNDLES.ID_USUARIO,notificationBeans.get(position).getId_usuario());
+                    switch (notificationBeans.get(position).getType_notification()){
+                        case 0:
+                            //LIKES (ABRE EL FRAGMENT DEL PERFIL DEL USUARIO O LA PUBLICACION)
+                            b.putInt(BUNDLES.ID_USUARIO,notificationBeans.get(position).getId_usuario());
+                            listener_changue_instance.change_fragment_parameter(FragmentElement.INSTANCE_PREVIEW_PROFILE,b);
+                            break;
+                        case 1:
+                            //COMENTARIO ABRE EL FRAGMENT DE LOS COMENTARIOS
+                            b.putInt(BUNDLES.ID_POST,notificationBeans.get(position).getId_recurso()); // EL ID REPRESENTA EL ID DEL RECURSO
+                            b.putBoolean(BUNDLES.CAN_COMMENT,true);
+                            listener_changue_instance.change_fragment_parameter(FragmentElement.INSTANCE_COMENTARIOS,b);
+                            break;
+                        case 2:
+                            //NUEVA SOLICITUD DE AMIGO (ABRE EL PERFIL DEL AMIGO)
+                            b.putInt(BUNDLES.ID_USUARIO,notificationBeans.get(position).getId_usuario());
+                            listener_changue_instance.change_fragment_parameter(FragmentElement.INSTANCE_PREVIEW_PROFILE,b);
+                            break;
+                        case 3:
+                            // ABRE EL FEED
+                            listener_changue_instance.change_fragment_parameter(FragmentElement.INSTANCE_FEED,b);
+                            break;
+                        case 4:
+                            //ABRE EL FRAGMENT DE LOS TIPS
+                            listener_changue_instance.change_fragment_parameter(FragmentElement.INSTANCE_TIPS,b);
+                            break;
+                        default:break;
+                    }
+                });
 
 
         }
@@ -257,7 +328,7 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
         }
 
         public class notificationsHOlder extends RecyclerView.ViewHolder{
-           TextView title_notification,body_notification;
+           TextView title_notification,body_notification,fecha_notificacion;
            RelativeLayout root_notification;
            ImagenCircular ic_notification;
            RelativeLayout delete_notification;
@@ -270,6 +341,7 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
                 root_notification = itemView.findViewById(R.id.root_notification);
                 delete_notification = itemView.findViewById(R.id.delete_notification);
                 image_extra = itemView.findViewById(R.id.image_extra);
+                fecha_notificacion = itemView.findViewById(R.id.fecha_notificacion);
             }
         }
     }
@@ -277,6 +349,13 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
     public interface  notifications_events{
         void delete(int id);
         void deleteAll(int id);
+    }
+
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        listener= (changue_fragment_parameters_listener) context;
     }
 }
 

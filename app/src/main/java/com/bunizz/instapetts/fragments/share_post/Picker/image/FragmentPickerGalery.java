@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -132,16 +133,20 @@ public class FragmentPickerGalery  extends Fragment implements  ImagePickerContr
         //recyclerView.setTag(ImagePickerFragment.IMAGE);
         recyclerView.setAdapter(adapter);
         crop_now.setOnClickListener(view1 -> {
-            Bundle b = new Bundle();
-            ArrayList<String> uri = new ArrayList<>();
-            List<Image> images_parameter = new ArrayList<>();
-            images_parameter = adapter.getSelectedImages();
-            for (int i =0; i<images_parameter.size();i++){
-                uri.add(images_parameter.get(i).getPath());
-            }
-            b.putStringArrayList("PATH_SELECTED",uri);
-            if(listener!=null){
-                listener.change_fragment_parameter(FragmentElement.INSTANCE_CROP_IMAGE,b);
+            if(adapter.getSelectedImages().size()>0) {
+                Bundle b = new Bundle();
+                ArrayList<String> uri = new ArrayList<>();
+                List<Image> images_parameter = new ArrayList<>();
+                images_parameter = adapter.getSelectedImages();
+                for (int i = 0; i < images_parameter.size(); i++) {
+                    uri.add(images_parameter.get(i).getPath());
+                }
+                b.putStringArrayList("PATH_SELECTED", uri);
+                if (listener != null) {
+                    listener.change_fragment_parameter(FragmentElement.INSTANCE_CROP_IMAGE, b);
+                }
+            }else{
+                Toast.makeText(getActivity(),"Selecciona una imagen primero",Toast.LENGTH_LONG).show();
             }
         });
         spinner_album.setAdapter(albumAdapter);
@@ -271,6 +276,11 @@ public class FragmentPickerGalery  extends Fragment implements  ImagePickerContr
     @Override
     public boolean onItemLongClickListener(@NotNull ViewGroup parent, @NotNull View view, int position, @NotNull Image item, boolean selectable) {
         if (!selectable) return false;
+        if(adapter.getSelectedImages().size()>0)
+           crop_now.setVisibility(View.VISIBLE);
+        else
+            crop_now.setVisibility(View.VISIBLE);
+
         adapter.updateItemView(position, config.getMaxCount());
         return true;
     }

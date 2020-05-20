@@ -3,9 +3,11 @@ package com.bunizz.instapetts.fragments.profile;
 import android.content.Context;
 import android.util.Log;
 
+import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.db.helpers.LikePostHelper;
+import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.db.helpers.SavedPostHelper;
 import com.bunizz.instapetts.fragments.login.MainLogin;
 import com.bunizz.instapetts.fragments.login.MainLoginContract;
@@ -31,6 +33,7 @@ public class ProfileUserPresenter implements   ProfileUserContract.Presenter {
     private static final String TAG = MainLogin.class.getSimpleName();
     SavedPostHelper savedPostHelper;
     LikePostHelper likePostHelper;
+    PetHelper petHelper;
     int RETRY =0;
     ProfileUserPresenter(ProfileUserContract.View view, Context context) {
         this.mView = view;
@@ -39,6 +42,7 @@ public class ProfileUserPresenter implements   ProfileUserContract.Presenter {
                 .create(WebServices.class);
         savedPostHelper = new SavedPostHelper(mContext);
         likePostHelper = new LikePostHelper(mContext);
+        petHelper = new PetHelper(this.mContext);
     }
 
     @Override
@@ -79,10 +83,11 @@ public class ProfileUserPresenter implements   ProfileUserContract.Presenter {
     }
 
     @Override
-    public void getPostUser(boolean one_user, int id_one) {
+    public void getPostUser(boolean one_user, int id_one,int filter) {
         PostFriendsBean postFriendsBean = new PostFriendsBean();
         postFriendsBean.setId_one(id_one);
         postFriendsBean.setTarget("ONE");
+        postFriendsBean.setFilter(filter);
         disposable.add(
                 apiService.getPosts(postFriendsBean)
                         .subscribeOn(Schedulers.io())
@@ -134,5 +139,10 @@ public class ProfileUserPresenter implements   ProfileUserContract.Presenter {
     @Override
     public boolean is_user_followed(int id_user) {
         return false;
+    }
+
+    @Override
+    public void updateMyPetLocal(PetBean petBean) {
+        petHelper.updateMyPet(petBean);
     }
 }

@@ -24,7 +24,7 @@
                 android:scaleType="centerCrop"
                 android:layout_centerVertical="true"
                 android:id="@+id/image_preview_smoot"
-                android:src="@drawable/perro_demo"
+                android:src="@drawable/ic_hand_pet_preload"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </androidx.cardview.widget.CardView>

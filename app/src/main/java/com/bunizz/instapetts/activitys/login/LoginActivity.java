@@ -470,6 +470,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
             i = new Intent(LoginActivity.this, Main.class);
             i.putExtra("LOGIN_AGAIN",1);
             i.putExtra("NEW_USER",1);
+            i.putExtra("FROM_PUSH",0);
             startActivity(i);
 
     }
@@ -489,6 +490,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         i.putExtra("LOGIN_AGAIN",1);
         i.putExtra(BUNDLES.DOWNLOADS_INFO,1);
         i.putExtra("NEW_USER",0);
+        i.putExtra("FROM_PUSH",0);
         startActivity(i);
     }
 
@@ -519,6 +521,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         i = new Intent(LoginActivity.this, Main.class);
         i.putExtra("LOGIN_AGAIN",1);
         i.putExtra("NEW_USER",1);
+        i.putExtra("FROM_PUSH",0);
         startActivity(i);
     }
 

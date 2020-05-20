@@ -10,7 +10,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
    <ImageView
        android:scaleType="centerCrop"
-       android:src="@drawable/perro_demo"
+       android:src="@drawable/ic_hand_pet_preload"
        android:layout_width="match_parent"
        android:layout_height="120dp"/>
 </androidx.cardview.widget.CardView>

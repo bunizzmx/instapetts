@@ -61,7 +61,7 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public ListAdapter(Context context) {
         this.context = context;
     }
-    Style style = Style.values()[14];
+    Style style = Style.values()[12];
     Sprite drawable = SpriteFactory.create(style);
 
     public ArrayList<Object> getData() {
@@ -140,7 +140,7 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if(data_parsed.getLikes()>0)
             f.num_likes_posts.setText("a " + data_parsed.getLikes() + " usuarios les gusta esto");
         else
-            f.num_likes_posts.setText("Se el primero en darle me gusta");
+            f.num_likes_posts.setText(context.getResources().getString(R.string.first_like));
         if(data_parsed.getDescription().isEmpty()){
                     f.description_posts.setVisibility(View.GONE);
                 }else{
@@ -150,7 +150,7 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 Glide.with(context).load(data_parsed.getUrl_photo_pet()).into(f.image_pet);
                 Glide.with(context).load(data_parsed.getUrl_photo_user()).into(f.mini_user_photo);
-                f.date_post.setText(App.fecha_lenguaje_humano(data_parsed.getDate_post()));
+                f.date_post.setText(App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()));
                 f.save_posts.setOnClickListener(view -> {
                     if(data_parsed.isSaved()) {
                         //listener_post.onDisfavorite(data_parsed.getId_post_from_web());

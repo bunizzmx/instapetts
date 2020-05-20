@@ -9,9 +9,10 @@ import java.util.ArrayList;
 public interface ProfileUserContract {
     interface Presenter {
         void getInfoUser(UserBean user);
-        void getPostUser(boolean one_user,int id_one);
+        void getPostUser(boolean one_user,int id_one,int filter);
         void follow(int id_user,boolean follow);
         boolean is_user_followed(int id_user);
+        void updateMyPetLocal(PetBean petBean);
     }
 
     interface View{

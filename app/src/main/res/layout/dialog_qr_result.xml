@@ -41,7 +41,7 @@
             android:layout_height="wrap_content">
             <com.bunizz.instapetts.utils.ImagenCircular
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/perro_demo"
+                android:src="@drawable/ic_hand_pet_preload"
                 android:layout_width="70dp"
                 android:layout_height="70dp"/>
 

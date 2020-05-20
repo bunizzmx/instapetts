@@ -112,7 +112,7 @@ public class FragmentPostPublicsSaved extends Fragment implements  PostPublicsSa
         list_posts_publics.setLayoutManager(new GridLayoutManager(getContext(),2));
         list_posts_publics.setAdapter(adapter);
         presenter.getPostPublics();
-        Style style = Style.values()[14];
+        Style style = Style.values()[12];
         Sprite drawable = SpriteFactory.create(style);
         progres_image.setIndeterminateDrawable(drawable);
         progres_image.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));

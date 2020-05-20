@@ -2,6 +2,7 @@ package com.bunizz.instapetts.fragments.feed;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -10,11 +11,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,7 +59,9 @@ import com.bunizz.instapetts.utils.loadings.Style;
 import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
 
 import com.bunizz.instapetts.utils.video_player.PlayerViewHolder;
+import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 
 import java.util.ArrayList;
 
@@ -72,7 +77,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     changue_fragment_parameters_listener listener;
     postsListener listener_post;
     open_camera_histories_listener listener_open_h;
-    Style style = Style.values()[14];
+    Style style = Style.values()[12];
     Sprite drawable = SpriteFactory.create(style);
     private RequestManager requestManager_param;
     public postsListener getListener_post() {
@@ -120,6 +125,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_POST_VIDEO=4;
     private static final int TYPE_HISTORI = 2;
     private static final int TYPE_EMPTY = 3;
+    private static final int TYPE_ADD = 5;
     public FeedAdapter(Context context,ArrayList<Object> data) {
         this.context = context;
         this.data.addAll(data);
@@ -164,11 +170,15 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }else if(recyclerViewItem instanceof DataEmptyBean){
             return TYPE_EMPTY;
         }else{
-            PostBean validate = (PostBean) data.get(position);
-            if(validate.getType_post() == 0)
-                 return TYPE_POST;
-            else
-                return TYPE_POST_VIDEO;
+            if(recyclerViewItem instanceof  UnifiedNativeAd){
+                return  TYPE_ADD;
+            }else{
+                PostBean validate = (PostBean) data.get(position);
+                if(validate.getType_post() == 0)
+                    return TYPE_POST;
+                else
+                    return TYPE_POST_VIDEO;
+            }
         }
     }
 
@@ -194,6 +204,10 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case TYPE_POST_VIDEO:
                 view = getInflatedView(parent, R.layout.item_feed_post_video);
                 return new PlayerViewHolder(view);
+
+            case TYPE_ADD:
+                view = getInflatedView(parent, R.layout.ad_unified);
+                return new UnifiedAddHolder(view);
 
             case TYPE_HISTORI:
             default:
@@ -257,9 +271,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
                 if(mo.getLikes()>0)
-                    vid_h.num_likes_posts.setText("a " + mo.getLikes() + " usuarios les gusta esto");
+                    vid_h.num_likes_posts.setText(" " + mo.getLikes() + " " +  context.getResources().getString(R.string.likes));
                 else
-                    vid_h.num_likes_posts.setText("Se el primero en darle me gusta");
+                    vid_h.num_likes_posts.setText(context.getResources().getString(R.string.first_like));
 
                 vid_h.num_comments_layout.setOnClickListener(v -> {
                     if(mo.getCan_comment()==1)
@@ -273,7 +287,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 aspectBean = App.getInstance().getAspect(mo.getAspect());
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(aspectBean.getWidth(), aspectBean.getHeight());
                 vid_h.root_multiple_image.setLayoutParams(layoutParams);
-                vid_h.icon_like.setOnClickListener(view -> {
+                vid_h.l_icon_like.setOnClickListener(view -> {
                     if(!mo.isLiked()) {
                         vid_h.layout_double_tap_like.setVisibility(View.VISIBLE);
                         vid_h.layout_double_tap_like.animate_icon(vid_h.layout_double_tap_like);
@@ -311,8 +325,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         .placeholder(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
                         .error(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
                         .into(vid_h.mini_user_photo);
-                vid_h.date_post.setText(App.fecha_lenguaje_humano(mo.getDate_post()));
-                vid_h.save_posts.setOnClickListener(view -> {
+                vid_h.date_post.setText("Hace " + App.getInstance().fecha_lenguaje_humano(mo.getDate_post()));
+                vid_h.l_saved_post.setOnClickListener(view -> {
                     if(mo.isSaved()) {
                         mo.setSaved(false);
                         listener_post.onDisfavorite(mo.getId_post_from_web());
@@ -337,7 +351,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
                 vid_h.open_options_posts.setOnClickListener(view -> listener_post.openMenuOptions(mo.getId_post_from_web(),mo.getId_usuario(),mo.getUuid()));
 
-                vid_h.icon_commentar.setOnClickListener(v -> {
+                vid_h.l_icon_commentar.setOnClickListener(v -> {
                     if(mo.getCan_comment()==1)
                         listener_post.commentPost(mo.getId_post_from_web(),false);
                     else
@@ -362,7 +376,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 else
                     f.addres_post.setVisibility(View.GONE);
 
-                f.icon_commentar.setOnClickListener(v -> {
+                f.l_icon_commentar.setOnClickListener(v -> {
                     if(data_parsed.getCan_comment()==1)
                         listener_post.commentPost(data_parsed.getId_post_from_web(),false);
                     else
@@ -433,7 +447,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }).into(f.single_image);
 
                 }
-                f.icon_like.setOnClickListener(view -> {
+                f.l_icon_like.setOnClickListener(view -> {
                     if(!data_parsed.isLiked()) {
                         f.layout_double_tap_like.setVisibility(View.VISIBLE);
                         f.layout_double_tap_like.animate_icon(f.layout_double_tap_like);
@@ -462,9 +476,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 f.name_pet.setText(data_parsed.getName_pet());
                 f.name_user_posts.setText(data_parsed.getName_user());
                 if(data_parsed.getLikes()>0)
-                   f.num_likes_posts.setText("a " + data_parsed.getLikes() + " usuarios les gusta esto");
+                   f.num_likes_posts.setText( "" +data_parsed.getLikes() + " " + context.getResources().getString(R.string.likes));
                 else
-                    f.num_likes_posts.setText("Se el primero en darle me gusta");
+                    f.num_likes_posts.setText(context.getResources().getString(R.string.first_like));
                 if(data_parsed.getDescription().isEmpty()){
                     f.description_posts.setVisibility(View.GONE);
                 }else{
@@ -480,8 +494,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         .placeholder(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
                         .error(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
                         .into(f.mini_user_photo);
-                f.date_post.setText(App.fecha_lenguaje_humano(data_parsed.getDate_post()));
-                f.save_posts.setOnClickListener(view -> {
+                f.date_post.setText( "Hace " + App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()));
+                f.l_saved_post.setOnClickListener(view -> {
                      if(data_parsed.isSaved()) {
                          data_parsed.setSaved(false);
                          listener_post.onDisfavorite(data_parsed.getId_post_from_web());
@@ -507,6 +521,11 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 f.open_options_posts.setOnClickListener(view -> listener_post.openMenuOptions(data_parsed.getId_post_from_web(),data_parsed.getId_usuario(),data_parsed.getUuid()));
 
 
+                break;
+
+            case TYPE_ADD:
+                UnifiedNativeAd nativeAd = (UnifiedNativeAd) data.get(position);
+                populateNativeAdView(nativeAd, ((UnifiedAddHolder) holder).getAdView());
                 break;
 
 
@@ -540,8 +559,12 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         ImageView icon_commentar;
         TextView num_coments;
         LinearLayout num_comments_layout;
+        RelativeLayout l_icon_like,l_icon_commentar,l_saved_post;
         public FeedHolder(@NonNull View itemView) {
             super(itemView);
+            l_icon_commentar = itemView.findViewById(R.id.l_icon_commentar);
+            l_icon_like = itemView.findViewById(R.id.l_icon_like);
+            l_saved_post = itemView.findViewById(R.id.l_saved_post);
             card_number_indicator = itemView.findViewById(R.id.card_number_indicator);
             label_number_indicator = itemView.findViewById(R.id.label_number_indicator);
             root_preview_perfil_click = itemView.findViewById(R.id.root_preview_perfil_click);
@@ -595,5 +618,56 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return  true;
         else
             return false;
+    }
+
+
+    private void populateNativeAdView(UnifiedNativeAd nativeAd,
+                                      UnifiedNativeAdView adView) {
+        // Some assets are guaranteed to be in every UnifiedNativeAd.
+        ((TextView) adView.getHeadlineView()).setText(nativeAd.getHeadline());
+        ((TextView) adView.getBodyView()).setText(nativeAd.getBody());
+        ((Button) adView.getCallToActionView()).setText(nativeAd.getCallToAction());
+        ((Button) adView.getCallToActionView()).setBackground(context.getResources().getDrawable(R.drawable.button_create_acount));
+        ((Button) adView.getCallToActionView()).setTextColor(Color.WHITE);
+        NativeAd.Image icon = nativeAd.getIcon();
+
+        if (icon == null) {
+            adView.getIconView().setVisibility(View.INVISIBLE);
+        } else {
+            ((ImageView) adView.getIconView()).setImageDrawable(icon.getDrawable());
+            adView.getIconView().setVisibility(View.VISIBLE);
+        }
+
+        if (nativeAd.getPrice() == null) {
+            adView.getPriceView().setVisibility(View.INVISIBLE);
+        } else {
+            adView.getPriceView().setVisibility(View.VISIBLE);
+            ((TextView) adView.getPriceView()).setText(nativeAd.getPrice());
+        }
+
+        if (nativeAd.getStore() == null) {
+            adView.getStoreView().setVisibility(View.INVISIBLE);
+        } else {
+            adView.getStoreView().setVisibility(View.VISIBLE);
+            ((TextView) adView.getStoreView()).setText(nativeAd.getStore());
+        }
+
+        if (nativeAd.getStarRating() == null) {
+            adView.getStarRatingView().setVisibility(View.INVISIBLE);
+        } else {
+            ((RatingBar) adView.getStarRatingView())
+                    .setRating(nativeAd.getStarRating().floatValue());
+            adView.getStarRatingView().setVisibility(View.VISIBLE);
+        }
+
+        if (nativeAd.getAdvertiser() == null) {
+            adView.getAdvertiserView().setVisibility(View.INVISIBLE);
+        } else {
+            ((TextView) adView.getAdvertiserView()).setText(nativeAd.getAdvertiser());
+            adView.getAdvertiserView().setVisibility(View.VISIBLE);
+        }
+
+        // Assign native ad object to the native view.
+        adView.setNativeAd(nativeAd);
     }
 }

@@ -28,6 +28,10 @@ import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.wizardPets.adapters.SearchRazaAdapter;
 import com.bunizz.instapetts.listeners.change_instance_wizard;
 import com.bunizz.instapetts.listeners.process_save_pet_listener;
+import com.bunizz.instapetts.utils.loadings.SpinKitView;
+import com.bunizz.instapetts.utils.loadings.SpriteFactory;
+import com.bunizz.instapetts.utils.loadings.Style;
+import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,12 +46,16 @@ public class FragmentSearchPet extends Fragment  implements SearchPetContract.Vi
     @BindView(R.id.list_words_search)
     RecyclerView list_words_search;
 
+    @BindView(R.id.spin_kit)
+    SpinKitView spin_kit;
 
     @BindView(R.id.serach_raza)
     EditText serach_raza;
     String texto_buscado="";
     process_save_pet_listener listener_pet_config;
 
+    Style style = Style.values()[12];
+    Sprite drawable = SpriteFactory.create(style);
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.layout_no_se_raza)
@@ -94,6 +102,8 @@ public class FragmentSearchPet extends Fragment  implements SearchPetContract.Vi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        spin_kit.setIndeterminateDrawable(drawable);
+        spin_kit.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         list_words_search.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter.setListener(new change_instance_wizard() {
             @Override
@@ -134,6 +144,22 @@ public class FragmentSearchPet extends Fragment  implements SearchPetContract.Vi
     }
 
 
+   public  void research_raza(){
+        if(presenter !=null && list_words_search!=null) {
+            Bundle bundle = getArguments();
+            if (bundle != null) {
+                Log.e("PET_PARAMETER", "-->" + TYPE_PET);
+                TYPE_PET = bundle.getInt(BUNDLES.TYPE_PET);
+            }
+            adapter.clear();
+            spin_kit.setVisibility(View.VISIBLE);
+            presenter.downloadCatalogo(TYPE_PET);
+        }else{
+            Log.e("AUN_NO_SE","CONSTRUYE");
+        }
+    }
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -143,11 +169,13 @@ public class FragmentSearchPet extends Fragment  implements SearchPetContract.Vi
 
     @Override
     public void showCatalogo(ArrayList<RazaBean> data,String query) {
+        spin_kit.setVisibility(View.GONE);
       adapter.setData(data,query);
     }
 
     @Override
     public void saveRazas(ArrayList<RazaBean> data) {
+        spin_kit.setVisibility(View.GONE);
         razasfor_database.clear();
         razasfor_database.addAll(data);
         SaveDictionaryTask task =new  SaveDictionaryTask();

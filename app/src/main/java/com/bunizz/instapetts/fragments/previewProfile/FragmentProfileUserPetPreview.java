@@ -38,6 +38,7 @@ import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
 import com.bunizz.instapetts.fragments.profile.PetsPropietaryAdapter;
 import com.bunizz.instapetts.fragments.profile.ProfileUserContract;
+import com.bunizz.instapetts.fragments.search.posts.FragmentListGalery;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.folowFavoriteListener;
@@ -55,6 +56,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.http.POST;
 
 public class FragmentProfileUserPetPreview extends Fragment implements  ProfileUserContract.View {
 
@@ -112,7 +114,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
 
 
 
-    Style style = Style.values()[14];
+    Style style = Style.values()[12];
     Sprite drawable = SpriteFactory.create(style);
     folowFavoriteListener listener_follow;
 
@@ -125,6 +127,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     ViewPagerAdapter adapter_pager;
     PetHelper petHelper;
     PreviewProfileUserPresenter presenter;
+    int POSITION_PAGER =0;
 
     PetsPropietaryAdapter petsPropietaryAdapter;
     int ID_USER_PARAMETER=0;
@@ -152,9 +155,9 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         super.onCreate(savedInstanceState);
         petsPropietaryAdapter = new PetsPropietaryAdapter(getContext());
         adapter_pager = new ViewPagerAdapter(getChildFragmentManager());
-        adapter_pager.addFragment(new FragmentPostGalery(), "Post");
-        adapter_pager.addFragment(new FragmentPostGalery(), "Favoritos");
-        adapter_pager.addFragment(new FragmentPostGalery(), "Post Privados");
+        adapter_pager.addFragment(new FragmentPostGalery(), "Publicaciones");
+        adapter_pager.addFragment(new FragmentPostGalery(), "Solo Videos");
+        adapter_pager.addFragment(new FragmentPostGalery(), "Fotos y galerias");
         petHelper = new PetHelper(getContext());
         presenter = new PreviewProfileUserPresenter(this,getContext());
         Bundle bundle=getArguments();
@@ -178,7 +181,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
             userBean.setId(ID_USER_PARAMETER);
             userBean.setUuid("xxxx");
             presenter.getInfoUser(userBean);
-            presenter.getPostUser(true,userBean.getId());
+            presenter.getPostUser(true,userBean.getId(),POSITION_PAGER);
         }
 
     }
@@ -208,6 +211,31 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         });
         list_pets_propietary.setAdapter(petsPropietaryAdapter);
         viewpager_profile.setAdapter(adapter_pager);
+        viewpager_profile.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                POSITION_PAGER = position;
+                Fragment frag = adapter_pager.getItem(POSITION_PAGER);
+                if (frag instanceof FragmentPostGalery) {
+                    if(!((FragmentPostGalery) frag).isDataAdded()) {
+                        Log.e("DATOS_CARGADOS","YA_CARGUE_DATOS_AQUI : " + POSITION_PAGER);
+                        presenter.getPostUser(true, userBean.getId(), POSITION_PAGER);
+                    }
+                    else
+                        Log.e("DATOS_CARGADOS","YA_CARGUE_DATOS_AQUI");
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         tabs_profile_propietary.setViewPager(viewpager_profile);
         spinky_loading_profile_info.setIndeterminateDrawable(drawable);
         spinky_loading_profile_info.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
@@ -221,7 +249,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         userBean.setId(ID_USER_PARAMETER);
         userBean.setUuid("xxxx");
         presenter.getInfoUser(userBean);
-        presenter.getPostUser(true,userBean.getId());
+        presenter.getPostUser(true,userBean.getId(),POSITION_PAGER);
     }
 
 
@@ -263,13 +291,13 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
                 userBean.setId(ID_USER_PARAMETER);
                 userBean.setUuid("xxxx");
                 presenter.getInfoUser(userBean);
-                presenter.getPostUser(true,userBean.getId());
+                presenter.getPostUser(true,userBean.getId(),POSITION_PAGER);
             } else {
                 IS_MISMO_USER = false;
                 userBean.setId(ID_USER_PARAMETER);
                 userBean.setUuid("xxxx");
                 presenter.getInfoUser(userBean);
-                presenter.getPostUser(true,userBean.getId());
+                presenter.getPostUser(true,userBean.getId(),POSITION_PAGER);
 
             }
             paint_buttons();
@@ -337,7 +365,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     @Override
     public void showPostUser(ArrayList<PostBean> posts) {
         Log.e("SETDATA","ONMY_PROFILE" + posts.size());
-        Fragment frag = adapter_pager.getItem(0);
+        Fragment frag = adapter_pager.getItem(POSITION_PAGER);
         POSTS.clear();
         POSTS.addAll(posts);
         ArrayList<Object> results = new ArrayList<>();

@@ -21,6 +21,7 @@ import com.bunizz.instapetts.beans.NotificationBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.NotificationHelper;
+import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.services.NotificationsService;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -40,14 +41,18 @@ public class NotificationsManagers extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
         Log.e("ONCREATE_APP","SERVICE NOTIF");
         notificationHelper = new NotificationHelper(this);
+        notificationBean = new NotificationBean();
+        String id_resource="";
         String title = remoteMessage.getNotification().getTitle();
         String body =  remoteMessage.getNotification().getBody();
         String type_notification = remoteMessage.getData().get("type_notification");
         String url_resource = remoteMessage.getData().get("url_foto");
         String id_usuario = remoteMessage.getData().get("id_usuario");
         String url_extra = remoteMessage.getData().get("url_extra");
-
-        notificationBean = new NotificationBean();
+        if(Integer.parseInt(type_notification) <=2){
+           id_resource = remoteMessage.getData().get("id_resource");
+           notificationBean.setId_recurso(Integer.parseInt(id_resource));
+        }
         notificationBean.setBody(body);
         notificationBean.setTitle(title);
         notificationBean.setType_notification( Integer.parseInt(type_notification));
@@ -59,9 +64,9 @@ public class NotificationsManagers extends FirebaseMessagingService {
         switch (notificationBean.getType_notification()){
             case 0:
                 if(App.read(PREFERENCES.PUSH_ME_GUSTAS,true))
-                    buildNotification(title,body);
+                    buildNotification(title,body,notificationBean);
                 else
-                    Log.e("PUSH_BLOQUEADA","ME GUSTAST");
+                    buildNotification(title,body,notificationBean);
                 break;
         }
 
@@ -79,10 +84,28 @@ public class NotificationsManagers extends FirebaseMessagingService {
 
     }
 
-    void buildNotification(String title,String body){
+    void buildNotification(String title,String body,NotificationBean notificationBean){
         Intent intent;
         intent = new Intent(this, Main.class);
+        intent.putExtra("FROM_PUSH",1);
         intent.putExtra("LOGIN_AGAIN",0);
+        if(notificationBean.getType_notification() == 0){
+            intent.putExtra("ID_RESOURCE",notificationBean.getId_recurso());
+            intent.putExtra("TYPE_FRAGMENT", FragmentElement.INSTANCE_PREVIEW_PROFILE);
+        }else if(notificationBean.getType_notification() == 1){
+            intent.putExtra("ID_RESOURCE",notificationBean.getId_recurso());
+            intent.putExtra("TYPE_FRAGMENT", FragmentElement.INSTANCE_COMENTARIOS);
+        }else if(notificationBean.getType_notification() == 2){
+            intent.putExtra("ID_RESOURCE",notificationBean.getId_recurso());
+            intent.putExtra("TYPE_FRAGMENT", FragmentElement.INSTANCE_PREVIEW_PROFILE);
+        }
+        else if(notificationBean.getType_notification() == 3){
+            intent.putExtra("TYPE_FRAGMENT", FragmentElement.INSTANCE_FEED);
+        }
+        else if(notificationBean.getType_notification() == 4){
+            intent.putExtra("TYPE_FRAGMENT", FragmentElement.INSTANCE_TIPS);
+        }
+
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         int notificationId = 1;

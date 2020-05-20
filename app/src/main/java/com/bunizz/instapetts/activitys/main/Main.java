@@ -192,7 +192,9 @@ public class Main extends AppCompatActivity implements change_instance,
     boolean SIDE_OPEN=false;
 
     String addressOutput="";
-
+    int TYPE_FRAGMENT_PUSH = 999;
+    int FROM_PUSH =0;
+    Bundle b_from_push = new Bundle();
 
     private AddressResultReceiver resultReceiver;
 
@@ -335,6 +337,7 @@ public class Main extends AppCompatActivity implements change_instance,
         registerReceiver(mainPagerReceiver, server_connected);
         if(b!=null)
         {
+            FROM_PUSH = b.getInt("FROM_PUSH");
             int res  = b.getInt(BUNDLES.DOWNLOADS_INFO);
             int is_login_again = b.getInt("LOGIN_AGAIN");
             int new_u = b.getInt("NEW_USER");
@@ -348,6 +351,17 @@ public class Main extends AppCompatActivity implements change_instance,
             }
             if(is_login_again == 1){
                 presenter.getFileBackup();
+            }
+            if(FROM_PUSH == 1){
+                int ID_RESOURCE=0;
+                TYPE_FRAGMENT_PUSH = b.getInt("TYPE_FRAGMENT");
+                ID_RESOURCE = b.getInt("ID_RESOURCE");
+                if(TYPE_FRAGMENT_PUSH == FragmentElement.INSTANCE_PREVIEW_PROFILE){
+                    b_from_push.putInt(BUNDLES.ID_USUARIO,ID_RESOURCE);
+                }else if(TYPE_FRAGMENT_PUSH == FragmentElement.INSTANCE_COMENTARIOS){
+                    b_from_push.putInt(BUNDLES.ID_POST,ID_RESOURCE);
+                    b_from_push.putBoolean(BUNDLES.CAN_COMMENT,true);
+                }
             }
         }
 
@@ -443,32 +457,25 @@ public class Main extends AppCompatActivity implements change_instance,
         presenter.downloadMyPets(userBean);
     }
 
-    public void changeStatusBarCNAME_USUARIOSolor(int color) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            //window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), color));
-            window.setNavigationBarColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
-        }
-    }
-
     private void setupFirstFragment() {
-        repaint_nav(R.id.tab_feed);
-        mCurrentFragment = new FragmentElement<>(null, FeedFragment.newInstance(), FragmentElement.INSTANCE_FEED, true);
-        change_main(mCurrentFragment);
+        if(FROM_PUSH == 0){
+            repaint_nav(R.id.tab_feed);
+            mCurrentFragment = new FragmentElement<>(null, FeedFragment.newInstance(), FragmentElement.INSTANCE_FEED, true);
+            change_main(mCurrentFragment);
+        }else{
+                changeOfInstance(TYPE_FRAGMENT_PUSH,b_from_push);
+        }
     }
 
 
     private void change_main(FragmentElement fragment) {
-        if (fragment != null) {
-            mCurrentFragment = fragment;
-            if (stack_feed.size() <= 0) {
-                stack_feed.push(mCurrentFragment);
+            if (fragment != null) {
+                mCurrentFragment = fragment;
+                if (stack_feed.size() <= 0) {
+                    stack_feed.push(mCurrentFragment);
+                }
             }
-        }
-        inflateFragment();
+            inflateFragment();
     }
 
     private void change_detail_tip(FragmentElement fragment,Bundle data) {
@@ -519,6 +526,7 @@ public class Main extends AppCompatActivity implements change_instance,
                 stack_profile_pet.push(mCurrentFragment);
             }
         }
+        ((FragmentProfileUserPet) mCurrentFragment.getFragment()).reloadMyData();
         inflateFragment();
     }
 
@@ -1128,8 +1136,8 @@ public class Main extends AppCompatActivity implements change_instance,
 
    @Override
    public void open_target_post(){
-       final SpannableString spannedDesc = new SpannableString("Configura a tu mascota para asignarle un perfil.");
-       TapTargetView.showFor(this, TapTarget.forView(findViewById(R.id.tab_add_image), "Agrega una mascota", spannedDesc)
+       final SpannableString spannedDesc = new SpannableString(getApplicationContext().getResources().getString(R.string.config_fist_foto));
+       TapTargetView.showFor(this, TapTarget.forView(findViewById(R.id.tab_add_image), getApplicationContext().getResources().getString(R.string.add_first_photo), spannedDesc)
                .cancelable(false)
                .drawShadow(true)
                .tintTarget(false), new TapTargetView.Listener() {
@@ -1273,11 +1281,15 @@ public class Main extends AppCompatActivity implements change_instance,
                 close_smoot.setOnClickListener(view -> {
                     root_progres_publish.setVisibility(View.GONE);
                 });
+                File cacheDir = new File(context.getCacheDir() + File.separator + "THUMBS_VIDEOS" + File.separator);
+                File[] files = cacheDir.listFiles();
+                if (files != null) {
+                    for (File file : files)
+                        file.delete();
+                }
             }
         }
     };
-
-
 
     private class GenerateFileTask extends AsyncTask<Void, Integer, Boolean> {
        ArrayList<Integer> list_ids = new ArrayList<>();

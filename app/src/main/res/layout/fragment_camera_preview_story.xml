@@ -102,7 +102,7 @@
                 android:textColor="@color/black"
                 android:fontFamily="@font/avenir_b"
                 android:layout_marginRight="10dp"
-                android:text="Compartir"
+                android:text="@string/share"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <ImageView

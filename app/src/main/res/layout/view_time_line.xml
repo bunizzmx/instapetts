@@ -111,8 +111,7 @@
             android:layout_gravity="center_horizontal"
             android:max="1000"
             android:progressDrawable="@android:color/transparent"
-            android:secondaryProgress="0"
-            android:thumb="@drawable/apptheme_text_select_handle_middle"/>
+            android:secondaryProgress="0" />
 
         <com.bunizz.instapetts.utils.trimVideo2.view.ProgressBarView
             android:id="@+id/timeVideoView"

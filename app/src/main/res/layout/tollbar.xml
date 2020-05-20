@@ -14,7 +14,7 @@
         android:layout_width="50dp"
         android:layout_height="match_parent">
         <ImageView
-            android:tint="#5A5959"
+            android:tint="@color/black"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:src="@drawable/ic_upload_story"
@@ -22,12 +22,12 @@
             android:layout_height="20dp"/>
     </RelativeLayout>
    <TextView
-       android:layout_toRightOf="@+id/new_story"
        android:id="@+id/label_toolbar"
-       style="@style/FontNormalTitleSecondary"
-       android:layout_marginLeft="10dp"
+       style="@style/titleapp"
+       android:textSize="18dp"
        android:layout_centerVertical="true"
-       android:text="news Feed"
+       android:layout_centerHorizontal="true"
+       android:text="@string/app_name"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"/>
     <RelativeLayout

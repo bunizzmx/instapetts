@@ -2,10 +2,7 @@ package com.bunizz.instapetts.fragments.feed;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -28,20 +23,16 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.bunizz.instapetts.App;
+import com.bunizz.instapetts.BuildConfig;
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.activitys.camera_history.CameraHistoryActivity;
+import com.bunizz.instapetts.activitys.reports.ReportActiviy;
 import com.bunizz.instapetts.beans.HistoriesBean;
-import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
-import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
-import com.bunizz.instapetts.db.helpers.FollowsHelper;
 import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
-import com.bunizz.instapetts.fragments.login.login.FragmentLogin;
 import com.bunizz.instapetts.listeners.actions_dialog_profile;
-import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.postsListener;
@@ -52,10 +43,14 @@ import com.bunizz.instapetts.utils.loadings.Style;
 import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
 import com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerView;
 import com.bunizz.instapetts.web.parameters.PostActions;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -89,7 +84,8 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
 
     open_camera_histories_listener listener_open_camera_h;
      IdsUsersHelper followsHelper;
-    ArrayList<Object> data = new ArrayList<>();
+    ArrayList<Object> data_feed = new ArrayList<>();
+    private List<UnifiedNativeAd> mNativeAds = new ArrayList<>();
     boolean HAS_FRIENDS =false;
 
     public static FeedFragment newInstance() {
@@ -122,14 +118,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         else
             HAS_FRIENDS=false;
 
-        HistoriesBean my_storie_bean = new HistoriesBean();
-        if(!mPresenter.getMyStories().getHistorias().isEmpty()) {
-            my_storie_bean = mPresenter.getMyStories();
-            data.add(my_storie_bean);
-        }else {
-            data.add(new HistoriesBean());
-        }
-        feedAdapter = new FeedAdapter(getContext(),data);
+        feedAdapter = new FeedAdapter(getContext(), data_feed);
         feedAdapter.setListener(new changue_fragment_parameters_listener() {
             @Override
             public void change_fragment_parameter(int type_fragment, Bundle data) {
@@ -175,11 +164,20 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
             @Override
             public void openMenuOptions(int id_post,int id_usuario,String uuid) {
                 DialogOptionsPosts optionsPosts = new DialogOptionsPosts(getContext(),id_post,id_usuario,uuid);
-                optionsPosts.setListener(id_post1 -> {
-                    PostBean postBean = new PostBean();
-                    postBean.setId_post_from_web(id_post1);
-                    postBean.setTarget("DELETE");
-                    mPresenter.deletePost(postBean);
+                optionsPosts.setListener(new actions_dialog_profile() {
+                    @Override
+                    public void delete_post(int id_post) {
+                        PostBean postBean = new PostBean();
+                        postBean.setId_post_from_web(id_post);
+                        postBean.setTarget("DELETE");
+                        mPresenter.deletePost(postBean);
+                    }
+
+                    @Override
+                    public void reportPost(int id_post) {
+                        Intent reportIntent = new Intent(getActivity(),ReportActiviy.class);
+                        startActivity(reportIntent);
+                    }
                 });
                 optionsPosts.show();
             }
@@ -192,7 +190,6 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
                 listener.change_fragment_parameter(FragmentElement.INSTANCE_COMENTARIOS,b);
             }
         });
-
 
     }
 
@@ -223,7 +220,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
                 mPresenter.geet_feed_recomended(false, App.read(PREFERENCES.ID_USER_FROM_WEB,0));
             }
         });
-        Style style = Style.values()[14];
+        Style style = Style.values()[12];
         Sprite drawable = SpriteFactory.create(style);
         spin_kit.setIndeterminateDrawable(drawable);
         spin_kit.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
@@ -250,8 +247,10 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     public void show_feed(ArrayList<PostBean> data,ArrayList<HistoriesBean> data_stories) {
         Log.e("SHOW_FEED","SI");
         refresh_feed.setRefreshing(false);
+        if(data.size()>0)
+            data_feed.clear();
+
         ArrayList<HistoriesBean> historiesBeans = new ArrayList<>();
-        ArrayList<Object> data_object= new ArrayList<>();
         if(!mPresenter.getMyStories().getHistorias().isEmpty()){
             historiesBeans.add(mPresenter.getMyStories());
         }else{
@@ -259,11 +258,14 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         }
         historiesBeans.addAll(data_stories);
         spin_kit.setVisibility(View.GONE);
-        data_object.add(new HistoriesBean());
-        data_object.addAll(data);
-        mRecyclerView.setMediaObjects(data_object);
+        data_feed.add(new HistoriesBean());
+        data_feed.addAll(data);
+        mRecyclerView.setMediaObjects(data_feed);
         feedAdapter.setHistoriesBeans(historiesBeans);
-        feedAdapter.addData(data_object);
+        if(App.getInstance().getAds().size()>0)
+            insertAdsInMenuItems(true);
+        else
+            feedAdapter.addData(data_feed);
     }
 
     @Override
@@ -344,6 +346,23 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     public void stop_player(){
         if(mRecyclerView!=null)
             mRecyclerView.onPausePlayer();
+    }
+
+
+    private void insertAdsInMenuItems(boolean more) {
+        mNativeAds = App.getInstance().getAds();
+        if (mNativeAds.size() <= 0) { return;}
+        int offset = mNativeAds.size() + 1;
+        int index = 3;
+        for (UnifiedNativeAd ad: mNativeAds) {
+            if(index< data_feed.size())
+                data_feed.add(index, ad);
+            if((offset % 2 != 0)) {}
+            else{offset +=1;}
+            index = index + offset;
+        }
+        feedAdapter.addData(data_feed);
+        refresh_feed.setRefreshing(false);
     }
 }
 

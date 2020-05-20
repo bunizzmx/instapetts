@@ -55,22 +55,37 @@
         android:layout_above="@+id/separator_comment"
         android:id="@+id/no_comments"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="60dp">
         <include layout="@layout/no_data"/>
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/separator_comment"
-        android:layout_above="@+id/layout_commentarios"
+        android:layout_above="@+id/layout_loanding_comments"
         android:background="@drawable/corner_line"
         android:layout_width="match_parent"
         android:layout_height="0.5sp"/>
     <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/layout_loanding_comments"
+        android:padding="8dp"
+        android:layout_above="@+id/layout_commentarios"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ProgressBar
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_width="25dp"
+            android:layout_height="25dp"/>
+    </RelativeLayout>
+    <RelativeLayout
         android:id="@+id/layout_commentarios"
-        android:padding="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="wrap_content">
         <com.bunizz.instapetts.utils.ImagenCircular
+            android:layout_centerVertical="true"
             android:layout_margin="5dp"
             android:id="@+id/image_user_comment"
             app:civ_border_width="2dp"
@@ -88,28 +103,29 @@
             android:layout_toRightOf="@+id/image_user_comment"
             android:layout_toLeftOf="@+id/comment_now"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="60dp"/>
         <RelativeLayout
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_centerVertical="true"
             android:id="@+id/comment_now"
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_height="60dp">
             <TextView
+                android:layout_centerVertical="true"
                 android:textStyle="bold"
                 android:id="@+id/text_label"
                 android:textColor="#CAC7C7"
-                android:layout_centerVertical="true"
                 android:text="Publicar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </RelativeLayout>
         <RelativeLayout
+            android:layout_centerVertical="true"
+            android:visibility="gone"
             android:id="@+id/desactivate_comments"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="60dp">
             <TextView
                 android:text="Comentarios desactivados por el usuario"
                 android:layout_centerHorizontal="true"
@@ -118,4 +134,14 @@
                 android:layout_height="wrap_content"/>
         </RelativeLayout>
     </RelativeLayout>
+
+    <com.bunizz.instapetts.utils.loadings.SpinKitView
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView"
+        android:background="?selectableItemBackgroundBorderless"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:padding="10dp" />
 </RelativeLayout>

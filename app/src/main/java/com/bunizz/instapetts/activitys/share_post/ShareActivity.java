@@ -40,12 +40,14 @@ import com.bunizz.instapetts.fragments.share_post.Share.FragmentSharePost;
 import com.bunizz.instapetts.fragments.share_post.cropImages.ImageCropFragment;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.uploads;
+import com.bunizz.instapetts.utils.imagePicker.data.Image;
 import com.bunizz.instapetts.utils.videoCrop.VideoCropActivity;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 import java.util.UUID;
 
@@ -187,16 +189,16 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
         }
         else if (intanceType == FragmentElement.INSTANCE_PICKER_CAMERA) {
 
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        /*  Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-            }
+            }*/
 
-          /*  if (stack_picker_camera.size() == 0) {
+           if (stack_picker_camera.size() == 0) {
                 change_picker_camera(new FragmentElement<>("", CameraFragment.newInstace(), FragmentElement.INSTANCE_PICKER_CAMERA),bundle);
             } else {
                 change_picker_camera(stack_picker_camera.pop(),bundle);
-            }*/
+            }
         }
         else if (intanceType == FragmentElement.INSTANCE_SHARE) {
              Log.e("CHANGE_SHARE","yes");
@@ -369,6 +371,14 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
                         b.putInt(BUNDLES.VIDEO_DURATION,duracion);
                         changeOfInstance(FragmentElement.INSTANCE_SHARE,b);
             }
+        }else if(requestCode ==  REQUEST_IMAGE_CAPTURE){
+            Log.e("DATA","-->" + data.toString());
+            Bundle b = new Bundle();
+            ArrayList<String> uri = new ArrayList<>();
+           // uri.add()
+            b.putStringArrayList("PATH_SELECTED", uri);
+            changeOfInstance(FragmentElement.INSTANCE_CROP_IMAGE, b);
+
         }
     }
 

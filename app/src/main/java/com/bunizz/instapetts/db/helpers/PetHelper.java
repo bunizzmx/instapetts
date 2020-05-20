@@ -1,5 +1,6 @@
 package com.bunizz.instapetts.db.helpers;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
@@ -79,6 +80,14 @@ public class PetHelper extends GenericHelper {
             }
         }
         return pets;
+    }
+
+    public void updateMyPet(PetBean petBean){
+        Log.e("UPDATE_PET","-->:");
+        ContentValues valores = new ContentValues();
+        valores.put(RAZA_PET, petBean.getRaza_pet());
+        valores.put(RATING_PET, petBean.getRate_pet());
+        getWritableDatabase().update(TABLE_NAME,valores,"id_pet="+petBean.getId_pet()+"",null);
     }
 
     public PetBean getPetByid(String id) {

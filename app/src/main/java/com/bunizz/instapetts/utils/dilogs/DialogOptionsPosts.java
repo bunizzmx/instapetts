@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
@@ -26,6 +27,7 @@ public class DialogOptionsPosts extends BaseAlertDialog{
     String title_permision;
     actions_dialog_profile listener;
     RelativeLayout delete_post;
+    RelativeLayout report_post;
     int ID_POST =0;
     public actions_dialog_profile getListener() {
         return listener;
@@ -41,11 +43,19 @@ public class DialogOptionsPosts extends BaseAlertDialog{
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this.context);
         LayoutInflater inflater = LayoutInflater.from(this.context);
         dialogView = inflater.inflate(R.layout.dialog_options_posts, null);
+        report_post = dialogView.findViewById(R.id.report_post);
         delete_post = dialogView.findViewById(R.id.delete_post);
         delete_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 listener.delete_post(id_post);
+                dismiss();
+            }
+        });
+        report_post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.reportPost(id_post);
                 dismiss();
             }
         });

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public interface PostPublicsContract {
     interface Presenter {
-        void getPostPublics();
+        void getPostPublics(int type_search);
     }
 
     interface View{

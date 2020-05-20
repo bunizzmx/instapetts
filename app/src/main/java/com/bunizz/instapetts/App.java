@@ -24,6 +24,11 @@ import com.bunizz.instapetts.db.Utilities;
 import com.bunizz.instapetts.utils.AndroidIdentifier;
 import com.bunizz.instapetts.utils.dilogs.DialogPermision;
 import com.bunizz.instapetts.web.CONST;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -33,6 +38,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -60,8 +66,9 @@ public class App extends Application {
     private static FirebaseFirestore db;
 
     public static final String DATE_FROMAT_FOR_COMMENTS = "yyyy-MM-dd-HH-mm-ss";
-
-
+    private AdLoader adLoader;
+    ArrayList<UnifiedNativeAd> ads = new ArrayList<>();
+    private static final String AD_UNIT_ID = BuildConfig.ADS_NATIVO;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -76,7 +83,8 @@ public class App extends Application {
         Log.e("IDIOMA","-->" + idioma);
         write("IDIOMA",idioma);
         write(PREFERENCES.ANDROID_ID, Utilities.Md5Hash(new AndroidIdentifier(this).generateCombinationID()));
-
+        MobileAds.initialize(this ,this.getResources().getString(R.string.app_admob));
+        generateItemsForAds();
     }
 
    public  void clear_preferences(){
@@ -238,7 +246,7 @@ public class App extends Application {
 
 
 
-    public static String fecha_lenguaje_humano(String fecha){
+    public  String fecha_lenguaje_humano(String fecha){
         try {
 
             Date fechaInicial = StringToDate(fecha, "-", 0);
@@ -249,12 +257,12 @@ public class App extends Application {
             return cantidadTotalMinutos(calFechaInicial,calFechaFinal);
         }catch (Exception e){
             Log.e("Exceptiocccc","-->" + e.getMessage());
-            return  "Hace un momento";
+            return  getApplicationContext().getResources().getString(R.string.now) ;
         }
 
     }
 
-    public static String diferenciaHorasDias(long horas){
+    public  String diferenciaHorasDias(long horas){
         int meses =0;
         if((horas/24)>6){
                if(horas > 8064) {
@@ -264,35 +272,44 @@ public class App extends Application {
                         meses  = residuo / 872;
                         if(years==1) {
                             if(meses > 1)
-                                return years + " año " + " y  " + meses + " meses";
+                                return years + getApplicationContext().getResources().getString(R.string.years) + " y  " + meses + " " + getApplicationContext().getResources().getString(R.string.months);
                             else {
                                 if(meses ==0)
-                                   return years + " año ";
+                                   return years + getApplicationContext().getResources().getString(R.string.year);
                                 else
-                                    return years + " año " + " y  " + meses + " mes";
+                                    return years + getApplicationContext().getResources().getString(R.string.year)+ " y  " + meses + " " + getApplicationContext().getResources().getString(R.string.month);
                             }
                         }
                         else {
                             if(meses > 1)
-                                return years + " años " + " y  " + meses + " meses";
+                                return years + getApplicationContext().getResources().getString(R.string.years) + " y  " + meses + " " + getApplicationContext().getResources().getString(R.string.months);
                             else {
                                  if(meses==0)
-                                     return years + " años ";
+                                     return years + getApplicationContext().getResources().getString(R.string.years);
                                  else
-                                     return years + " años " + " y  " + meses + " mes";
+                                     return years + getApplicationContext().getResources().getString(R.string.years) + " y  " + meses + " " + getApplicationContext().getResources().getString(R.string.months);
                             }
                         }
                    }else{
                        if(years==1)
-                         return  years + " año";
+                         return  years + getApplicationContext().getResources().getString(R.string.year);
                        else
-                           return  years + " años ";
+                           return  years + getApplicationContext().getResources().getString(R.string.years);
                    }
                }
-               else
-                   return "Hace " + ((horas/24)/4)  + " semanas";
+               else{
+                   if((horas/24)/4 > 1)
+                     return  "" + ((horas/24)/4)  + " " + getApplicationContext().getResources().getString(R.string.weeks);
+                   else
+                       return  "" + ((horas/24)/4)  + " " + getApplicationContext().getResources().getString(R.string.week);
+               }
+
           }else{
-              return "Hace " + (horas/24)  + " dias";
+            if(horas/24 > 1)
+               return " " + (horas/24)  + " " + getApplicationContext().getResources().getString(R.string.days);
+            else
+                return " " + (horas/24)  + " " +  getApplicationContext().getResources().getString(R.string.day);
+
           }
 
     }
@@ -321,32 +338,32 @@ public class App extends Application {
         return  totalMinutos;
     }
 
-    public static String cantidadTotalMinutos(Calendar fechaInicial , Calendar fechaFinal){
+    public  String cantidadTotalMinutos(Calendar fechaInicial , Calendar fechaFinal){
         long totalMinutos=0;
         totalMinutos=((fechaFinal.getTimeInMillis()-fechaInicial.getTimeInMillis())/1000/60);
 
         if(totalMinutos > 0 && totalMinutos< 60) {
             if(totalMinutos==1){
-                return "Hace " + totalMinutos + " Minuto";
+                return getApplicationContext().getResources().getString(R.string.hace)  + " " + totalMinutos + " " + getApplicationContext().getResources().getString(R.string.minute);
             }else{
-                return "Hace " + totalMinutos + " Minutos";
+                return getApplicationContext().getResources().getString(R.string.hace) + " " + totalMinutos + " " + getApplicationContext().getResources().getString(R.string.minutes);
             }
 
         }else if(totalMinutos ==0){
-            return "Justo Ahora";
+            return getApplicationContext().getResources().getString(R.string.now);
         }else{
             return cantidadTotalHoras(fechaInicial,fechaFinal);
         }
     }
 
-    public static String cantidadTotalHoras(Calendar fechaInicial , Calendar fechaFinal){
+    public  String cantidadTotalHoras(Calendar fechaInicial , Calendar fechaFinal){
         long totalMinutos=0;
         totalMinutos=((fechaFinal.getTimeInMillis()-fechaInicial.getTimeInMillis())/1000/60/60);
         if(totalMinutos ==1){
-            return " Hace " + totalMinutos + " Hora";
+            return getApplicationContext().getResources().getString(R.string.hace) + " "+ totalMinutos + " "+ getApplicationContext().getResources().getString(R.string.hour);
         }else{
             if(totalMinutos < 24){
-                return " Hace " + totalMinutos + " Horas";
+                return getApplicationContext().getResources().getString(R.string.hace) + " "+ totalMinutos + " "+ getApplicationContext().getResources().getString(R.string.hours);
             }else{
                 return  diferenciaHorasDias(totalMinutos);
             }
@@ -479,4 +496,34 @@ public class App extends Application {
       return new AspectBean(width,height);
     }
 
+
+    public void generateItemsForAds(){
+        Log.e("GENERAMOS_NUEVOS","NUEVOS ADS");
+        AdLoader.Builder builder = new AdLoader.Builder(this,AD_UNIT_ID );
+        adLoader = builder.forUnifiedNativeAd(
+                unifiedNativeAd -> {
+                    if(ads.size() > 5)
+                        ads.clear();
+                    ads.add(unifiedNativeAd);
+                    if (!adLoader.isLoading()) {}
+                }).withAdListener(
+                new AdListener() {
+                    @Override
+                    public void onAdFailedToLoad(int errorCode) {
+                        if (!adLoader.isLoading()) {}
+                    }
+                }).build();
+        adLoader.loadAds(new AdRequest.Builder().build(), 1);
+    }
+
+    public ArrayList<UnifiedNativeAd> getAds() {
+        Log.e("ADS_AVIAVILITY","SI HAY YA:" + ads.size());
+        if(ads.size()>1)
+            generateItemsForAds();
+        return ads;
+    }
+
+    public void setAds(ArrayList<UnifiedNativeAd> ads) {
+        this.ads = ads;
+    }
 }

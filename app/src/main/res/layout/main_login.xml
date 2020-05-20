@@ -31,12 +31,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
-            android:src="@drawable/ic_hand_pet_preload"
+            android:src="@drawable/logo"
             android:layout_gravity="center_horizontal"
             android:layout_width="80dp"
             android:layout_height="80dp"/>
         <TextView
-            android:fontFamily="@font/avenir_black"
+            style="@style/titleapp"
             android:textSize="28dp"
             android:textColor="@color/primary"
             android:layout_marginTop="10dp"
@@ -61,7 +61,7 @@
             android:layout_gravity="center_vertical"
             android:fontFamily="@font/avenir_b"
             android:inputType="textEmailAddress"
-            android:hint="Correo"
+            android:hint="@string/mail"
             android:padding="10dp"
             android:background="#00FFFFFF"
             android:layout_width="match_parent"
@@ -83,7 +83,7 @@
             android:inputType="textPassword"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:hint="Contraseña"
+            android:hint="@string/password"
             android:padding="10dp"
             android:background="#00FFFFFF"
             android:layout_width="match_parent"
@@ -101,7 +101,7 @@
             android:layout_marginTop="40dp"
             android:textColor="@color/white"
             android:background="@drawable/button_create_acount"
-            android:text="Log in"
+            android:text="@string/login"
             android:textAllCaps="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -115,7 +115,7 @@
             <TextView
                 android:layout_centerHorizontal="true"
                 android:padding="5dp"
-                android:text="login or register whit"
+                android:text="@string/login_or"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </RelativeLayout>
@@ -182,13 +182,13 @@
             android:layout_centerHorizontal="true"
             android:id="@+id/politics"
             android:layout_alignParentBottom="true"
-            android:text="No tiene suna cuenta?"
+            android:text="@string/no_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
             style="@style/FontNormalTitle"
             android:padding="10dp"
-            android:text="registrate"
+            android:text="@string/register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>

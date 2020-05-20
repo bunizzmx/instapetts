@@ -25,7 +25,7 @@
             <ImageView
                 android:scaleType="centerCrop"
                 android:id="@+id/pet_chose_list"
-                android:src="@drawable/perro_demo"
+                android:src="@drawable/ic_hand_pet_preload"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </androidx.cardview.widget.CardView>
@@ -59,12 +59,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
+                android:id="@+id/raza_mascota_chose_pet"
                 android:textSize="12dp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:layout_alignParentRight="true"
                 android:layout_gravity="end"
-                android:text="BULLDOG"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </RelativeLayout>
@@ -81,11 +81,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
+                android:id="@+id/edad_pet_chose"
                 android:textSize="12dp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:layout_alignParentRight="true"
-                android:text="7 años"
+                android:text=""
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </RelativeLayout>
@@ -102,11 +103,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
+                android:id="@+id/rate_pet_chose_pet"
                 android:textSize="12dp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:layout_alignParentRight="true"
-                android:text="4.9"
+                android:text=""
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </RelativeLayout>

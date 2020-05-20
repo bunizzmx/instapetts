@@ -21,6 +21,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
+import com.bunizz.instapetts.App;
+import com.bunizz.instapetts.BuildConfig;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
@@ -37,8 +39,13 @@ import com.bunizz.instapetts.utils.loadings.Style;
 import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
 import com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerView;
 import com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerViewTips;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -76,7 +83,7 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
 
     @BindView(R.id.refresh_tips)
     SwipeRefreshLayout refresh_tips;
-
+    private List<UnifiedNativeAd> mNativeAds = new ArrayList<>();
     public static FragmentTips newInstance() {
         return new FragmentTips();
     }
@@ -119,11 +126,11 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
             presenter.getTips();
         });
         open_notifications.setVisibility(View.GONE);
-        Style style = Style.values()[14];
+        Style style = Style.values()[12];
         Sprite drawable = SpriteFactory.create(style);
         spin_kit.setIndeterminateDrawable(drawable);
         spin_kit.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
-        label_toolbar.setText("Tips y Noticias");
+        label_toolbar.setText(getActivity().getResources().getString(R.string.tips_notice));
         new_story.setVisibility(View.GONE);
     }
 
@@ -143,7 +150,10 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
             refresh_tips.setRefreshing(false);
             root_loading.setVisibility(View.GONE);
             list_tips.setMediaObjects(data);
-            adapter.setData(data);
+            if(data.size()>3 && App.getInstance().getAds().size()>0)
+                insertAdsInMenuItems(true);
+            else
+               adapter.setData(data);
         }
     }
 
@@ -176,6 +186,24 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
     public void onResume() {
         super.onResume();
 
+    }
+
+
+
+    private void insertAdsInMenuItems(boolean more) {
+        mNativeAds = App.getInstance().getAds();
+        if (mNativeAds.size() <= 0) { return;}
+        int offset = mNativeAds.size() + 1;
+        int index = 3;
+        for (UnifiedNativeAd ad: mNativeAds) {
+            if(index< data.size())
+                data.add(index, ad);
+            if((offset % 2 != 0)) {}
+            else{offset +=1;}
+            index = index + offset;
+        }
+        adapter.setData(data);
+        refresh_tips.setRefreshing(false);
     }
 }
 

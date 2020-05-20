@@ -22,6 +22,10 @@ public class PostFriendsBean {
     @Expose
     String target;
 
+    @SerializedName("filter")
+    @Expose
+    int filter;
+
     @SerializedName("id_one")
     @Expose
     int id_one;
@@ -74,5 +78,13 @@ public class PostFriendsBean {
 
     public void setId_one(int id_one) {
         this.id_one = id_one;
+    }
+
+    public int getFilter() {
+        return filter;
+    }
+
+    public void setFilter(int filter) {
+        this.filter = filter;
     }
 }

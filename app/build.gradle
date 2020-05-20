@@ -15,12 +15,53 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
-    buildTypes {
+    signingConfigs {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            storeFile file("C:\\key_bunizz\\bunizzkey.jks")
+            storePassword "bunizz1,.1#?"
+            keyAlias "bunizz"
+            keyPassword "bunizz1,.1"
         }
     }
+    buildTypes {
+        release {
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable false
+            signingConfig signingConfigs.release
+
+
+        }
+        debug {
+            shrinkResources false
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+    flavorDimensions "instance"
+    productFlavors {
+        produccion {
+            versionName "1.0.0"
+            versionCode 1
+            dimension "instance"
+            buildConfigField 'String', 'ADS_NATIVO', '"ca-app-pub-3652627287925800/4391434018"'
+            buildConfigField 'Boolean', 'DEVELOPMENT', 'false'
+        }
+        development {
+            versionName "1.0.0(DEBUG)"
+            versionCode 1
+            dimension "instance"
+            buildConfigField 'String', 'ADS_NATIVO', '"ca-app-pub-3940256099942544/2247696110"'
+            buildConfigField 'String', 'ADS_BANNERS', '"ca-app-pub-3940256099942544/6300978111"'
+            buildConfigField 'Boolean', 'DEVELOPMENT', 'true'
+        }
+
+    }
+
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8

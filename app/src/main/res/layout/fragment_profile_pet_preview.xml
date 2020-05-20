@@ -123,7 +123,7 @@
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:id="@+id/spinky_loading_profile_info"
-            android:layout_width="30dp"
-            android:layout_height="30dp"/>
+            android:layout_width="60dp"
+            android:layout_height="60dp"/>
     </RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

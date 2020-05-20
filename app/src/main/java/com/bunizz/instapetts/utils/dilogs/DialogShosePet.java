@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.SearchPetBean;
@@ -181,6 +182,9 @@ public class DialogShosePet extends BaseAlertDialog{
                     listener.chose(petBeans.get(position).getUrl_photo_tumbh(),Integer.parseInt(petBeans.get(position).getId_pet()),petBeans.get(position).getName_pet());
                 }
             });
+            h.rate_pet_chose_pet.setText(""+ petBeans.get(position).getRate_pet());
+            h.edad_pet_chose.setText(App.getInstance().fecha_lenguaje_humano(petBeans.get(position).getEdad_pet().replace("T"," ").replace("T","")+" años"));
+            h.raza_mascota_chose_pet.setText(petBeans.get(position).getRaza_pet());
         }
 
         @Override
@@ -190,13 +194,16 @@ public class DialogShosePet extends BaseAlertDialog{
 
         public class chose_pet_holder extends RecyclerView.ViewHolder{
               ImageView pet_chose_list;
-              TextView name_pet_chose_list;
+              TextView name_pet_chose_list,edad_pet_chose,rate_pet_chose_pet,raza_mascota_chose_pet;
               CardView root_chose_pet;
             public chose_pet_holder(@NonNull View itemView) {
                 super(itemView);
                 pet_chose_list = itemView.findViewById(R.id.pet_chose_list);
                 name_pet_chose_list = itemView.findViewById(R.id.name_pet_chose_list);
                 root_chose_pet = itemView.findViewById(R.id.root_chose_pet);
+                edad_pet_chose = itemView.findViewById(R.id.edad_pet_chose);
+                rate_pet_chose_pet = itemView.findViewById(R.id.rate_pet_chose_pet);
+                raza_mascota_chose_pet = itemView.findViewById(R.id.raza_mascota_chose_pet);
             }
         }
     }

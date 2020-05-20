@@ -261,7 +261,7 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
             icon_genero_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_hembra));
         }
 
-        edad_pet.setText(App.fecha_lenguaje_humano(petBean.getEdad_pet().replace("T"," ").replace("Z","")));
+        edad_pet.setText(App.getInstance().fecha_lenguaje_humano(petBean.getEdad_pet().replace("T"," ").replace("Z","")));
     }
 
     @Override

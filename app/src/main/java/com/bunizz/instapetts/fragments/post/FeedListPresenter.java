@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -198,7 +199,10 @@ public class FeedListPresenter implements FeedContract.Presenter {
                                             data_notification.put("ID_REMITENTE",App.read(PREFERENCES.ID_USER_FROM_WEB,0));
                                             data_notification.put("URL_EXTRA",postActions.getExtra());
                                             data_notification.put("FOTO_REMITENTE",App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
-                                            db.collection(FIRESTORE.COLLECTION_NOTIFICATIONS).document()
+                                            data_notification.put("FECHA",App.formatDateGMT(new Date()));
+                                            db.collection(FIRESTORE.COLLECTION_NOTIFICATIONS).document(""+postActions.getId_usuario())
+                                                    .collection(FIRESTORE.COLLECTION_NOTIFICATIONS)
+                                                    .document()
                                                     .set(data_notification)
                                                     .addOnFailureListener(e -> {})
                                                     .addOnCompleteListener(task -> {})
