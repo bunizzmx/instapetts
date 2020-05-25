@@ -102,7 +102,10 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
     @Override
     protected void onPause() {
         super.onPause();
-        ((FragmentStoriView) adapter.getItem(CURRENT_ITEM)).StopProgressAnimation();
+        if(CURRENT_ITEM!=0)
+            ((FragmentStoriView) adapter.getItem(CURRENT_ITEM - 1)).StopProgressAnimation();
+        else
+            ((FragmentStoriView) adapter.getItem(CURRENT_ITEM )).StopProgressAnimation();
 
     }
 

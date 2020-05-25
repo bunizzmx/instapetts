@@ -43,7 +43,11 @@ public class SearchResentHelper extends GenericHelper {
 
 
     public void saveSearch(SearcRecentBean search) {
-        Log.e("SAVE_SEARCH",":)" + search.getName_tag());
+        Cursor cursor=null;
+        Log.e("SAVE_SEARCH",":)" + search.getName_tag() + "/id_usuario:" + search.getId_usuario() + "/id_mascota:" + search.getId_mascota()
+               + "/name_mascota:" + search.getName_pet()
+    +"/name_user:" + search.getName()
+        +"/raza:" + search.getName_raza() );
         ContentValues contentValues = new ContentValues();
         contentValues.put(URL, search.getUrl_photo());
         contentValues.put(TYPE_PET, search.getType_mascota());
@@ -56,12 +60,42 @@ public class SearchResentHelper extends GenericHelper {
         contentValues.put(ID_MASCOTA, search.getId_mascota());
         contentValues.put(NAME_TAG,search.getName_tag());
         try {
-            getWritableDatabase().insertOrThrow(TABLE_NAME, null,contentValues);
+            if(search.getType_save() == 2) {
+                cursor = getReadableDatabase().query(
+                        TABLE_NAME,
+                        null,
+                        "name_pet ='" + search.getName_pet()+"'",
+                        null, null, null, null, null);
+            }else{
+                cursor = getReadableDatabase().query(
+                        TABLE_NAME,
+                        null,
+                        "id_usuario =" + search.getId_usuario(),
+                        null, null, null, null, null);
+            }
+            if(cursor.moveToFirst()){
+               Log.e("YA_ESTA_LA_BUSQUEDA","SI");
+            }else{
+                Log.e("YA_ESTA_LA_BUSQUEDA","NO");
+                getWritableDatabase().insertOrThrow(TABLE_NAME, null,contentValues);
+            }
         } catch (SQLiteConstraintException | IllegalStateException e) {
             e.printStackTrace();
+        }finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
     }
 
+
+   public  void deleteSearch(int id_item,boolean is_user){
+        if(is_user){
+            getWritableDatabase().delete(TABLE_NAME, ID_USUARIO + "=" +id_item, null) ;
+        }else{
+            getWritableDatabase().delete(TABLE_NAME, ID_MASCOTA + "=" +id_item, null) ;
+        }
+    }
 
 
     public ArrayList<SearcRecentBean> getMySearchRecent(int type_Search) {

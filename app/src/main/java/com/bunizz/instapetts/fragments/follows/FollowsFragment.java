@@ -1,6 +1,5 @@
 package com.bunizz.instapetts.fragments.follows;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,32 +9,25 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.FollowsBean;
 import com.bunizz.instapetts.beans.PetBean;
-import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
-import com.bunizz.instapetts.fragments.info.InfoPetFragment;
-import com.bunizz.instapetts.listeners.RatePetListener;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.folowFavoriteListener;
 import com.bunizz.instapetts.utils.ImagenCircular;
-import com.bunizz.instapetts.utils.dilogs.DialogRatePet;
-import com.bunizz.instapetts.utils.fastScroll.FastScrollItemIndicator;
-import com.bunizz.instapetts.utils.fastScroll.FastScrollerThumbView;
-import com.bunizz.instapetts.utils.fastScroll.FastScrollerView;
 import com.bunizz.instapetts.utils.loadings.SpinKitView;
 import com.bunizz.instapetts.utils.loadings.SpriteFactory;
 import com.bunizz.instapetts.utils.loadings.Style;
 import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
-
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -46,9 +38,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-
-import static com.bunizz.instapetts.constantes.BUNDLES.PETBEAN;
 
 public class FollowsFragment extends Fragment implements FollowsContract.View {
 
@@ -87,16 +76,16 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
     @BindView(R.id.root_no_internet)
     RelativeLayout root_no_internet;
 
+    @BindView(R.id.loanding_more_users)
+    RelativeLayout loanding_more_users;
 
-    @BindView(R.id.sample_basic_fastscroller)
-    FastScrollerView sample_basic_fastscroller;
-
-    @BindView(R.id.sample_basic_fastscroller_thumb)
-    FastScrollerThumbView sample_basic_fastscroller_thumb;
+    private boolean loading =true;
+    private boolean IS_ALL = false;
 
     FollowsAdapter adapter;
     FollowsPresenter presenter;
     changue_fragment_parameters_listener listener;
+    int tipo_descarga=1;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +96,7 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
             name_user = bundle.getString(BUNDLES.NAME_USUARIO);
             id_user = bundle.getInt(BUNDLES.ID_USUARIO);
             uuid = bundle.getString(BUNDLES.UUID);
+            tipo_descarga = bundle.getInt("TIPO_DESCARGA");
         }
     }
 
@@ -122,59 +112,99 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
         ButterKnife.bind(this, view);
         list_follows.setLayoutManager(new LinearLayoutManager(getContext()));
         list_follows.setAdapter(adapter);
-
-        sample_basic_fastscroller.setUseDefaultScroller(false);
-        sample_basic_fastscroller.getItemIndicatorSelectedCallbacks().add(
-                new FastScrollerView.ItemIndicatorSelectedCallback() {
-                    @Override
-                    public void onItemIndicatorSelected(
-                            FastScrollItemIndicator indicator,
-                            int indicatorCenterY,
-                            int itemPosition
-                    ) {
-                        // Handle scrolling
-                    }
-                }
-        );
         adapter.setListener((type_fragment, data) -> {
             if(listener!=null)
                 listener.change_fragment_parameter(type_fragment,data);
         });
+        adapter.setListener_follow(new folowFavoriteListener() {
+            @Override
+            public void followUser(UserBean userBean, boolean follow_unfollow) {
+                presenter.unfollowUser(userBean.getUuid(),userBean.getName_tag(),userBean.getId());
+            }
+
+            @Override
+            public void favoritePet(UserBean userBean, PetBean petBean) {
+
+            }
+        });
+        adapter.setTipo_descarga(tipo_descarga);
         Style style = Style.values()[12];
         Sprite drawable = SpriteFactory.create(style);
         spin_kit.setIndeterminateDrawable(drawable);
         spin_kit.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         spin_kit.setVisibility(View.VISIBLE);
-        name_user_folowers.setText(name_user);
-        sample_basic_fastscroller.setupWithRecyclerView(list_follows, (position) -> new FastScrollItemIndicator.Text(
-                "AA".substring(0, 1).toUpperCase()
-        ));
-        sample_basic_fastscroller_thumb.setupWithFastScroller(sample_basic_fastscroller);
-        presenter.getFirstFollows(uuid);
+        if(tipo_descarga == 1) {
+            name_user_folowers.setText("Seguidos");
+            presenter.getFirstFollowed(uuid);
+        }
+        else {
+            name_user_folowers.setText("Seguidores");
+            presenter.getFirstFolowers(uuid);
+        }
+
+        list_follows.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleItemCount = recyclerView.getLayoutManager().getChildCount();
+                int totalItemCount = recyclerView.getLayoutManager().getItemCount();
+                int pastVisiblesItems = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                if (dy > 0) {
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                        if(loading){
+                            loading = false;
+                            if(IS_ALL == false) {
+                                loanding_more_users.setVisibility(View.VISIBLE);
+                                Log.e("DONWLOAD_MORE_COMMENTS","SI");
+                                presenter.nextFollowers();
+                            }else {
+                                Log.e("DONWLOAD_MORE_COMMENTS","NO");
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
+
+
     public void updateInfo(Bundle b){
+
         if(presenter!=null) {
+            Log.e("UPDATE_INFO_FOLLOWS","SI");
             if (b != null) {
                 name_user = b.getString(BUNDLES.NAME_USUARIO);
                 id_user = b.getInt(BUNDLES.ID_USUARIO);
                 uuid = b.getString(BUNDLES.UUID);
+                tipo_descarga = b.getInt("TIPO_DESCARGA");
             }
-            name_user_folowers.setText(name_user);
-            presenter.getFirstFollows(uuid);
+            adapter.setTipo_descarga(tipo_descarga);
+
+            if(tipo_descarga == 1) {
+                name_user_folowers.setText("Seguidos");
+                presenter.getFirstFollowed(uuid);
+            }
+            else {
+                name_user_folowers.setText("Seguidores");
+                presenter.getFirstFolowers(uuid);
+            }
+        }else{
+            Log.e("UPDATE_INFO_FOLLOWS","NO");
         }
     }
 
 
     @Override
-    public void showFirstFollows(ArrayList<FollowsBean> followsBeans) {
+    public void showFirstFollowers(ArrayList<FollowsBean> followsBeans) {
         if(followsBeans.size()>0){
             spin_kit.setVisibility(View.GONE);
             adapter.setUserBeans(followsBeans);
-            if(sample_basic_fastscroller==null)
-                sample_basic_fastscroller.setupWithRecyclerView(list_follows,null);
-            else
-                sample_basic_fastscroller.getItemIndicators();
         }else{
             body_no_data.setText("Cuando sigas 1 o mas cuentas apareceran aqui");
             title_no_internet.setText("Aun no sigues a nadie");
@@ -182,13 +212,48 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
             spin_kit.setVisibility(View.GONE);
             root_no_internet.setVisibility(View.VISIBLE);
         }
-
-
     }
 
     @Override
-    public void showNextFollows(ArrayList<PostBean> posts) {
+    public void showNextFollowers(ArrayList<FollowsBean> followsBeans) {
+        loanding_more_users.setVisibility(View.GONE);
+        loading =true;
+        if(followsBeans.size()>0) {
+            adapter.addMoreUsers(followsBeans);
+        }else{
+            Toast.makeText(getContext(),"YA ES TODO",Toast.LENGTH_LONG).show();
+            IS_ALL =true;
+        }
+    }
 
+    @Override
+    public void showFirstFollowed(ArrayList<FollowsBean> followsBeans) {
+        ArrayList<FollowsBean> FIRST_FOLLOWEDS = new ArrayList<>();
+        FIRST_FOLLOWEDS.addAll(followsBeans);
+        if(FIRST_FOLLOWEDS.size()>0){
+            spin_kit.setVisibility(View.GONE);
+            adapter.setUserBeans(FIRST_FOLLOWEDS);
+        }else{
+            body_no_data.setText("Cuando sigas 1 o mas cuentas apareceran aqui");
+            title_no_internet.setText("Aun no sigues a nadie");
+            icon_no_internet.setVisibility(View.GONE);
+            spin_kit.setVisibility(View.GONE);
+            root_no_internet.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void showNextFollowed(ArrayList<FollowsBean> followsBeans) {
+        ArrayList<FollowsBean> NEXT_FOLLOWEDS = new ArrayList<>();
+        NEXT_FOLLOWEDS.addAll(followsBeans);
+        loanding_more_users.setVisibility(View.GONE);
+        loading =true;
+        if(NEXT_FOLLOWEDS.size()>0) {
+            adapter.addMoreUsers(NEXT_FOLLOWEDS);
+        }else{
+            Toast.makeText(getContext(),"YA ES TODO",Toast.LENGTH_LONG).show();
+            IS_ALL =true;
+        }
     }
 
     @Override
@@ -199,7 +264,19 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
 
     @Override
     public void Error() {
-        presenter.getFirstFollows(uuid);
+        presenter.getFirstFolowers(uuid);
+    }
+
+    @Override
+    public void UnfollowSuccess() {
+        adapter.notifyDataSetChanged();
+        if(adapter.size_items()==0){
+            body_no_data.setText("Cuando sigas 1 o mas cuentas apareceran aqui");
+            title_no_internet.setText("Aun no sigues a nadie");
+            icon_no_internet.setVisibility(View.GONE);
+            spin_kit.setVisibility(View.GONE);
+            root_no_internet.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -208,6 +285,16 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
         ArrayList<FollowsBean> userBeans = new ArrayList<>();
         Context context;
         changue_fragment_parameters_listener listener;
+        folowFavoriteListener listener_follow;
+        int tipo_descarga=1;
+
+        public int getTipo_descarga() {
+            return tipo_descarga;
+        }
+
+        public void setTipo_descarga(int tipo_descarga) {
+            this.tipo_descarga = tipo_descarga;
+        }
 
         public changue_fragment_parameters_listener getListener() {
             return listener;
@@ -215,6 +302,14 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
 
         public void setListener(changue_fragment_parameters_listener listener) {
             this.listener = listener;
+        }
+
+        public folowFavoriteListener getListener_follow() {
+            return listener_follow;
+        }
+
+        public void setListener_follow(folowFavoriteListener listener_follow) {
+            this.listener_follow = listener_follow;
         }
 
         public FollowsAdapter(Context context) {
@@ -226,7 +321,16 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
         }
 
         public void setUserBeans(ArrayList<FollowsBean> userBeans) {
-            this.userBeans = userBeans;
+            this.userBeans.clear();
+            this.userBeans.addAll(userBeans);
+            notifyDataSetChanged();
+        }
+        public int size_items(){
+            return  this.userBeans.size();
+        }
+
+        public void addMoreUsers(ArrayList<FollowsBean> userBeans){
+            this.userBeans.addAll(userBeans);
             notifyDataSetChanged();
         }
 
@@ -246,11 +350,25 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
                 @Override
                 public void onClick(View view) {
                     Bundle b = new Bundle();
-                    b.putString(BUNDLES.UUID,userBeans.get(position).getUudi());
+                    b.putString(BUNDLES.UUID,userBeans.get(position).getUuid_user());
                     b.putInt(BUNDLES.ID_USUARIO,userBeans.get(position).getId_user());
                     listener.change_fragment_parameter(FragmentElement.INSTANCE_PREVIEW_PROFILE,b);
                 }
             });
+            h.delete_recent.setOnClickListener(v -> {
+                UserBean user = new UserBean();
+                user.setName_tag(userBeans.get(position).getName_nip_user());
+                user.setUuid(userBeans.get(position).getUuid_user());
+                user.setId(userBeans.get(position).getId_user());
+                listener_follow.followUser(user,false);
+                userBeans.remove(position);
+            });
+
+            if(tipo_descarga ==2){
+                h.label_unfollow.setText("Eliminar");
+            }else{
+                h.label_unfollow.setText("Dejar de seguir");
+            }
         }
 
         @Override
@@ -263,11 +381,15 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
             ImagenCircular image_user_follow;
             TextView name_follow;
             RelativeLayout root_follows_user;
+            RelativeLayout delete_recent;
+            TextView label_unfollow;
             public FollowsHolder(@NonNull View itemView) {
                 super(itemView);
                 name_follow = itemView.findViewById(R.id.name_follow);
                 image_user_follow = itemView.findViewById(R.id.image_user_follow);
                 root_follows_user = itemView.findViewById(R.id.root_follows_user);
+                delete_recent = itemView.findViewById(R.id.delete_recent);
+                label_unfollow = itemView.findViewById(R.id.label_unfollow);
             }
         }
     }

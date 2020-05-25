@@ -135,7 +135,7 @@ public class FragmentEditProfileUser extends Fragment {
             num_caracteres_description.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID").toString().length() +"/"+ "255");
         }
         URL_UPDATED = App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID");
-        Glide.with(getContext()).load(URL_UPDATED).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_userd_edit);
+        Glide.with(getContext()).load(URL_UPDATED).placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_userd_edit);
         Log.e("URL_GUARDADA","-->" + URL_UPDATED);
         descripcion_user.addTextChangedListener(new TextWatcher() {
             @Override

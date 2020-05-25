@@ -171,7 +171,7 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
 
     public void StopProgressAnimation(){
         if(storyPlayerProgressView!=null)
-        storyPlayerProgressView.pauseProgress();
+         storyPlayerProgressView.pauseProgress();
     }
 
 

@@ -169,7 +169,9 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         }
                     }
                 });
-                Glide.with(context).load(data_parsed.getPhoto_tumbh_tip()).into(h.top_image_tip);
+                Glide.with(context).load(data_parsed.getPhoto_tumbh_tip())
+               .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                        .error(context.getResources().getDrawable(R.drawable.ic_holder)).into(h.top_image_tip);
 
                 break;
             case TYPE_VIDEO:
@@ -181,7 +183,9 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(aspectBean.getWidth(), aspectBean.getHeight());
                 hv.root_multiple_image.setLayoutParams(layoutParams);
                 hv.title_tip.setText(data_parsed_video.getTitle_tip());
-                Glide.with(context).load(data_parsed_video.getPhoto_tumbh_tip()).into(hv.mediaCoverImage);
+                Glide.with(context).load(data_parsed_video.getPhoto_tumbh_tip())
+                .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                        .error(context.getResources().getDrawable(R.drawable.ic_holder)).into(hv.mediaCoverImage);
                 hv.fecha_tip.setText(App.getInstance().fecha_lenguaje_humano(data_parsed_video.getFecha_tip().replace("Z","").replace("T"," ")));
                 hv.root_multiple_image.setOnLongClickListener(v -> {
                     listener_video.StopVideo();
@@ -198,7 +202,9 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             default:
                 TipsHolder f = (TipsHolder)holder;
                 TipsBean data_parsed_n = (TipsBean) data.get(position);
-                Glide.with(context).load(data_parsed_n.getPhoto_tumbh_tip()).into(f.image_tip_simple);
+                Glide.with(context).load(data_parsed_n.getPhoto_tumbh_tip())
+                        .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                        .error(context.getResources().getDrawable(R.drawable.ic_holder)).into(f.image_tip_simple);
                 f.root_tip_simple.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

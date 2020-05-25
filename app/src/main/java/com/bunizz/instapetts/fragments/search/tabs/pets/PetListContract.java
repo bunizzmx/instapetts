@@ -9,9 +9,11 @@ import java.util.ArrayList;
 public interface PetListContract {
     interface Presenter {
         void saveSearch(SearcRecentBean searcRecentBean);
+        void  deleteRecent(int id);
     }
 
     interface View{
+        void deleteSuccess();
         void searchSaved();
     }
 }

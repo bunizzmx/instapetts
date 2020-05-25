@@ -142,6 +142,9 @@ public class SearcRecentBean {
         if (cursor.getColumnIndex(SearchResentHelper.NAME_TAG) != -1)
             this.name_tag = cursor.getString(cursor.getColumnIndex(SearchResentHelper.NAME_TAG));
 
+        if(cursor.getColumnIndex(SearchResentHelper.RAZA_MASCOTA) != -1)
+            this.name_raza = cursor.getString(cursor.getColumnIndex(SearchResentHelper.RAZA_MASCOTA));
+
     }
 
 

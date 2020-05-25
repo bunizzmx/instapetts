@@ -1,9 +1,13 @@
 package com.bunizz.instapetts.activitys.reports;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.fragments.FragmentElement;
@@ -27,7 +31,9 @@ import java.util.Stack;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
+import butterknife.OnClick;
 
 public class ReportActiviy extends AppCompatActivity  implements changue_fragment_parameters_listener {
 
@@ -35,10 +41,24 @@ public class ReportActiviy extends AppCompatActivity  implements changue_fragmen
     private FragmentElement mOldFragment;
     private Stack<FragmentElement> stack_list_reports;
     private Stack<FragmentElement> stack_final_reports;
+
+    int ID_RECURSO=0;
+    int TYPO_RECURSO =0;
+
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.report_activity);
+        Intent iin= getIntent();
+        Bundle b = iin.getExtras();
+        if(b!=null)
+        {
+            ID_RECURSO = b.getInt("ID_RECURSO");
+            TYPO_RECURSO = b.getInt("TYPO_RECURSO");
+        }
+        changeStatusBarColor(R.color.white);
         stack_final_reports = new Stack<>();
         stack_list_reports = new Stack<>();
         setupFirstFragment();
@@ -62,6 +82,8 @@ public class ReportActiviy extends AppCompatActivity  implements changue_fragmen
     }
 
     private void changue_to_final_reports(FragmentElement fragment,Bundle data) {
+        data.putInt("ID_RECURSO",ID_RECURSO);
+        data.putInt("TYPO_RECURSO",TYPO_RECURSO);
         if (fragment != null) {
             mCurrentFragment = fragment;
             mCurrentFragment.getFragment().setArguments(data);
@@ -139,6 +161,17 @@ public class ReportActiviy extends AppCompatActivity  implements changue_fragmen
             finish();
         }else{
             changeOfInstance(FragmentElement.INSTANCE_REPORTS_LIST,null);
+        }
+    }
+
+    public void changeStatusBarColor(int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            //window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), color));
+            window.setNavigationBarColor(ContextCompat.getColor(getApplicationContext(), color));
         }
     }
 }

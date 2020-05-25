@@ -101,20 +101,20 @@ public class ImageService extends Service {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         mBuilder = new NotificationCompat.Builder(getApplicationContext(), channelId);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mBuilder.setSmallIcon(R.mipmap.ic_launcher_foreground)
+            mBuilder.setSmallIcon(R.mipmap.ic_splash_foreground)
                     .setContentTitle(TITLE)
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)
                     .setContentIntent(pendingIntent);
         }else {
-            mBuilder.setSmallIcon(R.mipmap.ic_launcher_foreground)
+            mBuilder.setSmallIcon(R.mipmap.ic_splash_foreground)
                     .setContentTitle(TITLE)
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)
                     .setContentIntent(pendingIntent);
         }
 
-        mBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_foreground));
+        mBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_splash_foreground));
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
         stackBuilder.addNextIntent(intent);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(

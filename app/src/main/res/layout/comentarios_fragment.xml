@@ -90,7 +90,7 @@
             android:id="@+id/image_user_comment"
             app:civ_border_width="2dp"
             app:civ_border_color="@color/white"
-            android:src="@drawable/ic_hand_pet_preload"
+            android:src="@drawable/ic_holder"
             android:layout_width="25dp"
             android:layout_height="25dp"/>
         <EditText

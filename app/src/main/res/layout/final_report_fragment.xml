@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:background="@color/white"
     android:padding="10dp"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -34,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:id="@+id/caracteres_share_post"
+            android:id="@+id/caracteres_report"
             android:layout_alignParentRight="true"
             android:layout_marginRight="30dp"
             android:layout_marginTop="10dp"
@@ -42,10 +43,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <EditText
+
             android:layout_marginTop="20dp"
             android:textSize="18dp"
             android:textAlignment="center"
-            android:id="@+id/description_post"
+            android:id="@+id/description_report"
             android:maxLines="8"
             android:maxLength="180"
             android:inputType="textMultiLine"
@@ -64,6 +66,7 @@
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"/>
     <Button
+        android:id="@+id/send_report"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"

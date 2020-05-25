@@ -98,7 +98,7 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
                 h.image_pet_history.setVisibility(View.GONE);
                 Log.e("MY_STORIE","null all ");
             }
-            Glide.with(context).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID")).placeholder(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(h.image_pet_history);
+            Glide.with(context).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID")).placeholder(context.getResources().getDrawable(R.drawable.ic_holder)).into(h.image_pet_history);
         }else{
             h.add_story_icon.setVisibility(View.GONE);
             h.image_pet_history.setVisibility(View.VISIBLE);

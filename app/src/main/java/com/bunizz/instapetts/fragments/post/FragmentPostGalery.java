@@ -93,7 +93,7 @@ public class FragmentPostGalery extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         Log.e("ONVIEW_CREATED","galery");
-        list_galery.setLayoutManager(new GridLayoutManager(getContext(),2));
+        list_galery.setLayoutManager(new GridLayoutManager(getContext(),3));
         list_galery.setAdapter(feedAdapter);
         feedAdapter.setListener(new changue_fragment_parameters_listener() {
             @Override

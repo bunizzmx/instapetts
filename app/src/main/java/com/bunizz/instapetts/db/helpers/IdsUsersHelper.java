@@ -40,6 +40,10 @@ public class IdsUsersHelper extends GenericHelper {
         }
     }
 
+    public void deleteId(int id){
+        getWritableDatabase().delete(TABLE_NAME, ID_USER + "=" +id, null) ;
+    }
+
     public boolean isMyFriend(int id_user) {
         final Cursor cursor = getReadableDatabase().query(
                 TABLE_NAME,

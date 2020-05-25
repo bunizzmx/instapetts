@@ -29,7 +29,7 @@
             android:layout_height="wrap_content">
             <com.bunizz.instapetts.utils.ImagenCircular
                 android:id="@+id/image_video_tumbh"
-                android:src="@drawable/ic_hand_pet_preload"
+                android:src="@drawable/ic_holder"
                 android:layout_width="35dp"
                 android:layout_height="35dp"/>
             <TextView
@@ -99,6 +99,7 @@
                 android:layout_height="20dp"/>
         </RelativeLayout>
         <RelativeLayout
+            android:id="@+id/open_dialog_options"
             android:layout_width="50dp"
             android:layout_height="match_parent">
             <ImageView

@@ -8,7 +8,7 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="20dp"
         android:id="@+id/pick_new_image"
-        android:src="@drawable/ic_hand_pet_preload"
+        android:src="@drawable/ic_holder"
         android:layout_width="90dp"
         android:layout_height="90dp"/>
     <LinearLayout

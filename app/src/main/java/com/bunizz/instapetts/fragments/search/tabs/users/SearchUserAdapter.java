@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,6 +32,7 @@ public class SearchUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     changue_fragment_parameters_listener listener;
     boolean HIDE_LABEL =true;
     ArrayList<Object> data = new ArrayList<>();
+    boolean IS_RECENT =false;
 
     searchRecentListener listener_recent;
 
@@ -59,6 +62,15 @@ public class SearchUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         notifyDataSetChanged();
     }
 
+    public void clear(){
+        this.data.clear();;
+        notifyDataSetChanged();
+    }
+
+    public void is_recent(boolean is_recent){
+        IS_RECENT = is_recent;
+    }
+
     public changue_fragment_parameters_listener getListener() {
         return listener;
     }
@@ -78,6 +90,10 @@ public class SearchUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return  new SearchPetHolder(v);
     }
 
+    public  int get_size(){
+        return  this.data.size();
+    }
+
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         SearchPetHolder h =(SearchPetHolder)holder;
@@ -87,14 +103,34 @@ public class SearchUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         else
             h.search_recent_label.setVisibility(View.GONE);
 
+        h.delete_recent.setOnClickListener(v -> {
+            data.remove(position);
+            listener_recent.deleteRecent(Integer.parseInt(data_parsed.getId_user()));
+        });
+
         if(HIDE_LABEL == false)
             h.delete_recent.setVisibility(View.VISIBLE);
         else
             h.delete_recent.setVisibility(View.GONE);
 
+        if(IS_RECENT) {
+            h.icon_flecha_item.setVisibility(View.GONE);
+            h.delete_recent.setVisibility(View.VISIBLE);
+        }
+        else{
+            h.icon_flecha_item.setVisibility(View.VISIBLE);
+            h.delete_recent.setVisibility(View.GONE);
+            h.search_recent_label.setVisibility(View.GONE);
+        }
+
+
+        h.layout_raza_icon_pet.setVisibility(View.GONE);
         h.name_propietary_pet_searching.setText("@" + data_parsed.getUser_tag());
         h.name_pet_searching.setText(data_parsed.getName_user() );
-        Glide.with(context).load(data_parsed.getUrl_photo()).into(h.image_pet_searching);
+        Glide.with(context).load(data_parsed.getUrl_photo())
+                .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                .error(context.getResources().getDrawable(R.drawable.ic_holder))
+                .into(h.image_pet_searching);
         h.root_pet_searching.setOnClickListener(view -> {
             Bundle b = new Bundle();
             b.putString(BUNDLES.UUID,data_parsed.getUudi());
@@ -113,6 +149,8 @@ public class SearchUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         TextView name_pet_searching,search_recent_label,name_propietary_pet_searching;
         ImagenCircular image_pet_searching;
         RelativeLayout root_pet_searching,delete_recent;
+        LinearLayout layout_raza_icon_pet;
+        ImageView icon_flecha_item;
         public SearchPetHolder(@NonNull View itemView) {
             super(itemView);
             name_pet_searching = itemView.findViewById(R.id.name_pet_searching);
@@ -121,6 +159,8 @@ public class SearchUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             search_recent_label = itemView.findViewById(R.id.search_recent_label);
             delete_recent = itemView.findViewById(R.id.delete_recent);
             name_propietary_pet_searching = itemView.findViewById(R.id.name_propietary_pet_searching);
+            layout_raza_icon_pet = itemView.findViewById(R.id.layout_raza_icon_pet);
+            icon_flecha_item = itemView.findViewById(R.id.icon_flecha_item);
         }
     }
 }

@@ -7,6 +7,7 @@ import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.beans.ReportBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.web.parameters.CatalogoParameters;
 import com.bunizz.instapetts.web.parameters.EventsPetsBean;
@@ -142,6 +143,10 @@ public interface WebServices {
 
     @POST("test/reports")
     Single<ResponseListReports> getListReports(@Body UserBean userBean);
+
+
+    @POST("test/reports")
+    Single<SimpleResponse> senReport(@Body ReportBean reportBean);
 
 
 

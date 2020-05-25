@@ -14,6 +14,7 @@ import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.FIRESTORE;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.db.helpers.FollowsHelper;
 import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
 import com.bunizz.instapetts.db.helpers.LikePostHelper;
@@ -86,6 +87,7 @@ public class FeedPresenter implements FeedContract.Presenter {
     @Override
     public void get_feed(boolean one_user,int id_one) {
         PostFriendsBean postFriendsBean = new PostFriendsBean();
+        postFriendsBean.setPaginador(-1);
         if(one_user){
             postFriendsBean.setId_one(id_one);
             postFriendsBean.setTarget("ONE");
@@ -157,7 +159,7 @@ public class FeedPresenter implements FeedContract.Presenter {
     public void geet_feed_recomended(boolean one_user, int id_one) {
         PostFriendsBean postFriendsBean = new PostFriendsBean();
         postFriendsBean.setId_one(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
-         postFriendsBean.setTarget("DISCOVER");
+         postFriendsBean.setTarget(WEBCONSTANTS.DISCOVER);
         disposable.add(
                 apiService.getPosts(postFriendsBean)
                         .subscribeOn(Schedulers.io())
@@ -220,11 +222,15 @@ public class FeedPresenter implements FeedContract.Presenter {
                                             data_notification.put("URL_EXTRA",postActions.getExtra());
                                             data_notification.put("FOTO_REMITENTE",App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
                                             data_notification.put("FECHA",App.formatDateGMT(new Date()));
-                                            db.collection(FIRESTORE.COLLECTION_NOTIFICATIONS).document()
+                                            db.collection(FIRESTORE.COLLECTION_NOTIFICATIONS).document(""+postActions.getId_usuario())
+                                                    .collection(FIRESTORE.COLLECTION_NOTIFICATIONS)
+                                                    .document()
                                                     .set(data_notification)
                                                     .addOnFailureListener(e -> {})
                                                     .addOnCompleteListener(task -> {})
                                                     .addOnSuccessListener(aVoid -> {});
+
+
                                         } else {
                                             RETRY++;
                                             if (RETRY < 3) {

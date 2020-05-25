@@ -30,6 +30,10 @@ public class PostFriendsBean {
     @Expose
     int id_one;
 
+    @SerializedName("paginador")
+    @Expose
+    int paginador;
+
     public PostFriendsBean() {
     }
 
@@ -86,5 +90,13 @@ public class PostFriendsBean {
 
     public void setFilter(int filter) {
         this.filter = filter;
+    }
+
+    public int getPaginador() {
+        return paginador;
+    }
+
+    public void setPaginador(int paginador) {
+        this.paginador = paginador;
     }
 }

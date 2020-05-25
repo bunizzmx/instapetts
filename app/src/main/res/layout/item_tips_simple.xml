@@ -20,7 +20,7 @@
         android:layout_height="120dp">
         <ImageView
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_hand_pet_preload"
+            android:src="@drawable/ic_holder"
             android:id="@+id/image_tip_simple"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

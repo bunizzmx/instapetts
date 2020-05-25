@@ -62,6 +62,10 @@ public class UserBean {
     @Expose
     int folowers;
 
+    @SerializedName("followed")
+    @Expose
+    int followed;
+
     @SerializedName("date_active")
     @Expose
     String date_active;
@@ -247,5 +251,13 @@ public class UserBean {
 
     public void setName_tag(String name_tag) {
         this.name_tag = name_tag;
+    }
+
+    public int getFollowed() {
+        return followed;
+    }
+
+    public void setFollowed(int followed) {
+        this.followed = followed;
     }
 }

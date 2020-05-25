@@ -1,5 +1,6 @@
 package com.bunizz.instapetts.activitys.PlayVideo;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 
@@ -81,7 +82,9 @@ public class PlayVideoPresenter implements PlayVideoContract.Presenter {
                                             data_notification.put("URL_EXTRA",postActions.getExtra());
                                             data_notification.put("FOTO_REMITENTE",App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
                                             data_notification.put("FECHA",App.formatDateGMT(new Date()));
-                                            db.collection(FIRESTORE.COLLECTION_NOTIFICATIONS).document()
+                                            db.collection(FIRESTORE.COLLECTION_NOTIFICATIONS).document(""+postActions.getId_usuario())
+                                                    .collection(FIRESTORE.COLLECTION_NOTIFICATIONS)
+                                                    .document()
                                                     .set(data_notification)
                                                     .addOnFailureListener(e -> {})
                                                     .addOnCompleteListener(task -> {})
@@ -125,6 +128,31 @@ public class PlayVideoPresenter implements PlayVideoContract.Presenter {
     @Override
     public boolean isSaved(int id_post) {
         return savedPostHelper.searchPostById(id_post);
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void deleteVideo(PostBean postBean) {
+        apiService.delete_post(postBean)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                    @Override
+                    public void onSuccess(SimpleResponse response) {
+                        Log.e("POST","SUCCESS");
+                        if(response!=null){
+                            if(response.getCode_response() ==200)
+                                mView.deletePostError(true);
+                            else
+                                mView.deletePostError(false);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.deletePostError(false);
+                    }
+                });
     }
 
 

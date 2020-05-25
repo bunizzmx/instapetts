@@ -30,6 +30,7 @@ import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.listeners.actions_dialog_profile;
@@ -169,13 +170,15 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
                     public void delete_post(int id_post) {
                         PostBean postBean = new PostBean();
                         postBean.setId_post_from_web(id_post);
-                        postBean.setTarget("DELETE");
+                        postBean.setTarget(WEBCONSTANTS.DELETE);
                         mPresenter.deletePost(postBean);
                     }
 
                     @Override
                     public void reportPost(int id_post) {
                         Intent reportIntent = new Intent(getActivity(),ReportActiviy.class);
+                        reportIntent.putExtra("ID_RECURSO",id_post);
+                        reportIntent.putExtra("TYPO_RECURSO",1);
                         startActivity(reportIntent);
                     }
                 });

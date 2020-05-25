@@ -9,6 +9,12 @@ public class FollowParameter {
     @Expose
     int id_user;
 
+    @SerializedName("id_my_user")
+    @Expose
+    int id_my_user;
+
+
+
     @SerializedName("target")
     @Expose
     String target;
@@ -19,6 +25,14 @@ public class FollowParameter {
     public FollowParameter(int id_user, String target) {
         this.id_user = id_user;
         this.target = target;
+    }
+
+    public int getId_my_user() {
+        return id_my_user;
+    }
+
+    public void setId_my_user(int id_my_user) {
+        this.id_my_user = id_my_user;
     }
 
     public int getId_user() {

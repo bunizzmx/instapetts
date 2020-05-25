@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content">
                 <com.bunizz.instapetts.utils.ImagenCircular
                     android:id="@+id/image_pet_dialog"
-                    android:src="@drawable/ic_hand_pet_preload"
+                    android:src="@drawable/ic_holder"
                     android:layout_width="40dp"
                     android:layout_height="40dp"/>
                 <LinearLayout

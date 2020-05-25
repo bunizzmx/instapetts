@@ -4,14 +4,17 @@ import android.content.Context;
 import android.util.Log;
 
 import com.bunizz.instapetts.App;
+import com.bunizz.instapetts.beans.ReportBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.fragments.search.SearchPetContract;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
 import com.bunizz.instapetts.web.parameters.ParameterSearching;
 import com.bunizz.instapetts.web.responses.ResponseListReports;
 import com.bunizz.instapetts.web.responses.SearchUsersResponse;
+import com.bunizz.instapetts.web.responses.SimpleResponse;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -39,7 +42,7 @@ public class ReportPresenter implements ReportsContract.Presenter {
     @Override
     public void getList() {
         UserBean user = new UserBean();
-        user.setTarget("GET");
+        user.setTarget(WEBCONSTANTS.GET);
         user.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         disposable.add(
                 apiService.getListReports(user)
@@ -49,6 +52,29 @@ public class ReportPresenter implements ReportsContract.Presenter {
                             @Override
                             public void onSuccess(ResponseListReports response) {
                                 mView.showListReports(response.getList_reports());
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.e("ERROR","--->" + e.getMessage());
+                            }
+                        })
+        );
+    }
+
+    @Override
+    public void SendReport(ReportBean reportBean) {
+        disposable.add(
+                apiService.senReport(reportBean)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                            @Override
+                            public void onSuccess(SimpleResponse response) {
+                                if(response!=null){
+                                    if(response.getCode_response()==200){
+                                        mView.reportSended();
+                                    }
+                                }
                             }
                             @Override
                             public void onError(Throwable e) {

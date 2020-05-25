@@ -24,7 +24,7 @@
                 android:scaleType="centerCrop"
                 android:layout_centerVertical="true"
                 android:id="@+id/image_preview_smoot"
-                android:src="@drawable/ic_hand_pet_preload"
+                android:src="@drawable/ic_holder"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </androidx.cardview.widget.CardView>
@@ -191,7 +191,7 @@
             android:background="?attr/selectableItemBackground"
             >
             <com.bunizz.instapetts.utils.ImagenCircular
-                app:civ_border_width="1dp"
+                app:civ_border_width="2dp"
                 app:civ_border_color="@color/white"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"

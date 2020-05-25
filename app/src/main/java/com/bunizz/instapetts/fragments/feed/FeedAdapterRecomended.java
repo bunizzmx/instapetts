@@ -61,12 +61,12 @@ public class FeedAdapterRecomended extends RecyclerView.Adapter<RecyclerView.Vie
         if(data_parsed.getType_post() !=1) {
             if (is_multiple(data_parsed.getUrls_posts())) {
                 String splits[] = data_parsed.getUrls_posts().split(",");
-                Glide.with(context).load(splits[0]).into(h.image_post_recomended);
+                Glide.with(context).load(data_parsed.getThumb_video()).into(h.image_post_recomended);
                 h.multiple_images_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_album));
             } else {
                 h.multiple_images_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_camera));
                 Log.e("IMAGEN_DE_LA_PREVIEW","-->:" + data_parsed.getUrls_posts());
-                Glide.with(context).load(data_parsed.getUrls_posts()).into(h.image_post_recomended);
+                Glide.with(context).load(data_parsed.getThumb_video()).into(h.image_post_recomended);
             }
         }else{
             Log.e("IMAGEN_DE_LA_PREVIEW","-->:" + data_parsed.getThumb_video());

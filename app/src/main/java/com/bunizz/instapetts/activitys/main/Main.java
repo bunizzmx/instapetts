@@ -46,6 +46,7 @@ import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.comentarios.ComentariosFragment;
@@ -202,7 +203,7 @@ public class Main extends AppCompatActivity implements change_instance,
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tab_profile_pet)
     void tab_profile_pet() {
-        changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET,null);
+        changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET,null,false);
         repaint_nav(R.id.tab_profile_pet);
     }
 
@@ -254,7 +255,7 @@ public class Main extends AppCompatActivity implements change_instance,
     void tap_tips() {
 
      if(mCurrentFragment.getInstanceType() != FragmentElement.INSTANCE_TIPS) {
-         changeOfInstance(FragmentElement.INSTANCE_TIPS, null);
+         changeOfInstance(FragmentElement.INSTANCE_TIPS, null,false);
          repaint_nav(R.id.tap_tips);
      }
     }
@@ -307,7 +308,7 @@ public class Main extends AppCompatActivity implements change_instance,
     @OnClick(R.id.tab_feed)
     void tab_feed() {
         if(mCurrentFragment.getInstanceType() != FragmentElement.INSTANCE_FEED) {
-            changeOfInstance(FragmentElement.INSTANCE_FEED,null);
+            changeOfInstance(FragmentElement.INSTANCE_FEED,null,false);
             repaint_nav(R.id.tab_feed);
         }
     }
@@ -316,7 +317,7 @@ public class Main extends AppCompatActivity implements change_instance,
     @OnClick(R.id.tab_search_pet)
     void tab_search_pet() {
         if(mCurrentFragment.getInstanceType() != FragmentElement.INSTANCE_GET_POSTS_PUBLICS) {
-            changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS,null);
+            changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS,null,false);
             repaint_nav(R.id.tab_search_pet);
         }
     }
@@ -431,7 +432,7 @@ public class Main extends AppCompatActivity implements change_instance,
             presenter.update_token(U_TOK);
         });
 
-        Glide.with(Main.this).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID")).placeholder(getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(icon_profile_pet);
+        Glide.with(Main.this).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID")).placeholder(getResources().getDrawable(R.drawable.ic_holder)).into(icon_profile_pet);
         presenter.getIdentificadoresHistories();
 
         if(App.read(PREFERENCES.FECHA_BACKUP_FILE,"-").equals("-"))
@@ -463,7 +464,7 @@ public class Main extends AppCompatActivity implements change_instance,
             mCurrentFragment = new FragmentElement<>(null, FeedFragment.newInstance(), FragmentElement.INSTANCE_FEED, true);
             change_main(mCurrentFragment);
         }else{
-                changeOfInstance(TYPE_FRAGMENT_PUSH,b_from_push);
+                changeOfInstance(TYPE_FRAGMENT_PUSH,b_from_push,false);
         }
     }
 
@@ -562,7 +563,7 @@ public class Main extends AppCompatActivity implements change_instance,
     }
 
 
-    private void change_to_preview_erfil(FragmentElement fragment,Bundle data) {
+    private void change_to_preview_erfil(FragmentElement fragment,Bundle data,boolean back) {
         if (fragment != null) {
             mCurrentFragment = fragment;
             //Log.e("EARCH_USERS","fragment : " + data.getInt(BUNDLES.ID_USUARIO));
@@ -571,7 +572,8 @@ public class Main extends AppCompatActivity implements change_instance,
                 stack_preview_perfil.push(mCurrentFragment);
             }
         }
-        inflateFragment();
+         inflateFragment();
+        if(!back)
         ((FragmentProfileUserPetPreview) mCurrentFragment.getFragment()).refresh_info();
     }
 
@@ -617,7 +619,7 @@ public class Main extends AppCompatActivity implements change_instance,
         mOldFragment = mCurrentFragment;
     }
 
-    private synchronized void changeOfInstance(int intanceType,Bundle bundle) {
+    private synchronized void changeOfInstance(int intanceType,Bundle bundle,boolean back) {
         saveFragment();
 
         if(intanceType!=FragmentElement.INSTANCE_COMENTARIOS && intanceType!=FragmentElement.INSTANCE_EDIT_PROFILE_USER) {
@@ -686,9 +688,9 @@ public class Main extends AppCompatActivity implements change_instance,
 
         else if(intanceType == FragmentElement.INSTANCE_PREVIEW_PROFILE) {
             if (stack_preview_perfil.size() == 0) {
-                change_to_preview_erfil(new FragmentElement<>("", FragmentProfileUserPetPreview.newInstance(), FragmentElement.INSTANCE_PREVIEW_PROFILE),bundle);
+                change_to_preview_erfil(new FragmentElement<>("", FragmentProfileUserPetPreview.newInstance(), FragmentElement.INSTANCE_PREVIEW_PROFILE),bundle,back);
             } else {
-                change_to_preview_erfil(stack_preview_perfil.pop(),bundle);
+                change_to_preview_erfil(stack_preview_perfil.pop(),bundle,back);
             }
 
         }
@@ -753,12 +755,12 @@ public class Main extends AppCompatActivity implements change_instance,
 
     @Override
     public void change(int fragment_element) {
-        changeOfInstance(fragment_element,null);
+        changeOfInstance(fragment_element,null,false);
     }
 
     @Override
     public void onback() {
-        changeOfInstance(FragmentElement.INSTANCE_FEED,null);
+        changeOfInstance(FragmentElement.INSTANCE_FEED,null,false);
     }
 
     @Override
@@ -778,28 +780,48 @@ public class Main extends AppCompatActivity implements change_instance,
 
     @Override
     public void onBackPressed() {
+        Log.e("OLD_FRAGMENT","-->" + mOldFragment.getInstanceType());
         if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_TIP_DETAIL){
             repaint_nav(R.id.tap_tips);
-            changeOfInstance(FragmentElement.INSTANCE_TIPS,null);
+            changeOfInstance(FragmentElement.INSTANCE_TIPS,null,false);
         }
         else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH || mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED){
+            if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED){
+                ((FragmentListOfPosts) mCurrentFragment.getFragment()).stop_player();
+            }
            if(mOldFragment.getInstanceType()==FragmentElement.INSTANCE_PROFILE_PET) {
                repaint_nav(R.id.tab_profile_pet);
-               changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null);
+               changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null,false);
            }else{
-               changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null);
+               changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null,false);
            }
         }
         else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE && mOldFragment.getInstanceType()== FragmentElement.INSTANCE_GET_POSTS_PUBLICS){
-            changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null);
+                 changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null,false);
+        }else if(mCurrentFragment.getInstanceType()  == FragmentElement.INSTANCE_PREVIEW_PROFILE && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH){
+            changeOfInstance(FragmentElement.INSTANCE_SEARCH,null,false);
         }
         else if(IS_SHEET_OPEN || SIDE_OPEN){
             IS_SHEET_OPEN= false;
             mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
             mainSlideMenu.closeRightSlide();
-        }else{
+        }
+        else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_EDIT_PROFILE_USER){
+            Bundle b = new Bundle();
+            b.putString(BUNDLES.PHOTO_LOCAL,App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
+            changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET,b,false);
+        }else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_FOLLOWS_USER){
+            if(mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE){
+                changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE,null,true);
+            }else if(mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET){
+                Bundle b = new Bundle();
+                b.putString(BUNDLES.PHOTO_LOCAL,App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
+                changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET,b,false);
+            }
+        }
+        else{
             repaint_nav(R.id.tab_feed);
-            changeOfInstance(FragmentElement.INSTANCE_FEED,null);
+            changeOfInstance(FragmentElement.INSTANCE_FEED,null,false);
         }
 
     }
@@ -857,7 +879,7 @@ public class Main extends AppCompatActivity implements change_instance,
                 int id_user= data.getIntExtra(BUNDLES.ID_USUARIO,0);
                 Bundle b = new Bundle();
                 b.putInt(BUNDLES.ID_USUARIO,id_user);
-                changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE,b);
+                changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE,b,false);
             }
         }
 
@@ -927,7 +949,7 @@ public class Main extends AppCompatActivity implements change_instance,
             Intent i = new Intent(this , QrSearchActivity.class);
             startActivityForResult( i,NEW_PHOTO_QR_SCAN);
         }else
-        changeOfInstance(type_fragment,data);
+        changeOfInstance(type_fragment,data,false);
     }
 
 
@@ -972,11 +994,11 @@ public class Main extends AppCompatActivity implements change_instance,
         userBean.setDescripcion(bundle.getString(BUNDLES.DESCRIPCION));
         userBean.setPhoto_user(bundle.getString(BUNDLES.PHOTO));
         userBean.setPhoto_user_thumbh(bundle.getString(BUNDLES.PHOTO_TUMBH));
-        userBean.setTarget("UPDATE");
+        userBean.setTarget(WEBCONSTANTS.UPDATE);
         userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         userBean.setUuid(App.read(PREFERENCES.UUID,"INVALID"));
         presenter.UpdateProfile(userBean);
-        changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET,bundle);
+        changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET,bundle,false);
     }
 
     @Override
@@ -1048,7 +1070,7 @@ public class Main extends AppCompatActivity implements change_instance,
                     @Override
                     public void onTargetClick(TapTargetView view) {
                         super.onTargetClick(view);
-                        changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null);
+                        changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null,false);
                         repaint_nav(R.id.tab_profile_pet);
                     }
 

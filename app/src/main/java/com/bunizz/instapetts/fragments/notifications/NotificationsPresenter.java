@@ -25,7 +25,7 @@ public class NotificationsPresenter implements  NotificationsContract.Presenter 
     private CompositeDisposable disposable = new CompositeDisposable();
     NotificationHelper notificationHelper;
     FirebaseFirestore db;
-
+    ArrayList<NotificationBean> notificationBeans = new ArrayList<>();
     NotificationsPresenter(NotificationsContract.View view, Context context) {
         this.mView = view;
         this.mContext = context;
@@ -48,7 +48,7 @@ public class NotificationsPresenter implements  NotificationsContract.Presenter 
 
     @Override
     public void getNotificationsFromWeb() {
-        ArrayList<NotificationBean> notificationBeans = new ArrayList<>();
+
         db.collection(FIRESTORE.COLLECTION_NOTIFICATIONS).document(""+App.read(PREFERENCES.ID_USER_FROM_WEB,0))
                 .collection(FIRESTORE.COLLECTION_NOTIFICATIONS)
                 .get()
@@ -70,6 +70,7 @@ public class NotificationsPresenter implements  NotificationsContract.Presenter 
                         notificationHelper.saveNotification(NOTIFICACION);
                         notificationBeans.add( NOTIFICACION );
                     }
+                    notificationBeans = notificationHelper.getAllNotifications();
                     mView.showNotificationaFromWeb(notificationBeans);
                 })
                 .addOnSuccessListener(aVoid -> {});
@@ -98,7 +99,7 @@ public class NotificationsPresenter implements  NotificationsContract.Presenter 
         String body="";
         switch (type_notification){
             case 0:
-                body = name  + " "  + mContext.getResources().getString(R.string.body_follow);
+                body =  "A <b>" + name  + "</b>  "  + mContext.getResources().getString(R.string.body_follow);
                 break;
             case 1:
                 body = name  + " "  + mContext.getResources().getString(R.string.body_comment);

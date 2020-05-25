@@ -3,6 +3,7 @@ package com.bunizz.instapetts.utils.dilogs;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -69,7 +70,8 @@ public class DialogDeletes extends BaseAlertDialog{
             text_delete_dialog.setText("Eliminar todas");
             delete_now_layout.setOnClickListener(v -> {
                 if(listener!=null) {
-                    if(type_dialog == 0) {
+                    if(type_dialog == 1) {
+                        Log.e("EJECUTO_DELETE","SI");
                         listener.delete(true);
                     }else{
                         listener.deleteOne(id);

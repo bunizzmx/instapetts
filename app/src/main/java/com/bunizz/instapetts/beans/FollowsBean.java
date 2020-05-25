@@ -9,9 +9,9 @@ public class FollowsBean {
     @Expose
     int id_user;
 
-    @SerializedName("uudi")
+    @SerializedName("uuid_user")
     @Expose
-    String uudi;
+    String uuid_user;
 
     @SerializedName("url_photo_user")
     @Expose
@@ -21,19 +21,19 @@ public class FollowsBean {
     @Expose
     String name_user;
 
-    @SerializedName("name_tag")
+    @SerializedName("name_nip_user")
     @Expose
-    String name_tag;
+    String name_nip_user;
 
     public FollowsBean() {
     }
 
-    public FollowsBean(int id_user, String uudi, String url_photo_user, String name_user, String name_tag) {
+    public FollowsBean(int id_user, String uuid_user, String url_photo_user, String name_user, String name_nip_user) {
         this.id_user = id_user;
-        this.uudi = uudi;
+        this.uuid_user = uuid_user;
         this.url_photo_user = url_photo_user;
         this.name_user = name_user;
-        this.name_tag = name_tag;
+        this.name_nip_user = name_nip_user;
     }
 
     public int getId_user() {
@@ -44,12 +44,12 @@ public class FollowsBean {
         this.id_user = id_user;
     }
 
-    public String getUudi() {
-        return uudi;
+    public String getUuid_user() {
+        return uuid_user;
     }
 
-    public void setUudi(String uudi) {
-        this.uudi = uudi;
+    public void setUuid_user(String uuid_user) {
+        this.uuid_user = uuid_user;
     }
 
     public String getUrl_photo_user() {
@@ -68,13 +68,11 @@ public class FollowsBean {
         this.name_user = name_user;
     }
 
-    public String getName_tag() {
-        return name_tag;
+    public String getName_nip_user() {
+        return name_nip_user;
     }
 
-    public void setName_tag(String name_tag) {
-        this.name_tag = name_tag;
+    public void setName_nip_user(String name_nip_user) {
+        this.name_nip_user = name_nip_user;
     }
-
-
 }

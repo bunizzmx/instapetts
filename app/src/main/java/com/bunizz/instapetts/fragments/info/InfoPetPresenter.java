@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.bunizz.instapetts.beans.PetBean;
+import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.db.helpers.LikesTipsHelper;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.tips.detail.DetailContract;
@@ -40,7 +41,7 @@ public class InfoPetPresenter implements  InfoPetContract.Presenter {
     public void delete(int id_pet) {
         helper.deletePet(id_pet);
         EventsPetsBean eventsPetsBean = new EventsPetsBean();
-        eventsPetsBean.setTarget("DELETE");
+        eventsPetsBean.setTarget(WEBCONSTANTS.DELETE);
         eventsPetsBean.setId_pet(id_pet);
         disposable.add(
                 apiService.deletePet(eventsPetsBean)
@@ -116,7 +117,7 @@ public class InfoPetPresenter implements  InfoPetContract.Presenter {
 
     @Override
     public void updatePet(PetBean petBean) {
-        petBean.setTarget("UPDATE");
+        petBean.setTarget(WEBCONSTANTS.DELETE);
         disposable.add(
                 apiService.updatePet(petBean)
                         .subscribeOn(Schedulers.io())

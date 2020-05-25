@@ -25,7 +25,7 @@
             <ImageView
                 android:scaleType="centerCrop"
                 android:id="@+id/pet_chose_list"
-                android:src="@drawable/ic_hand_pet_preload"
+                android:src="@drawable/ic_holder"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </androidx.cardview.widget.CardView>

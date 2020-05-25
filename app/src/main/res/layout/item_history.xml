@@ -53,7 +53,7 @@
       android:layout_alignParentRight="true"
       app:civ_border_width="2dp"
       app:civ_border_color="@color/primary"
-      android:src="@drawable/ic_hand_pet_preload"
+      android:src="@drawable/ic_holder"
       android:id="@+id/image_pet_history"
       android:layout_width="30dp"
       android:layout_height="30dp"/>

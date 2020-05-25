@@ -102,6 +102,10 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     @BindView(R.id.descripcion_perfil_user)
     TextView descripcion_perfil_user;
 
+    @BindView(R.id.num_followed)
+    TextView num_followed;
+
+
     @BindView(R.id.name_property_pet)
     TextView name_property_pet;
     folowFavoriteListener listener_follow;
@@ -148,6 +152,19 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
          b.putString(BUNDLES.NAME_USUARIO,USERBEAN.getName_user());
          b.putInt(BUNDLES.ID_USUARIO,USERBEAN.getId());
          b.putString(BUNDLES.UUID,USERBEAN.getUuid());
+        b.putInt("TIPO_DESCARGA",2);
+        listener_instance.change_fragment_parameter(FragmentElement.INSTANCE_FOLLOWS_USER,b);
+    }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.open_followiongs)
+    void open_followiongs() {
+        Log.e("CHANGUE_FOLLOOWS","true");
+        Bundle b = new Bundle();
+        b.putString(BUNDLES.NAME_USUARIO,USERBEAN.getName_user());
+        b.putInt(BUNDLES.ID_USUARIO,USERBEAN.getId());
+        b.putString(BUNDLES.UUID,USERBEAN.getUuid());
+        b.putInt("TIPO_DESCARGA",1);
         listener_instance.change_fragment_parameter(FragmentElement.INSTANCE_FOLLOWS_USER,b);
     }
 
@@ -257,7 +274,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
             follow_edit.setOnClickListener(view1 -> listener.change(FragmentElement.INSTANCE_EDIT_PROFILE_USER));
         descripcion_perfil_user.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
         URL_UPDATED = App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID");
-        Glide.with(getContext()).load(URL_UPDATED).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);
+        Glide.with(getContext()).load(URL_UPDATED).placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
 
         presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0),POSITION_PAGER);
 
@@ -290,7 +307,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     public void change_image_profile(String url){
         if(image_profile_property_pet!=null) {
             if(!url.equals("INVALID"))
-            Glide.with(getContext()).load(url).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);
+            Glide.with(getContext()).load(url).placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
         }
     }
 
@@ -345,11 +362,12 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
             name_property_pet.setText("@" + App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"INVALID"));
 
         descripcion_perfil_user.setText(USERBEAN.getDescripcion());
-        Glide.with(getContext()).load(USERBEAN.getPhoto_user()).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);
+        Glide.with(getContext()).load(USERBEAN.getPhoto_user()).placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
         petsPropietaryAdapter.setPets(PETS);
         num_posts.setText(String.valueOf(USERBEAN.getPosts()));
-        num_rate_pets.setText(String.valueOf(RATE_PETS));
+        num_rate_pets.setText(String.format("%.2f", RATE_PETS));
         num_followers.setText(String.valueOf(USERBEAN.getFolowers()));
+        num_followed.setText(""+USERBEAN.getFollowed());
     }
 
 

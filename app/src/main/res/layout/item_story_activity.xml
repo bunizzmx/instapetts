@@ -60,7 +60,7 @@
             android:id="@+id/imagen_usuario_historia"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/ic_hand_pet_preload"
+            android:src="@drawable/ic_holder"
             app:civ_border_width="2dp"
             app:civ_border_color="@color/white"/>
         <TextView
@@ -171,7 +171,7 @@
             android:layout_height="wrap_content">
             <com.bunizz.instapetts.utils.ImagenCircular
                 android:id="@+id/imagen_mascota_history"
-                android:src="@drawable/ic_hand_pet_preload"
+                android:src="@drawable/ic_holder"
                 android:layout_width="30dp"
                 android:layout_height="30dp"/>
             <TextView

@@ -20,7 +20,7 @@
       android:layout_height="match_parent">
 
     <ImageView
-        android:src="@drawable/ic_hand_pet_preload"
+        android:src="@drawable/ic_holder"
         android:scaleType="centerCrop"
         android:id="@+id/image_selected"
         android:layout_width="match_parent"

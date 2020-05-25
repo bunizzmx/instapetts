@@ -8,7 +8,7 @@
     android:background="@color/white"
     >
     <RelativeLayout
-        android:id="@+id/root_folloes_toolbar"
+        android:id="@+id/root_toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
@@ -32,7 +32,7 @@
     <TextView
         android:layout_marginLeft="10dp"
         android:textSize="18dp"
-        android:text="-"
+        android:text="Usuarios Seguidos"
         android:id="@+id/name_user_folowers"
         android:textColor="@color/black"
         android:fontFamily="@font/avenir_b"
@@ -43,7 +43,8 @@
         android:layout_height="wrap_content"/>
     </RelativeLayout>
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@+id/root_folloes_toolbar"
+        android:layout_above="@+id/loanding_more_users"
+        android:layout_below="@+id/root_toolbar"
         android:id="@+id/list_follows"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -52,24 +53,6 @@
         android:paddingTop="8dp"
         tools:listitem="@layout/item_follow"
         />
-
-    <com.bunizz.instapetts.utils.fastScroll.FastScrollerView
-        android:layout_below="@+id/root_folloes_toolbar"
-        android:layout_alignParentRight="true"
-        android:id="@+id/sample_basic_fastscroller"
-        android:layout_width="32dp"
-        android:layout_height="match_parent"
-        />
-
-    <com.bunizz.instapetts.utils.fastScroll.FastScrollerThumbView
-        android:layout_below="@+id/root_folloes_toolbar"
-        android:layout_toLeftOf="@+id/sample_basic_fastscroller"
-        android:id="@+id/sample_basic_fastscroller_thumb"
-        android:layout_width="40dp"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="16dp"
-        />
-
     <include layout="@layout/no_internet"></include>
     <com.bunizz.instapetts.utils.loadings.SpinKitView
         android:id="@+id/spin_kit"
@@ -80,5 +63,20 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:padding="10dp" />
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:background="@color/white"
+        android:id="@+id/loanding_more_users"
+        android:layout_alignParentBottom="true"
+        android:padding="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ProgressBar
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_width="20dp"
+            android:layout_height="20dp"/>
+    </RelativeLayout>
 
 </RelativeLayout>

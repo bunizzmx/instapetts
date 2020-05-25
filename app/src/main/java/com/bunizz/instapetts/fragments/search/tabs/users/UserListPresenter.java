@@ -25,4 +25,10 @@ public class UserListPresenter implements UserListContract.Presenter {
     public void saveSearch(SearcRecentBean searcRecentBean) {
         searchResentHelper.saveSearch(searcRecentBean);
     }
+
+    @Override
+    public void deleteRecent(int id) {
+        searchResentHelper.deleteSearch(id,true);
+        mView.deleteSucess();
+    }
 }

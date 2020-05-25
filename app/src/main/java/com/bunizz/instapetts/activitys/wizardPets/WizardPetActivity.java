@@ -24,6 +24,7 @@ import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.camera.CameraFragment;
@@ -232,7 +233,7 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
         NEW_PET.setId_propietary(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         NEW_PET.setUuid(App.read(PREFERENCES.UUID,"INVALID"));
         NEW_PET.setName_propietary(App.read(PREFERENCES.NAME_USER,"INVALID"));
-        NEW_PET.setTarget("NEW");
+        NEW_PET.setTarget(WEBCONSTANTS.NEW);
         presenter.newPet(NEW_PET);
     }
 

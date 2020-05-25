@@ -40,7 +40,7 @@
 
     <com.bunizz.instapetts.utils.ImagenCircular
         android:id="@+id/image_pet_rate"
-        android:src="@drawable/ic_hand_pet_preload"
+        android:src="@drawable/ic_holder"
         android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal"
         android:layout_width="100dp"

@@ -15,9 +15,11 @@ public interface PlayVideoContract {
         void deleteFavorite(int id_post);
         boolean isLiked(int id_post);
         boolean  isSaved(int id_post);
+        void deleteVideo(PostBean postBean);
     }
 
     interface View{
         void LikeSuccess();
+        void deletePostError(boolean deleted);
     }
 }

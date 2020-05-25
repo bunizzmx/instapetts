@@ -20,7 +20,7 @@
         <com.bunizz.instapetts.utils.ImagenCircular
             android:layout_marginLeft="20dp"
             android:id="@+id/image_profile_property_pet"
-            android:src="@drawable/ic_hand_pet_preload"
+            android:src="@drawable/ic_holder"
             android:layout_width="70dp"
             android:layout_height="70dp"/>
         <LinearLayout
@@ -55,12 +55,13 @@
                     android:layout_height="wrap_content"/>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/open_followiongs"
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/num_rate_pets"
+                    android:id="@+id/num_followed"
                     android:layout_gravity="center_horizontal"
                     android:fontFamily="@font/avenir_black"
                     android:textSize="18dp"
@@ -71,7 +72,7 @@
                 <TextView
                     style="@style/FontNormal"
                     android:layout_gravity="center_horizontal"
-                    android:text="Rate Pets"
+                    android:text="@string/Followed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
@@ -93,7 +94,7 @@
                 <TextView
                     style="@style/FontNormal"
                     android:layout_gravity="center_horizontal"
-                    android:text="Fllowers"
+                    android:text="@string/followers"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
@@ -106,28 +107,75 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
                 <TextView
-                    android:textSize="20dp"
+                    android:textSize="16dp"
                     android:layout_marginTop="10dp"
                     style="@style/FontNormalTitlePrimary"
                     android:text="-"
                     android:id="@+id/name_property_pet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
+            <RelativeLayout
+                android:paddingRight="2dp"
+                android:paddingLeft="3dp"
+                android:layout_marginRight="20dp"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_alignParentStart="true"
+                    android:id="@+id/quote_left"
+                   android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8sp"
+                    android:src="@drawable/ic_quotes"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"/>
                 <TextView
-                    android:layout_marginRight="20dp"
+                    android:layout_toRightOf="@+id/quote_left"
+                    android:layout_toLeftOf="@+id/quote_right"
                     android:layout_marginBottom="10dp"
                     android:id="@+id/descripcion_perfil_user"
                     android:layout_marginTop="5dp"
                     android:text="-"
-                    style="@style/FontRegular"
-                    android:layout_below="@+id/follow_edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
+                <ImageView
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/quote_right"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="8sp"
+                    android:src="@drawable/ic_quotes_reverse"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"/>
+            </RelativeLayout>
+
             <LinearLayout
                 android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_marginRight="10dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/num_rate_pets"
+                        android:layout_gravity="center_horizontal"
+                        android:fontFamily="@font/avenir_black"
+                        android:textSize="18dp"
+                        android:textColor="@color/black"
+                        android:text="-"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        style="@style/FontNormal"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Rate Pets"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
                 <Button
                     android:paddingRight="30dp"
                     android:paddingLeft="30dp"

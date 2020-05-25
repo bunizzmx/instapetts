@@ -15,6 +15,7 @@ import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.FIRESTORE;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.db.helpers.FollowsHelper;
 import com.bunizz.instapetts.db.helpers.IdentificadoresHistoriesHelper;
 import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
@@ -129,9 +130,9 @@ public class MainPresenter implements MainContract.Presenter {
         historiesBean.setUltima_fecha(App.formatDateGMT(new Date()));
         historiesBean.setHistorias(concat_stories);
         if(lista.size()==1)
-            historiesBean.setTarget("NEW");
+            historiesBean.setTarget(WEBCONSTANTS.NEW);
         else
-            historiesBean.setTarget("UPDATE");
+            historiesBean.setTarget(WEBCONSTANTS.UPDATE);
 
 
         disposable.add(
@@ -153,37 +154,47 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void followUser(UserBean userBean) {
+
+        Map<String,Object> followedUserData = new HashMap<>();
+        followedUserData.put("url_photo_user",userBean.getPhoto_user_thumbh());
+        followedUserData.put("uuid_user",userBean.getUuid());
+        followedUserData.put("id_user",userBean.getId());
+        followedUserData.put("name_nip_user",userBean.getName_tag());
+        followedUserData.put("token",userBean.getToken());
+        followedUserData.put("name_user",userBean.getName_user());
+
+
         Map<String,Object> followUserData = new HashMap<>();
-        followUserData.put("name_user",userBean.getName_user());
-        followUserData.put("url_photo_user",userBean.getPhoto_user());
-        followUserData.put("uuid_user",userBean.getUuid());
-        followUserData.put("id_user",userBean.getId());
-        followUserData.put("name_nip_user",userBean.getName_user());
+        followUserData.put("url_photo_user",App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
+        followUserData.put("uuid_user",App.read(PREFERENCES.UUID,"INVALID"));
+        followUserData.put("id_user",App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        followUserData.put("name_nip_user",App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"INVALID"));
         followUserData.put("token",userBean.getToken());
+        followUserData.put("name_user",App.read(PREFERENCES.NAME_USER,"INVALID"));
         idsUsersHelper.saveId(userBean.getId());
-        db.collection(FIRESTORE.R_FOLLOWS).document(App.read(PREFERENCES.UUID,"INVALID")).collection(FIRESTORE.SEGUIDOS)
-                .document(String.valueOf(userBean.getUuid()))
-                .set(followUserData)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
+            db.collection(FIRESTORE.R_FOLLOWS).document(App.read(PREFERENCES.UUID,"INVALID")).collection(FIRESTORE.SEGUIDOS)
+                    .document(userBean.getName_tag())
+                    .set(followedUserData)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
 
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
 
-                    }
-                })
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
+                        }
+                    })
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
 
-                    }
-                });
+                        }
+                    });
         db.collection(FIRESTORE.R_FOLLOWS).document(String.valueOf(userBean.getUuid())).collection(FIRESTORE.SEGUIDORES)
-                .document(App.read(PREFERENCES.UUID,"INVALID"))
+                .document(App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"INVALID"))
                 .set(followUserData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

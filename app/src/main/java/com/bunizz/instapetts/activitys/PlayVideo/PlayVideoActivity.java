@@ -1,6 +1,7 @@
 package com.bunizz.instapetts.activitys.PlayVideo;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,15 +15,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.reports.ReportActiviy;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.TipsBean;
+import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.fragments.FragmentElement;
+import com.bunizz.instapetts.listeners.actions_dialog_profile;
 import com.bunizz.instapetts.utils.AnalogTv.AnalogTvNoise;
 import com.bunizz.instapetts.utils.ImagenCircular;
+import com.bunizz.instapetts.utils.dilogs.DialogOptionsPosts;
 import com.bunizz.instapetts.utils.slidemenu.SlideMenuLayout;
 import com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerView;
 import com.bunizz.instapetts.utils.video_player.PreviewTimeBar;
@@ -44,6 +50,7 @@ import androidx.core.content.ContextCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.http.POST;
 
 public class PlayVideoActivity extends AppCompatActivity implements PreviewView.OnPreviewChangeListener,PlayVideoContract.View {
 
@@ -112,6 +119,34 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
 
         presenter.likeVideo(postActions);
     }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.open_dialog_options)
+    void open_dialog_options() {
+        DialogOptionsPosts optionsPosts = new DialogOptionsPosts(this,POST_BEAN.getId_post_from_web(),POST_BEAN.getId_usuario(),POST_BEAN.getUuid());
+        optionsPosts.setListener(new actions_dialog_profile() {
+            @Override
+            public void delete_post(int id_post) {
+                PostBean postBean = new PostBean();
+                postBean.setId_post_from_web(id_post);
+                postBean.setTarget(WEBCONSTANTS.DELETE);
+                presenter.deleteVideo(postBean);
+            }
+
+            @Override
+            public void reportPost(int id_post) {
+                Intent reportIntent = new Intent(PlayVideoActivity.this, ReportActiviy.class);
+                reportIntent.putExtra("ID_RECURSO",id_post);
+                reportIntent.putExtra("TYPO_RECURSO",1);
+                startActivity(reportIntent);
+            }
+        });
+        optionsPosts.show();
+    }
+
+
+
+
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.save_on_favorites)
@@ -347,6 +382,12 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
     @Override
     public void LikeSuccess() {
 
+    }
+
+    @Override
+    public void deletePostError(boolean deleted) {
+        Toast.makeText(this,"Publicacion eliminada",Toast.LENGTH_LONG).show();
+        finish();
     }
 }
 

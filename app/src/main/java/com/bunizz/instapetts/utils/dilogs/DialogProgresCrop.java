@@ -44,8 +44,8 @@ public class DialogProgresCrop extends BaseAlertDialog{
         image_crop_video = dialogView.findViewById(R.id.image_crop_video);
         percentage.setText("0 %");
         Glide.with(context).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"))
-                .placeholder(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
-                .error(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
+                .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                .error(context.getResources().getDrawable(R.drawable.ic_holder))
                 .into(image_crop_video);
         dialogBuilder.setView(dialogView);
         dialog = dialogBuilder.create();

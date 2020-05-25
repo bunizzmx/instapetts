@@ -168,8 +168,8 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
             adapter.clear();
             presenter.getComentarios(ID_POST);
             Glide.with(getContext()).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"))
-                    .placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload))
-                    .error(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload))
+                    .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder))
+                    .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
                     .into(image_user_comment);
             if(!CAN_COMMENT){
                 comment_now.setVisibility(View.GONE);
@@ -210,8 +210,8 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
         });
         Glide.with(getContext())
                 .load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"))
-                .placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload))
-                .error(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload))
+                .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder))
+                .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
                 .into(image_user_comment);
 
         if(!CAN_COMMENT){
@@ -373,8 +373,8 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
 
             h.item_comentarios_name.setText(data.get(position).getName_user());
             Glide.with(context).load(data.get(position).getFoto_user())
-                    .placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload))
-                    .error(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload))
+                    .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder))
+                    .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
                     .into(h.imagen_user_comment);
             h.item_comentarios_comentario.setText(data.get(position).getCommentario());
             h.fecha_comment.setText(App.getInstance().fecha_lenguaje_humano(data.get(position).getFecha_comentario()));

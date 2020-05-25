@@ -112,7 +112,8 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     @BindView(R.id.spinky_loading_profile_info)
     SpinKitView spinky_loading_profile_info;
 
-
+    @BindView(R.id.num_followed)
+    TextView num_followed;
 
     Style style = Style.values()[12];
     Sprite drawable = SpriteFactory.create(style);
@@ -146,6 +147,19 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         b.putString(BUNDLES.NAME_USUARIO,USERBEAN.getName_user());
         b.putInt(BUNDLES.ID_USUARIO,USERBEAN.getId());
         b.putString(BUNDLES.UUID,USERBEAN.getUuid());
+        b.putInt("TIPO_DESCARGA",2);
+        listener_instance.change_fragment_parameter(FragmentElement.INSTANCE_FOLLOWS_USER,b);
+    }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.open_followiongs)
+    void open_followiongs() {
+        Log.e("CHANGUE_FOLLOOWS","true");
+        Bundle b = new Bundle();
+        b.putString(BUNDLES.NAME_USUARIO,USERBEAN.getName_user());
+        b.putInt(BUNDLES.ID_USUARIO,USERBEAN.getId());
+        b.putString(BUNDLES.UUID,USERBEAN.getUuid());
+        b.putInt("TIPO_DESCARGA",1);
         listener_instance.change_fragment_parameter(FragmentElement.INSTANCE_FOLLOWS_USER,b);
     }
 
@@ -264,7 +278,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
 
     public void change_image_profile(String url){
         if(image_profile_property_pet!=null)
-            Glide.with(getContext()).load(url).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);
+            Glide.with(getContext()).load(url).placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
     }
 
     public void refresh_info(){
@@ -341,24 +355,27 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         PETS.addAll(pets);
         float RATE_PETS=0;
         float ACOMULATIVO_RATE=0;
-        for(int i=0;i <pets.size();i++){
-            ACOMULATIVO_RATE +=pets.get(i).getRate_pet();
+        for(int i=0;i <PETS.size();i++){
+            Log.e("ACOMULATIVO_RATE","-->:" + PETS.get(i).getRate_pet() );
+            ACOMULATIVO_RATE +=PETS.get(i).getRate_pet();
         }
-        RATE_PETS = ACOMULATIVO_RATE / pets.size();
+        RATE_PETS = ACOMULATIVO_RATE / PETS.size();
 
         USERBEAN = userBean;
         Log.e("USER_BEAN","-->TOKEN:" + USERBEAN.getToken() );
-        name_property_pet.setText("@" + USERBEAN.getName_user());
+        name_property_pet.setText("@" + USERBEAN.getName_tag());
         descripcion_perfil_user.setText(USERBEAN.getDescripcion());
-        Glide.with(getContext()).load(USERBEAN.getPhoto_user()).placeholder(getContext().getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(image_profile_property_pet);
+        Glide.with(getContext()).load(USERBEAN.getPhoto_user()).placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
         petsPropietaryAdapter.setPetsforOtherUser(PETS);
         title_name_preview.setText(USERBEAN.getName_user());
         num_posts.setText(String.valueOf(USERBEAN.getNum_pets()));
         if(RATE_PETS <=0)
             num_rate_pets.setText("0.0");
         else
-            num_rate_pets.setText(String.valueOf(RATE_PETS));
+            num_rate_pets.setText(String.format("%.2f", RATE_PETS));
+
         num_followers.setText(String.valueOf(USERBEAN.getFolowers()));
+        num_followed.setText(""+USERBEAN.getFollowed());
 
     }
 

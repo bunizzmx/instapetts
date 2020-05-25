@@ -11,7 +11,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,6 +46,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 public class FragmentSearchPet extends Fragment implements SearchPetContract.View{
 
 
@@ -57,6 +62,8 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
     @BindView(R.id.tabs_search)
     SmartTabLayout tabs_search;
 
+    @BindView(R.id.searching_world)
+    ProgressBar searching_world;
 
 
     SearchPetPresenter presenter;
@@ -72,7 +79,7 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
     public static FragmentSearchPet newInstance() {
         return new FragmentSearchPet();
     }
-
+    private Handler mHandler= new Handler();
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +116,7 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
 
             @Override
             public void afterTextChanged(Editable s) {
+                searching_world.setVisibility(View.VISIBLE);
                 if(s.length()> 3){
                     handler.removeCallbacks(workRunnable);
                     workRunnable = () ->{
@@ -118,6 +126,15 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
                             presenter.searchPets(search_input.getText().toString());
                     };
                     handler.postDelayed(workRunnable, 1000 /*delay*/);
+                }else if(s.toString().length() == 0 ){
+                    Log.e("SHOW_RECENT","SI");
+                    Fragment frag = adapter_pager.getItem(POSITION_PAGER);
+                    if(frag instanceof FragmentPetList ){
+                        ((FragmentPetList) frag).showRecent();
+                    }else{
+                        ((FragmentPopietaryList) frag).showRecent();
+                    }
+                    searching_world.setVisibility(View.GONE);
                 }
             }
         });
@@ -145,6 +162,12 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
 
             }
         });
+        mHandler.post(() -> {
+                    InputMethodManager inputMethodManager =  (InputMethodManager)getContext().getSystemService(INPUT_METHOD_SERVICE);
+                    inputMethodManager.toggleSoftInputFromWindow(search_input.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+                    search_input.requestFocus();
+                });
+
     }
 
 
@@ -156,6 +179,7 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
 
     @Override
     public void shoPetsResults(ArrayList<SearchPetBean> pets) {
+        searching_world.setVisibility(View.GONE);
         Fragment frag = adapter_pager.getItem(1);
         if (frag instanceof FragmentPetList) {
             Log.e("SHOW_RESULT_USER","PEST");
@@ -167,6 +191,7 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
 
     @Override
     public void shoUsersResults(ArrayList<SearchUserBean> users) {
+        searching_world.setVisibility(View.GONE);
         Fragment frag =  adapter_pager.getItem(0);
         if (frag instanceof FragmentPopietaryList) {
             Log.e("SHOW_RESULT_USER","USUARIOS");

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
    <com.bunizz.instapetts.utils.ImagenCircular
        android:layout_centerHorizontal="true"
-     android:src="@drawable/ic_hand_pet_preload"
+     android:src="@drawable/ic_holder"
        android:id="@+id/type_pet_image"
        android:layout_width="wrap_content"
        android:layout_height="150dp"/>

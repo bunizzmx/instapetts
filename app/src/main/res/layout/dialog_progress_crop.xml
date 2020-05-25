@@ -35,7 +35,7 @@
             <com.bunizz.instapetts.utils.ImagenCircular
                 android:id="@+id/image_crop_video"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/ic_hand_pet_preload"
+                android:src="@drawable/ic_holder"
                 android:layout_width="70dp"
                 android:layout_height="70dp"/>
             <com.bunizz.instapetts.utils.textgradient.AnimatedGradientTextView

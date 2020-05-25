@@ -14,6 +14,10 @@ import com.bunizz.instapetts.beans.ReportListBean;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.qr.FragmentMyQRPreview;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.utils.loadings.SpinKitView;
+import com.bunizz.instapetts.utils.loadings.SpriteFactory;
+import com.bunizz.instapetts.utils.loadings.Style;
+import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
 
 import java.util.ArrayList;
 
@@ -34,8 +38,15 @@ public class ReportsListFragment extends Fragment implements   ReportsContract.V
 
     ReportPresenter presenter;
 
-    changue_fragment_parameters_listener listener;
+    @BindView(R.id.spin_kit)
+    SpinKitView spin_kit;
 
+    Style style = Style.values()[12];
+    Sprite drawable = SpriteFactory.create(style);
+
+
+
+    changue_fragment_parameters_listener listener;
     public static ReportsListFragment newInstance() {
         return new ReportsListFragment();
     }
@@ -56,6 +67,8 @@ public class ReportsListFragment extends Fragment implements   ReportsContract.V
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        spin_kit.setIndeterminateDrawable(drawable);
+        spin_kit.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         list_causas_report.setLayoutManager(new LinearLayoutManager(getContext()));
         list_causas_report.setAdapter(adapter);
         presenter.getList();
@@ -69,7 +82,22 @@ public class ReportsListFragment extends Fragment implements   ReportsContract.V
 
     @Override
     public void showListReports(ArrayList<ReportListBean> reportListBeans) {
-        adapter.setData(reportListBeans);
+        if(reportListBeans!=null){
+            if(reportListBeans.size()>0){
+                adapter.setData(reportListBeans);
+                spin_kit.setVisibility(View.GONE);
+            }else{
+                spin_kit.setVisibility(View.GONE);
+            }
+        }else{
+            spin_kit.setVisibility(View.GONE);
+        }
+
+    }
+
+    @Override
+    public void reportSended() {
+
     }
 
 
@@ -118,6 +146,7 @@ public class ReportsListFragment extends Fragment implements   ReportsContract.V
                 public void onClick(View v) {
                     Bundle b = new Bundle();
                     b.putString("MOTIVO",data.get(position).getName());
+                    b.putInt("ID_MOTIVO",data.get(position).getId());
                     listener.change_fragment_parameter(FragmentElement.INSTANCE_FINAL_REPORT,b);
                 }
             });

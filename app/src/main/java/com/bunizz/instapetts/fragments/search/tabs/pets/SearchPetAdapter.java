@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -34,6 +35,7 @@ public class SearchPetAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHol
     searchRecentListener listener_recent;
     boolean HIDE_LABEL =true;
     ArrayList<Object> data = new ArrayList<>();
+    boolean IS_RECENT=false;
 
     public ArrayList<Object> getData() {
         return data;
@@ -42,6 +44,10 @@ public class SearchPetAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void setData(ArrayList<Object> data) {
         this.data = data;
         notifyDataSetChanged();
+    }
+
+   public  int get_size(){
+       return  this.data.size();
     }
 
     public changue_fragment_parameters_listener getListener() {
@@ -67,6 +73,15 @@ public class SearchPetAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setListener_recent(searchRecentListener listener_recent) {
         this.listener_recent = listener_recent;
+    }
+
+    public void clear(){
+        this.data.clear();
+        notifyDataSetChanged();
+    }
+
+    public void isRecent(boolean is_resent){
+        IS_RECENT = is_resent;
     }
 
     public SearchPetAdapter(Context context) {
@@ -96,18 +111,52 @@ public class SearchPetAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHol
         else
             h.delete_recent.setVisibility(View.GONE);
 
-        h.name_pet_searching.setText(data_parsed.getName_pet() );
-        Glide.with(context).load(data_parsed.getUrl_photo()).into(h.image_pet_searching);
-        h.root_pet_searching.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle b = new Bundle();
-                b.putString(BUNDLES.UUID,data_parsed.getUuid());
-                b.putInt(BUNDLES.ID_USUARIO,data_parsed.getId_user());
-                listener_recent.onSearch(data_parsed,2);
-                listener.change_fragment_parameter(FragmentElement.INSTANCE_PREVIEW_PROFILE,b);
-            }
+        if(IS_RECENT) {
+            h.icon_flecha_item.setVisibility(View.GONE);
+            h.delete_recent.setVisibility(View.VISIBLE);
+        }else{
+            h.icon_flecha_item.setVisibility(View.VISIBLE);
+            h.delete_recent.setVisibility(View.GONE);
+            h.search_recent_label.setVisibility(View.GONE);
+        }
+
+        h.delete_recent.setOnClickListener(v ->{
+            data.remove(position);
+            listener_recent.deleteRecent(data_parsed.getId_pet());
         });
+
+        h.name_propietary_pet_searching.setText("@"+ ((SearchPetBean) data.get(position)).getName_user());
+
+        h.name_pet_searching.setText(data_parsed.getName_pet() );
+        Glide.with(context).load(data_parsed.getUrl_photo())
+                .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                .error(context.getResources().getDrawable(R.drawable.ic_holder)).into(h.image_pet_searching);
+        h.root_pet_searching.setOnClickListener(view -> {
+            Bundle b = new Bundle();
+            b.putString(BUNDLES.UUID,data_parsed.getUuid());
+            b.putInt(BUNDLES.ID_USUARIO,data_parsed.getId_user());
+            listener_recent.onSearch(data_parsed,2);
+            listener.change_fragment_parameter(FragmentElement.INSTANCE_PREVIEW_PROFILE,b);
+        });
+        h.name_raza_pet.setText( "  -  " +data_parsed.getName_raza());
+        switch (data_parsed.getType_raza()){
+            case 1:
+                h.icon_type_pet.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_perro));
+                break;
+            case 2:
+                h.icon_type_pet.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_gato));
+                break;
+            case 3:
+                h.icon_type_pet.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_mascota_perico));
+                break;
+            case 4:
+                h.icon_type_pet.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_mascota_conejo));
+                break;
+            case 5:
+                h.icon_type_pet.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_mascota_hamster));
+                break;
+        }
+
     }
 
     @Override
@@ -116,9 +165,11 @@ public class SearchPetAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     public class SearchPetHolder extends RecyclerView.ViewHolder{
-        TextView name_pet_searching,search_recent_label;
+        TextView name_pet_searching,search_recent_label,name_propietary_pet_searching,name_raza_pet;
         ImagenCircular image_pet_searching;
         RelativeLayout root_pet_searching,delete_recent;
+        ImageView icon_type_pet;
+        ImageView icon_flecha_item;
         public SearchPetHolder(@NonNull View itemView) {
             super(itemView);
             search_recent_label = itemView.findViewById(R.id.search_recent_label);
@@ -126,6 +177,10 @@ public class SearchPetAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHol
             image_pet_searching = itemView.findViewById(R.id.image_pet_searching);
             root_pet_searching = itemView.findViewById(R.id.root_pet_searching);
             delete_recent = itemView.findViewById(R.id.delete_recent);
+            name_propietary_pet_searching = itemView.findViewById(R.id.name_propietary_pet_searching);
+            icon_type_pet = itemView.findViewById(R.id.icon_type_pet);
+            name_raza_pet = itemView.findViewById(R.id.name_raza_pet);
+            icon_flecha_item = itemView.findViewById(R.id.icon_flecha_item);
         }
     }
 }

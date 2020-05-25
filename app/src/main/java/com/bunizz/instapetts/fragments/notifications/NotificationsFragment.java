@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,6 +80,7 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
         dialogDeletes.setListener(new delete() {
             @Override
             public void delete(boolean delete) {
+                Log.e("EJECUTO_DELETE","SI");
                 presenter.deleteAll();
             }
 
@@ -157,7 +159,7 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
             refresh_notificacions.setVisibility(View.VISIBLE);
             notificationsAdapter.setNotificationBeans(notificationBeans);
             a1.setVisibility(View.GONE);
-            presenter.getNotificationsFromWeb();
+            //presenter.getNotificationsFromWeb();
         }
         else{
           presenter.getNotificationsFromWeb();
@@ -166,11 +168,13 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
 
     @Override
     public void showNotificationaFromWeb(ArrayList<NotificationBean> notificationBeans) {
-        if(notificationBeans.size()> 0){
+        ArrayList<NotificationBean> DATA=new ArrayList<>();
+        DATA.addAll(notificationBeans);
+        if(DATA.size()> 0){
             delete_trash.setVisibility(View.VISIBLE);
             Log.e("NOTIFICATIOSN","SI HAY");
             refresh_notificacions.setVisibility(View.VISIBLE);
-            notificationsAdapter.setNotificationBeans(notificationBeans);
+            notificationsAdapter.setNotificationBeans(DATA);
             a1.setVisibility(View.GONE);
         }else{
             delete_trash.setVisibility(View.GONE);
@@ -226,6 +230,7 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
         public void setNotificationBeans(ArrayList<NotificationBean> notificationBeans) {
             this.notificationBeans.clear();
             this.notificationBeans.addAll(notificationBeans);
+            Log.e("TAM_NOTI",":) : " + this.notificationBeans.size());
             notifyDataSetChanged();
         }
 
@@ -253,11 +258,19 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             notificationsHOlder h = (notificationsHOlder)holder;
             if(notificationBeans.get(position).getBody().length() > 80) {
-                h.body_notification.setText(notificationBeans.get(position).getBody().substring(0,78) + "...");
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    h.body_notification.setText(Html.fromHtml(notificationBeans.get(position).getBody().substring(0,78) + "...",Html.FROM_HTML_MODE_LEGACY));
+                } else {
+                    h.body_notification.setText(Html.fromHtml(notificationBeans.get(position).getBody().substring(0,78) + "..."));
+                }
             }else{
-                h.body_notification.setText(notificationBeans.get(position).getBody());
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    h.body_notification.setText(Html.fromHtml(notificationBeans.get(position).getBody(),Html.FROM_HTML_MODE_LEGACY));
+                } else {
+                    h.body_notification.setText(Html.fromHtml(notificationBeans.get(position).getBody()));
+                }
             }
-
+           Log.e("FECHA_NOTIFICACION","-->:" + notificationBeans.get(position).getFecha());
             h.fecha_notificacion.setText(notificationBeans.get(position).getFecha());
                 h.title_notification.setText(notificationBeans.get(position).getTitle());
                 h.delete_notification.setOnClickListener(v -> {

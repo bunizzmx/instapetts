@@ -1,19 +1,27 @@
 package com.bunizz.instapetts.notifications;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.main.Main;
@@ -51,7 +59,7 @@ public class NotificationsManagers extends FirebaseMessagingService {
         String url_extra = remoteMessage.getData().get("url_extra");
         if(Integer.parseInt(type_notification) <=2){
            id_resource = remoteMessage.getData().get("id_resource");
-           notificationBean.setId_recurso(Integer.parseInt(id_resource));
+           //notificationBean.setId_recurso(Integer.parseInt(id_resource));
         }
         notificationBean.setBody(body);
         notificationBean.setTitle(title);
@@ -64,12 +72,13 @@ public class NotificationsManagers extends FirebaseMessagingService {
         switch (notificationBean.getType_notification()){
             case 0:
                 if(App.read(PREFERENCES.PUSH_ME_GUSTAS,true))
-                    buildNotification(title,body,notificationBean);
+                    buil_notification_image(title,body,notificationBean);
                 else
-                    buildNotification(title,body,notificationBean);
+                    buil_notification_image(title,body,notificationBean);
                 break;
         }
-
+        buil_notification_image(title,body,notificationBean);
+      //  crateec();
     }
 
     @Override
@@ -84,7 +93,28 @@ public class NotificationsManagers extends FirebaseMessagingService {
 
     }
 
-    void buildNotification(String title,String body,NotificationBean notificationBean){
+    void buil_notification_image(String title,String body,NotificationBean notificationBean){
+            final Bitmap[] bitmap = {null};
+
+            Glide.with(getApplicationContext())
+                    .asBitmap()
+                    .load(notificationBean.getUrl_resource())
+                    .into(new CustomTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+
+                            bitmap[0] = resource;
+                            // TODO Do some work: pass this bitmap
+                            buildNotification(title,body,notificationBean,bitmap[0]);
+                        }
+
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
+                        }
+                    });
+    }
+
+    void buildNotification(String title,String body,NotificationBean notificationBean,Bitmap bitmap){
         Intent intent;
         intent = new Intent(this, Main.class);
         intent.putExtra("FROM_PUSH",1);
@@ -118,9 +148,13 @@ public class NotificationsManagers extends FirebaseMessagingService {
             notificationManager.createNotificationChannel(mChannel);
         }
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        @SuppressLint("WrongConstant")
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), channelId)
-                .setSmallIcon(R.drawable.ic_hand_pet_preload)
+                .setSmallIcon(R.drawable.ic_stat_name)
+                .setBadgeIconType(R.drawable.ic_stat_name)
+                .setLargeIcon(bitmap)
                 .setContentTitle(title)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentText(body)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
@@ -137,4 +171,20 @@ public class NotificationsManagers extends FirebaseMessagingService {
 
         notificationManager.notify(notificationId, mBuilder.build());
     }
+
+    public void crateec(){
+        Log.e("CREATE_NOTI","xxx");
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "xx")
+                .setSmallIcon(R.drawable.n_ws)
+                .setContentTitle("My notification")
+                .setContentText("Much longer text that cannot fit one line...")
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText("Much longer text that cannot fit one line..."))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(1, builder.build());
+
+    }
+
 }

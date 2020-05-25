@@ -206,7 +206,7 @@
     <string name="add_first_photo">Vamos por tu primera foto!</string>
     <string name="config_fist_foto">Con una mascota lista ya podras empezar a subir contenido.</string>
 
-    <string name="firt_follow_pets">Empieza siguiendo a estas mascotas...</string>
+    <string name="firt_follow_pets">Publicaciones mas recientes...</string>
 
     <string name="account">Cuenta</string>
     <string name="saved">Guardado</string>
@@ -240,8 +240,13 @@
 
     <!-- STRING FOR PUSH /////////////////// -->
     <string name="title_follow">Nuevo me gusta</string>
-    <string name="body_follow"> le ha gustado tu publicación,sigue impresionando con tu mascota!!!</string>
+    <string name="body_follow"> le ha gustado tu publicación!!!</string>
 
     <string name="title_comment">Nuevo comentario</string>
     <string name="body_comment">  a comentado tu publicacion, ve de que se trata!!!</string>
+
+
+
+    <string name="Followed">Seguidos</string>
+    <string name="followers">Seguidores</string>
 </resources>

@@ -29,4 +29,10 @@ public class PetListPresenter implements PetListContract.Presenter {
     public void saveSearch(SearcRecentBean searcRecentBean) {
         searchResentHelper.saveSearch(searcRecentBean);
     }
+
+    @Override
+    public void deleteRecent(int id) {
+        searchResentHelper.deleteSearch(id,false);
+        mView.deleteSuccess();
+    }
 }

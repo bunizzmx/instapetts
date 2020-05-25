@@ -67,7 +67,8 @@ public class ViewPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         ImageView imageView = new ImageView(context);
-        Glide.with(context).load(image_urls.get(position)).placeholder(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload)).centerCrop().into(imageView);
+        Glide.with(context).load(image_urls.get(position)).placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                .error(context.getResources().getDrawable(R.drawable.ic_holder)).centerCrop().into(imageView);
         container.addView(imageView);
         return  imageView;
     }

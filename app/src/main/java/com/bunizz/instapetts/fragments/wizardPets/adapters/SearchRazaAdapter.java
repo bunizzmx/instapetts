@@ -90,7 +90,9 @@ public class SearchRazaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             listener.onchange(FragmentElement.INSTANCE_DATA_PET,b);
         });
         if(data.get(position).getUrl_photo()!=null)
-        Glide.with(context).load(data.get(position).getUrl_photo()).into(h.foto_pet_raza);
+        Glide.with(context).load(data.get(position).getUrl_photo())
+                .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                .error(context.getResources().getDrawable(R.drawable.ic_holder)).into(h.foto_pet_raza);
     }
 
     @Override

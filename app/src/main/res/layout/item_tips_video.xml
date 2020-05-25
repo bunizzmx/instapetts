@@ -55,7 +55,7 @@
                     android:layout_height="match_parent"
                     android:background="@android:color/white"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_hand_pet_preload"
+                    android:src="@drawable/ic_holder"
                     />
 
             </FrameLayout>

@@ -3,6 +3,7 @@ package com.bunizz.instapetts.fragments.profile;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,10 +79,15 @@ public class AdapterGridPostsProfile extends RecyclerView.Adapter<RecyclerView.V
             }else{
                 h.multiple_images_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_album));
             }
-            Glide.with(context).load(splits[0]).into(h.fisrt_stack_foto);
+            Log.e("ADAPTER_GRID_POIST","--> : " + data_parsed.getThumb_video());
+            Glide.with(context).load(data_parsed.getThumb_video())
+                    .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                    .error(context.getResources().getDrawable(R.drawable.ic_holder)).into(h.fisrt_stack_foto);
         }else{
             h.multiple_images_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_play));
-            Glide.with(context).load(data_parsed.getThumb_video()).into(h.fisrt_stack_foto);
+            Glide.with(context).load(data_parsed.getThumb_video())
+                    .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                    .error(context.getResources().getDrawable(R.drawable.ic_holder)).into(h.fisrt_stack_foto);
         }
         h.root_posts_search_item.setOnClickListener(view -> {
         });

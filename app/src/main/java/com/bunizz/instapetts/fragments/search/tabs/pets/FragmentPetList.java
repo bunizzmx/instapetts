@@ -1,12 +1,15 @@
 package com.bunizz.instapetts.fragments.search.tabs.pets;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,6 +43,13 @@ public class FragmentPetList extends Fragment implements  PetListContract.View{
     @BindView(R.id.root_no_data)
     RelativeLayout root_no_data;
 
+    @BindView(R.id.title_no_data)
+    TextView title_no_data;
+
+    @BindView(R.id.body_no_data)
+    TextView body_no_data;
+
+
 
     changue_fragment_parameters_listener listener;
     SearchPetAdapter adapter;
@@ -52,6 +62,7 @@ public class FragmentPetList extends Fragment implements  PetListContract.View{
         Log.e("REFRESH_DATA_SEARCH","--> data:" + data.size());
         this.data = data;
         if(this.data.size()>0) {
+            adapter.isRecent(false);
             list_Search_recents_pets.setVisibility(View.GONE);
             root_no_data.setVisibility(View.GONE);
             list_pets_search_result.setVisibility(View.VISIBLE);
@@ -61,6 +72,8 @@ public class FragmentPetList extends Fragment implements  PetListContract.View{
             list_Search_recents_pets.setVisibility(View.GONE);
             root_no_data.setVisibility(View.VISIBLE);
             list_pets_search_result.setVisibility(View.GONE);
+            title_no_data.setText("No hay busquedas recientes");
+            body_no_data.setText("No hay busquedas recientes, empieza por buscar a un usuario o mascota de tu preferencia.");
         }
     }
 
@@ -79,6 +92,8 @@ public class FragmentPetList extends Fragment implements  PetListContract.View{
             @Override
             public void change_fragment_parameter(int type_fragment, Bundle data) {
                 if(listener!=null) {
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                     listener.change_fragment_parameter(type_fragment, data);
                 }
             }
@@ -89,11 +104,16 @@ public class FragmentPetList extends Fragment implements  PetListContract.View{
                 SearcRecentBean searcRecentBean = new SearcRecentBean();
                 searcRecentBean.setId_usuario(searchPetBean.getId_user());
                 if(type_search == 1) {
+                    Log.e("CNCNCNCv","-->:" + searchPetBean.getName_pet());
                     searcRecentBean.setType_mascota(0);
                     searcRecentBean.setName(searchPetBean.getName_user());
+                    searcRecentBean.setName_raza("-");
                 }
                 else {
-                    searcRecentBean.setName(searchPetBean.getName_pet());
+                    Log.e("CNCNCNCN","-->:" + searchPetBean.getName_pet());
+                    searcRecentBean.setName_raza(searchPetBean.getName_raza());
+                    searcRecentBean.setName(searchPetBean.getName_user());
+                    searcRecentBean.setName_pet(searchPetBean.getName_pet());
                     searcRecentBean.setType_mascota(searchPetBean.getType_raza());
                 }
                 searcRecentBean.setType_save(type_search);
@@ -109,7 +129,11 @@ public class FragmentPetList extends Fragment implements  PetListContract.View{
 
             @Override
             public void deleteRecent(int id) {
-
+               presenter.deleteRecent(id);
+               if(adapter.get_size()==0)
+               {
+                   hide_list();
+               }
             }
         });
         searcRecentBeans.clear();
@@ -149,10 +173,13 @@ public class FragmentPetList extends Fragment implements  PetListContract.View{
             root_no_data.setVisibility(View.GONE);
             list_pets_search_result.setVisibility(View.GONE);
         }else{
+            title_no_data.setText("No hay busquedas recientes");
+            body_no_data.setText("No hay busquedas recientes, empieza por buscar a un usuario o mascota de tu preferencia.");
             list_Search_recents_pets.setVisibility(View.GONE);
             root_no_data.setVisibility(View.VISIBLE);
             list_pets_search_result.setVisibility(View.GONE);
         }
+        adapter.isRecent(true);
         adapter.setHIDE_LABEL(false);
         adapter.setData(data);
 
@@ -169,4 +196,46 @@ public class FragmentPetList extends Fragment implements  PetListContract.View{
     public void searchSaved() {
 
     }
+
+    @Override
+    public void deleteSuccess(){
+        adapter.notifyDataSetChanged();
+    }
+
+    public void showRecent(){
+        data.clear();
+        adapter.clear();
+        searcRecentBeans.clear();
+        searcRecentBeans.addAll(helper.getMySearchRecent(2));
+        for (int i = 0; i < searcRecentBeans.size(); i++) {
+            data.add(new SearchPetBean(
+                    searcRecentBeans.get(i).getId_mascota(),
+                    searcRecentBeans.get(i).getId_usuario(),
+                    searcRecentBeans.get(i).getUuid_usuario(),
+                    searcRecentBeans.get(i).getUrl_photo(),
+                    searcRecentBeans.get(i).getName(),
+                    searcRecentBeans.get(i).getName_pet(),
+                    searcRecentBeans.get(i).getName_raza(),
+                    searcRecentBeans.get(i).getType_mascota()
+            ));
+        }
+        if(data.size()>0){
+            adapter.isRecent(true);
+            adapter.setData(data);
+            list_Search_recents_pets.setVisibility(View.VISIBLE);
+            root_no_data.setVisibility(View.GONE);
+            list_pets_search_result.setVisibility(View.GONE);
+        }else{
+            hide_list();
+        }
+    }
+
+    void hide_list(){
+        title_no_data.setText("No hay busquedas recientes");
+        body_no_data.setText("No hay busquedas recientes, empieza por buscar a un usuario o mascota de tu preferencia.");
+        list_Search_recents_pets.setVisibility(View.GONE);
+        root_no_data.setVisibility(View.VISIBLE);
+        list_pets_search_result.setVisibility(View.GONE);
+    }
+
 }

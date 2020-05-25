@@ -32,6 +32,7 @@ import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.listeners.chose_pet_listener;
 import com.bunizz.instapetts.listeners.uploads;
@@ -80,6 +81,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
 
     @BindView(R.id.check_apagar_comments)
     Switch check_apagar_comments;
+    String ULTIMATE_IMAGE_THUMBH="-";
 
     PostBean post ;
     int DURACION =0;
@@ -115,6 +117,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
                     else {
                         post.setDuracion(0);
                         post.setAspect("-");
+                        post.setThumb_video(ULTIMATE_IMAGE_THUMBH);
                         beginUploadInBackground(paths, false);
                     }
                 }
@@ -179,6 +182,9 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
                         concat_paths = App.getInstance().make_uri_video_hls(splits[index - 1]);
                     else
                         concat_paths += "," + App.getInstance().make_uri_bucket_posts(splits[index - 1]);
+                }
+                if(is_video !=1) {
+                    ULTIMATE_IMAGE_THUMBH = App.getInstance().make_uri_bucket_posts_thumbh(splits[index - 1]);
                 }
             }
         }
@@ -278,7 +284,6 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             send_post();
         }
         else {
-            post.setThumb_video("-");
             intent.putExtra(BUNDLES.POST_TYPE, 0);
             send_post();
         }
@@ -332,7 +337,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         post.setUuidbucket("xx");
         post.setUuid(App.read(PREFERENCES.UUID, "INVALID"));
         post.setDate_post(App.formatDateGMT(new Date()));
-        post.setTarget("NEW");
+        post.setTarget(WEBCONSTANTS.NEW);
         post.setType_post(is_video);
         if(App.read(PREFERENCES.ALLOW_LOCATION_POST,true))
             post.setAddress(App.read(PREFERENCES.ADDRESS_USER,"INVALID"));

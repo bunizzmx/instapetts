@@ -14,7 +14,7 @@
             <com.bunizz.instapetts.utils.ImagenCircular
                 android:layout_margin="10dp"
                 android:id="@+id/image_pet"
-                android:src="@drawable/ic_hand_pet_preload"
+                android:src="@drawable/ic_holder"
                 android:layout_width="40dp"
                 android:layout_height="40dp"/>
             <RelativeLayout
@@ -99,7 +99,7 @@
                     android:layout_height="match_parent"
                     android:background="@android:color/white"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_hand_pet_preload"
+                    android:src="@drawable/ic_holder"
                     />
 
             </FrameLayout>
@@ -258,7 +258,7 @@
             android:layout_height="wrap_content">
             <com.bunizz.instapetts.utils.ImagenCircular
                 android:id="@+id/mini_user_photo"
-                android:src="@drawable/ic_hand_pet_preload"
+                android:src="@drawable/ic_holder"
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <ImageView

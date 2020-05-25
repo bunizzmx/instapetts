@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,6 +17,10 @@ import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
 import com.bunizz.instapetts.fragments.profile.AdapterGridPostsProfile;
 import com.bunizz.instapetts.fragments.search.AdapterGridPosts;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.utils.loadings.SpinKitView;
+import com.bunizz.instapetts.utils.loadings.SpriteFactory;
+import com.bunizz.instapetts.utils.loadings.Style;
+import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
@@ -38,6 +43,26 @@ public class FragmentListGalery extends Fragment {
     @BindView(R.id.list_posts_publics)
     RecyclerView list_posts_publics;
 
+    @BindView(R.id.root_no_internet)
+    RelativeLayout root_no_internet;
+
+    @BindView(R.id.title_no_internet)
+    TextView title_no_internet;
+
+    @BindView(R.id.body_no_data)
+    TextView body_no_data;
+
+    @BindView(R.id.icon_no_internet)
+    ImageView icon_no_internet;
+
+
+    @BindView(R.id.spin_kit)
+    SpinKitView spin_kit;
+
+    Style style = Style.values()[12];
+    Sprite drawable = SpriteFactory.create(style);
+
+
     changue_fragment_parameters_listener listener;
     ArrayList<Object> data_posts = new ArrayList<>();
     GridLayoutManager layoutManager;
@@ -45,7 +70,9 @@ public class FragmentListGalery extends Fragment {
     private List<UnifiedNativeAd> mNativeAds = new ArrayList<>();
     public void setData_posts(ArrayList<Object> data_posts) {
         if(data_posts !=null){
+            spin_kit.setVisibility(View.GONE);
             if(data_posts.size()>0){
+                root_no_internet.setVisibility(View.GONE);
                 this.data_posts = data_posts;
                 Log.e("SETIE_DATA_POST","--> " + data_posts.size());
                 if(adapter!=null) {
@@ -55,10 +82,16 @@ public class FragmentListGalery extends Fragment {
                         adapter.setPosts(this.data_posts);
                 }
             }else{
-
+                icon_no_internet.setVisibility(View.GONE);
+                title_no_internet.setText("No hay Publicaciones");
+                body_no_data.setText("Aun no hay publicaciones con esta opcion,quiza mas tarde.");
+                root_no_internet.setVisibility(View.VISIBLE);
             }
         }else{
-
+            icon_no_internet.setVisibility(View.GONE);
+            title_no_internet.setText("No hay Publicaciones");
+            body_no_data.setText("Aun no hay publicaciones con esta opcion,quiza mas tarde.");
+            root_no_internet.setVisibility(View.VISIBLE);
         }
 
     }
@@ -89,7 +122,9 @@ public class FragmentListGalery extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        layoutManager = new GridLayoutManager(getContext(),2);
+        spin_kit.setIndeterminateDrawable(drawable);
+        spin_kit.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
+        layoutManager = new GridLayoutManager(getContext(),3);
         list_posts_publics.setLayoutManager(layoutManager);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -98,7 +133,7 @@ public class FragmentListGalery extends Fragment {
                     case 1:
                         return 1;
                     default:
-                        return 2;
+                        return 3;
                 }
 
             }
@@ -127,11 +162,14 @@ public class FragmentListGalery extends Fragment {
     }
 
 
+
+
+
     private void insertAdsInMenuItems(boolean more) {
         mNativeAds = App.getInstance().getAds();
         if (mNativeAds.size() <= 0) { return;}
-        int offset = 5;
-        int index = 4;
+        int offset = 7;
+        int index = 9;
         for (UnifiedNativeAd ad: mNativeAds) {
             if(index< data_posts.size())
                 data_posts.add(index, ad);

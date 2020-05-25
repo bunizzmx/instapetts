@@ -26,6 +26,7 @@ public class NotificationHelper extends GenericHelper {
     public static final String URL_RESOURCE = "url_resource";
     public static final String URL_EXTRA_IMAGE = "url_image_extra";
     public static final String NOTIFICATION_VIEW = "vista";
+    public static final String FECHA = "fecha";
     public static final String ID_DOCUMENTO_NOTIFICATION = "id_document_notification";
 
     public static NotificationHelper getInstance(Context context) {
@@ -55,6 +56,7 @@ public class NotificationHelper extends GenericHelper {
         contentValues.put(URL_RESOURCE, notificationBean.getUrl_resource());
         contentValues.put(URL_EXTRA_IMAGE, notificationBean.getUrl_image_extra());
         contentValues.put(ID_DOCUMENTO_NOTIFICATION,notificationBean.getId_document_notification());
+        contentValues.put(FECHA,notificationBean.getFecha());
         contentValues.put(NOTIFICATION_VIEW,0);
 
         try {
@@ -112,6 +114,7 @@ public class NotificationHelper extends GenericHelper {
                 n.setUrl_resource(cursor.getString(cursor.getColumnIndex(URL_RESOURCE)));
                 n.setUrl_image_extra(cursor.getString(cursor.getColumnIndex(URL_EXTRA_IMAGE)));
                 n.setId_document_notification(cursor.getString(cursor.getColumnIndex(ID_DOCUMENTO_NOTIFICATION)));
+                n.setFecha(cursor.getString(cursor.getColumnIndex(FECHA)));
                 notifications.add(n);
                 updateViews();
             }

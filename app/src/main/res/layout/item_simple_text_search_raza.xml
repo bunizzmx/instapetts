@@ -22,7 +22,7 @@
         android:layout_marginBottom="10dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="20dp"
-        android:src="@drawable/ic_hand_pet_preload"
+        android:src="@drawable/ic_holder"
         android:id="@+id/foto_pet_raza"
         android:layout_width="35dp"
         android:layout_height="35dp"/>

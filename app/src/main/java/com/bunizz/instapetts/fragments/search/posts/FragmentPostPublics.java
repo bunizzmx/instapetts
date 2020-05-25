@@ -54,8 +54,7 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
     ArrayList<Object> data_posts = new ArrayList<>();
 
 
-    @BindView(R.id.root_no_internet)
-    RelativeLayout root_no_internet;
+
 
     @BindView(R.id.tabs_profile_propietary)
     SmartTabLayout tabs_profile_propietary;
@@ -136,6 +135,7 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
                     });
 
         });
+        viewpager_profile.setOffscreenPageLimit(3);
         viewpager_profile.setAdapter(adapter_pager);
         tabs_profile_propietary.setViewPager(viewpager_profile);
         refresh_search.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -186,8 +186,9 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
 
     @Override
     public void noInternet() {
-         root_no_internet.setVisibility(View.VISIBLE);
+        // root_no_internet.setVisibility(View.VISIBLE);
     }
+
 
     @Override
     public void peticionError() {

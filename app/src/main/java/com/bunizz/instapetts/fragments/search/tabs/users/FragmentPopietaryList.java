@@ -1,12 +1,15 @@
 package com.bunizz.instapetts.fragments.search.tabs.users;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,6 +45,12 @@ public class FragmentPopietaryList  extends Fragment implements  UserListContrac
     @BindView(R.id.root_no_data)
     RelativeLayout root_no_data;
 
+    @BindView(R.id.title_no_data)
+    TextView title_no_data;
+
+    @BindView(R.id.body_no_data)
+    TextView body_no_data;
+
 
     ArrayList<SearcRecentBean> searcRecentBeans = new ArrayList<>();
     changue_fragment_parameters_listener listener;
@@ -59,12 +68,15 @@ public class FragmentPopietaryList  extends Fragment implements  UserListContrac
         this.data = data;
         if(root_no_data!=null) {
             if (this.data.size() > 0) {
+                adapter.is_recent(false);
                 root_no_data.setVisibility(View.GONE);
                 list_propietary_search_recent.setVisibility(View.GONE);
                 list_propietary_search_result.setVisibility(View.VISIBLE);
                 adapter.setHIDE_LABEL(true);
                 adapter.setData(data);
             } else {
+                title_no_data.setText("No hay busquedas recientes");
+                body_no_data.setText("No hay busquedas recientes, empieza por buscar a un usuario o mascota de tu preferencia.");
                 root_no_data.setVisibility(View.VISIBLE);
                 list_propietary_search_recent.setVisibility(View.GONE);
                 list_propietary_search_result.setVisibility(View.GONE);
@@ -86,12 +98,11 @@ public class FragmentPopietaryList  extends Fragment implements  UserListContrac
         adapter = new SearchUserAdapter(getContext());
         helper = new SearchResentHelper(getContext());
         adapter.setData(data);
-        adapter.setListener(new changue_fragment_parameters_listener() {
-            @Override
-            public void change_fragment_parameter(int type_fragment, Bundle data) {
-                if(listener!=null) {
-                    listener.change_fragment_parameter(type_fragment, data);
-                }
+        adapter.setListener((type_fragment, data) -> {
+            if(listener!=null) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                listener.change_fragment_parameter(type_fragment, data);
             }
         });
         adapter.setListener_recent(new searchRecentListener() {
@@ -121,6 +132,9 @@ public class FragmentPopietaryList  extends Fragment implements  UserListContrac
 
             @Override
             public void deleteRecent(int id) {
+                   presenter.deleteRecent(id);
+                if(adapter.get_size()==0)
+                    hide_list();
 
             }
         });
@@ -135,6 +149,8 @@ public class FragmentPopietaryList  extends Fragment implements  UserListContrac
                         searcRecentBeans.get(i).getName_tag()
                 ));
             }
+
+
 
     }
 
@@ -154,13 +170,12 @@ public class FragmentPopietaryList  extends Fragment implements  UserListContrac
         list_propietary_search_result.setAdapter(adapter);
         list_propietary_search_recent.setAdapter(adapter);
         if(data.size()>0){
+            adapter.is_recent(true);
             root_no_data.setVisibility(View.GONE);
             list_propietary_search_recent.setVisibility(View.VISIBLE);
             list_propietary_search_result.setVisibility(View.GONE);
         }else{
-            root_no_data.setVisibility(View.VISIBLE);
-            list_propietary_search_recent.setVisibility(View.GONE);
-            list_propietary_search_result.setVisibility(View.GONE);
+            hide_list();
         }
         adapter.setHIDE_LABEL(false);
         adapter.setData(data);
@@ -175,5 +190,46 @@ public class FragmentPopietaryList  extends Fragment implements  UserListContrac
     @Override
     public void searchSaved() {
 
+    }
+
+    @Override
+    public void deleteSucess(){
+        adapter.notifyDataSetChanged();
+    }
+
+    public void showRecent(){
+        data.clear();
+        adapter.clear();
+        searcRecentBeans.clear();
+        searcRecentBeans.addAll(helper.getMySearchRecent(1));
+        for (int i = 0; i < searcRecentBeans.size(); i++) {
+            data.add(new SearchUserBean(
+                    String.valueOf(searcRecentBeans.get(i).getId_usuario()),
+                    searcRecentBeans.get(i).getUuid_usuario(),
+                    searcRecentBeans.get(i).getUrl_photo(),
+                    searcRecentBeans.get(i).getName(),
+                    searcRecentBeans.get(i).getName_tag()
+            ));
+        }
+        if(data.size()>0){
+            adapter.is_recent(true);
+            adapter.setData(data);
+            root_no_data.setVisibility(View.GONE);
+            list_propietary_search_recent.setVisibility(View.VISIBLE);
+            list_propietary_search_result.setVisibility(View.GONE);
+        }else{
+            root_no_data.setVisibility(View.VISIBLE);
+            list_propietary_search_recent.setVisibility(View.GONE);
+            list_propietary_search_result.setVisibility(View.GONE);
+
+        }
+    }
+
+    void hide_list(){
+        title_no_data.setText("No hay busquedas recientes");
+        body_no_data.setText("No hay busquedas recientes, empieza por buscar a un usuario o mascota de tu preferencia.");
+        root_no_data.setVisibility(View.VISIBLE);
+        list_propietary_search_recent.setVisibility(View.GONE);
+        list_propietary_search_result.setVisibility(View.GONE);
     }
 }

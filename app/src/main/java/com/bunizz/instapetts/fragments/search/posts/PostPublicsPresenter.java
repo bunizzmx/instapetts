@@ -8,6 +8,7 @@ import com.bunizz.instapetts.beans.AutenticateBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.fragments.login.MainLogin;
 import com.bunizz.instapetts.fragments.profile.ProfileUserContract;
 import com.bunizz.instapetts.web.ApiClient;
@@ -40,16 +41,17 @@ public class PostPublicsPresenter implements   PostPublicsContract.Presenter {
     @Override
     public void getPostPublics(int type_search) {
         PostFriendsBean postFriendsBean = new PostFriendsBean();
+        postFriendsBean.setPaginador(-1);
         postFriendsBean.setId_one(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         switch (type_search){
             case 0:
-                postFriendsBean.setTarget("DISCOVER");
+                postFriendsBean.setTarget(WEBCONSTANTS.DISCOVER);
                 break;
             case 1:
-                postFriendsBean.setTarget("MORE_VIEWS");
+                postFriendsBean.setTarget(WEBCONSTANTS.MORE_VIEWS);
                 break;
             case 2:
-                postFriendsBean.setTarget("RECENT");
+                postFriendsBean.setTarget(WEBCONSTANTS.RECENT);
                 break;
             default:break;
         }

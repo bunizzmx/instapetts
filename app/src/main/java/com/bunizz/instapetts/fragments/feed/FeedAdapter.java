@@ -318,12 +318,12 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
                 Glide.with(context).load(mo.getUrl_photo_pet())
-                        .placeholder(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
-                        .error(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
+                        .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                        .error(context.getResources().getDrawable(R.drawable.ic_holder))
                         .into(vid_h.image_pet);
                 Glide.with(context).load(mo.getUrl_photo_user())
-                        .placeholder(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
-                        .error(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
+                        .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                        .error(context.getResources().getDrawable(R.drawable.ic_holder))
                         .into(vid_h.mini_user_photo);
                 vid_h.date_post.setText("Hace " + App.getInstance().fecha_lenguaje_humano(mo.getDate_post()));
                 vid_h.l_saved_post.setOnClickListener(view -> {
@@ -432,7 +432,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     f.progres_image.setColor(context.getResources().getColor(R.color.colorPrimaryDark));
                     f.root_multiple_image.setVisibility(View.GONE);
                     f.single_image.setVisibility(View.VISIBLE);
-                    Glide.with(context).load(data_parsed.getUrls_posts()).addListener(new RequestListener<Drawable>() {
+                    Glide.with(context).load(data_parsed.getUrls_posts())
+                            .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                            .error(context.getResources().getDrawable(R.drawable.ic_holder)).addListener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                             f.progres_image.setVisibility(View.GONE);
@@ -457,9 +459,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         f.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
                         if(is_multiple(data_parsed.getUrls_posts())) {
                             String s[]= data_parsed.getUrls_posts().split(",");
-                            listener_post.onLike(data_parsed.getId_post_from_web(), true, data_parsed.getId_usuario(), s[0]);
+                            listener_post.onLike(data_parsed.getId_post_from_web(), true, data_parsed.getId_usuario(),data_parsed.getThumb_video());
                         }else{
-                            listener_post.onLike(data_parsed.getId_post_from_web(), true, data_parsed.getId_usuario(), data_parsed.getUrls_posts());
+                            listener_post.onLike(data_parsed.getId_post_from_web(), true, data_parsed.getId_usuario(), data_parsed.getThumb_video());
                         }
                     }else{
                         data_parsed.setLiked(false);
@@ -487,12 +489,12 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
                 Glide.with(context).load(data_parsed.getUrl_photo_pet())
-                        .placeholder(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
-                        .error(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
+                        .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                        .error(context.getResources().getDrawable(R.drawable.ic_holder))
                         .into(f.image_pet);
                 Glide.with(context).load(data_parsed.getUrl_photo_user())
-                        .placeholder(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
-                        .error(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
+                        .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                        .error(context.getResources().getDrawable(R.drawable.ic_holder))
                         .into(f.mini_user_photo);
                 f.date_post.setText( "Hace " + App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()));
                 f.l_saved_post.setOnClickListener(view -> {

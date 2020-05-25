@@ -8,7 +8,9 @@ import com.bunizz.instapetts.beans.AutenticateBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.FollowsHelper;
+import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
 import com.bunizz.instapetts.db.helpers.LikePostHelper;
 import com.bunizz.instapetts.db.helpers.SavedPostHelper;
 import com.bunizz.instapetts.fragments.login.MainLogin;
@@ -34,7 +36,7 @@ public class PreviewProfileUserPresenter implements   ProfileUserContract.Presen
     Context mContext;
     private CompositeDisposable disposable = new CompositeDisposable();
     private WebServices apiService;
-    FollowsHelper followsHelper;
+    IdsUsersHelper followsHelper;
     SavedPostHelper savedPostHelper;
     LikePostHelper likePostHelper;
     private static final String TAG = MainLogin.class.getSimpleName();
@@ -44,7 +46,7 @@ public class PreviewProfileUserPresenter implements   ProfileUserContract.Presen
         this.mContext = context;
         apiService = ApiClient.getClient(context)
                 .create(WebServices.class);
-        followsHelper = new FollowsHelper(mContext);
+        followsHelper = new IdsUsersHelper(mContext);
         savedPostHelper = new SavedPostHelper(mContext);
         likePostHelper = new LikePostHelper(mContext);
     }
@@ -82,6 +84,7 @@ public class PreviewProfileUserPresenter implements   ProfileUserContract.Presen
     @Override
     public void getPostUser(boolean one_user,int id_one,int filter) {
         PostFriendsBean postFriendsBean = new PostFriendsBean();
+        postFriendsBean.setPaginador(-1);
         if(one_user){
             postFriendsBean.setId_one(id_one);
             postFriendsBean.setTarget("ONE");
@@ -138,8 +141,11 @@ public class PreviewProfileUserPresenter implements   ProfileUserContract.Presen
         followParameter.setId_user(id_user);
         if(follow)
             followParameter.setTarget("FOLLOW");
-        else
+        else {
             followParameter.setTarget("UNFOLLOW");
+        }
+
+        followParameter.setId_my_user(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         disposable.add(
                 apiService.follows(followParameter)
                         .subscribeOn(Schedulers.io())
@@ -148,8 +154,12 @@ public class PreviewProfileUserPresenter implements   ProfileUserContract.Presen
                             @Override
                             public void onSuccess(SimpleResponse responsePost) {
                                 if(responsePost!=null) {
-                                    if(responsePost.getCode_response()==200)
-                                        mView.successFollow(follow,id_user);
+                                    if(responsePost.getCode_response()==200) {
+                                        if(follow == false){
+                                            followsHelper.deleteId(id_user);
+                                        }
+                                        mView.successFollow(follow, id_user);
+                                    }
                                     else
                                         mView.successFollow(follow,id_user);
 

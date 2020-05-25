@@ -9,14 +9,20 @@ import java.util.ArrayList;
 
 public interface FollowsContract {
     interface Presenter {
-        void getFirstFollows(String uuid);
-        void nextFollows();
+        void getFirstFolowers(String uuid);
+        void getFirstFollowed(String uuid);
+        void nextFollowers();
+        void nextFollowed();
+        void unfollowUser(String uuid,String name_tag,int id_usuario);
     }
 
     interface View{
-        void showFirstFollows(ArrayList<FollowsBean> followsBeans);
-        void showNextFollows(ArrayList<PostBean> posts);
+        void showFirstFollowers(ArrayList<FollowsBean> followsBeans);
+        void showNextFollowers(ArrayList<FollowsBean> followsBeans);
+        void showFirstFollowed(ArrayList<FollowsBean> followsBeans);
+        void showNextFollowed(ArrayList<FollowsBean> followsBeans);
         void noInternet();
         void Error();
+        void UnfollowSuccess();
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,7 +87,8 @@ public class AdapterGridPosts extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
         public void setPosts(ArrayList<Object> posts) {
-            this.posts = posts;
+            this.posts.clear();
+            this.posts.addAll(posts);
             notifyDataSetChanged();
         }
 
@@ -127,7 +129,7 @@ public class AdapterGridPosts extends RecyclerView.Adapter<RecyclerView.ViewHold
                         h.duration_item.setVisibility(View.VISIBLE);
                         h.duration_item.setText(data_parsed.getDuracion() + " seg.");
                         h.multiple_images_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_play));
-                        Glide.with(context).load(data_parsed.getThumb_video()).placeholder(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(h.fisrt_stack_foto);
+                        Glide.with(context).load(data_parsed.getThumb_video()).placeholder(context.getResources().getDrawable(R.drawable.ic_holder)).into(h.fisrt_stack_foto);
                     }else{
                         h.duration_item.setVisibility(View.GONE);
                         String splits[]  = data_parsed.getUrls_posts().split(",");
@@ -136,10 +138,11 @@ public class AdapterGridPosts extends RecyclerView.Adapter<RecyclerView.ViewHold
                         }else{
                             h.multiple_images_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_album));
                         }
-                        Glide.with(context).load(splits[0]).placeholder(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(h.fisrt_stack_foto);
+                        Log.e("ADAPTER_GRID_POIST","--> : " + data_parsed.getThumb_video());
+                        Glide.with(context).load(data_parsed.getThumb_video()).placeholder(context.getResources().getDrawable(R.drawable.ic_holder)).into(h.fisrt_stack_foto);
                     }
 
-                    Glide.with(context).load(data_parsed.getUrl_photo_user()).placeholder(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload)).into(h.image_user_item);
+                    Glide.with(context).load(data_parsed.getUrl_photo_user()).placeholder(context.getResources().getDrawable(R.drawable.ic_holder)).into(h.image_user_item);
                     h.name_user_item.setText(data_parsed.getName_user());
                     h.root_posts_search_item.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override

@@ -376,12 +376,12 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 }
 
                 Glide.with(context).load(data_parsed.getUrl_photo_pet())
-                        .placeholder(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
-                        .error(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
+                        .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                        .error(context.getResources().getDrawable(R.drawable.ic_holder))
                         .into(f.image_pet);
                 Glide.with(context).load(data_parsed.getUrl_photo_user())
-                        .placeholder(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
-                        .error(context.getResources().getDrawable(R.drawable.ic_hand_pet_preload))
+                        .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                        .error(context.getResources().getDrawable(R.drawable.ic_holder))
                         .into(f.mini_user_photo);
                 f.date_post.setText(App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()));
                 f.save_posts.setOnClickListener(view -> {
