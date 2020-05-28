@@ -5,11 +5,9 @@ import android.content.Context;
 import android.util.Log;
 
 import com.bunizz.instapetts.App;
-import com.bunizz.instapetts.activitys.story_player.StoryPlayerContract;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.FIRESTORE;
 import com.bunizz.instapetts.constantes.PREFERENCES;
-import com.bunizz.instapetts.db.helpers.IdentificadoresHistoriesHelper;
 import com.bunizz.instapetts.db.helpers.LikePostHelper;
 import com.bunizz.instapetts.db.helpers.SavedPostHelper;
 import com.bunizz.instapetts.web.ApiClient;

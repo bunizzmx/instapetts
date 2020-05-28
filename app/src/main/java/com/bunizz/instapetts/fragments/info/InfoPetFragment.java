@@ -210,6 +210,7 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
         Glide.with(getContext()).load(petBean.getUrl_photo()).into(image_pet_info);
         stars_pet.setText(String.format("%.2f", petBean.getRate_pet()));
         Log.e("PENDDD","-->" + petBean.getId_propietary() + "/" + App.read(PREFERENCES.ID_USER_FROM_WEB,0) );
+        Log.e("ID_PETXX","-->" + petBean.getId_propietary() + "/" + App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         if(petBean.getId_propietary() == App.read(PREFERENCES.ID_USER_FROM_WEB,0)){
             delete_trash.setVisibility(View.VISIBLE);
             icon_star_rated.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_editar));

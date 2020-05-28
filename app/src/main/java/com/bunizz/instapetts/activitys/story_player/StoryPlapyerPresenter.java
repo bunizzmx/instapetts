@@ -5,24 +5,27 @@ import android.util.Log;
 
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.beans.IdentificadoresHistoriesBean;
-import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.beans.PetBean;
+import com.bunizz.instapetts.beans.UserBean;
+import com.bunizz.instapetts.constantes.FIRESTORE;
 import com.bunizz.instapetts.constantes.PREFERENCES;
-import com.bunizz.instapetts.db.helpers.FollowsHelper;
 import com.bunizz.instapetts.db.helpers.IdentificadoresHistoriesHelper;
-import com.bunizz.instapetts.db.helpers.LikePostHelper;
+import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
 import com.bunizz.instapetts.db.helpers.MyStoryHelper;
-import com.bunizz.instapetts.db.helpers.SavedPostHelper;
-import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
 import com.bunizz.instapetts.web.parameters.IdentificadorHistoryParameter;
-import com.bunizz.instapetts.web.parameters.PostFriendsBean;
-import com.bunizz.instapetts.web.responses.ResponsePost;
 import com.bunizz.instapetts.web.responses.SimpleResponse;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import androidx.annotation.NonNull;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
@@ -36,12 +39,17 @@ public class StoryPlapyerPresenter implements  StoryPlayerContract.Presenter {
     private WebServices apiService;
     IdentificadoresHistoriesHelper helper ;
     int RETRY =0;
+    MyStoryHelper myStoryHelper;
+    FirebaseFirestore db;
+    IdsUsersHelper idsUsersHelper;
     StoryPlapyerPresenter(StoryPlayerContract.View view, Context context) {
         this.mView = view;
         this.mContext = context;
         apiService = ApiClient.getClient(context)
                 .create(WebServices.class);
         helper = new IdentificadoresHistoriesHelper(this.mContext);
+        db = App.getIntanceFirestore();
+        idsUsersHelper = new IdsUsersHelper(mContext);
     }
 
     @Override
@@ -112,6 +120,121 @@ public class StoryPlapyerPresenter implements  StoryPlayerContract.Presenter {
     public IdentificadoresHistoriesBean getIdentificador(String identificador) {
         return helper.searchIdentidicadorById(identificador);
     }
+
+
+    @Override
+    public void followUser(UserBean userBean) {
+
+        Map<String,Object> followedUserData = new HashMap<>();
+        followedUserData.put("url_photo_user",userBean.getPhoto_user_thumbh());
+        followedUserData.put("uuid_user",userBean.getUuid());
+        followedUserData.put("id_user",userBean.getId());
+        followedUserData.put("name_nip_user",userBean.getName_tag());
+        followedUserData.put("token",userBean.getToken());
+        followedUserData.put("name_user",userBean.getName_user());
+
+
+        Map<String,Object> followUserData = new HashMap<>();
+        followUserData.put("url_photo_user", App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
+        followUserData.put("uuid_user",App.read(PREFERENCES.UUID,"INVALID"));
+        followUserData.put("id_user",App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        followUserData.put("name_nip_user",App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"INVALID"));
+        followUserData.put("token",userBean.getToken());
+        followUserData.put("name_user",App.read(PREFERENCES.NAME_USER,"INVALID"));
+        idsUsersHelper.saveId(userBean.getId());
+        db.collection(FIRESTORE.R_FOLLOWS).document(App.read(PREFERENCES.UUID,"INVALID")).collection(FIRESTORE.SEGUIDOS)
+                .document(userBean.getName_tag())
+                .set(followedUserData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                    }
+                });
+        db.collection(FIRESTORE.R_FOLLOWS).document(String.valueOf(userBean.getUuid())).collection(FIRESTORE.SEGUIDORES)
+                .document(App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"INVALID"))
+                .set(followUserData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                    }
+                });
+    }
+
+    @Override
+    public void unfollowUser(String id_document) {
+        db.collection(FIRESTORE.R_FOLLOWS).document(id_document).collection(FIRESTORE.SEGUIDORES)
+                .document(App.read(PREFERENCES.UUID,"INVALID"))
+                .delete()
+                .addOnSuccessListener(aVoid -> {    Log.e("BORRE_FOLLOW","DE EL"); })
+                .addOnFailureListener(e -> { })
+                .addOnCompleteListener(task -> {    Log.e("BORRE_FOLLOW","DE EL");});
+        db.collection(FIRESTORE.R_FOLLOWS).document(App.read(PREFERENCES.UUID,"INVALID")).collection(FIRESTORE.SEGUIDORES)
+                .document(id_document)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Log.e("BORRE_FOLLOW","DE MI");
+                })
+                .addOnFailureListener(e -> { })
+                .addOnCompleteListener(task -> {    Log.e("BORRE_FOLLOW","DE MI");});
+    }
+
+    @Override
+    public void favoritePet(UserBean userBean, PetBean petBean) {
+        Map<String,Object> followPetData = new HashMap<>();
+        followPetData.put("name_user",userBean.getName_user());
+        followPetData.put("url_photo_user",userBean.getPhoto_user());
+        followPetData.put("uuid_user",userBean.getUuid());
+        followPetData.put("id_user",userBean.getId());
+        followPetData.put("name_nip_user",userBean.getName_user());
+        db.collection(FIRESTORE.R_FAVORITES).document(App.read(PREFERENCES.UUID,"INVALID")).collection(FIRESTORE.FAVORITES)
+                .document(String.valueOf(userBean.getUuid()))
+                .set(followPetData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                    }
+                });
+    }
+
 
 
 }

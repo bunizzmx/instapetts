@@ -41,7 +41,7 @@
     <com.bunizz.instapetts.utils.HistoryView.StoryPlayerProgressView
         app:gapBetweenProgressBar="2dp"
         app:progressBarHeight="1dp"
-        app:progressBarPrimaryColor="#ffffff"
+        app:progressBarPrimaryColor="@color/primary"
         app:progressBarSecondaryColor="#3effffff"
         android:id="@+id/progressBarView"
         android:layout_width="match_parent"
