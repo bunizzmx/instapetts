@@ -124,7 +124,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
             commentariosBean.setName_user(App.read(PREFERENCES.NAME_USER, "INVALID"));
             commentariosBean.setLikes(0);
             presenter.comment(commentariosBean);
-            input_commentarios.setText("");
+            input_commentarios.setText(" " + getString(R.string.me_gusta));
             adapter.addBelow(commentariosBean);
            scrolbottom();
         }
@@ -387,7 +387,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                         if(data.get(position).getLikes() - 1 > 0)
                            h.n_likes_comment.setText((data.get(position).getLikes() - 1) + " Me gusta");
                         else
-                            h.n_likes_comment.setText(" Me gusta");
+                            h.n_likes_comment.setText(" " + getString(R.string.gus));
                     }
                     else {
                         data.get(position).setIs_liked(true);
@@ -398,9 +398,9 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                 }
             });
             if(data.get(position).getLikes() == 0)
-               h.n_likes_comment.setText("Me gusta");
+               h.n_likes_comment.setText(" "+ getString(R.string.me_gusta));
             else
-                h.n_likes_comment.setText(data.get(position).getLikes() + " Me gusta");
+                h.n_likes_comment.setText(data.get(position).getLikes() + " " + getString(R.string.me_gusta));
         }
 
         @Override

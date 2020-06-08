@@ -295,7 +295,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
                 @Override
                 public void onSuccess(String message) {
                     Intent intent = new Intent();
-                    intent.putExtra(BUNDLES.VIDEO_DURATION,DURATION);
+                    intent.putExtra(BUNDLES.VIDEO_DURATION,(DURATION /1000));
                     intent.putExtra(BUNDLES.VIDEO_ASPECT,ASPECT);
                     setResult(RESULT_OK,intent);
                     finish();

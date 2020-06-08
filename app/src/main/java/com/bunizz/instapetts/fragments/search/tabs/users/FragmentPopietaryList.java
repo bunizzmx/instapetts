@@ -75,8 +75,8 @@ public class FragmentPopietaryList  extends Fragment implements  UserListContrac
                 adapter.setHIDE_LABEL(true);
                 adapter.setData(data);
             } else {
-                title_no_data.setText("No hay busquedas recientes");
-                body_no_data.setText("No hay busquedas recientes, empieza por buscar a un usuario o mascota de tu preferencia.");
+                title_no_data.setText(getString(R.string.no_recent_search_title));
+                body_no_data.setText(getString(R.string.no_recent_search_body));
                 root_no_data.setVisibility(View.VISIBLE);
                 list_propietary_search_recent.setVisibility(View.GONE);
                 list_propietary_search_result.setVisibility(View.GONE);
@@ -226,8 +226,8 @@ public class FragmentPopietaryList  extends Fragment implements  UserListContrac
     }
 
     void hide_list(){
-        title_no_data.setText("No hay busquedas recientes");
-        body_no_data.setText("No hay busquedas recientes, empieza por buscar a un usuario o mascota de tu preferencia.");
+        title_no_data.setText(getString(R.string.no_recent_search_title));
+        body_no_data.setText(""+getString(R.string.no_recent_search_body));
         root_no_data.setVisibility(View.VISIBLE);
         list_propietary_search_recent.setVisibility(View.GONE);
         list_propietary_search_result.setVisibility(View.GONE);

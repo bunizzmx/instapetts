@@ -140,7 +140,7 @@ class CropLayout @JvmOverloads constructor(
     cropImageView.requestLayout()
   }
 
-  fun modify_cropper(aspecto : Float){
+  fun modify_cropper(aspecto : Float, uri :Uri){
     val totalWidth = measuredWidth.toFloat()
     val totalHeight = measuredHeight.toFloat()
     val frameWidth = measuredWidth * 1f
@@ -155,13 +155,9 @@ class CropLayout @JvmOverloads constructor(
     cropImageView.setFrame(frame)
     cropImageView.requestLayout()
     cropOverlay.setFrame(frame)
+    cropImageView.setImageURI(uri)
     cropOverlay.requestLayout()
     frameCache = frame
-
-    val animator = GestureAnimator.of(cropImageView, frame, scale)
-    val animation = GestureAnimation(cropOverlay, animator)
-    animation.start()
-    cropImageView.requestLayout()
   }
 
   fun setBitmap(bitmap: Bitmap) {

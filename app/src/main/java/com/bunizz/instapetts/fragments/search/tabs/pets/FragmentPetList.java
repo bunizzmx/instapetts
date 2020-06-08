@@ -72,8 +72,8 @@ public class FragmentPetList extends Fragment implements  PetListContract.View{
             list_Search_recents_pets.setVisibility(View.GONE);
             root_no_data.setVisibility(View.VISIBLE);
             list_pets_search_result.setVisibility(View.GONE);
-            title_no_data.setText("No hay busquedas recientes");
-            body_no_data.setText("No hay busquedas recientes, empieza por buscar a un usuario o mascota de tu preferencia.");
+            title_no_data.setText(getString(R.string.no_recent_search_title));
+            body_no_data.setText("" + getString(R.string.no_recent_search_body));
         }
     }
 
@@ -173,8 +173,8 @@ public class FragmentPetList extends Fragment implements  PetListContract.View{
             root_no_data.setVisibility(View.GONE);
             list_pets_search_result.setVisibility(View.GONE);
         }else{
-            title_no_data.setText("No hay busquedas recientes");
-            body_no_data.setText("No hay busquedas recientes, empieza por buscar a un usuario o mascota de tu preferencia.");
+            title_no_data.setText(getString(R.string.no_recent_search_title));
+            body_no_data.setText("" +getString(R.string.no_recent_search_body));
             list_Search_recents_pets.setVisibility(View.GONE);
             root_no_data.setVisibility(View.VISIBLE);
             list_pets_search_result.setVisibility(View.GONE);
@@ -231,8 +231,8 @@ public class FragmentPetList extends Fragment implements  PetListContract.View{
     }
 
     void hide_list(){
-        title_no_data.setText("No hay busquedas recientes");
-        body_no_data.setText("No hay busquedas recientes, empieza por buscar a un usuario o mascota de tu preferencia.");
+        title_no_data.setText(getString(R.string.no_recent_search_title));
+        body_no_data.setText(getString(R.string.no_recent_search_body));
         list_Search_recents_pets.setVisibility(View.GONE);
         root_no_data.setVisibility(View.VISIBLE);
         list_pets_search_result.setVisibility(View.GONE);

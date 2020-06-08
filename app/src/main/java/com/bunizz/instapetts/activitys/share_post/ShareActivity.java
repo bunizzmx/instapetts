@@ -356,7 +356,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
         if (requestCode == CROP_REQUEST) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                        int duracion = data.getIntExtra(BUNDLES.VIDEO_DURATION,30);
+                        int duracion = (int) data.getLongExtra(BUNDLES.VIDEO_DURATION,30);
                         String aspect =  data.getStringExtra(BUNDLES.VIDEO_ASPECT);
                         Intent mediaScannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                         Uri fileContentUri = Uri.parse(outputPath);

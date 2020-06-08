@@ -138,7 +138,7 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 f.name_pet.setText(data_parsed.getName_pet());
                 f.name_user_posts.setText(data_parsed.getName_user());
         if(data_parsed.getLikes()>0)
-            f.num_likes_posts.setText("a " + data_parsed.getLikes() + " usuarios les gusta esto");
+            f.num_likes_posts.setText("a " + data_parsed.getLikes() + " " +  context.getResources().getString(R.string.people_like_this));
         else
             f.num_likes_posts.setText(context.getResources().getString(R.string.first_like));
         if(data_parsed.getDescription().isEmpty()){

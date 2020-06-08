@@ -9,10 +9,12 @@ import java.util.ArrayList;
 public interface PostPublicsContract {
     interface Presenter {
         void getPostPublics(int type_search);
+
     }
 
     interface View{
         void showPosts(ArrayList<PostBean> posts);
+
         void noInternet();
         void peticionError();
     }

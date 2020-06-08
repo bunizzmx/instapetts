@@ -113,7 +113,8 @@ public class MainPresenter implements MainContract.Presenter {
                                 lista.get(i).getId_pet() + ";" +
                                 lista.get(i).getTumbh_video() + ";" +
                                 lista.get(i).getUrl_photo() + ";" +
-                                lista.get(i).getIdentificador() + ",";
+                                lista.get(i).getIdentificador() + ";" +
+                                lista.get(i).getDate_story() +",";
             }else{
                 concat_stories +=
                         lista.get(i).getName_pet() + ";" +
@@ -121,7 +122,8 @@ public class MainPresenter implements MainContract.Presenter {
                                 lista.get(i).getId_pet() + ";" +
                                 lista.get(i).getTumbh_video() + ";" +
                                 lista.get(i).getUrl_photo() + ";" +
-                                lista.get(i).getIdentificador();
+                                lista.get(i).getIdentificador() + ";" +
+                                lista.get(i).getDate_story();
             }
          }
         historiesBean.setId_user(App.read(PREFERENCES.ID_USER_FROM_WEB,0));

@@ -89,9 +89,8 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
         adapter_pager = new ViewPagerAdapterx(getChildFragmentManager());
         adapter_pager.addFragment(new FragmentPopietaryList(), "Usuarios");
         adapter_pager.addFragment(new FragmentPetList(), "Mascotas");
-        adapter_pager.addFragment(new FragmentPetList(), "Lugares");
         adapter_pager.addFragment(new FragmentPetList(), "Cerca de ti");
-        adapter_pager.addFragment(new FragmentPetList(), "Lo más reciente");
+        adapter_pager.addFragment(new FragmentPetList(), "Usuarios nuevos");
 
     }
 

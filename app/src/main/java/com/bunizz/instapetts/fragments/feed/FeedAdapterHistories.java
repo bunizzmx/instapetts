@@ -110,13 +110,17 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
             Glide.with(context).load(historiesBeans.get(position).getPhoto_user()).into(h.image_pet_history);
             h.profile_background.setOnClickListener(view -> {
                 Intent i = new Intent(context, StoryPlayer.class);
-                if(historiesBeans.get(0).getHistorias()!=null)
-                i.putExtra("sliders", Parcels.wrap(historiesBeans));
+                if(historiesBeans.get(0).getHistorias()!=null && !historiesBeans.get(position).getHistorias().isEmpty() ) {
+                    Log.e("CONTENIDO_HISTORY","-->A:" + historiesBeans.get(position).getHistorias());
+                    i.putExtra("sliders", Parcels.wrap(historiesBeans));
+                    i.putExtra("SELECTED_POSITION", position);
+                }
                 else{
-                    historiesBeans.remove(0);
+                    Log.e("CONTENIDO_HISTORY","-->B:" + historiesBeans.get(position).getHistorias());
+                    i.putExtra("SELECTED_POSITION", position);
                     i.putExtra("sliders", Parcels.wrap(historiesBeans));
                 }
-                i.putExtra("SELECTED_POSITION", position);
+
                 context.startActivity(i);
             });
             if(historiesBeans.get(position).getName_user().length() >10) {
@@ -130,6 +134,7 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
+        Log.e("TAMAÑO_HISTORIES","-->"+ historiesBeans.size());
         return historiesBeans.size();
     }
 

@@ -191,6 +191,8 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
     public void deleteAllComplete() {
         notificationsAdapter.clean();
         root_no_data.setVisibility(View.VISIBLE);
+        body_no_data.setText("Cuando alguien te siga,comente o publique algo nuevo apareceran notificaciones en este apartado.");
+        title_no_data.setText("No hay notificaciones aun");
         a1.setVisibility(View.VISIBLE);
         list_notifications.setVisibility(View.GONE);
     }

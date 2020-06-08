@@ -83,13 +83,13 @@ public class ImageCropFragment extends Fragment {
     @OnClick(R.id.changue_to_4_3)
     void changue_to_4_3()
     {
-      cropLayout.modify_cropper(1f);
+      cropLayout.modify_cropper(1f,Uri.parse(paths.get(CURRENT_INDEX)));
     }
 
     @OnClick(R.id.changue_to_4_4)
     void changue_to_4_4()
     {
-        cropLayout.modify_cropper(0.5f);
+        cropLayout.modify_cropper(0.5f,Uri.parse(paths.get(CURRENT_INDEX)));
     }
 
 
@@ -181,17 +181,19 @@ public class ImageCropFragment extends Fragment {
                         }catch (Exception e){}
                     }
                     if(CURRENT_INDEX < paths.size()-1){
-                        CURRENT_INDEX ++;
                         if(CURRENT_INDEX==paths.size()-1){
-                            crop_now_selected.setText("FINALIZAR");
                             Log.e("lkjhdfjkdsh","POST");
                             Bundle b = new Bundle();
                             b.putStringArrayList("data_pahs",array_list_cropes);
                             listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
-                            CURRENT_INDEX =0;
                         }else{
+                            CURRENT_INDEX ++;
+                            if(CURRENT_INDEX == paths.size()-1)
+                              crop_now_selected.setText("Finalizar");
+
                             cropLayout.setUri(Uri.parse(paths.get(CURRENT_INDEX)));
                         }
+
                     }else{
                         if (App.read(PREFERENCES.FROM_PICKER, "PROFILE").equals("PROFILE")) {
                             Log.e("lkjhdfjkdsh","PROFILE");
@@ -215,12 +217,16 @@ public class ImageCropFragment extends Fragment {
         });
 
         cropLayout.setUri(Uri.parse(paths.get(CURRENT_INDEX)));
+        if (paths.size() == 1){
+            crop_now_selected.setText("Finalizar");
+        }else{
+            crop_now_selected.setText("Siguiente");
+        }
         crop_now_selected.setOnClickListener(view1 -> {
             if(CURRENT_INDEX < paths.size()-1){
                 adapter.update_croped_item(CURRENT_INDEX);
                 cropLayout.crop();
             }else if(CURRENT_INDEX == paths.size()-1){
-                crop_now_selected.setText("Finalizar");
                 cropLayout.crop();
             }
         });

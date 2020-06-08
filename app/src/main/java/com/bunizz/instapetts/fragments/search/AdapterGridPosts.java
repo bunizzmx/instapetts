@@ -25,6 +25,7 @@ import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.UnifiedAddHolder;
 import com.bunizz.instapetts.fragments.tips.adapters.TipsAdapter;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.postsListener;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.dilogs.DialogPreviewPost;
 import com.google.android.gms.ads.formats.NativeAd;
@@ -51,13 +52,34 @@ public class AdapterGridPosts extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         changue_fragment_parameters_listener listener;
 
-        public changue_fragment_parameters_listener getListener() {
+        postsListener listener_post;
+
+    public postsListener getListener_post() {
+        return listener_post;
+    }
+
+    public void setListener_post(postsListener listener_post) {
+        this.listener_post = listener_post;
+    }
+
+    public changue_fragment_parameters_listener getListener() {
             return listener;
         }
         DialogPreviewPost dialogPreviewPost;
 
         public void setListener(changue_fragment_parameters_listener listener) {
             this.listener = listener;
+        }
+
+        public int get_ultimo_id(){
+            Object recyclerViewItem = posts.get(posts.size() - 1);
+            if(recyclerViewItem instanceof PostBean)
+                 return ((PostBean) recyclerViewItem).getId_post_from_web();
+            else if( posts.get(posts.size() - 2) instanceof  PostBean){
+                return ((PostBean) recyclerViewItem).getId_post_from_web();
+            }else{
+                return 0;
+            }
         }
 
         public AdapterGridPosts(Context context) {
@@ -91,6 +113,11 @@ public class AdapterGridPosts extends RecyclerView.Adapter<RecyclerView.ViewHold
             this.posts.addAll(posts);
             notifyDataSetChanged();
         }
+
+    public void addMorePosts(ArrayList<Object> posts) {
+        this.posts.addAll(posts);
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override
@@ -149,6 +176,32 @@ public class AdapterGridPosts extends RecyclerView.Adapter<RecyclerView.ViewHold
                         public boolean onLongClick(View view) {
                             if(((PostBean) posts.get(position)).getType_post() == 0) {
                                 dialogPreviewPost = new DialogPreviewPost(context, data_parsed);
+                                dialogPreviewPost.setListener_post(new postsListener() {
+                                    @Override
+                                    public void onLike(int id_post, boolean type_like, int id_usuario, String url_image) {
+                                        listener_post.onLike(id_post,type_like,id_usuario,url_image);
+                                    }
+
+                                    @Override
+                                    public void onFavorite(int id_post, PostBean postBean) {
+                                      listener_post.onFavorite(id_post,postBean);
+                                    }
+
+                                    @Override
+                                    public void onDisfavorite(int id_post) {
+                                       listener_post.onDisfavorite(id_post);
+                                    }
+
+                                    @Override
+                                    public void openMenuOptions(int id_post, int id_usuario, String uuid) {
+
+                                    }
+
+                                    @Override
+                                    public void commentPost(int id_post, boolean can_comment) {
+
+                                    }
+                                });
                                 dialogPreviewPost.show();
                             }else{
                                 Intent i = new Intent(context, PlayVideoActivity.class);

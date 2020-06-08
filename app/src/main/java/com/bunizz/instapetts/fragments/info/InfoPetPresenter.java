@@ -117,7 +117,7 @@ public class InfoPetPresenter implements  InfoPetContract.Presenter {
 
     @Override
     public void updatePet(PetBean petBean) {
-        petBean.setTarget(WEBCONSTANTS.DELETE);
+        petBean.setTarget(WEBCONSTANTS.UPDATE);
         disposable.add(
                 apiService.updatePet(petBean)
                         .subscribeOn(Schedulers.io())

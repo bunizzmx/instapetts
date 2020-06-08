@@ -272,6 +272,11 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     }
 
     @Override
+    public void show_next_feed(ArrayList<PostBean> data) {
+
+    }
+
+    @Override
     public void show_feed_recomended(ArrayList<PostBean> data) {
         refresh_feed.setRefreshing(false);
         spin_kit.setVisibility(View.GONE);

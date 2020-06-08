@@ -57,6 +57,8 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
         presenter = new StoryPlapyerPresenter(this,this);
         if (getIntent() != null) {
             historiesBeans = Parcels.unwrap(getIntent().getParcelableExtra("sliders"));
+            if(historiesBeans.get(0).getHistorias() == null)
+                historiesBeans.remove(0);
             SELECTED_POSITION = getIntent().getIntExtra("SELECTED_POSITION",0);
         }
         Log.e("STORY_PLAYER","-->:Num Histories: " + historiesBeans.size());

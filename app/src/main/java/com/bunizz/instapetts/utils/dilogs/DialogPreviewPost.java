@@ -7,12 +7,16 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.db.helpers.LikePostHelper;
+import com.bunizz.instapetts.db.helpers.SavedPostHelper;
 import com.bunizz.instapetts.listeners.chose_pet_listener;
+import com.bunizz.instapetts.listeners.postsListener;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -29,7 +33,21 @@ public class DialogPreviewPost extends BaseAlertDialog{
     ImagenCircular image_pet_dialog;
     TextView num_likes_posts_dialog,name_pet_post_dialog;
     ImageView image_preview_dialog;
+    ImageView save_posts;
 
+    RelativeLayout l_like_post,l_saved_post;
+    ImageView icon_like;
+    postsListener listener_post;
+    LikePostHelper likePostHelper;
+    SavedPostHelper savedPostHelper;
+
+    public postsListener getListener_post() {
+        return listener_post;
+    }
+
+    public void setListener_post(postsListener listener_post) {
+        this.listener_post = listener_post;
+    }
 
     public chose_pet_listener getListener() {
         return listener;
@@ -42,6 +60,19 @@ public class DialogPreviewPost extends BaseAlertDialog{
     public DialogPreviewPost(Context context,PostBean postBean){
         this.context = context;
         this.postBean =postBean;
+        likePostHelper = new LikePostHelper(this.context);
+        savedPostHelper = new SavedPostHelper(this.context);
+
+        if(likePostHelper.searchPostById(this.postBean.getId_post_from_web()))
+            this.postBean.setLiked(true);
+        else
+            this.postBean.setLiked(false);
+
+        if(savedPostHelper.searchPostById(this.postBean.getId_post_from_web()))
+            this.postBean.setSaved(true);
+        else
+            this.postBean.setSaved(false);
+
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this.context);
         LayoutInflater inflater = LayoutInflater.from(this.context);
         dialogView = inflater.inflate(R.layout.dialog_preview_post, null);
@@ -50,18 +81,22 @@ public class DialogPreviewPost extends BaseAlertDialog{
         name_pet_post_dialog = dialogView.findViewById(R.id.name_pet_post_dialog);
         num_likes_posts_dialog = dialogView.findViewById(R.id.num_likes_posts_dialog);
         image_preview_dialog = dialogView.findViewById(R.id.image_preview_dialog);
+        save_posts = dialogView.findViewById(R.id.save_posts);
+        l_like_post = dialogView.findViewById(R.id.l_like_post);
+        l_saved_post = dialogView.findViewById(R.id.l_saved_post);
+        icon_like = dialogView.findViewById(R.id.icon_like);
         if(is_multiple(this.postBean.getUrls_posts())) {
             String splits[]  = this.postBean.getUrls_posts().split(",");
-            Glide.with(this.context).load(splits[0]).into(image_preview_dialog);
+            Glide.with(this.context).load(splits[0]).placeholder(context.getResources().getDrawable(R.drawable.ic_holder)).into(image_preview_dialog);
         }else{
-            Glide.with(this.context).load(this.postBean.getUrls_posts()).into(image_preview_dialog);
+            Glide.with(this.context).load(this.postBean.getUrls_posts()).placeholder(context.getResources().getDrawable(R.drawable.ic_holder)).into(image_preview_dialog);
         }
         name_pet_post_dialog.setText(this.postBean.getName_pet());
         if(this.postBean.getLikes() == 0)
-           num_likes_posts_dialog.setText("se el primero en darle like");
+           num_likes_posts_dialog.setText(getContext().getResources().getString(R.string.first_like));
         else
-            num_likes_posts_dialog.setText("a " + this.postBean.getLikes() + " personas les gusta esto");
-        Glide.with(this.context).load(this.postBean.getUrl_photo_pet()).into(image_pet_dialog);
+            num_likes_posts_dialog.setText("a " + this.postBean.getLikes() + " " + getContext().getResources().getString(R.string.people_like_this));
+        Glide.with(this.context).load(this.postBean.getUrl_photo_pet()).placeholder(context.getResources().getDrawable(R.drawable.ic_holder)).into(image_pet_dialog);
         if(postBean.getAddress()!=null) {
             if (!postBean.getAddress().equals("INVALID")) {
                 addres_post_dialog.setVisibility(View.VISIBLE);
@@ -71,6 +106,48 @@ public class DialogPreviewPost extends BaseAlertDialog{
         }else{
             addres_post_dialog.setVisibility(View.GONE);
         }
+
+        l_like_post.setOnClickListener(view -> {
+            if(!this.postBean.isLiked()) {
+                this.postBean.setLiked(true);
+                icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
+                if(is_multiple(this.postBean.getUrls_posts())) {
+                    String s[]= this.postBean.getUrls_posts().split(",");
+                    listener_post.onLike(this.postBean.getId_post_from_web(), true, this.postBean.getId_usuario(),this.postBean.getThumb_video());
+                }else{
+                    listener_post.onLike(this.postBean.getId_post_from_web(), true, this.postBean.getId_usuario(), this.postBean.getThumb_video());
+                }
+            }else{
+                this.postBean.setLiked(false);
+                icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
+            }
+        });
+
+        l_saved_post.setOnClickListener(view -> {
+            if(this.postBean.isSaved()) {
+                this.postBean.setSaved(false);
+                listener_post.onDisfavorite(this.postBean.getId_post_from_web());
+                save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite));
+            }
+            else {
+                this.postBean.setSaved(true);
+                save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite_fill));
+                listener_post.onFavorite(this.postBean.getId_post_from_web(), this.postBean);
+            }
+        });
+        if(this.postBean.isSaved()){
+            save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite_fill));
+        }else{
+            save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite));
+        }
+
+        if(this.postBean.isLiked()){
+            icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
+        }else{
+            icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
+        }
+
+
 
         dialogBuilder.setView(dialogView);
         dialog = dialogBuilder.create();

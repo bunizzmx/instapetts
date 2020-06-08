@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.PointerIcon;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -120,6 +121,7 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
         ButterKnife.bind(this, view);
 
         presenter.getPostPublics(POSITION_PAGER);
+        Log.e("DATOS_CARGADOS","POSITION1:" + POSITION_PAGER);
         search_by_qr.setOnClickListener(view1 -> {
             rxPermissions
                     .request(Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -153,10 +155,13 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
             @Override
             public void onPageSelected(int position) {
                 POSITION_PAGER = position;
+                Log.e("DATOS_CARGADOS","POSITION:" + POSITION_PAGER);
                 Fragment frag = adapter_pager.getItem(POSITION_PAGER);
                 if (frag instanceof FragmentListGalery) {
-                    if(!((FragmentListGalery) frag).is_data_charged())
+                    if(!((FragmentListGalery) frag).is_data_charged()) {
+                        Log.e("DATOS_CARGADOS","LOS_DESCARGO" + POSITION_PAGER);
                         presenter.getPostPublics(POSITION_PAGER);
+                    }
                     else
                         Log.e("DATOS_CARGADOS","YA_CARGUE_DATOS_AQUI");
                 }
@@ -180,9 +185,10 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
         data_posts.addAll(posts);
         Fragment frag = adapter_pager.getItem(POSITION_PAGER);
         if (frag instanceof FragmentListGalery) {
-            ((FragmentListGalery) frag).setData_posts(data_posts);
+            ((FragmentListGalery) frag).setData_posts(data_posts, POSITION_PAGER);
         }
     }
+
 
     @Override
     public void noInternet() {
@@ -230,4 +236,6 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
             return mFragmentTitleList.get(position);
         }
     }
+
+
 }

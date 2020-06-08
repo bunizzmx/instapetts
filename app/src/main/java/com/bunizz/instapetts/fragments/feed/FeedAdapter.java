@@ -137,7 +137,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void setHistoriesBeans(ArrayList<HistoriesBean> historiesBeans) {
         Log.e("HISTORIES_BEANS","-->" + historiesBeans.size());
-        this.historiesBeans = historiesBeans;
+        this.historiesBeans.clear();
+        this.historiesBeans.addAll(historiesBeans);
     }
 
     public ArrayList<Object> getData() {
@@ -250,7 +251,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 e.list_post_recomended.setLayoutManager(new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false));
                 feedAdapterRecomended.setData(data_recomended);
                 e.list_post_recomended.setAdapter(feedAdapterRecomended);
-                e.title_no_data.setText("Aun no sigues a nadie");
+                e.title_no_data.setText(context.getResources().getString(R.string.no_sigues));
                 e.body_no_data.setText("Te recomendamos a estas hermosas mascotas,porque no les echas un ojo.");
 
                 break;

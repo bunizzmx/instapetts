@@ -22,8 +22,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
+            android:textStyle="bold"
+            android:textColor="@color/primary"
+            android:textSize="14dp"
             android:layout_marginLeft="20dp"
-            style="@style/FontNormalTitlePrimary"
             android:id="@+id/app_name_user"
             android:text="-"
             android:layout_width="wrap_content"
@@ -99,6 +101,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/side_menu_administrate_account"
             android:background="?attr/selectableItemBackground"
             android:paddingBottom="10dp"
@@ -227,7 +230,8 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"/>
             <TextView
-                style="@style/FontNormalTitlePrimary"
+                android:textColor="@color/primary"
+                android:textStyle="bold"
                 android:layout_marginLeft="20dp"
                 android:text="@string/close_session"
                 android:layout_width="wrap_content"

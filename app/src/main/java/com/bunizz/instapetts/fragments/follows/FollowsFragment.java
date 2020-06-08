@@ -364,6 +364,8 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
                 userBeans.remove(position);
             });
 
+            h.name_propietary_pet_searching.setText("@" + userBeans.get(position).getName_nip_user());
+
             if(tipo_descarga ==2){
                 h.label_unfollow.setText("Eliminar");
             }else{
@@ -383,6 +385,7 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
             RelativeLayout root_follows_user;
             RelativeLayout delete_recent;
             TextView label_unfollow;
+            TextView name_propietary_pet_searching;
             public FollowsHolder(@NonNull View itemView) {
                 super(itemView);
                 name_follow = itemView.findViewById(R.id.name_follow);
@@ -390,6 +393,7 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
                 root_follows_user = itemView.findViewById(R.id.root_follows_user);
                 delete_recent = itemView.findViewById(R.id.delete_recent);
                 label_unfollow = itemView.findViewById(R.id.label_unfollow);
+                name_propietary_pet_searching = itemView.findViewById(R.id.name_propietary_pet_searching);
             }
         }
     }

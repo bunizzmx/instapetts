@@ -94,9 +94,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Stack;
 import java.util.UUID;
-
-import androidx.security.crypto.EncryptedFile;
-import androidx.security.crypto.MasterKeys;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -142,6 +139,9 @@ public class Main extends AppCompatActivity implements change_instance,
     ImageView icon_search_pet;
     @BindView(R.id.icon_profile_pet)
     ImagenCircular icon_profile_pet;
+
+    @BindView(R.id.image_preview_smoot)
+    ImageView image_preview_smoot;
 
     @BindView(R.id.text_tips)
     TextView text_tips;
@@ -844,6 +844,10 @@ public class Main extends AppCompatActivity implements change_instance,
                         Intent i = new Intent(Main.this, WizardPetActivity.class);
                         startActivityForResult(i, NEW_PET_REQUEST);
                     }else{
+                        Glide.with(Main.this).load(App.read(PREFERENCES.URI_TEMP_SMOOT,"INVALID"))
+                                .placeholder(R.drawable.ic_holder)
+                                .error(R.drawable.ic_holder)
+                                .into(image_preview_smoot);
                         smoot_progress.setVisibility(View.VISIBLE);
                         root_progres_publish.setVisibility(View.VISIBLE);
                         close_smoot.setVisibility(View.GONE);
@@ -856,11 +860,13 @@ public class Main extends AppCompatActivity implements change_instance,
         else if(requestCode == NEW_PHOTO_UPLOADED){
             if(data!=null) {
                String url =  data.getStringExtra(BUNDLES.URI_FOTO);
-
                    if (mCurrentFragment.getFragment() instanceof FragmentEditProfileUser) {
                        ((FragmentEditProfileUser) mCurrentFragment.getFragment()).change_image_profile(url);
                    }
-
+                    if( mCurrenSheet.getFragment() instanceof  InfoPetFragment){
+                       Log.e("REFRESH_OFTO_PET","-->: " + url);
+                       ((InfoPetFragment) mCurrenSheet.getFragment()).refresh_data_on_pet(url);
+                   }
             }
         }
         else if(requestCode == NEW_PHOTO_FOR_HISTORY){
@@ -1299,7 +1305,7 @@ public class Main extends AppCompatActivity implements change_instance,
             if (POST_SUCCESFULL.equals(action)) {
                 close_smoot.setVisibility(View.VISIBLE);
                 smoot_progress.setVisibility(View.GONE);
-                text_smoot.setText("COMPLETADO");
+                text_smoot.setText(getString(R.string.completed));
                 close_smoot.setOnClickListener(view -> {
                     root_progres_publish.setVisibility(View.GONE);
                 });

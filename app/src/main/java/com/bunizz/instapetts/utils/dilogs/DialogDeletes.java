@@ -53,7 +53,7 @@ public class DialogDeletes extends BaseAlertDialog{
         layout_delete_algo = dialogView.findViewById(R.id.layout_delete_algo);
         if(type_dialog == 0) {
             layout_delete_algo.setVisibility(View.GONE);
-            text_delete_dialog.setText("Eliminar");
+            text_delete_dialog.setText(getContext().getResources().getString(R.string.delete_button_alt));
             delete_now_layout.setOnClickListener(v -> {
                 if(listener!=null) {
                     if(type_dialog == 0) {
@@ -82,8 +82,8 @@ public class DialogDeletes extends BaseAlertDialog{
         }
         else {
             layout_delete_algo.setVisibility(View.VISIBLE);
-            text_delete_dialog.setText("Quieres eliminar a tu mascota?");
-            description_deletes.setText("Recuerda que los perfiles y contenido de tu mascota son tus recuerdos que siempre estaran disponibles para ti en Instappets no necesitas eliminarla definitivamente.");
+            text_delete_dialog.setText(getContext().getResources().getString(R.string.delete_pet_title));
+            description_deletes.setText(getContext().getResources().getString(R.string.delete_pet_body));
             confirm_deletes.setOnClickListener(v -> listener.delete(true));
             confirm_decline.setOnClickListener(v -> dismiss());
         }

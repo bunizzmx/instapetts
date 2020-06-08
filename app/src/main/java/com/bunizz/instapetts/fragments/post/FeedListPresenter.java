@@ -136,6 +136,77 @@ public class FeedListPresenter implements FeedContract.Presenter {
     }
 
     @Override
+    public void get_next_feed(boolean one_user, int id_one, int dias_pasados) {
+        PostFriendsBean postFriendsBean = new PostFriendsBean();
+        postFriendsBean.setPaginador(dias_pasados);
+        if(one_user){
+            postFriendsBean.setId_one(id_one);
+            postFriendsBean.setTarget("ONE");
+        }else{
+            postFriendsBean.setTarget("MULTIPLE");
+            postFriendsBean.setIds(followsHelper.getMyFriendsForPost());
+            postFriendsBean.setIds_h(followsHelper.getMyFriendsForPost());
+        }
+        disposable.add(
+                apiService.getPosts(postFriendsBean)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<ResponsePost>() {
+                            @Override
+                            public void onSuccess(ResponsePost responsePost) {
+                                if(responsePost.getList_posts()!=null) {
+                                    if(responsePost.getList_posts()!=null)
+                                        Log.e("NUMBER_POSTS", "-->" + responsePost.getList_posts().size());
+                                    ArrayList<PostBean> post = new ArrayList<>();
+                                    post.addAll(responsePost.getList_posts());
+                                    for (int i = 0; i < post.size(); i++) {
+                                        if (savedPostHelper.searchPostById(post.get(i).getId_post_from_web()))
+                                            post.get(i).setSaved(true);
+                                        else
+                                            post.get(i).setSaved(false);
+
+                                        if (likePostHelper.searchPostById(post.get(i).getId_post_from_web()))
+                                            post.get(i).setLiked(true);
+                                        else
+                                            post.get(i).setLiked(false);
+                                    }
+                                    if(responsePost.getCode_response()==200) {
+                                        if(post.size()>0)
+                                            mView.show_feed(post, responsePost.getList_stories());
+                                        else {
+                                            Log.e("GET_FEED","RECOMENDED");
+                                            geet_feed_recomended(false, App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
+                                        }
+
+                                    }else{
+                                        Log.e("NO_INTERNET","--> SUS AMIGOS AUN NO PUBLICAN" );
+                                        mView.show_feed_recomended(post);
+                                    }
+                                }  else{
+                                    RETRY ++;
+                                    if(RETRY < 3) {
+                                        mView.peticion_error();
+                                    }else{
+                                        Log.e("NO_INTERNET","--> tries alcanzados" );
+                                        mView.noInternet();
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                RETRY ++;
+                                if(RETRY < 3) {
+                                    mView.peticion_error();
+                                }else{
+                                    Log.e("NO_INTERNET","-->error" );
+                                    mView.noInternet();
+                                }
+                            }
+                        })
+        );
+    }
+
+    @Override
     public void geet_feed_recomended(boolean one_user, int id_one) {
         PostFriendsBean postFriendsBean = new PostFriendsBean();
         postFriendsBean.setId_one(App.read(PREFERENCES.ID_USER_FROM_WEB,0));

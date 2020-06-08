@@ -68,22 +68,38 @@
                 android:paddingRight="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_marginRight="10dp"
+                android:layout_alignParentRight="true"
+                android:id="@+id/l_saved_post"
+                android:layout_gravity="end"
+                android:background="?attr/selectableItemBackground"
+                android:layout_width="50dp"
+                android:layout_height="50dp">
                 <ImageView
                     android:id="@+id/save_posts"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:layout_alignParentRight="true"
+                    android:layout_centerHorizontal="true"
                     android:src="@drawable/ic_favorite"
                     android:layout_width="25dp"
                     android:layout_height="25dp"/>
-                <ImageView
-                    android:id="@+id/icon_like"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:layout_alignParentLeft="true"
-                    android:src="@drawable/ic_corazon"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"/>
+            </RelativeLayout>
+                <RelativeLayout
+                    android:layout_alignParentStart="true"
+                    android:id="@+id/l_like_post"
+                    android:layout_gravity="end"
+                    android:background="?attr/selectableItemBackground"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp">
+                    <ImageView
+                        android:id="@+id/icon_like"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_alignParentLeft="true"
+                        android:src="@drawable/ic_corazon"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"/>
+                </RelativeLayout>
                 <TextView
                     android:textSize="12dp"
                     android:id="@+id/num_likes_posts_dialog"
@@ -92,7 +108,7 @@
                     android:layout_centerVertical="true"
                     android:text="A 123 pets les gusta esto"
                     android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@+id/icon_like"
+                    android:layout_toRightOf="@+id/l_like_post"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </RelativeLayout>

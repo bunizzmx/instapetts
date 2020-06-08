@@ -3,8 +3,12 @@ package com.bunizz.instapetts.activitys.login;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -37,6 +41,17 @@ import com.bunizz.instapetts.services.ImageService;
 import com.bunizz.instapetts.utils.AndroidIdentifier;
 import com.bunizz.instapetts.utils.dilogs.DialogLoanding;
 import com.bunizz.instapetts.web.CONST;
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -50,13 +65,19 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
+import org.json.JSONObject;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Stack;
 
 import androidx.annotation.NonNull;
@@ -85,12 +106,30 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     DialogLoanding dialogLoanding ;
     Intent intent_service ;
     FirebaseUser user ;
+
     @SuppressLint("CheckResult")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         changeStatusBarColor(R.color.white);
+
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.bunizz.instapetts",                  //Insert your own package name.
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e("KeyHash:","ERROR" + e.getMessage());
+        } catch (NoSuchAlgorithmException e) {
+            Log.e("KeyHash:","ERROR2" + e.getMessage());
+        }
+
+
         intent_service = new Intent(this, DownloadsService.class);
         dialogLoanding = new DialogLoanding(this);
         stack_sigin = new Stack<>();
@@ -273,8 +312,10 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     }
 
     @Override
-    public void loginWithFacebook() {
-        permision_location();
+    public void loginWithFacebook(AccessToken accessToken)
+    {
+ handleFacebookAccessToken(accessToken);
+
     }
 
 
@@ -395,6 +436,16 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                     ((FragmentFirstUser) mCurrentFragment.getFragment()).change_image_profile(url);
                 }
             }
+        }else{
+
+            if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_MAIN_LOGIN)
+            {
+                Log.e("ACTIVITY_RESULT","SET DATA LOGIN");
+                ((MainLogin) mCurrentFragment.getFragment()).setData(requestCode,resultCode,data);
+            }else{
+                Log.e("ACTIVITY_RESULT","NO ES INSTANCIA DE SET DATA LOGIN");
+            }
+
         }
     }
 
@@ -582,6 +633,33 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
             dialogLoanding.show();
         }catch (Exception e){}
         presenter.updateUser(userBean);
+    }
+
+
+
+
+    private void handleFacebookAccessToken(AccessToken token) {
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            App.write(PREFERENCES.UUID, user.getUid());
+                            App.write(PREFERENCES.NAME_USER,user.getDisplayName());
+                            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(LoginActivity.this, instanceIdResult -> {
+                                String token = instanceIdResult.getToken();
+                                App.write(PREFERENCES.TOKEN,token);
+                                Log.e("ERROR_LOGIN","-->TODO BIEN" +token);
+                                generate_user_bean();
+                            });
+                        } else {
+                            Log.e("ERROR_LOGIN","-->TODO MAL" + task.getException().getMessage());
+                            Toast.makeText(LoginActivity.this, "Intente de nuevo", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
 
 

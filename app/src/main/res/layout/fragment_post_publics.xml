@@ -27,13 +27,10 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"/>
         </RelativeLayout>
-        <androidx.cardview.widget.CardView
+        <RelativeLayout
             android:layout_marginTop="5dp"
             android:layout_toLeftOf="@+id/search_by_qr"
             android:layout_marginBottom="5dp"
-            app:cardElevation="1dp"
-            app:cardCornerRadius="5dp"
-            app:contentPadding="3dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:id="@+id/card_search_raza"
@@ -58,7 +55,7 @@
                     android:layout_width="15dp"
                     android:layout_height="15dp"/>
             </RelativeLayout>
-        </androidx.cardview.widget.CardView>
+        </RelativeLayout>
         <com.bunizz.instapetts.utils.tabs2.SmartTabLayout
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"

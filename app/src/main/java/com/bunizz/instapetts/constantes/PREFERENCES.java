@@ -21,6 +21,7 @@ public interface PREFERENCES {
     String CP ="CP";
     String NAME_PRE_USER="NAME_PRE_USER";
     String NAME_TAG_INSTAPETTS ="NAME_TAG_INSTAPETTS";
+    String URI_TEMP_SMOOT ="URI_TEMP_SMOOT";
 
     //NOTIFICATIONS PUSH
 

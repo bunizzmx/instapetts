@@ -238,7 +238,7 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
             exoPlayerManager = new ExoPlayerManager(this,videoSurfaceView, previewTimeBar,
                     (ImageView) findViewById(R.id.imageView), TIPS_BEAN.getPhoto_tumbh_tip(),noise);
             exoPlayerManager.play(Uri.parse(TIPS_BEAN.getPhoto_tip()));
-            name_user_player.setText("INSTAPETS TIP");
+            name_user_player.setText("" + getString(R.string.instapetts_tips));
         }else{
             layout_views.setVisibility(View.GONE);
             name_user_player.setText(POST_BEAN.getName_user());

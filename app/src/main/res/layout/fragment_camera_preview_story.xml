@@ -6,6 +6,7 @@
 
     <com.bunizz.instapetts.utils.crop.CropLayout
         android:id="@+id/crop_view"
+        android:layout_marginTop="70dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:cropme_background_alpha="80%"

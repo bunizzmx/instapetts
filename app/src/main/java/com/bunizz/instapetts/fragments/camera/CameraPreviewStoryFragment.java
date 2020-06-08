@@ -159,20 +159,20 @@ public class CameraPreviewStoryFragment extends Fragment {
         crop_cuadrada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                crop_view.modify_cropper(0.5f);
+                crop_view.modify_cropper(0.5f,Uri.parse(path.get(0)));
             }
         });
 
         crop_3_4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                crop_view.modify_cropper(0.7f);
+                crop_view.modify_cropper(0.7f,Uri.parse(path.get(0)));
             }
         });
         crop_9_16.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                crop_view.modify_cropper(1f);
+                crop_view.modify_cropper(1f,Uri.parse(path.get(0)));
             }
         });
     }

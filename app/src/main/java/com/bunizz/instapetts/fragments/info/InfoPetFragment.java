@@ -2,6 +2,7 @@ package com.bunizz.instapetts.fragments.info;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.wizardPets.WizardPetActivity;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
@@ -31,6 +33,8 @@ import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.listeners.RatePetListener;
 import com.bunizz.instapetts.listeners.delete;
+import com.bunizz.instapetts.listeners.uploads;
+import com.bunizz.instapetts.services.ImageService;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.dilogs.DialogDeletes;
 import com.bunizz.instapetts.utils.dilogs.DialogRatePet;
@@ -114,6 +118,10 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
     InfoPetPresenter presenter;
     boolean IN_EDICION = false;
 
+    uploads listener;
+
+    String REFRESH_IMAGE ="INVALID";
+
 
 
     @SuppressLint("MissingPermission")
@@ -175,6 +183,17 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
     }
 
 
+    public void refresh_data_on_pet(String url) {
+        REFRESH_IMAGE = url;
+        Log.e("REFRESH_OFTO_PET","-->A: " + url);
+        Glide.with(getContext()).load(url)
+       .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder))
+        .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
+                .into(image_pet_info);
+        UploadImagePet(REFRESH_IMAGE,petBean.getName_pet());
+    }
+
+
 
   boolean IS_ME=false;
     @Override
@@ -207,7 +226,7 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
         name_property_pet_profile.setText("@" + App.read(PREFERENCES.NAME_USER,"INVALID"));
         descripcion_pet_profile.setText(petBean.getDescripcion_pet());
         peso_pet_profile.setText(petBean.getPeso_pet() + "kg");
-        Glide.with(getContext()).load(petBean.getUrl_photo()).into(image_pet_info);
+        Glide.with(getContext()).load(petBean.getUrl_photo()).placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).error(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_pet_info);
         stars_pet.setText(String.format("%.2f", petBean.getRate_pet()));
         Log.e("PENDDD","-->" + petBean.getId_propietary() + "/" + App.read(PREFERENCES.ID_USER_FROM_WEB,0) );
         Log.e("ID_PETXX","-->" + petBean.getId_propietary() + "/" + App.read(PREFERENCES.ID_USER_FROM_WEB,0));
@@ -216,7 +235,8 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
             icon_star_rated.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_editar));
             edit_photo_pet.setVisibility(View.VISIBLE);
             root_imagen_and_pencil.setOnClickListener(v -> {
-
+                App.write(PREFERENCES.FROM_PICKER,"PROFILE");
+                listener.onImageProfileUpdated();
             });
         }else{
             rate_pet_card.setVisibility(View.VISIBLE);
@@ -273,6 +293,25 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
     @Override
     public void petUpdated() {
         Toast.makeText(getActivity(),"Mascota Actualizada",Toast.LENGTH_LONG).show();
+    }
+
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        listener = (uploads) context;
+    }
+
+    void UploadImagePet(String url,String name_pet){
+        ArrayList<String> uri_profile = new ArrayList<>();
+        uri_profile.add(url);
+        Intent intent = new Intent(getActivity(), ImageService.class);
+        intent.putStringArrayListExtra(ImageService.INTENT_KEY_NAME, uri_profile);
+        intent.putExtra(BUNDLES.NOTIFICATION_TIPE,3);
+        intent.putExtra(BUNDLES.NAME_PET,name_pet);
+        intent.putExtra(ImageService.INTENT_TRANSFER_OPERATION, ImageService.TRANSFER_OPERATION_UPLOAD);
+        getActivity().startService(intent);
+        Toast.makeText(getActivity(),"Actualizando foto",Toast.LENGTH_LONG).show();
     }
 }
 

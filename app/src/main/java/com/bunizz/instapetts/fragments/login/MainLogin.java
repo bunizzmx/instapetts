@@ -1,18 +1,35 @@
 package com.bunizz.instapetts.fragments.login;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.login.LoginActivity;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.login.sigin.FragmentSigin;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.login_listener;
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+
+import java.util.Arrays;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +37,6 @@ import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 public class MainLogin extends Fragment implements  MainLoginContract.View{
 
     change_instance listener;
@@ -33,13 +49,9 @@ public class MainLogin extends Fragment implements  MainLoginContract.View{
     EditText password_email;
 
 
+    @BindView(R.id.login_with_facebook)
+    LoginButton login_with_facebook;
 
-
-    @OnClick(R.id.login_with_facebook)
-    void login_with_facebook()
-    {
-        listener_login.loginWithFacebook();
-    }
 
     @OnClick(R.id.login_with_gmail)
     void login_with_gmail()
@@ -52,8 +64,8 @@ public class MainLogin extends Fragment implements  MainLoginContract.View{
     {
        listener_login.loginWithEmail(mail_user.getText().toString(),password_email.getText().toString());
     }
-
-
+    CallbackManager mCallbackManager;
+    private AccessTokenTracker accessTokenTracker;
     @OnClick(R.id.change_to_create_account)
     void change_to_create_account()
     {
@@ -67,6 +79,7 @@ public class MainLogin extends Fragment implements  MainLoginContract.View{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mCallbackManager = CallbackManager.Factory.create();
     }
 
     @Nullable
@@ -79,7 +92,30 @@ public class MainLogin extends Fragment implements  MainLoginContract.View{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        login_with_facebook.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.e("ACCES_TOKENN","-->EXECUTE CALBACK");
+                AccessToken accessToken = loginResult.getAccessToken();
+                Profile profile = Profile.getCurrentProfile();
+                listener_login.loginWithFacebook(accessToken);
+            }
 
+            @Override
+            public void onCancel() {
+                Log.e("ACCES_TOKENN","-->CANCELADO:");
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                Log.e("ACCES_TOKENN","-->ERROR:"+ exception.getMessage());
+            }
+        });
+    }
+
+    public void setData(int requestCode, int resultCode, Intent data){
+        Log.e("ACTIVITY_RESULT","SET DATA LOGIN 2");
+        mCallbackManager.onActivityResult(requestCode,resultCode,data);
     }
 
     @Override

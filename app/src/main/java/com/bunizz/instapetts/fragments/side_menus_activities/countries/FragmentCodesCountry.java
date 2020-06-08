@@ -129,7 +129,7 @@ public class FragmentCodesCountry extends Fragment implements  CodesCountryContr
         }else{
             Log.e("CODES_EXISTENTES","--> SHOW NO DATA");
             body_no_data.setText("Cuando sigas 1 o mas cuentas apareceran aqui");
-            title_no_internet.setText("Aun no sigues a nadie");
+            title_no_internet.setText(getString(R.string.no_sigues));
             icon_no_internet.setVisibility(View.GONE);
             spin_kit.setVisibility(View.GONE);
             root_no_internet.setVisibility(View.VISIBLE);

@@ -24,6 +24,8 @@ import com.bunizz.instapetts.db.Utilities;
 import com.bunizz.instapetts.utils.AndroidIdentifier;
 import com.bunizz.instapetts.utils.dilogs.DialogPermision;
 import com.bunizz.instapetts.web.CONST;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
@@ -73,6 +75,8 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         SQLiteDatabase.loadLibs(getApplicationContext());
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         db = FirebaseFirestore.getInstance();
@@ -272,29 +276,29 @@ public class App extends Application {
                         meses  = residuo / 872;
                         if(years==1) {
                             if(meses > 1)
-                                return years + getApplicationContext().getResources().getString(R.string.years) + " y  " + meses + " " + getApplicationContext().getResources().getString(R.string.months);
+                                return years +  " " + getApplicationContext().getResources().getString(R.string.years) + " y  " + meses + " " + getApplicationContext().getResources().getString(R.string.months);
                             else {
                                 if(meses ==0)
-                                   return years + getApplicationContext().getResources().getString(R.string.year);
+                                   return years + " " + getApplicationContext().getResources().getString(R.string.year);
                                 else
-                                    return years + getApplicationContext().getResources().getString(R.string.year)+ " y  " + meses + " " + getApplicationContext().getResources().getString(R.string.month);
+                                    return years + " " +  getApplicationContext().getResources().getString(R.string.year)+ " y  " + meses + " " + getApplicationContext().getResources().getString(R.string.month);
                             }
                         }
                         else {
                             if(meses > 1)
-                                return years + getApplicationContext().getResources().getString(R.string.years) + " y  " + meses + " " + getApplicationContext().getResources().getString(R.string.months);
+                                return years + " " +getApplicationContext().getResources().getString(R.string.years) + " y  " + meses + " " + getApplicationContext().getResources().getString(R.string.months);
                             else {
                                  if(meses==0)
-                                     return years + getApplicationContext().getResources().getString(R.string.years);
+                                     return years + " " +getApplicationContext().getResources().getString(R.string.years);
                                  else
-                                     return years + getApplicationContext().getResources().getString(R.string.years) + " y  " + meses + " " + getApplicationContext().getResources().getString(R.string.months);
+                                     return years + " "  + getApplicationContext().getResources().getString(R.string.years) + " y  " + meses + " " + getApplicationContext().getResources().getString(R.string.months);
                             }
                         }
                    }else{
                        if(years==1)
-                         return  years + getApplicationContext().getResources().getString(R.string.year);
+                         return  years + " " +  getApplicationContext().getResources().getString(R.string.year);
                        else
-                           return  years + getApplicationContext().getResources().getString(R.string.years);
+                           return  years + " " + getApplicationContext().getResources().getString(R.string.years);
                    }
                }
                else{

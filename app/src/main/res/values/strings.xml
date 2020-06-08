@@ -1,5 +1,7 @@
 <resources>
     <string name="app_admob">ca-app-pub-3652627287925800~2029449466</string>
+    <string name="facebook_app_id">3028016427294198</string>
+    <string name="fb_login_protocol_scheme">fb3028016427294198</string>
 
 
     <string name="app_name">Instapetts</string>
@@ -237,7 +239,6 @@
     <string name="likes"> Me gusta</string>
 
 
-
     <!-- STRING FOR PUSH /////////////////// -->
     <string name="title_follow">Nuevo me gusta</string>
     <string name="body_follow"> le ha gustado tu publicación!!!</string>
@@ -245,8 +246,22 @@
     <string name="title_comment">Nuevo comentario</string>
     <string name="body_comment">  a comentado tu publicacion, ve de que se trata!!!</string>
 
-
-
     <string name="Followed">Seguidos</string>
     <string name="followers">Seguidores</string>
+    <string name="delete_pet_title">Quieres eliminar a tu mascota?</string>
+    <string name="delete_pet_body">Recuerda que los perfiles y contenido de tu mascota son tus recuerdos que siempre estaran disponibles para ti en Instappets no necesitas eliminarla definitivamente.</string>
+
+    <string name="people_like_this">personas les gusta esto</string>
+
+    <string name="no_sigues">Aun no sigues a nadie</string>
+
+    <string name="completed">COMPLETADO</string>
+
+    <string name="no_recent_search_title">No hay busquedas recientes</string>
+    <string name="no_recent_search_body">No hay busquedas recientes, empieza por buscar a un usuario o mascota de tu preferencia.</string>
+
+    <string name="me_gusta"> Me gusta</string>
+
+    <string name="instapetts_tips">INSTAPETS TIP</string>
+
 </resources>

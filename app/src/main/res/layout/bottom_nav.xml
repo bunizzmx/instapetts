@@ -141,7 +141,6 @@
             >
                         <ImageView
                             android:layout_centerVertical="true"
-                            android:tint="@color/colorPrimaryDark"
                            android:layout_centerHorizontal="true"
                             android:id="@+id/icon_add_image_pet"
                             android:layout_width="20dp"

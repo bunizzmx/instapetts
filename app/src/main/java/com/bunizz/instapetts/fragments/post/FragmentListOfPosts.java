@@ -23,6 +23,7 @@ import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.fragments.feed.FeedPresenter;
 import com.bunizz.instapetts.fragments.post.adapters.GaleryAdapter;
 import com.bunizz.instapetts.fragments.post.adapters.PostsAdapter;
+import com.bunizz.instapetts.fragments.search.posts.more_post;
 import com.bunizz.instapetts.listeners.actions_dialog_profile;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
@@ -203,6 +204,11 @@ public class FragmentListOfPosts extends Fragment implements FeedContract.View {
     public void show_feed(ArrayList<PostBean> data, ArrayList<HistoriesBean> data_stories) { }
 
     @Override
+    public void show_next_feed(ArrayList<PostBean> data) {
+
+    }
+
+    @Override
     public void show_feed_recomended(ArrayList<PostBean> data) { }
 
     @Override
@@ -226,5 +232,7 @@ public class FragmentListOfPosts extends Fragment implements FeedContract.View {
     public void showBadge(boolean show) {
         
     }
+
+
 }
 

@@ -269,7 +269,6 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             Bitmap bMap = ThumbnailUtils.createVideoThumbnail(filePaths.get(0), MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);//MediaStore.Video.Thumbnails.MICRO_KIND
             if (bMap != null) {
                 try {
-                    Log.e("SAVE_IMAGE","SUCCESS : ");
                     File newfile = savebitmap(bMap,filePaths.get(0));
                     uri_tuhmbh = String.valueOf(newfile.getPath());
                     post.setThumb_video(App.getInstance().make_uri_bucket_thumbh_video(uri_tuhmbh));
@@ -284,6 +283,11 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             send_post();
         }
         else {
+            if(filePaths.size() == 1){
+                App.write(PREFERENCES.URI_TEMP_SMOOT,filePaths.get(0));
+            }else{
+                App.write(PREFERENCES.URI_TEMP_SMOOT,filePaths.get(filePaths.size()-1));
+            }
             intent.putExtra(BUNDLES.POST_TYPE, 0);
             send_post();
         }
@@ -316,6 +320,8 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         File f = new File( getContext().getApplicationContext().getCacheDir() + File.separator + "THUMBS_VIDEOS"
                 + File.separator + name_sin_dot +".jpg");
         f.createNewFile();
+        String NAME_temph = f.getAbsolutePath();
+        App.write(PREFERENCES.URI_TEMP_SMOOT,NAME_temph);
         FileOutputStream fo = new FileOutputStream(f);
         fo.write(bytes.toByteArray());
         fo.close();

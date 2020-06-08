@@ -153,13 +153,13 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
             item.setTumbh_video(splitsSubItems[3]);
             item.setUrl_photo(splitsSubItems[4]);
             item.setIdentificador(splitsSubItems[5]);
+            item.setDate_story(splitsSubItems[6]);
            uris_fotos.add(item);
         }
         PROGRESS_COUNT=uris_fotos.size();
 
         name.setText(HISTORY_BEAN.getName_user());
         Glide.with(getActivity()).load(HISTORY_BEAN.getPhoto_user()).into(imagen_usuario_historia);
-
 
     }
 
@@ -246,6 +246,7 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
                         try {
                             progress_top.setVisibility(View.GONE);
                             Log.e("SCALE_HEIGHT","-->" +resource.getHeight() );
+                            Log.e("SCALE_WIDTH","-->" +resource.getWidth() );
                             if(resource.getHeight() > 900){
                                 image_story.setScaleType(ImageView.ScaleType.CENTER_CROP);
                             }else{

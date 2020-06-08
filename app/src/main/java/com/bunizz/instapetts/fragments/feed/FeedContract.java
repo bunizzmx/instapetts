@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public interface FeedContract {
     interface Presenter {
         void get_feed(boolean one_user,int id_one);
+        void get_next_feed(boolean one_user,int id_one,int dias_pasados);
         void geet_feed_recomended(boolean one_user,int id_one);
         void likePost(PostActions postActions);
         void saveFavorite(PostActions postActions,PostBean postBean);
@@ -22,6 +23,7 @@ public interface FeedContract {
 
     interface View{
         void show_feed(ArrayList<PostBean> data, ArrayList<HistoriesBean> data_stories);
+        void show_next_feed(ArrayList<PostBean> data);
         void show_feed_recomended(ArrayList<PostBean> data);
         void peticion_error();
         void deletePostError(boolean deleted);
