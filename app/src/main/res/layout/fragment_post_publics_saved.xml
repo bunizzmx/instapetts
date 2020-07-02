@@ -24,7 +24,6 @@
                 android:layout_height="15dp"/>
         </RelativeLayout>
         <TextView
-            style="@style/FontNormalTitleSecondary"
             android:text="@string/post_saved"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="20dp"

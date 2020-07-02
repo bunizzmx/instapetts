@@ -11,6 +11,7 @@ public interface FeedContract {
     interface Presenter {
         void get_feed(boolean one_user,int id_one);
         void get_next_feed(boolean one_user,int id_one,int dias_pasados);
+        void unfollowUser(String uuid_usuario,int id_usuario);
         void geet_feed_recomended(boolean one_user,int id_one);
         void likePost(PostActions postActions);
         void saveFavorite(PostActions postActions,PostBean postBean);

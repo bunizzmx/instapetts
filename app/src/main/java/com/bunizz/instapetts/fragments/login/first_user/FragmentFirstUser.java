@@ -68,7 +68,7 @@ public class FragmentFirstUser extends Fragment implements  FirstUserContract.Vi
     void change_photo()
     {
         App.write(PREFERENCES.FROM_PICKER,"PROFILE");
-        listener_uploads.onImageProfileUpdated();
+        listener_uploads.onImageProfileUpdated("PROFILE_PHOTO");
     }
 
     @SuppressLint("MissingPermission")

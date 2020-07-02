@@ -127,7 +127,7 @@ public class ExoPlayerManager implements PreviewLoader {
             player.release();
         }
         player = createFullPlayer();
-        playerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_ZOOM);
+
         playerView.setPlayer(player);
         player.addListener(new Player.EventListener() {
             @Override

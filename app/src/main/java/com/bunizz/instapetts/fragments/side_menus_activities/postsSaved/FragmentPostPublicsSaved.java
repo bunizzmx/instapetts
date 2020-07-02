@@ -55,6 +55,12 @@ public class FragmentPostPublicsSaved extends Fragment implements  PostPublicsSa
     @BindView(R.id.progres_image)
     SpinKitView progres_image;
 
+    @OnClick(R.id.back_to_main)
+    void back_to_main()
+    {
+        getActivity().onBackPressed();
+    }
+
 
     ArrayList<Object> data_posts = new ArrayList<>();
 
@@ -117,7 +123,7 @@ public class FragmentPostPublicsSaved extends Fragment implements  PostPublicsSa
         progres_image.setIndeterminateDrawable(drawable);
         progres_image.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         title_no_data.setText(getContext().getResources().getString(R.string.no_saved_post_title));
-        body_no_data.setText(getString(R.string.no_saved_post_title));
+        body_no_data.setText(getString(R.string.no_saved_post_body));
     }
 
 

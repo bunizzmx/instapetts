@@ -205,5 +205,18 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
         adapter.setData(data);
         refresh_tips.setRefreshing(false);
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(list_tips!=null)
+            list_tips.onPausePlayer();
+    }
+
+
+    public void stop_player(){
+        if(list_tips!=null)
+            list_tips.onPausePlayer();
+    }
 }
 

@@ -1,5 +1,8 @@
 package com.bunizz.instapetts.beans;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class AspectBean {
     int width;
     int height;

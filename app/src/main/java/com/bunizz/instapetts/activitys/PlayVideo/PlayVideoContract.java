@@ -15,6 +15,7 @@ public interface PlayVideoContract {
         void deleteFavorite(int id_post);
         boolean isLiked(int id_post);
         boolean  isSaved(int id_post);
+        void unfollowUser(String uuid_usuario,int id_usuario);
         void deleteVideo(PostBean postBean);
     }
 

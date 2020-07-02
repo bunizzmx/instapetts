@@ -46,7 +46,7 @@ public class FragmentEditProfileUser extends Fragment {
     void change_photo()
     {
         App.write(PREFERENCES.FROM_PICKER,"PROFILE");
-        listener.onImageProfileUpdated();
+        listener.onImageProfileUpdated("PROFILE_PHOTO");
     }
 
     @SuppressLint("MissingPermission")

@@ -37,6 +37,14 @@ public class TipsBean {
     @Expose
     int type_tip;
 
+    @SerializedName("tip_notice")
+    @Expose
+    int tip_notice;
+
+    @SerializedName("aspect")
+    @Expose
+    String aspect;
+
 
     public TipsBean(int id, String body_tip, String title_tip, String fecha_tip, int likes_tip, int type_pet, int raza_pet, String photo_tumbh_tip, String photo_tip, int views_tip) {
         this.id = id;
@@ -140,5 +148,21 @@ public class TipsBean {
 
     public void setType_tip(int type_tip) {
         this.type_tip = type_tip;
+    }
+
+    public int getTip_notice() {
+        return tip_notice;
+    }
+
+    public void setTip_notice(int tip_notice) {
+        this.tip_notice = tip_notice;
+    }
+
+    public String getAspect() {
+        return aspect;
+    }
+
+    public void setAspect(String aspect) {
+        this.aspect = aspect;
     }
 }

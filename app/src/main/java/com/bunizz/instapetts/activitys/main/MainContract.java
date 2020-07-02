@@ -24,6 +24,7 @@ public interface MainContract {
         ArrayList<Integer> getIdsFolows();
         void sendFileBackup();
         void getFileBackup();
+        void delete_data();
     }
 
     interface View{

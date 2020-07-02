@@ -37,6 +37,7 @@ import com.bunizz.instapetts.listeners.actions_dialog_profile;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.postsListener;
+import com.bunizz.instapetts.utils.SingleScrollDirectionEnforcer;
 import com.bunizz.instapetts.utils.dilogs.DialogOptionsPosts;
 import com.bunizz.instapetts.utils.loadings.SpinKitView;
 import com.bunizz.instapetts.utils.loadings.SpriteFactory;
@@ -181,6 +182,11 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
                         reportIntent.putExtra("TYPO_RECURSO",1);
                         startActivity(reportIntent);
                     }
+
+                    @Override
+                    public void unfollowUser(int id_user,String uuid) {
+                        mPresenter.unfollowUser(uuid,id_user);
+                    }
                 });
                 optionsPosts.show();
             }
@@ -208,8 +214,8 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         ButterKnife.bind(this, view);
         feedAdapter.setRequestManager(initGlide());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(feedAdapter);
+
         refresh_feed.setOnRefreshListener(() ->{
             root_no_internet.setVisibility(View.GONE);
             if(followsHelper.getMyFriendsForPost().size()>0)

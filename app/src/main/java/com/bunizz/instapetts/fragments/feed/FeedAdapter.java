@@ -51,6 +51,7 @@ import com.bunizz.instapetts.listeners.postsListener;
 import com.bunizz.instapetts.utils.Dots.DotsIndicator;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.OnSwipeTouchListener;
+import com.bunizz.instapetts.utils.SingleScrollDirectionEnforcer;
 import com.bunizz.instapetts.utils.ViewPagerAdapter;
 import com.bunizz.instapetts.utils.double_tap.DoubleTapLikeView;
 import com.bunizz.instapetts.utils.loadings.SpinKitView;
@@ -84,6 +85,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return listener_post;
     }
     boolean POST_EMPTY = false;
+    SingleScrollDirectionEnforcer enforcer = new SingleScrollDirectionEnforcer();
     public void setListener_post(postsListener listener_post) {
         this.listener_post = listener_post;
     }
@@ -250,6 +252,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 });
                 e.list_post_recomended.setLayoutManager(new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false));
                 feedAdapterRecomended.setData(data_recomended);
+
+                e.list_post_recomended.addOnItemTouchListener(enforcer);
+                e.list_post_recomended.addOnScrollListener(enforcer);
                 e.list_post_recomended.setAdapter(feedAdapterRecomended);
                 e.title_no_data.setText(context.getResources().getString(R.string.no_sigues));
                 e.body_no_data.setText("Te recomendamos a estas hermosas mascotas,porque no les echas un ojo.");
@@ -408,7 +413,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     ViewPagerAdapter adapter = new ViewPagerAdapter(context);
                     if (data_parsed.getUrls_posts() != null)
                         adapter.setUris_not_parsed(data_parsed.getUrls_posts());
+
                     f.list_fotos.setAdapter(adapter);
+
                     f.list_fotos.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                         @Override
                         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

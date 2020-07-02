@@ -113,7 +113,14 @@ public class FragmentListOfPosts extends Fragment implements FeedContract.View {
                         reportIntent.putExtra("TYPO_RECURSO",1);
                         startActivity(reportIntent);
                     }
+                    @Override
+                    public void unfollowUser(int id_user,String uuid) {
+                        mPresenter.unfollowUser(uuid,id_user);
+                    }
                 });
+
+
+
                 optionsPosts.show();
             }
 

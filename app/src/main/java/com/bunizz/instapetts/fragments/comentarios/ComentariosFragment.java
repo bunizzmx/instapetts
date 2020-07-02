@@ -124,7 +124,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
             commentariosBean.setName_user(App.read(PREFERENCES.NAME_USER, "INVALID"));
             commentariosBean.setLikes(0);
             presenter.comment(commentariosBean);
-            input_commentarios.setText(" " + getString(R.string.me_gusta));
+            input_commentarios.setText("");
             adapter.addBelow(commentariosBean);
            scrolbottom();
         }
@@ -387,7 +387,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                         if(data.get(position).getLikes() - 1 > 0)
                            h.n_likes_comment.setText((data.get(position).getLikes() - 1) + " Me gusta");
                         else
-                            h.n_likes_comment.setText(" " + getString(R.string.gus));
+                            h.n_likes_comment.setText(" " + getString(R.string.me_gusta));
                     }
                     else {
                         data.get(position).setIs_liked(true);

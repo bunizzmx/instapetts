@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,6 +31,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.main.Main;
@@ -123,6 +126,10 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     @BindView(R.id.refresh_profile)
     SwipeRefreshLayout refresh_profile;
 
+    @BindView(R.id.rotate_refresh)
+    ImageView rotate_refresh;
+
+
 
     Style style = Style.values()[12];
     Sprite drawable = SpriteFactory.create(style);
@@ -155,6 +162,18 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         b.putInt("TIPO_DESCARGA",2);
         listener_instance.change_fragment_parameter(FragmentElement.INSTANCE_FOLLOWS_USER,b);
     }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.refresh_profile_item)
+    void refresh_profile_item() {
+        presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0),POSITION_PAGER);
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        Animation rotation = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_refresh);
+        rotation.setRepeatCount(Animation.INFINITE);
+        rotate_refresh.startAnimation(rotation);
+    }
+
+
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.open_followiongs)
@@ -274,7 +293,10 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
             follow_edit.setOnClickListener(view1 -> listener.change(FragmentElement.INSTANCE_EDIT_PROFILE_USER));
         descripcion_perfil_user.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
         URL_UPDATED = App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID");
-        Glide.with(getContext()).load(URL_UPDATED).placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
+        Glide.with(getContext()).load(URL_UPDATED)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
 
         presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0),POSITION_PAGER);
 
@@ -307,7 +329,10 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     public void change_image_profile(String url){
         if(image_profile_property_pet!=null) {
             if(!url.equals("INVALID"))
-            Glide.with(getContext()).load(url).placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
+            Glide.with(getContext()).load(url)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
         }
     }
 
@@ -362,7 +387,10 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
             name_property_pet.setText("@" + App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"INVALID"));
 
         descripcion_perfil_user.setText(USERBEAN.getDescripcion());
-        Glide.with(getContext()).load(USERBEAN.getPhoto_user()).placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
+        Glide.with(getContext()).load(USERBEAN.getPhoto_user())
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
         petsPropietaryAdapter.setPets(PETS);
         num_posts.setText(String.valueOf(USERBEAN.getPosts()));
         num_rate_pets.setText(String.format("%.2f", RATE_PETS));
@@ -373,6 +401,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
 
     @Override
     public void showPostUser(ArrayList<PostBean> posts) {
+        rotate_refresh.clearAnimation();
         refresh_profile.setRefreshing(false);
         Fragment frag = adapter_pager.getItem(POSITION_PAGER);
         POSTS.clear();

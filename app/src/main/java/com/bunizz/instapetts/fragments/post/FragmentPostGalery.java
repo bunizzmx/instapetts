@@ -16,8 +16,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.profile.AdapterGridPostsProfile;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.postsListener;
+import com.bunizz.instapetts.web.parameters.PostActions;
 
 import org.parceler.Parcels;
 
@@ -26,7 +29,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FragmentPostGalery extends Fragment {
+public class FragmentPostGalery extends Fragment implements PostGaleryContract.View {
     @BindView(R.id.list_galery)
     RecyclerView list_galery;
 
@@ -40,9 +43,14 @@ public class FragmentPostGalery extends Fragment {
     @BindView(R.id.body_no_data)
     TextView body_no_data;
 
+    PostGaleryPresenter presenter;
+
     changue_fragment_parameters_listener listener;
     AdapterGridPostsProfile feedAdapter;
     ArrayList<Object> data_posts = new ArrayList<>();
+
+
+
     public void setData_posts(ArrayList<Object> data_posts) {
         if(data_posts !=null){
             if(data_posts.size()>0){
@@ -79,6 +87,7 @@ public class FragmentPostGalery extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         feedAdapter = new AdapterGridPostsProfile(getContext());
+        presenter = new PostGaleryPresenter(this,getContext());
 
     }
 
@@ -108,6 +117,46 @@ public class FragmentPostGalery extends Fragment {
                 listener.change_fragment_parameter(type_fragment,b);
             }
         });
+        feedAdapter.setListener_post(new postsListener() {
+            @Override
+            public void onLike(int id_post, boolean type_like, int id_usuario, String url_image) {
+                PostActions postActions = new PostActions();
+                postActions.setId_post(id_post);
+                if(type_like)
+                    postActions.setAcccion("1");
+                else
+                    postActions.setAcccion("2");
+                postActions.setId_usuario(id_usuario);
+                postActions.setValor("1");
+                postActions.setExtra(url_image);
+                presenter.likePost(postActions);
+            }
+
+            @Override
+            public void onFavorite(int id_post, PostBean postBean) {
+                PostActions postActions = new PostActions();
+                postActions.setId_post(id_post);
+                postActions.setAcccion("FAVORITE");
+                postActions.setId_usuario(postBean.getId_usuario());
+                postActions.setValor("1");
+                presenter.saveFavorite(postActions,postBean);
+            }
+
+            @Override
+            public void onDisfavorite(int id_post) {
+
+            }
+
+            @Override
+            public void openMenuOptions(int id_post, int id_usuario, String uuid) {
+
+            }
+
+            @Override
+            public void commentPost(int id_post, boolean can_comment) {
+
+            }
+        });
         title_no_data.setText("No hay publicaciones");
         body_no_data.setText("Demuestrale al mundo la mascota linda que tienes escondida, todos queremos verla¡¡.");
     }
@@ -117,6 +166,12 @@ public class FragmentPostGalery extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         listener= (changue_fragment_parameters_listener) context;
+
+    }
+
+    @Override
+    public void showMorePost(ArrayList<PostBean> posts) {
+
     }
 }
 

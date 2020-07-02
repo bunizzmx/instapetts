@@ -107,7 +107,11 @@ public class FeedPresenter implements FeedContract.Presenter {
                                     if(responsePost.getList_posts()!=null)
                                     Log.e("NUMBER_POSTS", "-->" + responsePost.getList_posts().size());
                                     ArrayList<PostBean> post = new ArrayList<>();
-                                    post.addAll(responsePost.getList_posts());
+                                    for (int i =0;i<responsePost.getList_posts().size();i++){
+                                        if(responsePost.getList_posts().get(i).getCensored() == 0){
+                                            post.add(responsePost.getList_posts().get(i));
+                                        }
+                                    }
                                     for (int i = 0; i < post.size(); i++) {
                                         if (savedPostHelper.searchPostById(post.get(i).getId_post_from_web()))
                                             post.get(i).setSaved(true);
@@ -178,7 +182,11 @@ public class FeedPresenter implements FeedContract.Presenter {
                                     if(responsePost.getList_posts()!=null)
                                         Log.e("NUMBER_POSTS", "-->" + responsePost.getList_posts().size());
                                     ArrayList<PostBean> post = new ArrayList<>();
-                                    post.addAll(responsePost.getList_posts());
+                                    for (int i =0;i<responsePost.getList_posts().size();i++){
+                                        if(responsePost.getList_posts().get(i).getCensored() == 0){
+                                            post.add(responsePost.getList_posts().get(i));
+                                        }
+                                    }
                                     for (int i = 0; i < post.size(); i++) {
                                         if (savedPostHelper.searchPostById(post.get(i).getId_post_from_web()))
                                             post.get(i).setSaved(true);
@@ -190,6 +198,8 @@ public class FeedPresenter implements FeedContract.Presenter {
                                         else
                                             post.get(i).setLiked(false);
                                     }
+
+
                                     if(responsePost.getCode_response()==200) {
                                         if(post.size()>0)
                                             mView.show_feed(post, responsePost.getList_stories());
@@ -227,6 +237,27 @@ public class FeedPresenter implements FeedContract.Presenter {
     }
 
     @Override
+    public void unfollowUser(String  uuid_usuario,int id_usuario) {
+        db.collection(FIRESTORE.R_FOLLOWS).document(uuid_usuario).collection(FIRESTORE.SEGUIDORES)
+                .document(App.read(PREFERENCES.UUID,"INVALID"))
+                .delete()
+                .addOnSuccessListener(aVoid -> {    Log.e("BORRE_FOLLOW","DE EL"); })
+                .addOnFailureListener(e -> { })
+                .addOnCompleteListener(task -> {    Log.e("BORRE_FOLLOW","DE EL");});
+        db.collection(FIRESTORE.R_FOLLOWS).document(App.read(PREFERENCES.UUID,"INVALID")).collection(FIRESTORE.SEGUIDORES)
+                .document(uuid_usuario)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Log.e("BORRE_FOLLOW","DE MI");
+                })
+                .addOnFailureListener(e -> { })
+                .addOnCompleteListener(task -> {    Log.e("BORRE_FOLLOW","DE MI");});
+
+        idsUsersHelper.deleteId(id_usuario);
+
+    }
+
+    @Override
     public void geet_feed_recomended(boolean one_user, int id_one) {
         PostFriendsBean postFriendsBean = new PostFriendsBean();
         postFriendsBean.setId_one(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
@@ -242,7 +273,12 @@ public class FeedPresenter implements FeedContract.Presenter {
                                     if(responsePost.getList_posts()!=null)
                                         Log.e("NUMBER_POSTS_RECOMENDED", "-->" + responsePost.getList_posts().size());
                                     ArrayList<PostBean> post = new ArrayList<>();
-                                    post.addAll(responsePost.getList_posts());
+                                    for (int i =0;i<responsePost.getList_posts().size();i++){
+                                        if(responsePost.getList_posts().get(i).getCensored() == 0){
+                                            post.add(responsePost.getList_posts().get(i));
+                                        }
+                                    }
+
                                     mView.show_feed_recomended(post);
                                 }  else{
                                     RETRY ++;

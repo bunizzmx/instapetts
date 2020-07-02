@@ -30,6 +30,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.BuildConfig;
 import com.bunizz.instapetts.R;
@@ -274,6 +275,7 @@ public class Main extends AppCompatActivity implements change_instance,
         DialogLogout dialogLogout = new DialogLogout(this);
         dialogLogout.setListener(() -> {
             presenter.logout();
+            presenter.delete_data();
             App.getInstance().clear_preferences();
             Intent i = new Intent(Main.this, LoginActivity.class);
             startActivity(i);
@@ -432,7 +434,10 @@ public class Main extends AppCompatActivity implements change_instance,
             presenter.update_token(U_TOK);
         });
 
-        Glide.with(Main.this).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID")).placeholder(getResources().getDrawable(R.drawable.ic_holder)).into(icon_profile_pet);
+        Glide.with(Main.this).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"))
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .placeholder(getResources().getDrawable(R.drawable.ic_holder)).into(icon_profile_pet);
         presenter.getIdentificadoresHistories();
 
         if(App.read(PREFERENCES.FECHA_BACKUP_FILE,"-").equals("-"))
@@ -633,6 +638,10 @@ public class Main extends AppCompatActivity implements change_instance,
         if(mOldFragment.getInstanceType()==FragmentElement.INSTANCE_FEED){
             ((FeedFragment) mOldFragment.getFragment()).stop_player();
         }
+
+        if(mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS)
+            ((FragmentTips) mOldFragment.getFragment()).stop_player();
+
         if (intanceType == FragmentElement.INSTANCE_FEED) {
             if (stack_feed.size() == 0) {
                 change_main(new FragmentElement<>("", FeedFragment.newInstance(), FragmentElement.INSTANCE_LOGIN));
@@ -780,7 +789,10 @@ public class Main extends AppCompatActivity implements change_instance,
 
     @Override
     public void onBackPressed() {
-        Log.e("OLD_FRAGMENT","-->" + mOldFragment.getInstanceType());
+        if(mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS)
+            ((FragmentTips) mOldFragment.getFragment()).stop_player();
+
+
         if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_TIP_DETAIL){
             repaint_nav(R.id.tap_tips);
             changeOfInstance(FragmentElement.INSTANCE_TIPS,null,false);
@@ -820,8 +832,12 @@ public class Main extends AppCompatActivity implements change_instance,
             }
         }
         else{
-            repaint_nav(R.id.tab_feed);
-            changeOfInstance(FragmentElement.INSTANCE_FEED,null,false);
+            if(mCurrentFragment.getInstanceType()== FragmentElement.INSTANCE_FEED)
+                finish();
+            else {
+                repaint_nav(R.id.tab_feed);
+                changeOfInstance(FragmentElement.INSTANCE_FEED, null, false);
+            }
         }
 
     }
@@ -863,7 +879,7 @@ public class Main extends AppCompatActivity implements change_instance,
                    if (mCurrentFragment.getFragment() instanceof FragmentEditProfileUser) {
                        ((FragmentEditProfileUser) mCurrentFragment.getFragment()).change_image_profile(url);
                    }
-                    if( mCurrenSheet.getFragment() instanceof  InfoPetFragment){
+                    else{
                        Log.e("REFRESH_OFTO_PET","-->: " + url);
                        ((InfoPetFragment) mCurrenSheet.getFragment()).refresh_data_on_pet(url);
                    }
@@ -961,7 +977,7 @@ public class Main extends AppCompatActivity implements change_instance,
 
     @SuppressLint("CheckResult")
     @Override
-    public void onImageProfileUpdated() {
+    public void onImageProfileUpdated(String from) {
         rxPermissions
                 .request(Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -969,7 +985,7 @@ public class Main extends AppCompatActivity implements change_instance,
                 .subscribe(granted -> {
                     if (granted) {
                         Intent i = new Intent(Main.this, ShareActivity.class);
-                        i.putExtra("FROM","PROFILE_PHOTO");
+                        i.putExtra("FROM",from);
                         startActivityForResult(i,NEW_PHOTO_UPLOADED);
                     } else {
                         App.getInstance().show_dialog_permision(Main.this,getResources().getString(R.string.permision_storage),
@@ -1042,6 +1058,10 @@ public class Main extends AppCompatActivity implements change_instance,
             ((FragmentProfileUserPet) mCurrentFragment.getFragment()).change_descripcion_profile();
         }
          Toast.makeText(Main.this,"PERFIL ACTUALIZADO",Toast.LENGTH_LONG).show();
+        Glide.with(Main.this).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"))
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .placeholder(getResources().getDrawable(R.drawable.ic_holder)).into(icon_profile_pet);
     }
 
     @Override

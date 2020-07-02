@@ -47,64 +47,9 @@ public class NotificationsPresenter implements  NotificationsContract.Presenter 
     }
 
     @Override
-    public void getNotificationsFromWeb() {
-
-        db.collection(FIRESTORE.COLLECTION_NOTIFICATIONS).document(""+App.read(PREFERENCES.ID_USER_FROM_WEB,0))
-                .collection(FIRESTORE.COLLECTION_NOTIFICATIONS)
-                .get()
-                .addOnFailureListener(e -> {})
-                .addOnCompleteListener(task -> {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        NotificationBeanFirestore notification = document.toObject(NotificationBeanFirestore.class);
-                        NotificationBean NOTIFICACION = new NotificationBean(
-                                getTitleForNotification(notification.getTYPE_NOTIFICATION(),notification.getNAME_REMITENTE()),
-                                getBodyForNotification(notification.getTYPE_NOTIFICATION(),notification.getNAME_REMITENTE()),
-                                notification.getFOTO_REMITENTE(),
-                                notification.getTYPE_NOTIFICATION(),
-                                notification.getID_REMITENTE(),
-                                notification.getURL_EXTRA(),
-                                App.getInstance().fecha_lenguaje_humano(notification.getFECHA())
-                        );
-                        NOTIFICACION.setId_recurso(notification.getID_RECURSO());
-                        NOTIFICACION.setId_document_notification(""+document.getId());
-                        notificationHelper.saveNotification(NOTIFICACION);
-                        notificationBeans.add( NOTIFICACION );
-                    }
-                    notificationBeans = notificationHelper.getAllNotifications();
-                    mView.showNotificationaFromWeb(notificationBeans);
-                })
-                .addOnSuccessListener(aVoid -> {});
-    }
-    @Override
     public void deleteAll() {
          notificationHelper.deleteAll();
          mView.deleteAllComplete();
     }
 
-    String getTitleForNotification(int type_notification,String name){
-      String title="";
-      switch (type_notification){
-          case 0:
-              title = mContext.getResources().getString(R.string.title_follow);
-              break;
-          case 1:
-              title = name  + " a  "  + mContext.getResources().getString(R.string.title_comment);
-              break;
-      }
-
-      return title;
-    }
-
-    String getBodyForNotification(int type_notification,String name){
-        String body="";
-        switch (type_notification){
-            case 0:
-                body =  "A <b>" + name  + "</b>  "  + mContext.getResources().getString(R.string.body_follow);
-                break;
-            case 1:
-                body = name  + " "  + mContext.getResources().getString(R.string.body_comment);
-                break;
-        }
-        return body;
-    }
 }

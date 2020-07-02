@@ -28,7 +28,7 @@ android {
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            debuggable false
+            debuggable true
             signingConfig signingConfigs.release
 
 
@@ -155,7 +155,7 @@ dependencies {
     implementation("com.amazonaws:aws-android-sdk-mobile-client:2.16.8")
 
     implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
-
+    implementation 'androidx.viewpager2:viewpager2:1.0.0-beta02'
 
     //region Parceler
     implementation ('org.parceler:parceler-api:1.1.12')

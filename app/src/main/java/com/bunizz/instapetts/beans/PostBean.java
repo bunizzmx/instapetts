@@ -113,6 +113,10 @@ public class PostBean {
 
     String target;
 
+    @SerializedName("censored")
+    @Expose
+    int censored;
+
     public PostBean() {
     }
 
@@ -355,6 +359,14 @@ public class PostBean {
 
     public void setNum_comentarios(int num_comentarios) {
         this.num_comentarios = num_comentarios;
+    }
+
+    public int getCensored() {
+        return censored;
+    }
+
+    public void setCensored(int censored) {
+        this.censored = censored;
     }
 }
 

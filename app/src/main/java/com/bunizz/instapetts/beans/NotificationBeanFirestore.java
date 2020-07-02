@@ -1,5 +1,9 @@
 package com.bunizz.instapetts.beans;
 
+
+import org.parceler.Parcel;
+
+@Parcel
 public class NotificationBeanFirestore {
     String FOTO_REMITENTE;
     int ID_RECURSO;

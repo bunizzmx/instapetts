@@ -2,6 +2,7 @@ package com.bunizz.instapetts.activitys.PlayVideo;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import com.bunizz.instapetts.utils.video_player.PreviewTumbh.ExoPlayerManager;
 import com.bunizz.instapetts.utils.video_player.PreviewView;
 import com.bunizz.instapetts.web.parameters.PostActions;
 import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
 
@@ -44,6 +46,7 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -93,6 +96,11 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
     @BindView(R.id.icon_save_on_favorites)
     ImageView icon_save_on_favorites;
 
+    @BindView(R.id.layout_censored)
+    RelativeLayout layout_censored;
+
+    @BindView(R.id.open_dialog_options)
+    RelativeLayout open_dialog_options;
 
 
     @SuppressLint("MissingPermission")
@@ -139,6 +147,10 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
                 reportIntent.putExtra("ID_RECURSO",id_post);
                 reportIntent.putExtra("TYPO_RECURSO",1);
                 startActivity(reportIntent);
+            }
+            @Override
+            public void unfollowUser(int id_user,String uuid) {
+                presenter.unfollowUser(uuid,id_user);
             }
         });
         optionsPosts.show();
@@ -199,34 +211,54 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
                 POST_BEAN = Parcels.unwrap(getIntent().getParcelableExtra("BEAN"));
 
         }
-        if(presenter.isLiked(POST_BEAN.getId_post_from_web()))
-            POST_BEAN.setLiked(true);
-        else
-            POST_BEAN.setLiked(false);
+
+        if(TYPE_PLAYER == 1) {
+            if (presenter.isLiked(POST_BEAN.getId_post_from_web()))
+                POST_BEAN.setLiked(true);
+            else
+                POST_BEAN.setLiked(false);
 
 
+            if (presenter.isSaved(POST_BEAN.getId_post_from_web()))
+                icon_save_on_favorites.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_fill));
+            else
+                icon_save_on_favorites.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_w));
 
-        if(presenter.isSaved(POST_BEAN.getId_post_from_web()))
-            icon_save_on_favorites.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_w));
-        else
-            icon_save_on_favorites.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_fill));
 
-
-        if(POST_BEAN.isLiked())
-            icon_like_video.setImageDrawable(getResources().getDrawable(R.drawable.ic_corazon_black));
-        else
-            icon_like_video.setImageDrawable(getResources().getDrawable(R.drawable.ic_corazon_w));
+            if (POST_BEAN.isLiked())
+                icon_like_video.setImageDrawable(getResources().getDrawable(R.drawable.ic_corazon_black));
+            else
+                icon_like_video.setImageDrawable(getResources().getDrawable(R.drawable.ic_corazon_w));
+        }else{
+            icon_save_on_favorites.setVisibility(View.GONE);
+            open_dialog_options.setVisibility(View.GONE);
+        }
 
         changeStatusBarColor(R.color.background_video_color);
         if(TYPE_PLAYER ==0) {
             title_video_play.setText(TIPS_BEAN.getTitle_tip());
             likes_video.setText("" + TIPS_BEAN.getLikes_tip());
             views_video.setText("" + TIPS_BEAN.getViews_tip());
+            init_timeline();
         }else{
             title_video_play.setText(POST_BEAN.getDescription());
             likes_video.setText("" + POST_BEAN.getLikes());
+            if(POST_BEAN.getCensored() == 0)
+                init_timeline();
+            else {
+                layout_censored.setVisibility(View.VISIBLE);
+                touch_view_more_controls.setVisibility(View.GONE);
+            }
         }
-        init_timeline();
+
+             if(TYPE_PLAYER == 0) {
+                 name_user_player.setText("" + getString(R.string.instapetts_tips));
+                 Glide.with(PlayVideoActivity.this).load(TIPS_BEAN.getPhoto_tumbh_tip()).into(image_video_tumbh);
+             }
+             else {
+                 name_user_player.setText(POST_BEAN.getName_user());
+                 Glide.with(PlayVideoActivity.this).load(POST_BEAN.getUrl_photo_user()).into(image_video_tumbh);
+             }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -246,8 +278,12 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
             exoPlayerManager = new ExoPlayerManager(this,videoSurfaceView, previewTimeBar,
                     (ImageView) findViewById(R.id.imageView), POST_BEAN.getThumb_video(),noise);
             exoPlayerManager.play(Uri.parse(POST_BEAN.getUrls_posts()));
+            if(POST_BEAN.getAspect().equals("16_9"))
+                videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
+            else
+                videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_ZOOM);
         }
-        previewTimeBar.setPreviewLoader(exoPlayerManager);
+
         videoSurfaceView.showController();
         videoSurfaceView.setControllerShowTimeoutMs(5000);
         videoSurfaceView.setControllerVisibilityListener(visibility -> {
@@ -259,29 +295,44 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
         });
     }
 
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE){
+            videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_ZOOM);
+            Log.e("On Config Change","LANDSCAPE");
+        }else{
+            videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_ZOOM);
+            Log.e("On Config Change","PORTRAIT");
+        }
+    }
 
     @Override
     public void onStart() {
         super.onStart();
-        exoPlayerManager.onStart();
+        if(exoPlayerManager!=null)
+          exoPlayerManager.onStart();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        exoPlayerManager.onResume();
+        if(exoPlayerManager!=null)
+           exoPlayerManager.onResume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        exoPlayerManager.onPause();
+        if(exoPlayerManager!=null)
+          exoPlayerManager.onPause();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        exoPlayerManager.onStop();
+        if(exoPlayerManager!=null)
+          exoPlayerManager.onStop();
     }
 
 
@@ -299,7 +350,8 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
 
     @Override
     public void onStopPreview(PreviewView previewView, int progress) {
-        exoPlayerManager.stopPreview(progress);
+        if(exoPlayerManager!=null)
+          exoPlayerManager.stopPreview(progress);
     }
 
     @Override

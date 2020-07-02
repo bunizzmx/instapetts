@@ -255,7 +255,7 @@ public class CameraHistoryActivity extends AppCompatActivity implements  changue
     }
 
     @Override
-    public void onImageProfileUpdated() {
+    public void onImageProfileUpdated(String from) {
 
     }
 

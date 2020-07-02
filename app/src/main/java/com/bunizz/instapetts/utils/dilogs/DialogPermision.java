@@ -73,8 +73,17 @@ public class DialogPermision extends BaseAlertDialog{
         dialog = dialogBuilder.create();
         this.dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         if (allowAnimation) dialog.getWindow().getAttributes().windowAnimations = R.style.customDialogAnimation;
-
-    ;
+        configure_permision = dialogView.findViewById(R.id.configure_permision);
+        configure_permision.setOnClickListener(v -> {
+            Intent i = new Intent();
+            i.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            i.addCategory(Intent.CATEGORY_DEFAULT);
+            i.setData(Uri.parse("package:com.bunizz.instapetts"));
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+            context.startActivity(i) ;
+        });
 
     }
 

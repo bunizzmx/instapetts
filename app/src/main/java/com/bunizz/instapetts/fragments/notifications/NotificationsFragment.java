@@ -159,33 +159,9 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
             refresh_notificacions.setVisibility(View.VISIBLE);
             notificationsAdapter.setNotificationBeans(notificationBeans);
             a1.setVisibility(View.GONE);
-            //presenter.getNotificationsFromWeb();
-        }
-        else{
-          presenter.getNotificationsFromWeb();
         }
     }
 
-    @Override
-    public void showNotificationaFromWeb(ArrayList<NotificationBean> notificationBeans) {
-        ArrayList<NotificationBean> DATA=new ArrayList<>();
-        DATA.addAll(notificationBeans);
-        if(DATA.size()> 0){
-            delete_trash.setVisibility(View.VISIBLE);
-            Log.e("NOTIFICATIOSN","SI HAY");
-            refresh_notificacions.setVisibility(View.VISIBLE);
-            notificationsAdapter.setNotificationBeans(DATA);
-            a1.setVisibility(View.GONE);
-        }else{
-            delete_trash.setVisibility(View.GONE);
-            Log.e("NOTIFICATIOSN","NO HAY");
-            body_no_data.setText("Cuando alguien te siga,comente o publique algo nuevo apareceran notificaciones en este apartado.");
-            title_no_data.setText("No hay notificaciones aun");
-            root_no_data.setVisibility(View.VISIBLE);
-            a1.setVisibility(View.VISIBLE);
-            list_notifications.setVisibility(View.GONE);
-        }
-    }
 
     @Override
     public void deleteAllComplete() {

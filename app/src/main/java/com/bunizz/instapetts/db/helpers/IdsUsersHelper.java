@@ -45,6 +45,7 @@ public class IdsUsersHelper extends GenericHelper {
     }
 
     public boolean isMyFriend(int id_user) {
+        Log.e("LOGE_FF","FRINED:" + id_user);
         final Cursor cursor = getReadableDatabase().query(
                 TABLE_NAME,
                 null,

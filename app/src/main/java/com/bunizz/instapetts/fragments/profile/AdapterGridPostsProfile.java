@@ -19,6 +19,7 @@ import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.postsListener;
 import com.bunizz.instapetts.utils.dilogs.DialogPreviewPost;
 
 import org.parceler.Parcels;
@@ -36,6 +37,17 @@ public class AdapterGridPostsProfile extends RecyclerView.Adapter<RecyclerView.V
     Context context;
 
     changue_fragment_parameters_listener listener;
+
+    postsListener listener_post;
+
+    public postsListener getListener_post() {
+        return listener_post;
+    }
+
+    public void setListener_post(postsListener listener_post) {
+        this.listener_post = listener_post;
+    }
+
 
     public changue_fragment_parameters_listener getListener() {
         return listener;
@@ -80,14 +92,30 @@ public class AdapterGridPostsProfile extends RecyclerView.Adapter<RecyclerView.V
                 h.multiple_images_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_album));
             }
             Log.e("ADAPTER_GRID_POIST","--> : " + data_parsed.getThumb_video());
-            Glide.with(context).load(data_parsed.getThumb_video())
-                    .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
-                    .error(context.getResources().getDrawable(R.drawable.ic_holder)).into(h.fisrt_stack_foto);
+            if(data_parsed.getCensored() == 1){
+                h.fisrt_stack_foto.setVisibility(View.GONE);
+                h.layout_censored.setVisibility(View.VISIBLE);
+            }else{
+                h.layout_censored.setVisibility(View.GONE);
+                h.fisrt_stack_foto.setVisibility(View.VISIBLE);
+                Glide.with(context).load(data_parsed.getThumb_video())
+                        .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                        .error(context.getResources().getDrawable(R.drawable.ic_holder)).into(h.fisrt_stack_foto);
+            }
+
         }else{
             h.multiple_images_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_play));
-            Glide.with(context).load(data_parsed.getThumb_video())
-                    .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
-                    .error(context.getResources().getDrawable(R.drawable.ic_holder)).into(h.fisrt_stack_foto);
+            if(data_parsed.getCensored() == 1){
+                h.fisrt_stack_foto.setVisibility(View.GONE);
+                h.layout_censored.setVisibility(View.VISIBLE);
+            }else{
+                h.layout_censored.setVisibility(View.GONE);
+                h.fisrt_stack_foto.setVisibility(View.VISIBLE);
+                Glide.with(context).load(data_parsed.getThumb_video())
+                        .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                        .error(context.getResources().getDrawable(R.drawable.ic_holder)).into(h.fisrt_stack_foto);
+            }
+
         }
         h.root_posts_search_item.setOnClickListener(view -> {
         });
@@ -101,6 +129,32 @@ public class AdapterGridPostsProfile extends RecyclerView.Adapter<RecyclerView.V
                     context.startActivity(i);
                 }else{
                     DialogPreviewPost dialogPreviewPost = new DialogPreviewPost(context,data_parsed);
+                    dialogPreviewPost.setListener_post(new postsListener() {
+                        @Override
+                        public void onLike(int id_post, boolean type_like, int id_usuario, String url_image) {
+                            listener_post.onLike(id_post,type_like,id_usuario,url_image);
+                        }
+
+                        @Override
+                        public void onFavorite(int id_post, PostBean postBean) {
+                            listener_post.onFavorite(id_post,postBean);
+                        }
+
+                        @Override
+                        public void onDisfavorite(int id_post) {
+                            listener_post.onDisfavorite(id_post);
+                        }
+
+                        @Override
+                        public void openMenuOptions(int id_post, int id_usuario, String uuid) {
+
+                        }
+
+                        @Override
+                        public void commentPost(int id_post, boolean can_comment) {
+
+                        }
+                    });
                     dialogPreviewPost.show();
                 }
 
@@ -130,12 +184,14 @@ public class AdapterGridPostsProfile extends RecyclerView.Adapter<RecyclerView.V
         ImageView multiple_images_posts,fisrt_stack_foto;
         CardView root_posts_search_item;
         LinearLayout root_info_item_profile;
+        LinearLayout layout_censored;
         public postsPublicsHolder(@NonNull View itemView) {
             super(itemView);
             fisrt_stack_foto = itemView.findViewById(R.id.fisrt_stack_foto);
             multiple_images_posts = itemView.findViewById(R.id.multiple_images_posts);
             root_posts_search_item = itemView.findViewById(R.id.root_posts_search_item);
             root_info_item_profile = itemView.findViewById(R.id.root_info_item_profile);
+            layout_censored = itemView.findViewById(R.id.layout_censored);
         }
     }
 

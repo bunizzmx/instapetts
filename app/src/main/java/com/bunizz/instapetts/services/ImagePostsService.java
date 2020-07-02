@@ -176,10 +176,6 @@ public class ImagePostsService extends Service {
         uploadTask  = reference.putFile(Uri.fromFile(file),metadata);
         uploadTask.addOnFailureListener(exception -> {}).addOnSuccessListener(taskSnapshot -> {
         }).addOnProgressListener(taskSnapshot -> {
-            int progreso = (int) ((int) (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
-            mBuilder.setContentText("Progreso " + progreso + "%")
-                    .setProgress(100,progreso,false);
-            notificationManager.notify(notificationId, mBuilder.build());
         });
         Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
             if (!task.isSuccessful()) {
@@ -218,6 +214,7 @@ public class ImagePostsService extends Service {
 
     void upload_video(String filename){
         TransferObserver transferObserver;
+        Log.e("FILENAME_TRANSFER","-->"+filename +"/"+file);
         transferObserver = transferUtility.upload(filename, file);
         transferObserver.setTransferListener(new UploadListener());
     }

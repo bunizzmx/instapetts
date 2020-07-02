@@ -5,6 +5,9 @@ import android.content.ContentValues;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.db.helpers.PropietaryHelper;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class PropietaryBean {
     String name;
     int posts;

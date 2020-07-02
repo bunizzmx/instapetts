@@ -14,7 +14,7 @@
     <string name="text_imagepicker_album_all_key">all</string>
 
     <string name="permision_storage">Permisos de Almacenamientos Requeridos</string>
-    <string name="permision_storage_body">Para mejorar la experiencia en Eshary necesitamos tu permiso para acceder a tu almacenamiento.</string>
+    <string name="permision_storage_body">Para mejorar la experiencia en Instapetts necesitamos tu permiso para acceder a tu almacenamiento.</string>
     <string name="text_imagepicker_permission_denied_external_storage">Please grant the permission to show media.</string>
 
 
@@ -212,7 +212,7 @@
 
     <string name="account">Cuenta</string>
     <string name="saved">Guardado</string>
-    <string name="post_saved">Publicaciones guardados</string>
+    <string name="post_saved">Publicaciones guardadas</string>
 
     <string name="share_profile">Compartir tu perfil</string>
     <string name="share">Compartir</string>
@@ -264,4 +264,11 @@
 
     <string name="instapetts_tips">INSTAPETS TIP</string>
 
+    <string name="no_saved_post_title">No tienes nada guardado.</string>
+    <string name="no_saved_post_body">Los posts que guardes apareceran en esta sección.</string>
+
+    <string name="censored_post">Esta publicacion esta en revision</string>
+
+    <string name="recomendacion_label">Tips de mascota</string>
+    <string name="notice">Noticias</string>
 </resources>

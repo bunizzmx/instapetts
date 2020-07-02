@@ -424,4 +424,9 @@ public class MainPresenter implements MainContract.Presenter {
             }
         });
     }
+
+    @Override
+    public void delete_data() {
+        idsUsersHelper.cleanTable();
+    }
 }

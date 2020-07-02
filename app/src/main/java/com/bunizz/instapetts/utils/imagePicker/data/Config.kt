@@ -1,8 +1,10 @@
 package com.bunizz.instapetts.utils.imagePicker.data
 
 import android.graphics.drawable.Drawable
+import org.parceler.Parcel
 import java.io.Serializable
 
+@Parcel
 data class Config(
         var pickerAllItemTitle: String = "All",
         var maxCount: Int = 5,

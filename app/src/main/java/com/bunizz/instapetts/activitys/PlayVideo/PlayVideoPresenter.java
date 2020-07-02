@@ -8,6 +8,7 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.FIRESTORE;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
 import com.bunizz.instapetts.db.helpers.LikePostHelper;
 import com.bunizz.instapetts.db.helpers.SavedPostHelper;
 import com.bunizz.instapetts.web.ApiClient;
@@ -42,6 +43,7 @@ public class PlayVideoPresenter implements PlayVideoContract.Presenter {
     FirebaseFirestore db;
     LikePostHelper likePostHelper;
     SavedPostHelper savedPostHelper;
+    IdsUsersHelper idsUsersHelper;
     PlayVideoPresenter(PlayVideoContract.View view, Context context) {
         this.mView = view;
         this.mContext = context;
@@ -49,6 +51,7 @@ public class PlayVideoPresenter implements PlayVideoContract.Presenter {
                 .create(WebServices.class);
         likePostHelper = new LikePostHelper(this.mContext);
         savedPostHelper = new SavedPostHelper(this.mContext);
+        idsUsersHelper = new IdsUsersHelper(this.mContext);
         db = App.getIntanceFirestore();
     }
 
@@ -126,6 +129,26 @@ public class PlayVideoPresenter implements PlayVideoContract.Presenter {
     @Override
     public boolean isSaved(int id_post) {
         return savedPostHelper.searchPostById(id_post);
+    }
+
+    @Override
+    public void unfollowUser(String uuid_usuario, int id_usuario) {
+        db.collection(FIRESTORE.R_FOLLOWS).document(uuid_usuario).collection(FIRESTORE.SEGUIDORES)
+                .document(App.read(PREFERENCES.UUID,"INVALID"))
+                .delete()
+                .addOnSuccessListener(aVoid -> {    Log.e("BORRE_FOLLOW","DE EL"); })
+                .addOnFailureListener(e -> { })
+                .addOnCompleteListener(task -> {    Log.e("BORRE_FOLLOW","DE EL");});
+        db.collection(FIRESTORE.R_FOLLOWS).document(App.read(PREFERENCES.UUID,"INVALID")).collection(FIRESTORE.SEGUIDORES)
+                .document(uuid_usuario)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Log.e("BORRE_FOLLOW","DE MI");
+                })
+                .addOnFailureListener(e -> { })
+                .addOnCompleteListener(task -> {    Log.e("BORRE_FOLLOW","DE MI");});
+
+        idsUsersHelper.deleteId(id_usuario);
     }
 
     @SuppressLint("CheckResult")

@@ -173,12 +173,20 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
                         .error(context.getResources().getDrawable(R.drawable.ic_holder)).into(h.top_image_tip);
 
+                if(data_parsed.getTip_notice() == 0){
+                    h.tip_notice_text.setText(context.getString(R.string.recomendacion_label));
+                   h.tipo_tip_notice.setCardBackgroundColor(context.getResources().getColor(R.color.primary));
+                }else{
+                    h.tip_notice_text.setText(context.getString(R.string.notice));
+                    h.tipo_tip_notice.setCardBackgroundColor(context.getResources().getColor(R.color.colorPrimaryDark));
+                }
+
                 break;
             case TYPE_VIDEO:
                 TipsHolderVideo hv =(TipsHolderVideo)holder;
                 TipsBean data_parsed_video= (TipsBean) data.get(position);
                 AspectBean aspectBean = new AspectBean();
-                aspectBean = App.getInstance().getAspect("4_5");
+                aspectBean = App.getInstance().getAspect(data_parsed_video.getAspect());
                 hv.requestManager = requestManager_param;
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(aspectBean.getWidth(), aspectBean.getHeight());
                 hv.root_multiple_image.setLayoutParams(layoutParams);
@@ -198,6 +206,10 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 hv.root_multiple_image.setOnClickListener(v -> {
                     listener_video.MuteVideo();
                 });
+                hv.tip_notice_text.setText("Video");
+                hv.tipo_tip_notice.setCardBackgroundColor(context.getResources().getColor(R.color.azul_facebook));
+                hv.num_views.setText("" + data_parsed_video.getViews_tip());
+                hv.num_likes.setText(""+ data_parsed_video.getLikes_tip());
                 break;
             default:
                 TipsHolder f = (TipsHolder)holder;
@@ -218,6 +230,15 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         }
                     }
                 });
+
+                if(data_parsed_n.getTip_notice() == 0){
+                    f.tipo_tip_notice.setCardBackgroundColor(context.getResources().getColor(R.color.primary));
+                    f.tip_notice_text.setText(context.getString(R.string.recomendacion_label));
+                }else{
+                    f.tip_notice_text.setText(context.getString(R.string.notice));
+                    f.tipo_tip_notice.setCardBackgroundColor(context.getResources().getColor(R.color.colorPrimaryDark));
+                }
+
                 f.fecha_tip.setText(App.getInstance().fecha_lenguaje_humano(data_parsed_n.getFecha_tip().replace("Z","").replace("T"," ")));
                 f.num_views.setText("" + data_parsed_n.getViews_tip());
                 f.num_likes.setText(""+ data_parsed_n.getLikes_tip());
@@ -243,8 +264,9 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public class TipsHolder extends RecyclerView.ViewHolder{
 RelativeLayout root_tip_simple;
 ImageView image_tip_simple;
-TextView body_tip_short,fecha_tip,num_likes,num_views;
+TextView body_tip_short,fecha_tip,num_likes,num_views,tip_notice_text;
 TextView title_tip_short;
+CardView tipo_tip_notice;
         public TipsHolder(@NonNull View itemView) {
             super(itemView);
             root_tip_simple = itemView.findViewById(R.id.root_tip_simple);
@@ -254,13 +276,16 @@ TextView title_tip_short;
             fecha_tip = itemView.findViewById(R.id.fecha_tip);
             num_likes = itemView.findViewById(R.id.num_likes);
             num_views = itemView.findViewById(R.id.num_views);
+            tipo_tip_notice = itemView.findViewById(R.id.tipo_tip_notice);
+            tip_notice_text = itemView.findViewById(R.id.tip_notice_text);
         }
     }
 
     public class TipsTopHolder extends RecyclerView.ViewHolder{
-     TextView boty_tip_top,title_tip_top,fecha_tip,num_likes,num_views;
+     TextView boty_tip_top,title_tip_top,fecha_tip,num_likes,num_views,tip_notice_text;
         LinearLayout root_tip_simple;
         ImageView top_image_tip;
+        CardView tipo_tip_notice;
         public TipsTopHolder(@NonNull View itemView) {
             super(itemView);
             root_tip_simple = itemView.findViewById(R.id.root_tip_simple);
@@ -270,6 +295,8 @@ TextView title_tip_short;
             num_likes = itemView.findViewById(R.id.num_likes);
             num_views = itemView.findViewById(R.id.num_views);
             top_image_tip = itemView.findViewById(R.id.top_image_tip);
+            tipo_tip_notice = itemView.findViewById(R.id.tipo_tip_notice);
+            tip_notice_text = itemView.findViewById(R.id.tip_notice_text);
         }
     }
 
@@ -279,11 +306,14 @@ TextView title_tip_short;
         public RequestManager requestManager;
         public CardView card_view_mute;
         public TextView title_tip;
-        public TextView fecha_tip;
+        public TextView fecha_tip,tip_notice_text;
         RelativeLayout root_multiple_image;
         public ProgressBar progressBar;
+        CardView tipo_tip_notice;
+        TextView num_likes,num_views;
         public TipsHolderVideo(@NonNull View itemView) {
             super(itemView);
+            tipo_tip_notice = itemView.findViewById(R.id.tipo_tip_notice);
             mediaContainer = itemView.findViewById(R.id.mediaContainer);
             mediaCoverImage = itemView.findViewById(R.id.ivMediaCoverImage);
             volumeControl = itemView.findViewById(R.id.ivVolumeControl);
@@ -292,6 +322,9 @@ TextView title_tip_short;
             fecha_tip = itemView.findViewById(R.id.fecha_tip);
             root_multiple_image = itemView.findViewById(R.id.root_multiple_image);
             progressBar = itemView.findViewById(R.id.progressBar);
+            tip_notice_text = itemView.findViewById(R.id.tip_notice_text);
+            num_likes = itemView.findViewById(R.id.num_likes);
+            num_views = itemView.findViewById(R.id.num_views);
         }
     }
 

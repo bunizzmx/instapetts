@@ -21,6 +21,7 @@ import com.bunizz.instapetts.activitys.login.LoginActivity;
 import com.bunizz.instapetts.beans.AspectBean;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.Utilities;
+import com.bunizz.instapetts.services.JobsServices;
 import com.bunizz.instapetts.utils.AndroidIdentifier;
 import com.bunizz.instapetts.utils.dilogs.DialogPermision;
 import com.bunizz.instapetts.web.CONST;
@@ -71,6 +72,7 @@ public class App extends Application {
     private AdLoader adLoader;
     ArrayList<UnifiedNativeAd> ads = new ArrayList<>();
     private static final String AD_UNIT_ID = BuildConfig.ADS_NATIVO;
+    JobsServices jobsServices;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -89,6 +91,8 @@ public class App extends Application {
         write(PREFERENCES.ANDROID_ID, Utilities.Md5Hash(new AndroidIdentifier(this).generateCombinationID()));
         MobileAds.initialize(this ,this.getResources().getString(R.string.app_admob));
         generateItemsForAds();
+        jobsServices = new JobsServices(this);
+        jobsServices.startNotificationsRequest();
     }
 
    public  void clear_preferences(){

@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerView
+
             android:background="@color/white"
-            android:nestedScrollingEnabled="true"
             android:id="@+id/exoPlayerRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

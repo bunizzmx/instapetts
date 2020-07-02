@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
@@ -13,12 +13,10 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <ImageView
-            android:tint="@color/colorPrimaryDark"
-            android:src="@drawable/ic_play"
-            android:layout_width="10dp"
-            android:layout_height="10dp"/>
+
         <TextView
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/tipo_tip_notice"
             android:id="@+id/title_tip"
             android:layout_marginLeft="10dp"
             android:textColor="@color/black"
@@ -26,7 +24,30 @@
             android:text=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-    </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="10dp"
+            app:contentPaddingTop="2dp"
+            app:contentPaddingBottom="2dp"
+            android:layout_marginBottom="5dp"
+            app:contentPaddingRight="5dp"
+            app:contentPaddingLeft="5dp"
+            app:cardCornerRadius="5dp"
+            app:cardBackgroundColor="@color/primary"
+            android:id="@+id/tipo_tip_notice"
+            android:layout_alignParentTop="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tip_notice_text"
+                android:textColor="@color/white"
+                android:textSize="10dp"
+                android:text="Noticia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </androidx.cardview.widget.CardView>
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -139,7 +160,7 @@
                     android:textStyle="bold"
                     android:id="@+id/num_likes"
                     android:layout_marginTop="2dp"
-                    android:text="10"
+                    android:text="-"
                     android:layout_gravity="center_horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -158,7 +179,7 @@
                     android:textStyle="bold"
                     android:id="@+id/num_views"
                     android:layout_marginTop="2dp"
-                    android:text="10"
+                    android:text="-"
                     android:layout_gravity="center_horizontal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>

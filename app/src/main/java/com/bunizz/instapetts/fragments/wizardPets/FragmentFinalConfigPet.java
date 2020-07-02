@@ -70,7 +70,7 @@ public class FragmentFinalConfigPet extends Fragment {
     @OnClick(R.id.change_photo)
     void change_photo_pet()
     {
-        uploads_listener.onImageProfileUpdated();
+        uploads_listener.onImageProfileUpdated("PROFILE_PHOTO_PET");
     }
 
     @BindView(R.id.configure_name_pet)

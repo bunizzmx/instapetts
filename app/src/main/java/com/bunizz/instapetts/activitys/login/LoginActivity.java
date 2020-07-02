@@ -332,22 +332,21 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     }
     @Override
     public void loginWithEmail(String correo, String password) {
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        Log.e("CURRENT_USER","-->" + user.getEmail());
-
+        if(!correo.isEmpty() && !password.isEmpty()) {
+            user = FirebaseAuth.getInstance().getCurrentUser();
             mAuth.signInWithEmailAndPassword(correo, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             user = mAuth.getCurrentUser();
-                            if(user.isEmailVerified()) {
+                            if (user.isEmailVerified()) {
                                 App.write(PREFERENCES.UUID, user.getUid());
-                                App.write(PREFERENCES.NAME_PRE_USER,user.getDisplayName());
+                                App.write(PREFERENCES.NAME_PRE_USER, user.getDisplayName());
                                 FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(LoginActivity.this, instanceIdResult -> {
                                     String token = instanceIdResult.getToken();
                                     App.write(PREFERENCES.TOKEN, token);
                                     generate_user_bean();
                                 });
-                            }else{
+                            } else {
                                 Toast.makeText(LoginActivity.this, "VERIFICA TU CORREO", Toast.LENGTH_LONG).show();
                             }
                         } else {
@@ -365,7 +364,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                         }
 
                     });
-        permision_location();
+            permision_location();
 
        /* FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         user.updateEmail(correo)
@@ -378,6 +377,9 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                     }
                 });
         */
+        }else{
+            Toast.makeText(LoginActivity.this,"Revisa tus credenciales",Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -523,6 +525,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
             i.putExtra("NEW_USER",1);
             i.putExtra("FROM_PUSH",0);
             startActivity(i);
+            finish();
 
     }
 
@@ -543,6 +546,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         i.putExtra("NEW_USER",0);
         i.putExtra("FROM_PUSH",0);
         startActivity(i);
+        finish();
     }
 
     @Override
@@ -574,11 +578,12 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         i.putExtra("NEW_USER",1);
         i.putExtra("FROM_PUSH",0);
         startActivity(i);
+        finish();
     }
 
     @SuppressLint("CheckResult")
     @Override
-    public void onImageProfileUpdated() {
+    public void onImageProfileUpdated(String from) {
         rxPermissions
                 .request(Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -586,7 +591,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                 .subscribe(granted -> {
                     if (granted) {
                         Intent i = new Intent(LoginActivity.this, ShareActivity.class);
-                        i.putExtra("FROM","PROFILE_PHOTO");
+                        i.putExtra("FROM",from);
                         startActivityForResult(i,NEW_PHOTO_UPLOADED);
                     } else {
                         App.getInstance().show_dialog_permision(LoginActivity.this,getResources().getString(R.string.permision_storage),

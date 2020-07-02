@@ -138,6 +138,9 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
                 Log.e("SOLO1","foto");
                 is_single_selection = true;
                 is_from_profile = true;
+            }else if(j.equals("PROFILE_PHOTO_PET")){
+                is_single_selection = true;
+                is_from_profile = true;
             }
         }
         setupFirstFragment();
@@ -437,7 +440,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
 
     @Override
-    public void onImageProfileUpdated() {
+    public void onImageProfileUpdated(String from) {
         Intent intent = new Intent();
         intent.putExtra("PET_REQUEST","POST_REQUEST");
         setResult(RESULT_OK,intent);

@@ -20,8 +20,10 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.main.Main;
 import com.bunizz.instapetts.activitys.wizardPets.WizardPetActivity;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
@@ -187,6 +189,8 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
         REFRESH_IMAGE = url;
         Log.e("REFRESH_OFTO_PET","-->A: " + url);
         Glide.with(getContext()).load(url)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
        .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder))
         .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
                 .into(image_pet_info);
@@ -226,7 +230,10 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
         name_property_pet_profile.setText("@" + App.read(PREFERENCES.NAME_USER,"INVALID"));
         descripcion_pet_profile.setText(petBean.getDescripcion_pet());
         peso_pet_profile.setText(petBean.getPeso_pet() + "kg");
-        Glide.with(getContext()).load(petBean.getUrl_photo()).placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).error(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_pet_info);
+        Glide.with(getContext()).load(petBean.getUrl_photo())
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+        .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).error(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_pet_info);
         stars_pet.setText(String.format("%.2f", petBean.getRate_pet()));
         Log.e("PENDDD","-->" + petBean.getId_propietary() + "/" + App.read(PREFERENCES.ID_USER_FROM_WEB,0) );
         Log.e("ID_PETXX","-->" + petBean.getId_propietary() + "/" + App.read(PREFERENCES.ID_USER_FROM_WEB,0));
@@ -236,7 +243,7 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
             edit_photo_pet.setVisibility(View.VISIBLE);
             root_imagen_and_pencil.setOnClickListener(v -> {
                 App.write(PREFERENCES.FROM_PICKER,"PROFILE");
-                listener.onImageProfileUpdated();
+                listener.onImageProfileUpdated("PROFILE_PHOTO_PET");
             });
         }else{
             rate_pet_card.setVisibility(View.VISIBLE);
@@ -312,6 +319,7 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
         intent.putExtra(ImageService.INTENT_TRANSFER_OPERATION, ImageService.TRANSFER_OPERATION_UPLOAD);
         getActivity().startService(intent);
         Toast.makeText(getActivity(),"Actualizando foto",Toast.LENGTH_LONG).show();
+        App.getInstance().delete_cache();
     }
 }
 

@@ -1,5 +1,8 @@
 package com.bunizz.instapetts.beans;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class AutenticateBean {
 
     String name_user;

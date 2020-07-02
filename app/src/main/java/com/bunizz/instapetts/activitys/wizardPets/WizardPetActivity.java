@@ -265,7 +265,7 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
 
     @SuppressLint("CheckResult")
     @Override
-    public void onImageProfileUpdated() {
+    public void onImageProfileUpdated(String from) {
         rxPermissions
                 .request(Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,

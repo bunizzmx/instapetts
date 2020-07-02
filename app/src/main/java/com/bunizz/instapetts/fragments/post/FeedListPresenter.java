@@ -12,6 +12,7 @@ import com.bunizz.instapetts.constantes.FIRESTORE;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.db.helpers.FollowsHelper;
+import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
 import com.bunizz.instapetts.db.helpers.LikePostHelper;
 import com.bunizz.instapetts.db.helpers.MyStoryHelper;
 import com.bunizz.instapetts.db.helpers.SavedPostHelper;
@@ -51,6 +52,7 @@ public class FeedListPresenter implements FeedContract.Presenter {
     int RETRY =0;
     FirebaseFirestore db;
     FollowsHelper followsHelper;
+    IdsUsersHelper idsUsersHelper;
 
     FeedListPresenter(FeedContract.View view, Context context) {
         this.mView = view;
@@ -61,6 +63,7 @@ public class FeedListPresenter implements FeedContract.Presenter {
         likePostHelper = new LikePostHelper(this.mContext);
         myStoryHelper = new MyStoryHelper(this.mContext);
         followsHelper = new FollowsHelper(this.mContext);
+        idsUsersHelper = new IdsUsersHelper(this.mContext);
         db = App.getIntanceFirestore();
     }
 
@@ -204,6 +207,26 @@ public class FeedListPresenter implements FeedContract.Presenter {
                             }
                         })
         );
+    }
+
+    @Override
+    public void unfollowUser(String uuid_usuario, int id_usuario) {
+        db.collection(FIRESTORE.R_FOLLOWS).document(uuid_usuario).collection(FIRESTORE.SEGUIDORES)
+                .document(App.read(PREFERENCES.UUID,"INVALID"))
+                .delete()
+                .addOnSuccessListener(aVoid -> {    Log.e("BORRE_FOLLOW","DE EL"); })
+                .addOnFailureListener(e -> { })
+                .addOnCompleteListener(task -> {    Log.e("BORRE_FOLLOW","DE EL");});
+        db.collection(FIRESTORE.R_FOLLOWS).document(App.read(PREFERENCES.UUID,"INVALID")).collection(FIRESTORE.SEGUIDORES)
+                .document(uuid_usuario)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Log.e("BORRE_FOLLOW","DE MI");
+                })
+                .addOnFailureListener(e -> { })
+                .addOnCompleteListener(task -> {    Log.e("BORRE_FOLLOW","DE MI");});
+
+        idsUsersHelper.deleteId(id_usuario);
     }
 
     @Override

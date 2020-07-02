@@ -56,6 +56,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 import retrofit2.http.POST;
 
 import static com.bunizz.instapetts.fragments.FragmentElement.INSTANCE_PREVIEW_PROFILE;
@@ -253,6 +254,13 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     vid_h.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
                 }
                 vid_h.open_options_posts.setOnClickListener(view -> listener_post.openMenuOptions(mo.getId_post_from_web(),mo.getId_usuario(),mo.getUuid()));
+
+                vid_h.icon_commentar.setOnClickListener(v -> {
+                    if(mo.getCan_comment()==1)
+                        listener_post.commentPost(mo.getId_post_from_web(),false);
+                    else
+                        listener_post.commentPost(mo.getId_post_from_web(),true);
+                });
 
                 break;
             default:

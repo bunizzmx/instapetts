@@ -50,7 +50,8 @@
                     android:layout_marginLeft="10dp"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/back_to_main"
-                    style="@style/FontNormalTitleSecondary"
+
+                    android:textStyle="bold"
                     android:text="Publicaciones"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>

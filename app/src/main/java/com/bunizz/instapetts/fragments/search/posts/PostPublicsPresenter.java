@@ -67,7 +67,11 @@ public class PostPublicsPresenter implements   PostPublicsContract.Presenter {
                                     if(responsePost.getList_posts()!=null)
                                         Log.e("NUMBER_POSTS", "-->" + responsePost.getList_posts().size());
                                     ArrayList<PostBean> post = new ArrayList<>();
-                                    post.addAll(responsePost.getList_posts());
+                                    for (int i =0;i<responsePost.getList_posts().size();i++){
+                                        if(responsePost.getList_posts().get(i).getCensored() == 0){
+                                            post.add(responsePost.getList_posts().get(i));
+                                        }
+                                    }
                                     mView.showPosts(post);
                                 }  else{
                                     RETRY ++;

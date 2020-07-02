@@ -216,7 +216,6 @@
         android:layout_height="10dp"/>
     <TextView
         android:textSize="14sp"
-        style="@style/FontNormalTitle"
         android:id="@+id/description_posts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>

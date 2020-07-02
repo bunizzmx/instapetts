@@ -95,7 +95,7 @@
             android:layout_height="25dp"/>
         <EditText
             android:id="@+id/input_commentarios"
-            android:hint="Commentar algo..."
+            android:hint="Comentar algo..."
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"

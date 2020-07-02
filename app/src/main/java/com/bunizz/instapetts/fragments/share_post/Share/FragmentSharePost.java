@@ -294,7 +294,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
 
         intent.putExtra(ImagePostsService.INTENT_TRANSFER_OPERATION, ImagePostsService.TRANSFER_OPERATION_UPLOAD);
         context.startService(intent);
-        listener.onImageProfileUpdated();
+        listener.onImageProfileUpdated("PROFILE_PHOTO");
     }
 
 

@@ -42,7 +42,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activitys.PlayVideo.PlayVideoActivity"/>
+        <activity android:name=".activitys.PlayVideo.PlayVideoActivity"
+            android:configChanges="keyboardHidden|orientation"/>
         <activity android:name=".utils.videoCrop.VideoCropActivity"/>
         <activity android:name=".activitys.side_menus_activities.SideMenusActivities"/>
         <activity android:name=".activitys.intro.IntroActivity" />

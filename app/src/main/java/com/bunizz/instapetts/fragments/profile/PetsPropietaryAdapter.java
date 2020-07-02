@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.fragments.feed.FeedAdapterHistories;
@@ -109,11 +110,18 @@ public class PetsPropietaryAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
                     default:break;
 
                 }
-                h.name_pet_item.setText(pets.get(position).getName_pet());
+                if(pets.get(position).getName_pet().length() > 12)
+                    h.name_pet_item.setText(pets.get(position).getName_pet().substring(0,12).trim() + "...");
+                else
+                    h.name_pet_item.setText(pets.get(position).getName_pet().trim());
                 h.image_pet_history.setOnClickListener(view -> listener.open(pets.get(position),0));
                 h.image_pet_history.setVisibility(View.VISIBLE);
                 h.image_pet_history_add.setVisibility(View.GONE);
-                Glide.with(context).load(pets.get(position).getUrl_photo_tumbh()).into(h.image_pet_history);
+                Glide.with(context).load(pets.get(position).getUrl_photo_tumbh())
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .placeholder(context.getDrawable(R.drawable.ic_holder))
+                        .error(context.getResources().getDrawable(R.drawable.ic_holder)).into(h.image_pet_history);
             }
         }else{
             switch (pets.get(position).getType_pet()){
@@ -151,7 +159,11 @@ public class PetsPropietaryAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
             h.image_pet_history.setOnClickListener(view -> listener.open(pets.get(position),1));
             h.image_pet_history.setVisibility(View.VISIBLE);
             h.image_pet_history_add.setVisibility(View.GONE);
-            Glide.with(context).load(pets.get(position).getUrl_photo_tumbh()).into(h.image_pet_history);
+            Glide.with(context).load(pets.get(position).getUrl_photo_tumbh())
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(context.getDrawable(R.drawable.ic_holder))
+                    .error(context.getResources().getDrawable(R.drawable.ic_holder)).into(h.image_pet_history);
         }
 
     }
