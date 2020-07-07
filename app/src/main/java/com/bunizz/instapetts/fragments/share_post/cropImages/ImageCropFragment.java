@@ -20,25 +20,13 @@ import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.beans.HistoriesBean;
-import com.bunizz.instapetts.beans.PetBean;
-import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.SelectedsImagesBean;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.FragmentElement;
-import com.bunizz.instapetts.fragments.camera.CameraFragment;
-import com.bunizz.instapetts.fragments.feed.FeedContract;
-import com.bunizz.instapetts.fragments.share_post.Picker.image.ImageListRecyclerViewAdapter;
-import com.bunizz.instapetts.fragments.share_post.Picker.image.ImagePickerContract;
-import com.bunizz.instapetts.fragments.share_post.Picker.image.ImagePickerPresenter;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.uploads;
-import com.bunizz.instapetts.utils.crop.CropLayout;
-import com.bunizz.instapetts.utils.crop.OnCropListener;
-import com.bunizz.instapetts.utils.imagePicker.data.Album;
-import com.bunizz.instapetts.utils.imagePicker.data.Config;
-import com.bunizz.instapetts.utils.imagePicker.data.Image;
-import com.bunizz.instapetts.utils.imagePicker.helper.EmptySupportedRecyclerView;
+
+import com.bunizz.instapetts.utils.crop2.view.ImageCropView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -51,6 +39,7 @@ import java.util.UUID;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -63,13 +52,25 @@ public class ImageCropFragment extends Fragment {
 
     String PATH_TEMP="-";
     @BindView(R.id.crop_view)
-    CropLayout cropLayout;
+    ImageCropView cropLayout;
 
     @BindView(R.id.liste_image_selected)
     RecyclerView liste_image_selected;
 
     @BindView(R.id.crop_now_selected)
     Button crop_now_selected;
+
+
+    @BindView(R.id.indicator_4_3)
+    CardView indicator_4_3;
+
+    @BindView(R.id.indicator_4_4)
+    CardView indicator_4_4;
+
+
+    @BindView(R.id.indicator_16_9)
+    CardView indicator_16_9;
+
     ArrayList<String> array_list_cropes = new ArrayList<>();
     int CURRENT_INDEX=0;
     int IS_FROM_CAMERA = 0;
@@ -83,13 +84,28 @@ public class ImageCropFragment extends Fragment {
     @OnClick(R.id.changue_to_4_3)
     void changue_to_4_3()
     {
-      cropLayout.modify_cropper(1f,Uri.parse(paths.get(CURRENT_INDEX)));
+      cropLayout.setAspectRatio(4,3);//1f,Uri.parse(paths.get(CURRENT_INDEX)));
+        indicator_4_3.setVisibility(View.VISIBLE);
+        indicator_4_4.setVisibility(View.GONE);
+        indicator_16_9.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.changue_to_4_4)
     void changue_to_4_4()
     {
-        cropLayout.modify_cropper(0.5f,Uri.parse(paths.get(CURRENT_INDEX)));
+        cropLayout.setAspectRatio(1,1);//0.5f,Uri.parse(paths.get(CURRENT_INDEX)));
+        indicator_4_3.setVisibility(View.GONE);
+        indicator_4_4.setVisibility(View.VISIBLE);
+        indicator_16_9.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.changue_to_16_9)
+    void changue_to_16_9()
+    {
+        cropLayout.setAspectRatio(16,9);//0.5f,Uri.parse(paths.get(CURRENT_INDEX)));
+        indicator_4_3.setVisibility(View.GONE);
+        indicator_4_4.setVisibility(View.GONE);
+        indicator_16_9.setVisibility(View.VISIBLE);
     }
 
 
@@ -142,7 +158,7 @@ public class ImageCropFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        cropLayout.setUri(Uri.parse(paths.get(0)));
+                        cropLayout.setImageFilePath(paths.get(0));
                         if(adapter!=null){
 
                             for(int i =0;i<paths.size();i++){
@@ -168,7 +184,7 @@ public class ImageCropFragment extends Fragment {
         ButterKnife.bind(this, view);
         liste_image_selected.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
         liste_image_selected.setAdapter(adapter);
-        cropLayout.addOnCropListener(new OnCropListener() {
+        /*(new OnCropListener() {
             @Override
             public void onSuccess(@NotNull Bitmap bitmap) {
                 if(saveImage(bitmap,"Instapetts","Instapetts_", Bitmap.CompressFormat.JPEG)){
@@ -214,9 +230,9 @@ public class ImageCropFragment extends Fragment {
             public void onFailure(@NotNull Exception e) {
 
             }
-        });
-
-        cropLayout.setUri(Uri.parse(paths.get(CURRENT_INDEX)));
+        });*/
+        indicator_4_4.setVisibility(View.VISIBLE);
+        cropLayout.setImageFilePath(paths.get(CURRENT_INDEX));
         if (paths.size() == 1){
             crop_now_selected.setText("Finalizar");
         }else{
@@ -225,9 +241,9 @@ public class ImageCropFragment extends Fragment {
         crop_now_selected.setOnClickListener(view1 -> {
             if(CURRENT_INDEX < paths.size()-1){
                 adapter.update_croped_item(CURRENT_INDEX);
-                cropLayout.crop();
+                saveImage(cropLayout.getCroppedImage(),"Instapetts","Instapetts_", Bitmap.CompressFormat.JPEG);
             }else if(CURRENT_INDEX == paths.size()-1){
-                cropLayout.crop();
+                saveImage(cropLayout.getCroppedImage(),"Instapetts","Instapetts_", Bitmap.CompressFormat.JPEG);
             }
         });
 
@@ -260,6 +276,34 @@ public class ImageCropFragment extends Fragment {
                 Uri fileContentUri = Uri.fromFile(file);
                 mediaScannerIntent.setData(fileContentUri);
                 getContext().sendBroadcast(mediaScannerIntent);
+
+                if(CURRENT_INDEX < paths.size()-1){
+                    if(CURRENT_INDEX==paths.size()-1){
+                        Log.e("lkjhdfjkdsh","POST");
+                        Bundle b = new Bundle();
+                        b.putStringArrayList("data_pahs",array_list_cropes);
+                        listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
+                    }else{
+                        CURRENT_INDEX ++;
+                        if(CURRENT_INDEX == paths.size()-1)
+                            crop_now_selected.setText("Finalizar");
+                        cropLayout.setImageFilePath(paths.get(CURRENT_INDEX));
+                    }
+
+                }else{
+                    if (App.read(PREFERENCES.FROM_PICKER, "PROFILE").equals("PROFILE")) {
+                        Log.e("lkjhdfjkdsh","PROFILE");
+                        listener_uploads.setResultForOtherChanges(array_list_cropes.get(0));
+                    }else{
+                        Log.e("lkjhdfjkdsh","POST");
+                        Bundle b = new Bundle();
+                        b.putStringArrayList("data_pahs",array_list_cropes);
+                        listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
+                        CURRENT_INDEX =0;
+                    }
+                }
+
+
             }catch (Exception e){
                 Log.e("ERROR_BROADCAST",":)");
             }

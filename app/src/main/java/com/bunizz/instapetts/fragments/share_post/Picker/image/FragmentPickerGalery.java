@@ -34,8 +34,7 @@ import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.uploads;
-import com.bunizz.instapetts.utils.crop.CropLayout;
-import com.bunizz.instapetts.utils.crop.OnCropListener;
+
 import com.bunizz.instapetts.utils.imagePicker.data.Album;
 import com.bunizz.instapetts.utils.imagePicker.data.Config;
 import com.bunizz.instapetts.utils.imagePicker.data.Image;

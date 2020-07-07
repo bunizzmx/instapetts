@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.App;
@@ -31,9 +32,7 @@ import com.bunizz.instapetts.listeners.change_instance_wizard;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.chose_pet_listener;
 import com.bunizz.instapetts.listeners.hisotry_listener;
-import com.bunizz.instapetts.listeners.uploads;
-import com.bunizz.instapetts.utils.crop.CropLayout;
-import com.bunizz.instapetts.utils.crop.OnCropListener;
+import com.bunizz.instapetts.utils.crop2.view.ImageCropView;
 import com.bunizz.instapetts.utils.dilogs.DialogShosePet;
 
 import org.jetbrains.annotations.NotNull;
@@ -59,19 +58,19 @@ public class CameraPreviewStoryFragment extends Fragment {
 
 
     @BindView(R.id.crop_view)
-    CropLayout crop_view;
+    ImageCropView crop_view;
 
     @BindView(R.id.publish_stories)
     CardView publish_stories;
 
     @BindView(R.id.crop_cuadrada)
-    CardView crop_cuadrada;
+    LinearLayout crop_cuadrada;
 
     @BindView(R.id.crop_3_4)
-    CardView crop_3_4;
+    LinearLayout crop_3_4;
 
     @BindView(R.id.crop_9_16)
-    CardView crop_9_16;
+    LinearLayout crop_9_16;
 
     String URL_FOTO_PET;
     String NAME_PET;
@@ -118,21 +117,8 @@ public class CameraPreviewStoryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        crop_view.setUri(Uri.parse(path.get(0)));
+        crop_view.setImageFilePath(path.get(0));
         pets_cuerrent = helper.getMyPets();
-        crop_view.addOnCropListener(new OnCropListener() {
-            @Override
-            public void onSuccess(@NotNull Bitmap bitmap) {
-                if(saveImage(bitmap,"Instapetts","Instapetts_", Bitmap.CompressFormat.JPEG)){
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Exception e) {
-
-            }
-        });
-
         publish_stories.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,7 +130,8 @@ public class CameraPreviewStoryFragment extends Fragment {
                         URL_FOTO_PET = url_foto;
                         NAME_PET = name_pet;
                         ID_PET=id_pet;
-                        crop_view.crop();
+                        if(saveImage(crop_view.getCroppedImage(),"Instapetts","Instapetts_", Bitmap.CompressFormat.JPEG)){
+                        }
                     }
 
                     @Override
@@ -159,20 +146,20 @@ public class CameraPreviewStoryFragment extends Fragment {
         crop_cuadrada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                crop_view.modify_cropper(0.5f,Uri.parse(path.get(0)));
+                crop_view.setAspectRatio(4,4);
             }
         });
 
         crop_3_4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                crop_view.modify_cropper(0.7f,Uri.parse(path.get(0)));
+                crop_view.setAspectRatio(3,4);
             }
         });
         crop_9_16.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                crop_view.modify_cropper(1f,Uri.parse(path.get(0)));
+                crop_view.setAspectRatio(9,16);
             }
         });
     }

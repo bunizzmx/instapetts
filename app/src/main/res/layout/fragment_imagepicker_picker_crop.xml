@@ -9,11 +9,37 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
+    <Button
+        android:layout_marginBottom="10dp"
+       android:layout_marginTop="10dp"
+        android:id="@+id/crop_now_selected"
+        android:layout_marginRight="10dp"
+        android:textSize="10dp"
+        android:textColor="@color/white"
+        android:background="@drawable/button_follow"
+        android:layout_alignParentRight="true"
+        android:text="Siguiente"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"/>
+
     <RelativeLayout
         android:layout_above="@+id/ccv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.bunizz.instapetts.utils.crop.CropLayout
+        <com.bunizz.instapetts.utils.crop2.view.ImageCropView
+            xmlns:imagecrop="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/crop_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            imagecrop:gridInnerColor="#66ffffff"
+            imagecrop:gridInnerStroke="1dp"
+            imagecrop:gridOuterColor="#ffffff"
+            imagecrop:gridOuterStroke="1dp"
+            imagecrop:outsideLayerColor="#99000000"
+            imagecrop:setInnerGridMode="on"
+            imagecrop:setOuterGridMode="on" />
+        <!--<com.bunizz.instapetts.utils.crop.CropLayout
             android:id="@+id/crop_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -23,7 +49,7 @@
             app:cropme_max_scale="3.0"
             app:cropme_overlay_shape="rectangle"
             app:cropme_with_border="true"
-            />
+            />-->
 
     </RelativeLayout>
 
@@ -31,17 +57,7 @@
         android:id="@+id/ccv"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="180dp">
-        <TextView
-            android:id="@+id/label_adjust"
-            android:textColor="@color/white"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/avenir_b"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="20dp"
-            android:text="Ajusta cada imagen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        android:layout_height="150dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_centerHorizontal="true"
@@ -51,39 +67,82 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <LinearLayout
-            android:layout_marginTop="10dp"
-            android:layout_above="@+id/liste_image_selected"
-            android:layout_below="@+id/label_adjust"
+             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-            <ImageView
+            <LinearLayout
+                android:background="?attr/selectableItemBackground"
+                android:padding="15dp"
                 android:id="@+id/changue_to_4_3"
-                android:tint="@color/white"
-                android:src="@drawable/ic_crop_portrait"
-                android:layout_width="20dp"
-                android:layout_height="20dp"/>
-            <ImageView
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textSize="12dp"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/white"
+                    android:text="3:4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <androidx.cardview.widget.CardView
+                    android:visibility="gone"
+                    android:id="@+id/indicator_4_3"
+                    android:layout_marginTop="1dp"
+                    android:layout_gravity="center_horizontal"
+                    app:cardBackgroundColor="@color/primary"
+                    android:layout_width="5dp"
+                    android:layout_height="5dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:background="?attr/selectableItemBackground"
+                android:padding="15dp"
                 android:id="@+id/changue_to_4_4"
-                android:layout_marginLeft="10dp"
-                android:tint="@color/white"
-                android:src="@drawable/ic_crop_square"
-                android:layout_width="20dp"
-                android:layout_height="20dp"/>
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textSize="12dp"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/white"
+                    android:text="4:4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <androidx.cardview.widget.CardView
+                    android:visibility="gone"
+                    android:id="@+id/indicator_4_4"
+                    android:layout_marginTop="1dp"
+                    android:layout_gravity="center_horizontal"
+                    app:cardBackgroundColor="@color/primary"
+                    android:layout_width="5dp"
+                    android:layout_height="5dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:background="?attr/selectableItemBackground"
+                android:padding="15dp"
+                android:id="@+id/changue_to_16_9"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:textSize="12dp"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@color/white"
+                    android:text="16:9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <androidx.cardview.widget.CardView
+                    android:visibility="gone"
+                    android:id="@+id/indicator_16_9"
+                    android:layout_marginTop="1dp"
+                    android:layout_gravity="center_horizontal"
+                    app:cardBackgroundColor="@color/primary"
+                    android:layout_width="5dp"
+                    android:layout_height="5dp"/>
+            </LinearLayout>
+
         </LinearLayout>
-        <Button
-            android:layout_marginBottom="10dp"
-            android:layout_above="@+id/liste_image_selected"
-            android:id="@+id/crop_now_selected"
-            android:layout_marginRight="10dp"
-            android:textSize="10dp"
-            android:textColor="@color/white"
-            android:background="@drawable/button_follow"
-            android:layout_alignParentRight="true"
-            android:text="Siguiente"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"/>
 
     </RelativeLayout>
 
