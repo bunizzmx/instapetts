@@ -380,6 +380,22 @@ public class FeedListPresenter implements FeedContract.Presenter {
     @SuppressLint("CheckResult")
     @Override
     public void deletePost(PostBean postBean) {
+
+       /* db.collection(FIRESTORE.COLLECTION_COMENTARIOS).document(
+                "-" +postBean.getId_post_from_web() +"-")
+                .delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.e("POST","COMEMTARIO BORRADO 2"  +task.getResult().toString());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("POST","COMEMTARIO BORRADO 3" + e.getMessage());
+                    }
+                });*/
         apiService.delete_post(postBean)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -388,8 +404,11 @@ public class FeedListPresenter implements FeedContract.Presenter {
                     public void onSuccess(SimpleResponse response) {
                         Log.e("POST","SUCCESS");
                      if(response!=null){
-                        if(response.getCode_response() ==200)
+                        if(response.getCode_response() ==200) {
                             mView.deletePostError(true);
+                            Log.e("ID_BORRAR","-->" + postBean.getId_post_from_web());
+
+                        }
                         else
                             mView.deletePostError(false);
                      }

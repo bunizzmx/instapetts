@@ -451,8 +451,9 @@ public class FeedPresenter implements FeedContract.Presenter {
                     public void onSuccess(SimpleResponse response) {
                         Log.e("POST","SUCCESS");
                      if(response!=null){
-                        if(response.getCode_response() ==200)
+                        if(response.getCode_response() ==200) {
                             mView.deletePostError(true);
+                        }
                         else
                             mView.deletePostError(false);
                      }
