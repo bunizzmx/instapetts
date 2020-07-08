@@ -50,6 +50,7 @@ public class StoryPlapyerPresenter implements  StoryPlayerContract.Presenter {
         helper = new IdentificadoresHistoriesHelper(this.mContext);
         db = App.getIntanceFirestore();
         idsUsersHelper = new IdsUsersHelper(mContext);
+        myStoryHelper = new MyStoryHelper(mContext);
     }
 
     @Override
@@ -235,6 +236,10 @@ public class StoryPlapyerPresenter implements  StoryPlayerContract.Presenter {
                 });
     }
 
+    @Override
+    public void deleteMyHistory(String id_ide_tificador) {
+        myStoryHelper.deleteHistory(id_ide_tificador);
+    }
 
 
 }

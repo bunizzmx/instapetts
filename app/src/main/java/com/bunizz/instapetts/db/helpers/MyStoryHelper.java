@@ -90,4 +90,8 @@ public class MyStoryHelper extends GenericHelper {
             ex.printStackTrace();
         }
     }
+
+    public void deleteHistory(String id){
+       Log.e("LOG_DBSSS","->" + getWritableDatabase().delete(TABLE_NAME, IDENTIFICADOR + "=?",  new String[]{id}));
+    }
 }

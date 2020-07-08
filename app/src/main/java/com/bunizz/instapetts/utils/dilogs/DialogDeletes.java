@@ -80,6 +80,14 @@ public class DialogDeletes extends BaseAlertDialog{
                 }
             });
         }
+        else if(type_dialog == 4){
+            text_delete_dialog.setText(getContext().getResources().getString(R.string.delete_history));
+            confirm_deletes.setOnClickListener(v -> listener.delete(true));
+            confirm_decline.setOnClickListener(v ->  {
+                listener.delete(false);
+                dismiss();
+            });
+        }
         else {
             layout_delete_algo.setVisibility(View.VISIBLE);
             text_delete_dialog.setText(getContext().getResources().getString(R.string.delete_pet_title));
@@ -105,7 +113,7 @@ public class DialogDeletes extends BaseAlertDialog{
 
     @Override
     public void show(){
-        dialog.setCancelable(this.cancelable);
+        dialog.setCancelable(false);
         dialog.show();
     }
 

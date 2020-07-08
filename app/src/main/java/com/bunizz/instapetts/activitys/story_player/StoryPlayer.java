@@ -160,6 +160,11 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
     }
 
     @Override
+    public void onItemDeleted(String history) {
+       presenter.deleteMyHistory(history);
+    }
+
+    @Override
     public IdentificadoresHistoriesBean getIdenTificador(String identificador) {
         return presenter.getIdentificador(identificador);
     }

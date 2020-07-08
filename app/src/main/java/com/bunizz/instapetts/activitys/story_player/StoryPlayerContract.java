@@ -17,6 +17,7 @@ public interface StoryPlayerContract {
         void followUser(UserBean userBean);
         void unfollowUser(String id_document);
         void favoritePet(UserBean userBean, PetBean petBean);
+        void deleteMyHistory(String id_ide_tificador);
     }
 
     interface View{

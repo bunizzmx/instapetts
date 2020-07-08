@@ -10,6 +10,7 @@
         android:background="@drawable/gradient_history"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
     <ImageView
       android:scaleType="centerCrop"
         android:id="@+id/image_story"
@@ -84,7 +85,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>
-
+        <LinearLayout
+            android:background="?attr/selectableItemBackground"
+            android:id="@+id/delete_history"
+            android:padding="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:tint="@color/white"
+                android:src="@drawable/ic_trash"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+        </LinearLayout>
         <RelativeLayout
             android:id="@+id/like_history_layout"
             android:padding="20dp"

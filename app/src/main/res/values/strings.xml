@@ -271,4 +271,6 @@
 
     <string name="recomendacion_label">Tips de mascota</string>
     <string name="notice">Noticias</string>
+
+    <string name="delete_history">Eliminar esta historia?</string>
 </resources>

@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,9 +31,12 @@ import com.bunizz.instapetts.beans.IdentificadoresHistoriesBean;
 import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.fragments.FragmentElement;
+import com.bunizz.instapetts.listeners.delete;
 import com.bunizz.instapetts.listeners.story_finished_listener;
 import com.bunizz.instapetts.utils.HistoryView.StoryPlayerProgressView;
 import com.bunizz.instapetts.utils.ImagenCircular;
+import com.bunizz.instapetts.utils.dilogs.DialogDeletes;
 import com.bunizz.instapetts.utils.double_tap.DoubleTapLikeView;
 
 import org.parceler.Parcels;
@@ -41,6 +45,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class FragmentStoriView extends Fragment implements  StoryPlayerProgressView.StoryPlayerListener{
 
@@ -68,6 +73,10 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
     @BindView(R.id.info_of_likes_views)
     LinearLayout info_of_likes_views;
 
+
+    @BindView(R.id.delete_history)
+    LinearLayout delete_history;
+
     @BindView(R.id.like_history_layout)
     RelativeLayout like_history_layout;
 
@@ -91,6 +100,32 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
     @BindView(R.id.num_views_story)
     TextView num_views_story;
 
+
+    @OnClick(R.id.delete_history)
+    void delete_history()
+    {
+        storyPlayerProgressView.pauseProgress();
+        DialogDeletes delete_pet = new DialogDeletes(getContext(),0,4);
+        delete_pet.setListener(new delete() {
+            @Override
+            public void delete(boolean delete) {
+                if(delete) {
+                    Toast.makeText(getContext(),"Historia Eliminada",Toast.LENGTH_LONG).show();
+                    listener.onItemDeleted(uris_fotos.get(COUNTER).getIdentificador());
+                    getActivity().onBackPressed();
+                }else{
+                    storyPlayerProgressView.resumeProgress();
+                }
+              //  presenter.delete(Integer.parseInt(petBean.getId_pet()));
+            }
+            @Override
+            public void deleteOne(int id) {
+
+            }
+        });
+        delete_pet.show();
+    }
+
     story_finished_listener listener;
 
     ArrayList<IndividualDataPetHistoryBean> uris_fotos = new ArrayList<>();
@@ -113,6 +148,7 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
         }
     }
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -130,8 +166,10 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
         if(HISTORY_BEAN.getId_user() == App.read(PREFERENCES.ID_USER_FROM_WEB,0)) {
             like_history_layout.setVisibility(View.GONE);
             info_of_likes_views.setVisibility(View.VISIBLE);
+            delete_history.setVisibility(View.VISIBLE);
         }
         else {
+            delete_history.setVisibility(View.GONE);
             like_history_layout.setVisibility(View.VISIBLE);
             info_of_likes_views.setVisibility(View.GONE);
             like_history_layout.setOnClickListener(v -> {
