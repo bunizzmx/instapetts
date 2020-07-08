@@ -162,8 +162,24 @@ public class PlayVideoPresenter implements PlayVideoContract.Presenter {
                     public void onSuccess(SimpleResponse response) {
                         Log.e("POST","SUCCESS");
                         if(response!=null){
-                            if(response.getCode_response() ==200)
+                            if(response.getCode_response() ==200) {
                                 mView.deletePostError(true);
+                                Log.e("ID_BORRAR","-->" + postBean.getId_post_from_web());
+                                db.collection(FIRESTORE.COLLECTION_COMENTARIOS).document(""+postBean.getId_post_from_web())
+                                        .delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.e("POST","COMEMTARIO BORRADO");
+                                            }
+                                        })
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                Log.e("POST","COMEMTARIO BORRADO 2");
+                                            }
+                                        });
+                            }
                             else
                                 mView.deletePostError(false);
                         }

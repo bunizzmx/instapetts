@@ -25,9 +25,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.SearchPetBean;
 import com.bunizz.instapetts.beans.SearchUserBean;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
 import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.fragments.search.tabs.pets.FragmentPetList;
@@ -180,11 +182,16 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
     public void shoPetsResults(ArrayList<SearchPetBean> pets) {
         searching_world.setVisibility(View.GONE);
         Fragment frag = adapter_pager.getItem(1);
+        ArrayList<Object> PETS = new ArrayList<>();
         if (frag instanceof FragmentPetList) {
+            PETS.clear();
             Log.e("SHOW_RESULT_USER","PEST");
-            ArrayList<Object> results = new ArrayList<>();
-            results.addAll(pets);
-            ((FragmentPetList) frag).setData(results);
+            for (int i =0 ;i<pets.size();i++){
+                if(pets.get(i).getId_user()!= App.read(PREFERENCES.ID_USER_FROM_WEB,0)){
+                    PETS.add(pets.get(i));
+                }
+            }
+            ((FragmentPetList) frag).setData(PETS);
         }
     }
 
@@ -192,11 +199,16 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
     public void shoUsersResults(ArrayList<SearchUserBean> users) {
         searching_world.setVisibility(View.GONE);
         Fragment frag =  adapter_pager.getItem(0);
+        ArrayList<Object> USERS = new ArrayList<>();
         if (frag instanceof FragmentPopietaryList) {
             Log.e("SHOW_RESULT_USER","USUARIOS");
-            ArrayList<Object> results = new ArrayList<>();
-            results.addAll(users);
-            ((FragmentPopietaryList) frag).setData(results);
+            USERS.clear();
+            for (int i =0 ;i<users.size();i++){
+                if(Integer.parseInt(users.get(i).getId_user())!= App.read(PREFERENCES.ID_USER_FROM_WEB,0)){
+                    USERS.add(users.get(i));
+                }
+            }
+            ((FragmentPopietaryList) frag).setData(USERS);
         }
     }
 

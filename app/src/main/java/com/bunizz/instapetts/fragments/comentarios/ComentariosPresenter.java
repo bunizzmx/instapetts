@@ -73,7 +73,7 @@ public class ComentariosPresenter implements ComentariosContract.Presenter {
         data.put("id_post",commentariosBean.getId_post());
         data.put("likes",commentariosBean.getLikes());
 
-        db.collection(FIRESTORE.COLLECTION_COMENTARIOS).document(""+commentariosBean.getId_post()).collection(FIRESTORE.COLLECTION_COMENTARIOS_SUBCOLECCION)
+        db.collection(FIRESTORE.COLLECTION_COMENTARIOS).document("-"+commentariosBean.getId_post()+"-").collection(FIRESTORE.COLLECTION_COMENTARIOS_SUBCOLECCION)
                 .document(App.formatDateComments(new Date()))
                 .set(data)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

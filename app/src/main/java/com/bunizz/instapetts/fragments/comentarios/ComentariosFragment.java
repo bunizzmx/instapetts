@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -370,8 +371,14 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                 h.icon_like_comment.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_like_comment_on));
             else
                 h.icon_like_comment.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_like_comment_off));
+                h.item_comentarios_name.setText(data.get(position).getName_user());
 
-            h.item_comentarios_name.setText(data.get(position).getName_user());
+                    if(data.get(position).getId_user() == App.read(PREFERENCES.ID_USER_FROM_WEB,0))
+                        h.item_comentarios_autor.setVisibility(View.VISIBLE);
+                    else
+                        h.item_comentarios_autor.setVisibility(View.GONE);
+
+
             Glide.with(context).load(data.get(position).getFoto_user())
                     .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder))
                     .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
@@ -414,7 +421,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
              TextView item_comentarios_comentario,fecha_comment;
              RelativeLayout like_comment;
              ImageView icon_like_comment;
-             TextView n_likes_comment;
+             TextView n_likes_comment,item_comentarios_autor;
             public CommentsHolder(@NonNull View itemView) {
                 super(itemView);
                 item_comentarios_name = itemView.findViewById(R.id.item_comentarios_name);
@@ -424,6 +431,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                 like_comment = itemView.findViewById(R.id.like_comment);
                 icon_like_comment = itemView.findViewById(R.id.icon_like_comment);
                 n_likes_comment = itemView.findViewById(R.id.n_likes_comment);
+                item_comentarios_autor = itemView.findViewById(R.id.item_comentarios_autor);
             }
         }
     }
