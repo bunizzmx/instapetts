@@ -24,6 +24,7 @@ import com.bunizz.instapetts.beans.NotificationBeanFirestore;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.FIRESTORE;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.db.helpers.MyStoryHelper;
 import com.bunizz.instapetts.db.helpers.NotificationHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -53,60 +54,59 @@ public class JobsServices {
     NotificationHelper notificationHelper;
     ArrayList<String> ids = new ArrayList<>();
     int index_sync =0;
+    MyStoryHelper myStoryHelper;
     public JobsServices(Context context) {
         this.context = context;
         this.db = App.getIntanceFirestore();
         notificationHelper = new NotificationHelper(this.context);
+        myStoryHelper = new MyStoryHelper(this.context);
     }
 
 
     public void startNotificationsRequest() {
         scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Log.e("SINCRONIZACION","RUN");
-                   db.collection(FIRESTORE.COLLECTION_NOTIFICATIONS).document(""+App.read(PREFERENCES.ID_USER_FROM_WEB,0))
-                           .collection(FIRESTORE.COLLECTION_NOTIFICATIONS).get()
-                           .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                               @Override
-                               public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+        scheduler.scheduleWithFixedDelay(() -> {
+            try {
+                Log.e("SINCRONIZACION","RUN");
+               db.collection(FIRESTORE.COLLECTION_NOTIFICATIONS).document(""+App.read(PREFERENCES.ID_USER_FROM_WEB,0))
+                       .collection(FIRESTORE.COLLECTION_NOTIFICATIONS).get()
+                       .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                           @Override
+                           public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
-                               }
-                           })
-                           .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                               @Override
-                               public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                   for (QueryDocumentSnapshot document : task.getResult()) {
-                                       Log.e("SINCRONIZACION","encontre");
-                                       NotificationBeanFirestore notification = document.toObject(NotificationBeanFirestore.class);
-                                       NotificationBean NOTIFICACION = new NotificationBean(
-                                               getTitleForNotification(notification.getTYPE_NOTIFICATION(),notification.getNAME_REMITENTE()),
-                                               getBodyForNotification(notification.getTYPE_NOTIFICATION(),notification.getNAME_REMITENTE()),
-                                               notification.getFOTO_REMITENTE(),
-                                               notification.getTYPE_NOTIFICATION(),
-                                               notification.getID_REMITENTE(),
-                                               notification.getURL_EXTRA(),
-                                               App.getInstance().fecha_lenguaje_humano(notification.getFECHA())
-                                       );
-                                       NOTIFICACION.setId_recurso(notification.getID_RECURSO());
-                                       NOTIFICACION.setId_document_notification(""+document.getId());
-                                       notificationHelper.saveNotification(NOTIFICACION);
-                                   }
-                                   ids =  notificationHelper.getNotificationForSincronized();
-                                   synchronizedNotifications("-");
                            }
-                           })
-                           .addOnFailureListener(new OnFailureListener() {
-                               @Override
-                               public void onFailure(@NonNull Exception e) {
-
+                       })
+                       .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                           @Override
+                           public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                               for (QueryDocumentSnapshot document : task.getResult()) {
+                                   Log.e("SINCRONIZACION","encontre");
+                                   NotificationBeanFirestore notification = document.toObject(NotificationBeanFirestore.class);
+                                   NotificationBean NOTIFICACION = new NotificationBean(
+                                           getTitleForNotification(notification.getTYPE_NOTIFICATION(),notification.getNAME_REMITENTE()),
+                                           getBodyForNotification(notification.getTYPE_NOTIFICATION(),notification.getNAME_REMITENTE()),
+                                           notification.getFOTO_REMITENTE(),
+                                           notification.getTYPE_NOTIFICATION(),
+                                           notification.getID_REMITENTE(),
+                                           notification.getURL_EXTRA(),
+                                           App.getInstance().fecha_lenguaje_humano(notification.getFECHA())
+                                   );
+                                   NOTIFICACION.setId_recurso(notification.getID_RECURSO());
+                                   NOTIFICACION.setId_document_notification(""+document.getId());
+                                   notificationHelper.saveNotification(NOTIFICACION);
                                }
-                           });
-                } catch (Exception ex) {
-                    Log.e(TAG, "Error en la ejecución de peticion de tramas", ex);
-                }
+                               ids =  notificationHelper.getNotificationForSincronized();
+                               synchronizedNotifications("-");
+                       }
+                       })
+                       .addOnFailureListener(new OnFailureListener() {
+                           @Override
+                           public void onFailure(@NonNull Exception e) {
+
+                           }
+                       });
+            } catch (Exception ex) {
+                Log.e(TAG, "Error en la ejecución de peticion de tramas", ex);
             }
         }, 0, 60, TimeUnit.SECONDS);
     }

@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
@@ -61,6 +62,7 @@ import com.bunizz.instapetts.fragments.profile.FragmentEditProfileUser;
 import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.fragments.search.FragmentSearchPet;
 import com.bunizz.instapetts.fragments.search.posts.FragmentPostPublics;
+import com.bunizz.instapetts.fragments.side.SideFragment;
 import com.bunizz.instapetts.fragments.tips.detail.FragmentTipDetail;
 import com.bunizz.instapetts.fragments.tips.FragmentTips;
 import com.bunizz.instapetts.listeners.change_instance;
@@ -119,6 +121,7 @@ public class Main extends AppCompatActivity implements change_instance,
     private Stack<FragmentElement> stack_posts_publics_search;
     private Stack<FragmentElement> stack_posts_search_advanced;
     private Stack<FragmentElement> stack_comentarios;
+    private Stack<FragmentElement> stack_side_menu;
 
     private FragmentElement mCurrentFragment;
 
@@ -160,14 +163,7 @@ public class Main extends AppCompatActivity implements change_instance,
     SmoothProgressBar smoot_progress;
 
 
-    @BindView(R.id.mainSlideMenu)
-    SlideMenuLayout mainSlideMenu;
 
-    @BindView(R.id.app_name_user)
-    TextView app_name_user;
-
-    @BindView(R.id.version_app)
-    TextView version_app;
 
     @BindView(R.id.text_smoot)
     TextView text_smoot;
@@ -208,46 +204,15 @@ public class Main extends AppCompatActivity implements change_instance,
         repaint_nav(R.id.tab_profile_pet);
     }
 
-    @SuppressLint("MissingPermission")
-    @OnClick(R.id.menu_centro_ayuda)
-    void menu_centro_ayuda() {
-        i.putExtra("TYPE_MENU",0);
-        startActivity(i);
-    }
-
-    @SuppressLint("MissingPermission")
-    @OnClick(R.id.side_menu_administrate_account)
-    void side_menu_administrate_account() {
-        i.putExtra("TYPE_MENU",1);
-        startActivity(i);
-    }
-
-    @SuppressLint("MissingPermission")
-    @OnClick(R.id.open_my_pet_code)
-    void open_my_pet_code() {
-        Intent i = new Intent(this , QrSearchActivity.class);
-        startActivityForResult( i,NEW_PHOTO_QR_SCAN);
-    }
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.back_to_main_sliding)
     void back_to_main_sliding() {
+
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
     }
 
-    @SuppressLint("MissingPermission")
-    @OnClick(R.id.menu_side_guardado)
-    void menu_side_guardado() {
-        i.putExtra("TYPE_MENU",2);
-        startActivity(i);
-    }
 
-    @SuppressLint("MissingPermission")
-    @OnClick(R.id.side_menu_open_push)
-    void side_menu_open_push() {
-        i.putExtra("TYPE_MENU",3);
-        startActivity(i);
-    }
 
 
 
@@ -261,27 +226,6 @@ public class Main extends AppCompatActivity implements change_instance,
      }
     }
 
-    @SuppressLint("MissingPermission")
-    @OnClick(R.id.side_menu_share_profile)
-    void side_menu_share_profile() {
-        share_profile();
-    }
-
-
-
-    @SuppressLint("MissingPermission")
-    @OnClick(R.id.logout)
-    void logout() {
-        DialogLogout dialogLogout = new DialogLogout(this);
-        dialogLogout.setListener(() -> {
-            presenter.logout();
-            presenter.delete_data();
-            App.getInstance().clear_preferences();
-            Intent i = new Intent(Main.this, LoginActivity.class);
-            startActivity(i);
-        });
-        dialogLogout.show();
-    }
 
 
 
@@ -381,6 +325,7 @@ public class Main extends AppCompatActivity implements change_instance,
         stack_posts_search_advanced = new Stack<>();
         stack_follows = new Stack<>();
         stack_comentarios = new Stack<>();
+        stack_side_menu = new Stack<>();
         setupFirstFragment();
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
@@ -404,16 +349,9 @@ public class Main extends AppCompatActivity implements change_instance,
         if(DOWNLOAD_INFO)
             download_pets();
 
-        app_name_user.setText("@" + App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"INVALID"));
-        version_app.setText("Version : " + BuildConfig.VERSION_NAME);
 
-        mainSlideMenu.addOnSlideChangedListener((slideMenu, isLeftSlideOpen, isRightSlideOpen) -> {
 
-            if(isRightSlideOpen)
-                SIDE_OPEN =true;
-            else
-                SIDE_OPEN = false;
-        });
+
 
         presenter.have_pets();
         getLocation();
@@ -481,7 +419,7 @@ public class Main extends AppCompatActivity implements change_instance,
                     stack_feed.push(mCurrentFragment);
                 }
             }
-            inflateFragment();
+            inflateFragment(false);
     }
 
     private void change_detail_tip(FragmentElement fragment,Bundle data) {
@@ -493,7 +431,7 @@ public class Main extends AppCompatActivity implements change_instance,
             }
         }
         ((FragmentTipDetail) mCurrentFragment.getFragment()).refill_data(data);
-        inflateFragment();
+        inflateFragment(false);
     }
 
     private void change_edit_profile(FragmentElement fragment) {
@@ -506,7 +444,7 @@ public class Main extends AppCompatActivity implements change_instance,
         Bundle b = new Bundle();
         b.putInt("CONFIG",1);
         mCurrentFragment.getFragment().setArguments(b);
-        inflateFragment();
+        inflateFragment(false);
     }
 
     private void change_notifications(FragmentElement fragment) {
@@ -516,10 +454,10 @@ public class Main extends AppCompatActivity implements change_instance,
                 stack_notifications.push(mCurrentFragment);
             }
         }
-        inflateFragment();
+        inflateFragment(false);
     }
 
-    private void change_profile_pet(FragmentElement fragment,Bundle bundle) {
+    private void change_profile_pet(FragmentElement fragment,Bundle bundle,boolean is_back) {
         if (fragment != null) {
             mCurrentFragment = fragment;
             if(bundle!=null){
@@ -533,7 +471,7 @@ public class Main extends AppCompatActivity implements change_instance,
             }
         }
         ((FragmentProfileUserPet) mCurrentFragment.getFragment()).reloadMyData();
-        inflateFragment();
+        inflateFragment(is_back);
     }
 
     private void change_tips(FragmentElement fragment) {
@@ -543,7 +481,7 @@ public class Main extends AppCompatActivity implements change_instance,
                 stack_tips.push(mCurrentFragment);
             }
         }
-        inflateFragment();
+        inflateFragment(false);
     }
 
     private void change_search_pet(FragmentElement fragment) {
@@ -553,7 +491,7 @@ public class Main extends AppCompatActivity implements change_instance,
                 stack_serch_pet.push(mCurrentFragment);
             }
         }
-        inflateFragment();
+        inflateFragment(false);
     }
 
     private void change_to_search_posts_publics(FragmentElement fragment) {
@@ -564,7 +502,7 @@ public class Main extends AppCompatActivity implements change_instance,
             }
         }
 
-        inflateFragment();
+        inflateFragment(false);
     }
 
 
@@ -577,7 +515,7 @@ public class Main extends AppCompatActivity implements change_instance,
                 stack_preview_perfil.push(mCurrentFragment);
             }
         }
-         inflateFragment();
+         inflateFragment(false);
         if(!back)
         ((FragmentProfileUserPetPreview) mCurrentFragment.getFragment()).refresh_info();
     }
@@ -590,7 +528,7 @@ public class Main extends AppCompatActivity implements change_instance,
                 stack_posts_search_advanced.push(mCurrentFragment);
             }
         }
-        inflateFragment();
+        inflateFragment(false);
         ((FragmentListOfPosts) mCurrentFragment.getFragment()).update_lists();
     }
 
@@ -603,7 +541,7 @@ public class Main extends AppCompatActivity implements change_instance,
             }
         }
         ((FollowsFragment) mCurrentFragment.getFragment()).updateInfo(data);
-        inflateFragment();
+        inflateFragment(false);
     }
 
     private void change_to_comentarios(FragmentElement fragment,Bundle data) {
@@ -615,8 +553,21 @@ public class Main extends AppCompatActivity implements change_instance,
             }
         }
        ((ComentariosFragment) mCurrentFragment.getFragment()).refresh_coments();
-        inflateFragment();
+        inflateFragment(false);
     }
+
+    private void changue_to_side(FragmentElement fragment,Bundle data,boolean is_back) {
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            mCurrentFragment.getFragment().setArguments(data);
+            if (stack_side_menu.size() <= 0) {
+                stack_side_menu.push(mCurrentFragment);
+            }
+        }
+        inflateFragment(is_back);
+    }
+
+
 
 
 
@@ -627,7 +578,7 @@ public class Main extends AppCompatActivity implements change_instance,
     private synchronized void changeOfInstance(int intanceType,Bundle bundle,boolean back) {
         saveFragment();
 
-        if(intanceType!=FragmentElement.INSTANCE_COMENTARIOS && intanceType!=FragmentElement.INSTANCE_EDIT_PROFILE_USER) {
+        if(intanceType!=FragmentElement.INSTANCE_COMENTARIOS && intanceType!=FragmentElement.INSTANCE_EDIT_PROFILE_USER && intanceType != FragmentElement.INSTANCE_SIDE_MENU) {
             Log.e("OCULTO_PORQUE","-->debo" + intanceType);
             runOnUiThread(() -> root_bottom_nav.setVisibility(View.VISIBLE));
         }
@@ -650,9 +601,9 @@ public class Main extends AppCompatActivity implements change_instance,
             }
         } else if (intanceType == FragmentElement.INSTANCE_PROFILE_PET) {
             if (stack_profile_pet.size() == 0) {
-                change_profile_pet(new FragmentElement<>("", FragmentProfileUserPet.newInstance(), FragmentElement.INSTANCE_PROFILE_PET),bundle);
+                change_profile_pet(new FragmentElement<>("", FragmentProfileUserPet.newInstance(), FragmentElement.INSTANCE_PROFILE_PET),bundle,back);
             } else {
-                change_profile_pet(stack_profile_pet.pop(),bundle);
+                change_profile_pet(stack_profile_pet.pop(),bundle,back);
             }
         }
         else if (intanceType == FragmentElement.INSTANCE_TIPS) {
@@ -731,25 +682,78 @@ public class Main extends AppCompatActivity implements change_instance,
                 change_to_comentarios(stack_comentarios.pop(),bundle);
             }
         }
+        else if(intanceType == FragmentElement.INSTANCE_SIDE_MENU){
+            if (stack_side_menu.size() == 0) {
+                changue_to_side(new FragmentElement<>("", SideFragment.newInstance(), FragmentElement.INSTANCE_SIDE_MENU),bundle,back);
+            } else {
+                changue_to_side(stack_side_menu.pop(),bundle,back);
+            }
+        }
+
     }
 
     @SuppressLint("RestrictedApi")
-    private synchronized void inflateFragment() {
+    private synchronized void inflateFragment(boolean is_back) {
         try {
+
             FragmentManager fragmentManager = getSupportFragmentManager();
             if (mOldFragment != null) {
+                Log.e("current_fragment","" + mCurrentFragment.getInstanceType() + "/" + mOldFragment.getInstanceType());
                 if (mCurrentFragment.getFragment().isAdded()) {
-                    fragmentManager
-                            .beginTransaction()
-                            .addToBackStack(null)
-                            .hide(mOldFragment.getFragment())
-                            .show(mCurrentFragment.getFragment()).commit();
+                    if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SIDE_MENU || (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_SIDE_MENU  && mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET )){
+                        Log.e("ANIMATIONXX","1");
+                        if(is_back){
+                            fragmentManager
+                                    .beginTransaction()
+                                    .addToBackStack(null)
+                                    .setCustomAnimations(R.anim.enter_left, R.anim.exit_right)
+                                    .hide(mOldFragment.getFragment())
+                                    .show(mCurrentFragment.getFragment()).commit();
+                        }else{
+                            fragmentManager
+                                    .beginTransaction()
+                                    .addToBackStack(null)
+                                    .setCustomAnimations(R.anim.enter_right, R.anim.exit_left)
+                                    .hide(mOldFragment.getFragment())
+                                    .show(mCurrentFragment.getFragment()).commit();
+                        }
+
+                    }else{
+                        Log.e("ANIMATIONXX","2");
+                        fragmentManager
+                                .beginTransaction()
+                                .addToBackStack(null)
+                                .hide(mOldFragment.getFragment())
+                                .show(mCurrentFragment.getFragment()).commit();
+                    }
                 } else {
-                    fragmentManager
-                            .beginTransaction()
-                            .addToBackStack(null)
-                            .hide(mOldFragment.getFragment())
-                            .add(R.id.root_main, mCurrentFragment.getFragment()).commit();
+                    if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SIDE_MENU || (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_SIDE_MENU  && mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET )){
+                        Log.e("ANIMATIONXX","3");
+                        if(is_back){
+                            fragmentManager
+                                    .beginTransaction()
+                                    .addToBackStack(null)
+                                    .setCustomAnimations(R.anim.enter_left, R.anim.exit_right)
+                                    .hide(mOldFragment.getFragment())
+                                    .add(R.id.root_main, mCurrentFragment.getFragment()).commit();
+                        }else{
+                            fragmentManager
+                                    .beginTransaction()
+                                    .addToBackStack(null)
+                                    .setCustomAnimations(R.anim.enter_right, R.anim.exit_left)
+                                    .hide(mOldFragment.getFragment())
+                                    .add(R.id.root_main, mCurrentFragment.getFragment()).commit();
+
+                        }
+                    }else{
+                        Log.e("ANIMATIONXX","4");
+                        fragmentManager
+                                .beginTransaction()
+                                .addToBackStack(null)
+                                .hide(mOldFragment.getFragment())
+                                .add(R.id.root_main, mCurrentFragment.getFragment()).commit();
+                    }
+
                 }
 
             } else {
@@ -778,7 +782,7 @@ public class Main extends AppCompatActivity implements change_instance,
         b.putParcelable(BUNDLES.PETBEAN, Parcels.wrap(petBean));
         b.putInt(BUNDLES.IS_ME, is_me);
         changue_instance_sheet(b);
-        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+       // mLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
     }
 
     @Override
@@ -789,6 +793,7 @@ public class Main extends AppCompatActivity implements change_instance,
 
     @Override
     public void onBackPressed() {
+        Log.e("ONBACKKK","111");
         if(mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS)
             ((FragmentTips) mOldFragment.getFragment()).stop_player();
 
@@ -798,6 +803,7 @@ public class Main extends AppCompatActivity implements change_instance,
             changeOfInstance(FragmentElement.INSTANCE_TIPS,null,false);
         }
         else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH || mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED){
+            Log.e("ONBACKKK","444");
             if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED){
                 ((FragmentListOfPosts) mCurrentFragment.getFragment()).stop_player();
             }
@@ -814,15 +820,20 @@ public class Main extends AppCompatActivity implements change_instance,
             changeOfInstance(FragmentElement.INSTANCE_SEARCH,null,false);
         }
         else if(IS_SHEET_OPEN || SIDE_OPEN){
+            Log.e("ONBACKKK","555");
             IS_SHEET_OPEN= false;
+            SIDE_OPEN =false;
             mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-            mainSlideMenu.closeRightSlide();
+            changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null,true);
+
         }
         else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_EDIT_PROFILE_USER){
+            Log.e("ONBACKKK","666");
             Bundle b = new Bundle();
             b.putString(BUNDLES.PHOTO_LOCAL,App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
             changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET,b,false);
         }else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_FOLLOWS_USER){
+            Log.e("ONBACKKK","777");
             if(mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE){
                 changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE,null,true);
             }else if(mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET){
@@ -832,9 +843,12 @@ public class Main extends AppCompatActivity implements change_instance,
             }
         }
         else{
-            if(mCurrentFragment.getInstanceType()== FragmentElement.INSTANCE_FEED)
+            if(mCurrentFragment.getInstanceType()== FragmentElement.INSTANCE_FEED) {
+                Log.e("ONBACKKK","222");
                 finish();
+            }
             else {
+                Log.e("ONBACKKK","333");
                 repaint_nav(R.id.tab_feed);
                 changeOfInstance(FragmentElement.INSTANCE_FEED, null, false);
             }
@@ -1168,7 +1182,7 @@ public class Main extends AppCompatActivity implements change_instance,
     @Override
     public void open_side() {
         SIDE_OPEN = true;
-        mainSlideMenu.openRightSlide();
+            changeOfInstance(FragmentElement.INSTANCE_SIDE_MENU,null,false);
     }
 
 

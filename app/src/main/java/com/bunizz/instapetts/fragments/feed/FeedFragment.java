@@ -68,7 +68,6 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     @BindView(R.id.exoPlayerRecyclerView)
     ExoPlayerRecyclerView mRecyclerView;
 
-
     @BindView(R.id.spin_kit)
     SpinKitView spin_kit;
 
@@ -212,10 +211,13 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+
+
         feedAdapter.setRequestManager(initGlide());
+
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         mRecyclerView.setAdapter(feedAdapter);
-
         refresh_feed.setOnRefreshListener(() ->{
             root_no_internet.setVisibility(View.GONE);
             if(followsHelper.getMyFriendsForPost().size()>0)
@@ -275,6 +277,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
             insertAdsInMenuItems(true);
         else
             feedAdapter.addData(data_feed);
+
     }
 
     @Override
@@ -301,6 +304,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         feedAdapter.setHistoriesBeans(historiesBeans);
         feedAdapter.addData(data_object);
         feedAdapter.setData_recomended(data_recomended);
+
     }
 
     @Override

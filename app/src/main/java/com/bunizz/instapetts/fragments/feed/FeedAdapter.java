@@ -27,6 +27,7 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.MotionEventCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -253,8 +254,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 e.list_post_recomended.setLayoutManager(new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false));
                 feedAdapterRecomended.setData(data_recomended);
 
-                e.list_post_recomended.addOnItemTouchListener(enforcer);
-                e.list_post_recomended.addOnScrollListener(enforcer);
+                PagerSnapHelper snapHelper = new PagerSnapHelper();
+                snapHelper.attachToRecyclerView(e.list_post_recomended);
+                e.list_post_recomended.setHasFixedSize(true);
                 e.list_post_recomended.setAdapter(feedAdapterRecomended);
                 e.title_no_data.setText(context.getResources().getString(R.string.no_sigues));
                 e.body_no_data.setText("Te recomendamos a estas hermosas mascotas,porque no les echas un ojo.");
@@ -618,6 +620,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public EmptyHolder(@NonNull View itemView) {
             super(itemView);
             list_post_recomended = itemView.findViewById(R.id.list_post_recomended);
+
             body_no_data = itemView.findViewById(R.id.body_no_data);
             title_no_data = itemView.findViewById(R.id.title_no_data);
         }

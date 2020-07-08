@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/AppTheme"
     android:background="@color/white"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include layout="@layout/tollbar"/>
@@ -13,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerView
-
             android:background="@color/white"
             android:id="@+id/exoPlayerRecyclerView"
             android:layout_width="match_parent"
@@ -31,4 +28,4 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:padding="10dp" />
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
