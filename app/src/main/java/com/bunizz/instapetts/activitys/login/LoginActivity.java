@@ -40,6 +40,7 @@ import com.bunizz.instapetts.services.DownloadsService;
 import com.bunizz.instapetts.services.ImageService;
 import com.bunizz.instapetts.utils.AndroidIdentifier;
 import com.bunizz.instapetts.utils.dilogs.DialogLoanding;
+import com.bunizz.instapetts.utils.snackbar.SnackBar;
 import com.bunizz.instapetts.web.CONST;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
@@ -50,6 +51,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
+import com.facebook.login.LoginFragment;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
@@ -160,80 +162,80 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     private void setupFirstFragment() {
         if(App.read(PREFERENCES.IS_FIRST_USER,false)){
             mCurrentFragment = new FragmentElement<>(null, FragmentFirstUser.newInstance(), FragmentElement.INSTANCE_NEW_USER_CONFIG, true);
-            config_first_user(mCurrentFragment);
+            config_first_user(mCurrentFragment,false);
             permision_location();
         }else{
             mCurrentFragment = new FragmentElement<>(null, MainLogin.newInstance(), FragmentElement.INSTANCE_MAIN_LOGIN, true);
-            change_main(mCurrentFragment);
+            change_main(mCurrentFragment,false);
             permision_location();
         }
 
     }
 
-    private void change_login(FragmentElement fragment) {
+    private void change_login(FragmentElement fragment,boolean is_back) {
         if (fragment != null) {
             mCurrentFragment = fragment;
             if(stack_login.size()<=0){stack_login.push(mCurrentFragment);}
         }
-        inflateFragment();
+        inflateFragment(is_back);
     }
-    private void change_main(FragmentElement fragment) {
+    private void change_main(FragmentElement fragment,boolean is_back) {
         if (fragment != null) {
             mCurrentFragment = fragment;
             if(stack_main_login.size()<=0){stack_main_login.push(mCurrentFragment);}
         }
-        inflateFragment();
+        inflateFragment(is_back);
     }
 
-    private void config_first_user(FragmentElement fragment) {
+    private void config_first_user(FragmentElement fragment,boolean is_back) {
         if (fragment != null) {
             mCurrentFragment = fragment;
             if(stack_first_user.size()<=0){stack_first_user.push(mCurrentFragment);}
         }
-        inflateFragment();
+        inflateFragment(is_back);
     }
 
-    private void change_sigin(FragmentElement fragment) {
+    private void change_sigin(FragmentElement fragment,boolean is_back) {
         if (fragment != null) {
             mCurrentFragment = fragment;
             if(stack_sigin.size()<=0){stack_sigin.push(mCurrentFragment);}
         }
-        inflateFragment();
+        inflateFragment(is_back);
     }
 
     private void saveFragment() {
         mOldFragment = mCurrentFragment;
     }
 
-    private synchronized void changeOfInstance(int intanceType) {
+    private synchronized void changeOfInstance(int intanceType,boolean is_back) {
         saveFragment();
         if (intanceType == FragmentElement.INSTANCE_LOGIN) {
             if (stack_login.size() == 0) {
-                change_login(new FragmentElement<>("", FragmentLogin.newInstance(), FragmentElement.INSTANCE_LOGIN));
+                change_login(new FragmentElement<>("", FragmentLogin.newInstance(), FragmentElement.INSTANCE_LOGIN),is_back);
             } else {
-                change_login(stack_login.pop());
+                change_login(stack_login.pop(),is_back);
             }
         }else if(intanceType == FragmentElement.INSTANCE_SIGIN) {
             if (stack_sigin.size() == 0) {
-                change_sigin(new FragmentElement<>("", FragmentSigin.newInstance(), FragmentElement.INSTANCE_SIGIN));
+                change_sigin(new FragmentElement<>("", FragmentSigin.newInstance(), FragmentElement.INSTANCE_SIGIN),is_back);
             } else {
-                change_sigin(stack_sigin.pop());
+                change_sigin(stack_sigin.pop(),is_back);
             }
 
         }
         else if(intanceType == FragmentElement.INSTANCE_MAIN_LOGIN) {
             if (stack_main_login.size() == 0) {
-                change_main(new FragmentElement<>("", MainLogin.newInstance(), FragmentElement.INSTANCE_MAIN_LOGIN));
+                change_main(new FragmentElement<>("", MainLogin.newInstance(), FragmentElement.INSTANCE_MAIN_LOGIN),is_back);
             } else {
-                change_main(stack_main_login.pop());
+                change_main(stack_main_login.pop(),is_back);
             }
         }
 
         else if(intanceType == FragmentElement.INSTANCE_NEW_USER_CONFIG) {
             if (stack_first_user.size() == 0) {
-                config_first_user(new FragmentElement<>("", FragmentFirstUser.newInstance(), FragmentElement.INSTANCE_NEW_USER_CONFIG));
+                config_first_user(new FragmentElement<>("", FragmentFirstUser.newInstance(), FragmentElement.INSTANCE_NEW_USER_CONFIG),is_back);
             } else {
-                config_first_user(stack_first_user.pop());
+                config_first_user(stack_first_user.pop(),is_back);
             }
         }
 
@@ -242,27 +244,53 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     }
 
     @SuppressLint("RestrictedApi")
-    private synchronized void inflateFragment() {
+    private synchronized void inflateFragment(boolean is_back) {
         try {
             FragmentManager fragmentManager = getSupportFragmentManager();
             if(mOldFragment!=null) {
                 if (mCurrentFragment.getFragment().isAdded()) {
-                    fragmentManager
-                            .beginTransaction()
-                            .setCustomAnimations(R.anim.enter_left, R.anim.exit_right, R.anim.enter_right, R.anim.exit_left)
-                            .addToBackStack(null)
-                            .hide(mOldFragment.getFragment())
-                            .show(mCurrentFragment.getFragment()).commit();
+                    Log.e("LOGINGS_LOGS","1");
+                    if(is_back){
+                        Log.e("LOGINGS_LOGS","2");
+                        fragmentManager
+                                .beginTransaction()
+                                .addToBackStack(null)
+                                .setCustomAnimations(R.anim.enter_left, R.anim.exit_right)
+                                .hide(mOldFragment.getFragment())
+                                .show(mCurrentFragment.getFragment()).commit();
+                    }else{
+                        Log.e("LOGINGS_LOGS","3");
+                        fragmentManager
+                                .beginTransaction()
+                                .addToBackStack(null)
+                                .setCustomAnimations(R.anim.enter_right, R.anim.exit_left)
+                                .hide(mOldFragment.getFragment())
+                                .show(mCurrentFragment.getFragment()).commit();
+                    }
                 } else {
-                    fragmentManager
-                            .beginTransaction()
-                            .setCustomAnimations(R.anim.enter_right, R.anim.exit_left, R.anim.enter_left, R.anim.exit_right)
-                            .addToBackStack(null)
-                            .hide(mOldFragment.getFragment())
-                            .add(R.id.root_login, mCurrentFragment.getFragment()).commit();
+                    Log.e("LOGINGS_LOGS","4");
+                    if(is_back){
+                        Log.e("LOGINGS_LOGS","5");
+                        fragmentManager
+                                .beginTransaction()
+                                .addToBackStack(null)
+                                .setCustomAnimations(R.anim.enter_left, R.anim.exit_right)
+                                .hide(mOldFragment.getFragment())
+                                .add(R.id.root_main, mCurrentFragment.getFragment()).commit();
+                    }else{
+                        Log.e("LOGINGS_LOGS","6");
+                        fragmentManager
+                                .beginTransaction()
+                                .addToBackStack(null)
+                                .setCustomAnimations(R.anim.enter_right, R.anim.exit_left)
+                                .hide(mOldFragment.getFragment())
+                                .add(R.id.root_login, mCurrentFragment.getFragment()).commit();
+
+                    }
                 }
 
             }else{
+
                 fragmentManager
                         .beginTransaction()
                         .addToBackStack(null)
@@ -273,12 +301,12 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     @Override
     public void change(int fragment_element) {
-        changeOfInstance(fragment_element);
+        changeOfInstance(fragment_element,false);
     }
 
     @Override
     public void onback() {
-        changeOfInstance(FragmentElement.INSTANCE_MAIN_LOGIN);
+        changeOfInstance(FragmentElement.INSTANCE_MAIN_LOGIN,true);
     }
 
     @Override
@@ -296,7 +324,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     @Override
     public void onBackPressed() {
-            changeOfInstance(FragmentElement.INSTANCE_MAIN_LOGIN);
+            changeOfInstance(FragmentElement.INSTANCE_MAIN_LOGIN,true);
     }
 
     @Override
@@ -347,20 +375,22 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                                     generate_user_bean();
                                 });
                             } else {
-                                Toast.makeText(LoginActivity.this, "VERIFICA TU CORREO", Toast.LENGTH_LONG).show();
+                                View v = findViewById(R.id.root_login);
+                                SnackBar.info(v, R.string.verify_email, SnackBar.LENGTH_LONG).show();
                             }
                         } else {
 
                         }
                     })
                     .addOnFailureListener(e -> {
+                        View v = findViewById(R.id.root_login);
                         Log.e("EEROR_LOGIN", "-->" + e.getMessage());
                         if (e.getMessage().contains("badly formatted")) {
-                            Toast.makeText(LoginActivity.this, "Correo no valido", Toast.LENGTH_LONG).show();
+                            SnackBar.error(v, R.string.correo_invalido, SnackBar.LENGTH_LONG).show();
                         } else if (e.getMessage().contains("There is no user")) {
-                            Toast.makeText(LoginActivity.this, "Usuario no existe", Toast.LENGTH_LONG).show();
+                            SnackBar.error(v, R.string.user_no_existe, SnackBar.LENGTH_LONG).show();
                         } else if (e.getMessage().contains("The password is invalid")) {
-                            Toast.makeText(LoginActivity.this, "Revisa tus credenciales", Toast.LENGTH_LONG).show();
+                            SnackBar.error(v, R.string.error_credenciales, SnackBar.LENGTH_LONG).show();
                         }
 
                     });
@@ -395,7 +425,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                                 .addOnCompleteListener(task1 -> {
                                     if (task1.isSuccessful()) {
                                         Toast.makeText(LoginActivity.this,"SE ENVIO UN CORREO DE VERIFICACION",Toast.LENGTH_LONG).show();
-                                        changeOfInstance(FragmentElement.INSTANCE_MAIN_LOGIN);
+                                        changeOfInstance(FragmentElement.INSTANCE_MAIN_LOGIN,false);
                                     }
                                 });
                     } else {
@@ -562,7 +592,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         try {
             dialogLoanding.dismiss();
         }catch (Exception e){}
-        changeOfInstance(FragmentElement.INSTANCE_NEW_USER_CONFIG);
+        changeOfInstance(FragmentElement.INSTANCE_NEW_USER_CONFIG,false);
     }
 
     @Override

@@ -356,9 +356,10 @@ class CameraStoryt : Fragment() {
                         val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
                         val b = Bundle()
                         val uri = java.util.ArrayList<String>()
-                        uri.add(savedUri.toString())
+                        uri.add(savedUri.path!!)
                         b.putStringArrayList("PATH_SELECTED", uri)
                         if (listener != null) {
+                            Log.e("MANDO_SNAL","SI");
                             val mediaScannerIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
                             mediaScannerIntent.data = savedUri
                             context!!.sendBroadcast(mediaScannerIntent)
@@ -366,6 +367,8 @@ class CameraStoryt : Fragment() {
                             broadcastManager.unregisterReceiver(volumeDownReceiver)
                             displayManager.unregisterDisplayListener(displayListener)
                             listener!!.change_fragment_parameter(FragmentElement.INSTANCE_HISTORY_FOTO_PICKED, b)
+                        }else{
+                            Log.e("MANDO_SNAL","NO");
                         }
                     }
                 })

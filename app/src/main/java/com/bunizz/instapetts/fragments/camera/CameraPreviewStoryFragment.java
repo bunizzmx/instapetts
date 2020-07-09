@@ -117,7 +117,6 @@ public class CameraPreviewStoryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        crop_view.setImageFilePath(path.get(0));
         pets_cuerrent = helper.getMyPets();
         publish_stories.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +161,7 @@ public class CameraPreviewStoryFragment extends Fragment {
                 crop_view.setAspectRatio(9,16);
             }
         });
+        crop_view.setImageFilePath(path.get(0));
     }
 
 

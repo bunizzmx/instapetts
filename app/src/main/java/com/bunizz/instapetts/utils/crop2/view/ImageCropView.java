@@ -431,11 +431,14 @@ public class ImageCropView extends ImageView {
     }
 
     public void setImageFilePath(String imageFilePath) {
-        File imageFile = new File(imageFilePath);
+
+        this.imageFilePath = imageFilePath.replace("///","//");
+        File imageFile = new File(this.imageFilePath);
+        Log.e("FXCxxV",this.imageFilePath);
         if (!imageFile.exists()) {
             throw new IllegalArgumentException("Image file does not exist");
         }
-        this.imageFilePath = imageFilePath;
+
         int reqSize = 1000;
         Bitmap bitmap = BitmapLoadUtils.decode(imageFilePath, reqSize, reqSize, true);
         setImageBitmap(bitmap);

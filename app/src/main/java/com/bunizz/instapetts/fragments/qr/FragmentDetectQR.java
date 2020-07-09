@@ -50,6 +50,13 @@ public class FragmentDetectQR extends Fragment implements Callback {
         listener.change_fragment_parameter(FragmentElement.INSTANCE_VIEW_MY_QR,null);
     }
 
+    @OnClick(R.id.close_dialog)
+    void close_dialog()
+    {
+        listener.change_fragment_parameter(FragmentElement.INSTANCE_VIEW_MY_QR,null);
+    }
+
+
 
     private Context mApplicationContext;
 

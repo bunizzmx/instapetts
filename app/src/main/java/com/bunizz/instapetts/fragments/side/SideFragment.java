@@ -63,7 +63,7 @@ public class SideFragment extends  Fragment{
     @SuppressLint("MissingPermission")
     @OnClick(R.id.open_my_pet_code)
     void open_my_pet_code() {
-        listener.open_side();
+        listener.open_pet_code();
     }
 
     @SuppressLint("MissingPermission")

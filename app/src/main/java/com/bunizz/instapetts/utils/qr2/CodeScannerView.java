@@ -70,7 +70,6 @@ public final class CodeScannerView extends ViewGroup {
     private static final float FOCUS_AREA_SIZE_DP = 20f;
     private SurfaceView mPreviewView;
     private ViewFinderView mViewFinderView;
-    private ImageView mAutoFocusButton;
     private ImageView mFlashButton;
     private Point mPreviewSize;
     private SizeListener mSizeListener;
@@ -134,11 +133,11 @@ public final class CodeScannerView extends ViewGroup {
         final float density = context.getResources().getDisplayMetrics().density;
         mButtonSize = Math.round(density * BUTTON_SIZE_DP);
         mFocusAreaSize = Math.round(density * FOCUS_AREA_SIZE_DP);
-        mAutoFocusButton = new ImageView(context);
+        /*mAutoFocusButton = new ImageView(context);
         mAutoFocusButton.setLayoutParams(new LayoutParams(mButtonSize, mButtonSize));
         mAutoFocusButton.setScaleType(ImageView.ScaleType.CENTER);
         mAutoFocusButton.setImageResource(R.drawable.ic_camera);
-        mAutoFocusButton.setOnClickListener(new AutoFocusClickListener());
+        mAutoFocusButton.setOnClickListener(new AutoFocusClickListener());*/
         mFlashButton = new ImageView(context);
         mFlashButton.setLayoutParams(new LayoutParams(mButtonSize, mButtonSize));
         mFlashButton.setScaleType(ImageView.ScaleType.CENTER);
@@ -154,9 +153,9 @@ public final class CodeScannerView extends ViewGroup {
             mViewFinderView
                     .setFrameCornersRadius(Math.round(DEFAULT_FRAME_CORNERS_RADIUS_DP * density));
             mViewFinderView.setFrameSize(DEFAULT_FRAME_SIZE);
-            mAutoFocusButton.setColorFilter(DEFAULT_AUTO_FOCUS_BUTTON_COLOR);
+            //mAutoFocusButton.setColorFilter(DEFAULT_AUTO_FOCUS_BUTTON_COLOR);
             mFlashButton.setColorFilter(DEFAULT_FLASH_BUTTON_COLOR);
-            mAutoFocusButton.setVisibility(DEFAULT_AUTO_FOCUS_BUTTON_VISIBILITY);
+           // mAutoFocusButton.setVisibility(DEFAULT_AUTO_FOCUS_BUTTON_VISIBILITY);
             mFlashButton.setVisibility(DEFAULT_FLASH_BUTTON_VISIBILITY);
         } else {
             TypedArray a = null;
@@ -198,7 +197,7 @@ public final class CodeScannerView extends ViewGroup {
         }
         addView(mPreviewView);
         addView(mViewFinderView);
-        addView(mAutoFocusButton);
+       // addView(mAutoFocusButton);
         addView(mFlashButton);
     }
 
@@ -436,9 +435,7 @@ public final class CodeScannerView extends ViewGroup {
      *
      * @see #setAutoFocusButtonVisible
      */
-    public boolean isAutoFocusButtonVisible() {
-        return mAutoFocusButton.getVisibility() == VISIBLE;
-    }
+
 
     /**
      * Set whether auto focus button is visible or not
@@ -446,7 +443,7 @@ public final class CodeScannerView extends ViewGroup {
      * @param visible Visibility
      */
     public void setAutoFocusButtonVisible(final boolean visible) {
-        mAutoFocusButton.setVisibility(visible ? VISIBLE : INVISIBLE);
+      //  mAutoFocusButton.setVisibility(visible ? VISIBLE : INVISIBLE);
     }
 
     /**
@@ -484,7 +481,7 @@ public final class CodeScannerView extends ViewGroup {
      */
     public void setAutoFocusButtonColor(@ColorInt final int color) {
         mAutoFocusButtonColor = color;
-        mAutoFocusButton.setColorFilter(color);
+        //mAutoFocusButton.setColorFilter(color);
     }
 
     /**
@@ -541,8 +538,8 @@ public final class CodeScannerView extends ViewGroup {
     }
 
     void setAutoFocusEnabled(final boolean enabled) {
-        mAutoFocusButton.setImageResource(enabled ? R.drawable.ic_camera :
-                R.drawable.ic_camera);
+        //mAutoFocusButton.setImageResource(enabled ? R.drawable.ic_camera :
+         //       R.drawable.ic_camera);
     }
 
     void setFlashEnabled(final boolean enabled) {
@@ -575,7 +572,7 @@ public final class CodeScannerView extends ViewGroup {
         }
         mViewFinderView.layout(0, 0, width, height);
         final int buttonSize = mButtonSize;
-        mAutoFocusButton.layout(0, 0, buttonSize, buttonSize);
+       // mAutoFocusButton.layout(0, 0, buttonSize, buttonSize);
         mFlashButton.layout(width - buttonSize, 0, width, buttonSize);
     }
 

@@ -33,7 +33,7 @@
             <ImageView
                 android:layout_marginBottom="20dp"
                 android:tint="@color/white"
-                android:src="@drawable/ic_hand_pet"
+                android:src="@drawable/ic_holder"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="40dp"
                 android:layout_height="40dp"/>
@@ -43,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:text="Instapetts"
+                android:text="@string/app_name"
                 android:textAllCaps="true"
                 android:textSize="28sp"
                 android:fontFamily="@font/avenir_b"

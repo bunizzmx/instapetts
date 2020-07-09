@@ -429,12 +429,27 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
 
     public static File get_dir(){
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + "Instapetts");
-        if (!file.exists()) {
-            file.mkdir();
+        String state = Environment.getExternalStorageState();
+        if (state.equals(Environment.MEDIA_MOUNTED)) {
+            Log.e("ESTATUS_SD","-----SI TIENE SD");
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + "Instapetts");
+            if (!file.exists()) {
+                file.mkdir();
+            }
+            file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + "Instapetts" + File.separator);
+            return  file;
         }
-        file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + "Instapetts" + File.separator);
-        return  file;
+     else{
+         Log.e("ESTATUS_SD","-----NO TIENE SD");
+
+            File file = new File(Environment.getRootDirectory().getAbsolutePath() + File.separator + "Instapetts");
+            if (!file.exists()) {
+                file.mkdir();
+            }
+            file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + File.separator + "Instapetts" + File.separator);
+            return  file;
+        }
+
     }
 
 

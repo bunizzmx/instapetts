@@ -253,9 +253,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 });
                 e.list_post_recomended.setLayoutManager(new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false));
                 feedAdapterRecomended.setData(data_recomended);
-
-                PagerSnapHelper snapHelper = new PagerSnapHelper();
-                snapHelper.attachToRecyclerView(e.list_post_recomended);
                 e.list_post_recomended.setHasFixedSize(true);
                 e.list_post_recomended.setAdapter(feedAdapterRecomended);
                 e.title_no_data.setText(context.getResources().getString(R.string.no_sigues));

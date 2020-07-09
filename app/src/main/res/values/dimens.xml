@@ -156,4 +156,6 @@
     <bool name="spb_default_reversed">false</bool>
     <bool name="spb_default_mirror_mode">false</bool>
     <bool name="spb_default_progressiveStart_activated">false</bool>
+
+    <dimen name="icon_padding">8dp</dimen>
 </resources>

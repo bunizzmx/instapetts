@@ -152,6 +152,14 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     }
 
     @SuppressLint("MissingPermission")
+    @OnClick(R.id.back_to_main)
+    void back_to_main() {
+     getActivity().onBackPressed();
+    }
+
+
+
+    @SuppressLint("MissingPermission")
     @OnClick(R.id.open_followiongs)
     void open_followiongs() {
         Log.e("CHANGUE_FOLLOOWS","true");

@@ -782,7 +782,7 @@ public class Main extends AppCompatActivity implements change_instance,
         b.putParcelable(BUNDLES.PETBEAN, Parcels.wrap(petBean));
         b.putInt(BUNDLES.IS_ME, is_me);
         changue_instance_sheet(b);
-       // mLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
     }
 
     @Override

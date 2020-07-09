@@ -60,6 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <EditText
+                android:textSize="14dp"
                 android:id="@+id/email_signin"
                 android:layout_gravity="center_vertical"
                 android:fontFamily="@font/avenir_b"
@@ -86,6 +87,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <EditText
+                android:textSize="14dp"
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@+id/see_password"
                 android:id="@+id/password_signin"
@@ -118,7 +120,6 @@
         <TextView
             android:id="@+id/label_check_password_first"
             android:textSize="10dp"
-            style="@style/FontNormalTitlePrimary"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="30dp"
@@ -126,6 +127,7 @@
             android:layout_height="wrap_content"/>
 
         <EditText
+            android:textSize="14dp"
             android:id="@+id/password_signin_confirm"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
@@ -148,7 +150,7 @@
         <TextView
             android:id="@+id/label_check_password"
             android:textSize="10dp"
-            style="@style/FontNormalTitlePrimary"
+           android:textColor="@color/colorPrimaryDark"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="30dp"
@@ -156,6 +158,8 @@
             android:layout_height="wrap_content"/>
 
         <Button
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:id="@+id/button_signin"
             android:layout_marginTop="30dp"
             android:textColor="@color/white"

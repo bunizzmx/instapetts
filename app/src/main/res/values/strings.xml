@@ -273,4 +273,9 @@
     <string name="notice">Noticias</string>
 
     <string name="delete_history">Eliminar esta historia?</string>
+
+    <string name="correo_invalido">Correo no valido</string>
+    <string name="error_credenciales">Revisa tus credenciales</string>
+    <string name="user_no_existe">Usuario no existe</string>
+    <string name="verify_email">Verifica tu correo</string>
 </resources>
