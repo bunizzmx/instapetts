@@ -182,7 +182,8 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
 
 
         String splitsItems[] = unparseableStories.split(",");
-        for(int i=0;i<=splitsItems.length - 1;i++){
+        Log.e("HISTORIES_BEAN","--->:::::" + splitsItems.length);
+        for(int i=0;i<splitsItems.length ;i++){
            String splitsSubItems[] = splitsItems[i].split(";");
            IndividualDataPetHistoryBean item = new IndividualDataPetHistoryBean();
             item.setName_pet(splitsSubItems[0]);

@@ -1,7 +1,16 @@
 package com.bunizz.instapetts.web.responses;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class SimpleResponse {
+
+    @SerializedName("code_response")
+    @Expose
     int code_response;
+
+    @SerializedName("result_data_extra")
+    @Expose
     String result_data_extra;
 
     public SimpleResponse() {}

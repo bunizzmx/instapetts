@@ -1186,17 +1186,40 @@ public class Main extends AppCompatActivity implements change_instance,
     }
 
 
-    void share_profile(){
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
-            startActivity(intent);
+
+
+
+    @Override
+    public void open_url(String url) {
+
+    }
+
+    @Override
+    public void open_pet_code() {
+        Intent i = new Intent(this , QrSearchActivity.class);
+        startActivityForResult( i,NEW_PHOTO_QR_SCAN);
+    }
+
+    @Override
+    public void open_post_saved() {
+
+    }
+
+    @Override
+    public void logout() {
+         DialogLogout dialogLogout = new DialogLogout(this);
+        dialogLogout.setListener(() -> {
+            presenter.logout();
+            presenter.delete_data();
+            App.getInstance().clear_preferences();
+            Intent i = new Intent(Main.this, LoginActivity.class);
+            startActivity(i);
+        });
+        dialogLogout.show();
     }
 
 
-
-
-   @Override
+    @Override
    public void open_target_post(){
        final SpannableString spannedDesc = new SpannableString(getApplicationContext().getResources().getString(R.string.config_fist_foto));
        TapTargetView.showFor(this, TapTarget.forView(findViewById(R.id.tab_add_image), getApplicationContext().getResources().getString(R.string.add_first_photo), spannedDesc)
@@ -1231,6 +1254,14 @@ public class Main extends AppCompatActivity implements change_instance,
            @Override
            public void onTargetDismissed(TapTargetView view, boolean userInitiated) { }
        });
+    }
+
+    @Override
+    public void share_my_profile() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+        startActivity(intent);
     }
 
 

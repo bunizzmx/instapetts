@@ -61,6 +61,8 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
                 if(root_no_data!=null)
                 root_no_data.setVisibility(View.GONE);
             }else{
+                this.data_posts.clear();
+                feedAdapter.refresh();
                 Log.e("DATAPOST_GRID","DATA POS mayor 0");
                 if(root_no_data!=null)
                 root_no_data.setVisibility(View.VISIBLE);

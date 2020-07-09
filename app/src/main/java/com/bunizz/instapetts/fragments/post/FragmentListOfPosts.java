@@ -7,16 +7,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.reports.ReportActiviy;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
@@ -102,6 +105,7 @@ public class FragmentListOfPosts extends Fragment implements FeedContract.View {
                     public void delete_post(int id_post) {
                         PostBean postBean = new PostBean();
                         postBean.setId_post_from_web(id_post);
+                        postBean.setId_usuario(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
                         postBean.setTarget(WEBCONSTANTS.DELETE);
                         mPresenter.deletePost(postBean);
                     }
@@ -222,7 +226,17 @@ public class FragmentListOfPosts extends Fragment implements FeedContract.View {
     public void peticion_error() { }
 
     @Override
-    public void deletePostError(boolean deleted) { }
+    public void deletePostError(boolean deleted) {
+        if(deleted) {
+            Log.e("DELETED_POST","TRUE");
+            getActivity().onBackPressed();
+            Toast.makeText(getContext(), "POST ELIMINADO", Toast.LENGTH_LONG).show();
+        }
+        else {
+            Log.e("DELETED_POST","FALSE");
+            Toast.makeText(getContext(), "NO SE PUDO BORRAR EL POSTS INTENTA DE NUEVO", Toast.LENGTH_LONG).show();
+        }
+    }
 
     @Override
     public void LikeEror() { }

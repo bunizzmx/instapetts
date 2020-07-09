@@ -19,11 +19,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.reports.ReportActiviy;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.TipsBean;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.listeners.actions_dialog_profile;
@@ -137,6 +139,7 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
             public void delete_post(int id_post) {
                 PostBean postBean = new PostBean();
                 postBean.setId_post_from_web(id_post);
+                postBean.setId_usuario(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
                 postBean.setTarget(WEBCONSTANTS.DELETE);
                 presenter.deleteVideo(postBean);
             }

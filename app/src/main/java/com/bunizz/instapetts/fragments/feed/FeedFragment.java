@@ -170,6 +170,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
                     public void delete_post(int id_post) {
                         PostBean postBean = new PostBean();
                         postBean.setId_post_from_web(id_post);
+                        postBean.setId_usuario(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
                         postBean.setTarget(WEBCONSTANTS.DELETE);
                         mPresenter.deletePost(postBean);
                     }
@@ -314,10 +315,15 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
 
     @Override
     public void deletePostError(boolean deleted) {
-        if(deleted)
-            Toast.makeText(getContext(),"POST ELIMINADO",Toast.LENGTH_LONG).show();
-        else
-            Toast.makeText(getContext(),"NO SE PUDO BORRAR EL POSTS INTENTA DE NUEVO",Toast.LENGTH_LONG).show();
+        if(deleted) {
+            Log.e("DELETED_POST","TRUE");
+            getActivity().onBackPressed();
+            Toast.makeText(getContext(), "POST ELIMINADO", Toast.LENGTH_LONG).show();
+        }
+        else {
+            Log.e("DELETED_POST","FALSE");
+            Toast.makeText(getContext(), "NO SE PUDO BORRAR EL POSTS INTENTA DE NUEVO", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

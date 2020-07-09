@@ -1,6 +1,7 @@
 package com.bunizz.instapetts.fragments.side;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import com.bunizz.instapetts.activitys.main.Main;
 import com.bunizz.instapetts.activitys.searchqr.QrSearchActivity;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.side_menus_activities.FragmentConfigEmail;
+import com.bunizz.instapetts.listeners.open_side_menu;
 import com.bunizz.instapetts.utils.dilogs.DialogLogout;
 
 import androidx.annotation.NonNull;
@@ -27,6 +29,8 @@ import butterknife.OnClick;
 
 public class SideFragment extends  Fragment{
     Intent i=null;
+
+    open_side_menu listener;
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.menu_side_guardado)
@@ -59,14 +63,13 @@ public class SideFragment extends  Fragment{
     @SuppressLint("MissingPermission")
     @OnClick(R.id.open_my_pet_code)
     void open_my_pet_code() {
-        //Intent i = new Intent(this , QrSearchActivity.class);
-       // startActivityForResult( i,NEW_PHOTO_QR_SCAN);
+        listener.open_side();
     }
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.side_menu_share_profile)
     void side_menu_share_profile() {
-        //share_profile();
+       listener.share_my_profile();
     }
 
     @SuppressLint("MissingPermission")
@@ -80,15 +83,7 @@ public class SideFragment extends  Fragment{
     @SuppressLint("MissingPermission")
     @OnClick(R.id.logout)
     void logout() {
-       /* DialogLogout dialogLogout = new DialogLogout(this);
-        dialogLogout.setListener(() -> {
-            presenter.logout();
-            presenter.delete_data();
-            App.getInstance().clear_preferences();
-            Intent i = new Intent(Main.this, LoginActivity.class);
-            startActivity(i);
-        });
-        dialogLogout.show();*/
+      listener.logout();
     }
 
     @BindView(R.id.app_name_user)
@@ -122,5 +117,10 @@ public class SideFragment extends  Fragment{
 
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        listener =(open_side_menu) context;
 
+    }
 }
