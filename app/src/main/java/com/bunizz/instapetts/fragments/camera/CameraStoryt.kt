@@ -40,6 +40,8 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.camera.core.*
 import androidx.camera.core.ImageCapture.Metadata
+import androidx.camera.core.impl.ImageCaptureConfig
+import androidx.camera.core.impl.PreviewConfig
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
@@ -76,6 +78,7 @@ class CameraStoryt : Fragment() {
     private lateinit var container: RelativeLayout
     private lateinit var viewFinder: PreviewView
     private lateinit var close_dialog :ImageView
+    private lateinit var switch_camera :ImageView
     private lateinit var outputDirectory: File
     private lateinit var broadcastManager: LocalBroadcastManager
      val ANIMATION_FAST_MILLIS = 50L
@@ -175,6 +178,7 @@ class CameraStoryt : Fragment() {
         container = view as RelativeLayout
         viewFinder = container.findViewById(R.id.view_finder)
         close_dialog = container.findViewById(R.id.close_dialog)
+        switch_camera = container.findViewById(R.id.switch_camera)
         broadcastManager = LocalBroadcastManager.getInstance(view.context)
 
         // Set up the intent filter that will receive events from our main activity
@@ -205,6 +209,17 @@ class CameraStoryt : Fragment() {
             stop_camera()
             activity?.onBackPressed()
         }
+
+        switch_camera.setOnClickListener {
+            lensFacing = if (CameraSelector.LENS_FACING_FRONT == lensFacing) {
+                CameraSelector.LENS_FACING_BACK
+            } else {
+                CameraSelector.LENS_FACING_FRONT
+            }
+            // Re-bind use cases to update selected camera
+            bindCameraUseCases()
+        }
+
     }
 
     /**
@@ -516,5 +531,9 @@ class CameraStoryt : Fragment() {
                 }
         }
     }
+
+
+
+
 
 }

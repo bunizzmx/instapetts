@@ -28,6 +28,7 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.reports.ReportActiviy;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.constantes.WEBCONSTANTS;
@@ -287,7 +288,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     }
 
     @Override
-    public void show_feed_recomended(ArrayList<PostBean> data) {
+    public void show_feed_recomended(ArrayList<PostBean> data, ArrayList<UserBean> users) {
         refresh_feed.setRefreshing(false);
         spin_kit.setVisibility(View.GONE);
         ArrayList<HistoriesBean> historiesBeans = new ArrayList<>();
@@ -296,15 +297,17 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         }else{
             historiesBeans.add(new HistoriesBean());
         }
-
+        ArrayList<Object> users_object = new ArrayList<>();
         ArrayList<Object> data_object= new ArrayList<>();
         data_object.add(new HistoriesBean());
         ArrayList<Object> data_recomended = new ArrayList<>();
         data_recomended.clear();
         data_recomended.addAll(data);
+        users_object.addAll(users);
         feedAdapter.setHistoriesBeans(historiesBeans);
         feedAdapter.addData(data_object);
-        feedAdapter.setData_recomended(data_recomended);
+        Log.e("DATATATATA","-->"+ users_object.size());
+        feedAdapter.setData_recomended(data_recomended,users_object);
 
     }
 

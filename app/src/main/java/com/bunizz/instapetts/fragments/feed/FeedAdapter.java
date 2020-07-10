@@ -75,6 +75,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     ArrayList<String> current_images = new ArrayList<>();
     ArrayList<Object> data = new ArrayList<>();
     ArrayList<Object> data_recomended = new ArrayList<>();
+    ArrayList<Object> data_news_users = new ArrayList<>();
     ArrayList<HistoriesBean> historiesBeans = new ArrayList<>();
     changue_fragment_parameters_listener listener;
     postsListener listener_post;
@@ -119,10 +120,13 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return data_recomended;
     }
 
-    public void setData_recomended(ArrayList<Object> data_recomended) {
+    public void setData_recomended(ArrayList<Object> data_recomended,ArrayList<Object> data_news_users) {
         this.data_recomended = data_recomended;
+        this.data_news_users = data_news_users;
+        Log.e("DATATATATA","-->"+ this.data_news_users.size());
         notifyDataSetChanged();
     }
+
 
     private static final int TYPE_POST=1;
     private static final int TYPE_POST_VIDEO=4;
@@ -244,6 +248,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             case TYPE_EMPTY:
                 EmptyHolder e =(EmptyHolder)holder;
+                FeedAdapterNewsUsers adaptaer_n_users  =new FeedAdapterNewsUsers(context);
                 FeedAdapterRecomended feedAdapterRecomended = new FeedAdapterRecomended(context);
                 feedAdapterRecomended.setListener((id_user, uuid) -> {
                     Bundle b = new Bundle();
@@ -257,6 +262,15 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 e.list_post_recomended.setAdapter(feedAdapterRecomended);
                 e.title_no_data.setText(context.getResources().getString(R.string.no_sigues));
                 e.body_no_data.setText("Te recomendamos a estas hermosas mascotas,porque no les echas un ojo.");
+                e.list_news_users.setLayoutManager(new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false));
+                adaptaer_n_users.setData(data_news_users);
+                adaptaer_n_users.setListener((id_user, uuid) -> {
+                    Bundle b = new Bundle();
+                    b.putString(BUNDLES.UUID,uuid);
+                    b.putInt(BUNDLES.ID_USUARIO,id_user);
+                    listener.change_fragment_parameter(INSTANCE_PREVIEW_PROFILE,b);
+                });
+                e.list_news_users.setAdapter(adaptaer_n_users);
 
                 break;
 
@@ -613,11 +627,12 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public class EmptyHolder extends RecyclerView.ViewHolder{
         RecyclerView list_post_recomended;
+        RecyclerView list_news_users;
         TextView title_no_data,body_no_data;
         public EmptyHolder(@NonNull View itemView) {
             super(itemView);
             list_post_recomended = itemView.findViewById(R.id.list_post_recomended);
-
+            list_news_users = itemView.findViewById(R.id.list_news_users);
             body_no_data = itemView.findViewById(R.id.body_no_data);
             title_no_data = itemView.findViewById(R.id.title_no_data);
         }

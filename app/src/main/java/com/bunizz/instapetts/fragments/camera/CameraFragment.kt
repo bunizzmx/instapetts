@@ -35,6 +35,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.camera.core.*
 import androidx.camera.core.ImageCapture.Metadata
@@ -80,6 +81,7 @@ class CameraFragment : Fragment() {
     private lateinit var broadcastManager: LocalBroadcastManager
      val ANIMATION_FAST_MILLIS = 50L
      val ANIMATION_SLOW_MILLIS = 100L
+    private lateinit var switch_camera :RelativeLayout
 
     private var displayId: Int = -1
     private var lensFacing: Int = CameraSelector.LENS_FACING_BACK
@@ -172,7 +174,7 @@ class CameraFragment : Fragment() {
         container = view as RelativeLayout
         viewFinder = container.findViewById(R.id.view_finder)
         broadcastManager = LocalBroadcastManager.getInstance(view.context)
-
+        switch_camera = container.findViewById(R.id.switch_camera)
         // Set up the intent filter that will receive events from our main activity
         val filter = IntentFilter().apply { addAction(KEY_EVENT_ACTION) }
         broadcastManager.registerReceiver(volumeDownReceiver, filter)
@@ -190,6 +192,16 @@ class CameraFragment : Fragment() {
             // Build UI controls
             updateCameraUi()
             // Bind use cases
+            bindCameraUseCases()
+        }
+
+        switch_camera.setOnClickListener {
+            lensFacing = if (CameraSelector.LENS_FACING_FRONT == lensFacing) {
+                CameraSelector.LENS_FACING_BACK
+            } else {
+                CameraSelector.LENS_FACING_FRONT
+            }
+            // Re-bind use cases to update selected camera
             bindCameraUseCases()
         }
     }

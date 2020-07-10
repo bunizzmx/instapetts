@@ -25,6 +25,7 @@ import com.bunizz.instapetts.web.responses.ResponseCodesCountries;
 import com.bunizz.instapetts.web.responses.ResponseListReports;
 import com.bunizz.instapetts.web.responses.ResponseNamesAvailables;
 import com.bunizz.instapetts.web.responses.ResponsePost;
+import com.bunizz.instapetts.web.responses.ResponsePostRecomended;
 import com.bunizz.instapetts.web.responses.ResponseProfileUser;
 import com.bunizz.instapetts.web.responses.ResponseTips;
 import com.bunizz.instapetts.web.responses.SearchPetsResponse;
@@ -73,6 +74,9 @@ public interface WebServices {
 
     @POST("test/getposts")
     Single<ResponsePost> getPosts(@Body PostFriendsBean postFriendsBean);
+
+    @POST("test/getposts")
+    Single<ResponsePostRecomended> getPostsRecomended(@Body PostFriendsBean postFriendsBean);
     ////////////////////////////////////////////////////////////////////
 
 

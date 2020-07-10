@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.listeners.SelectUserListener;
@@ -75,6 +76,7 @@ public class FeedAdapterRecomended extends RecyclerView.Adapter<RecyclerView.Vie
         }
         Glide.with(context).load(data_parsed.getUrl_photo_user()).into(h.image_user_recomended);
         h.name_user_recomended.setText(data_parsed.getName_user());
+        h.date_user_recomended.setText(App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()));
         h.root_simple_recomended_user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,7 +125,7 @@ public class FeedAdapterRecomended extends RecyclerView.Adapter<RecyclerView.Vie
     public class RecomendedHolder extends RecyclerView.ViewHolder{
        ImageView image_post_recomended,multiple_images_posts,icon_type_mascota;
        ImagenCircular image_user_recomended;
-       TextView name_user_recomended,label_first_recomended;
+       TextView name_user_recomended,date_user_recomended;
        RelativeLayout root_simple_recomended_user;
         public RecomendedHolder(@NonNull View itemView) {
             super(itemView);
@@ -133,6 +135,7 @@ public class FeedAdapterRecomended extends RecyclerView.Adapter<RecyclerView.Vie
             name_user_recomended = itemView.findViewById(R.id.name_user_recomended);
             root_simple_recomended_user = itemView.findViewById(R.id.root_simple_recomended_user);
             icon_type_mascota = itemView.findViewById(R.id.icon_type_mascota);
+            date_user_recomended = itemView.findViewById(R.id.date_user_recomended);
         }
     }
 

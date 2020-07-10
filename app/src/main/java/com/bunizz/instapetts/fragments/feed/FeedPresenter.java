@@ -12,6 +12,7 @@ import com.bunizz.instapetts.beans.AutenticateBean;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.FIRESTORE;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.constantes.WEBCONSTANTS;
@@ -28,6 +29,7 @@ import com.bunizz.instapetts.web.parameters.PostActions;
 import com.bunizz.instapetts.web.parameters.PostFriendsBean;
 import com.bunizz.instapetts.web.parameters.PostLikeBean;
 import com.bunizz.instapetts.web.responses.ResponsePost;
+import com.bunizz.instapetts.web.responses.ResponsePostRecomended;
 import com.bunizz.instapetts.web.responses.SimpleResponse;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -133,7 +135,7 @@ public class FeedPresenter implements FeedContract.Presenter {
 
                                     }else{
                                         Log.e("NO_INTERNET","--> SUS AMIGOS AUN NO PUBLICAN" );
-                                        mView.show_feed_recomended(post);
+                                        mView.show_feed_recomended(post,null);
                                     }
                                 }  else{
                                     RETRY ++;
@@ -210,7 +212,7 @@ public class FeedPresenter implements FeedContract.Presenter {
 
                                     }else{
                                         Log.e("NO_INTERNET","--> SUS AMIGOS AUN NO PUBLICAN" );
-                                        mView.show_feed_recomended(post);
+                                        mView.show_feed_recomended(post,null);
                                     }
                                 }  else{
                                     RETRY ++;
@@ -263,23 +265,28 @@ public class FeedPresenter implements FeedContract.Presenter {
         postFriendsBean.setId_one(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
          postFriendsBean.setTarget(WEBCONSTANTS.DISCOVER);
         disposable.add(
-                apiService.getPosts(postFriendsBean)
+                apiService.getPostsRecomended(postFriendsBean)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(new DisposableSingleObserver<ResponsePost>() {
+                        .subscribeWith(new DisposableSingleObserver<ResponsePostRecomended>() {
                             @Override
-                            public void onSuccess(ResponsePost responsePost) {
+                            public void onSuccess(ResponsePostRecomended responsePost) {
                                 if(responsePost.getList_posts()!=null) {
                                     if(responsePost.getList_posts()!=null)
-                                        Log.e("NUMBER_POSTS_RECOMENDED", "-->" + responsePost.getList_posts().size());
+                                        Log.e("NUMBER_POSTS_RECOMENDED", "-->" + responsePost.getList_users().size());
                                     ArrayList<PostBean> post = new ArrayList<>();
+                                    ArrayList<UserBean>users = new ArrayList<>();
                                     for (int i =0;i<responsePost.getList_posts().size();i++){
                                         if(responsePost.getList_posts().get(i).getCensored() == 0){
                                             post.add(responsePost.getList_posts().get(i));
                                         }
                                     }
+                                    for (int i =0;i<responsePost.getList_users().size();i++){
+                                        users.add(responsePost.getList_users().get(i));
 
-                                    mView.show_feed_recomended(post);
+                                    }
+
+                                    mView.show_feed_recomended(post,users);
                                 }  else{
                                     RETRY ++;
                                     if(RETRY < 3) {

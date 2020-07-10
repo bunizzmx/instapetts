@@ -18,6 +18,7 @@ import com.bunizz.instapetts.activitys.reports.ReportActiviy;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.constantes.WEBCONSTANTS;
@@ -220,7 +221,7 @@ public class FragmentListOfPosts extends Fragment implements FeedContract.View {
     }
 
     @Override
-    public void show_feed_recomended(ArrayList<PostBean> data) { }
+    public void show_feed_recomended(ArrayList<PostBean> data,ArrayList<UserBean> users) { }
 
     @Override
     public void peticion_error() { }

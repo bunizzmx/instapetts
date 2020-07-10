@@ -112,7 +112,7 @@ public class FeedListPresenter implements FeedContract.Presenter {
 
                                     }else{
                                         Log.e("NO_INTERNET","--> SUS AMIGOS AUN NO PUBLICAN" );
-                                        mView.show_feed_recomended(post);
+                                        mView.show_feed_recomended(post,null);
                                     }
                                 }  else{
                                     RETRY ++;
@@ -183,7 +183,7 @@ public class FeedListPresenter implements FeedContract.Presenter {
 
                                     }else{
                                         Log.e("NO_INTERNET","--> SUS AMIGOS AUN NO PUBLICAN" );
-                                        mView.show_feed_recomended(post);
+                                        mView.show_feed_recomended(post,null);
                                     }
                                 }  else{
                                     RETRY ++;
@@ -246,7 +246,7 @@ public class FeedListPresenter implements FeedContract.Presenter {
                                         Log.e("NUMBER_POSTS_RECOMENDED", "-->" + responsePost.getList_posts().size());
                                     ArrayList<PostBean> post = new ArrayList<>();
                                     post.addAll(responsePost.getList_posts());
-                                    mView.show_feed_recomended(post);
+                                    mView.show_feed_recomended(post,null);
                                 }  else{
                                     RETRY ++;
                                     if(RETRY < 3) {
