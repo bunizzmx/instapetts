@@ -75,6 +75,34 @@ public class SharePostPresenter implements SharePostContract.Presenter {
 
     }
 
+    @SuppressLint("CheckResult")
+    @Override
+    public void sendPostHelpPet(PostBean post) {
+        post.setTarget("HELP_PET");
+        apiService.sendPost(post)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                    @Override
+                    public void onSuccess(SimpleResponse response) {
+                        Log.e("POST","SUCCESS");
+                        if(response!=null){
+                            if(response.getCode_response() ==200){
+                                mView.postStatus(true);
+                            }else{
+                                mView.postStatus(false);
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.postStatus(false);
+                    }
+                });
+    }
+
     @Override
     public void getLocation() {
         mView.showLocation(App.read(PREFERENCES.ADDRESS_USER,"INVALID"));

@@ -83,6 +83,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Style style = Style.values()[12];
     Sprite drawable = SpriteFactory.create(style);
     private RequestManager requestManager_param;
+    FeedAdapterHistories adapterHistories ;
     public postsListener getListener_post() {
         return listener_post;
     }
@@ -136,6 +137,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public FeedAdapter(Context context,ArrayList<Object> data) {
         this.context = context;
         this.data.addAll(data);
+
     }
 
     public ArrayList<HistoriesBean> getHistoriesBeans() {
@@ -234,7 +236,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         switch (viewtype) {
             case TYPE_HISTORI:
                 HistoriesHolder h = (HistoriesHolder)holder;
-                FeedAdapterHistories adapterHistories = new FeedAdapterHistories(context);
+                adapterHistories =  new FeedAdapterHistories(context);
                 adapterHistories.setListener(() -> {
                     if(listener_open_h!=null){
                         listener_open_h.open();

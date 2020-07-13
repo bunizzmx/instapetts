@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_admob">ca-app-pub-3652627287925800~2029449466</string>
+    <string name="app_admob">ca-app-pub-9180706110192425~6738219117</string>
     <string name="facebook_app_id">3028016427294198</string>
     <string name="fb_login_protocol_scheme">fb3028016427294198</string>
 
@@ -278,4 +278,7 @@
     <string name="error_credenciales">Revisa tus credenciales</string>
     <string name="user_no_existe">Usuario no existe</string>
     <string name="verify_email">Verifica tu correo</string>
+
+    <string name="body_no_noty">Cuando alguien te siga,comente o publique algo nuevo apareceran notificaciones en este apartado.</string>
+    <string name="title_no_noty">No hay notificaciones au</string>
 </resources>

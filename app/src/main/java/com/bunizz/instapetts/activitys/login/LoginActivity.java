@@ -26,6 +26,7 @@ import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.Utilities;
+import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.login.MainLogin;
 import com.bunizz.instapetts.fragments.login.first_user.FragmentFirstUser;
@@ -547,7 +548,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     @Override
     public void registerCompleted() {
-           startService(intent_service);
+            startService(intent_service);
             App.write(IS_LOGUEDD,true);
             Intent i ;
             i = new Intent(LoginActivity.this, Main.class);
@@ -569,14 +570,8 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         App.write(PREFERENCES.ID_USER_FROM_WEB,userBean.getId());
         App.write(PREFERENCES.NAME_TAG_INSTAPETTS,userBean.getName_tag());
         App.write(IS_LOGUEDD,true);
-        Intent i ;
-        i = new Intent(LoginActivity.this, Main.class);
-        i.putExtra("LOGIN_AGAIN",1);
-        i.putExtra(BUNDLES.DOWNLOADS_INFO,1);
-        i.putExtra("NEW_USER",0);
-        i.putExtra("FROM_PUSH",0);
-        startActivity(i);
-        finish();
+        presenter.getFileBackup();
+
     }
 
     @Override
@@ -606,6 +601,19 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         i = new Intent(LoginActivity.this, Main.class);
         i.putExtra("LOGIN_AGAIN",1);
         i.putExtra("NEW_USER",1);
+        i.putExtra("FROM_PUSH",0);
+        startActivity(i);
+        finish();
+    }
+
+    @Override
+    public void fileBackupDownloaded() {
+        dialogLoanding.dismiss();
+        Intent i ;
+        i = new Intent(LoginActivity.this, Main.class);
+        i.putExtra("LOGIN_AGAIN",1);
+        i.putExtra(BUNDLES.DOWNLOADS_INFO,1);
+        i.putExtra("NEW_USER",0);
         i.putExtra("FROM_PUSH",0);
         startActivity(i);
         finish();

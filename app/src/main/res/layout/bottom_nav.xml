@@ -140,12 +140,13 @@
             android:layout_weight="3"
             >
                         <ImageView
+                            android:tint="@color/black"
                             android:layout_centerVertical="true"
-                           android:layout_centerHorizontal="true"
+                            android:layout_centerHorizontal="true"
                             android:id="@+id/icon_add_image_pet"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:src="@drawable/ic_camera"
+                            android:src="@drawable/ic_hand_pet_stroke"
                             tools:ignore="ContentDescription" />
         </RelativeLayout>
 

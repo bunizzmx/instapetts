@@ -175,6 +175,7 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
             @Override
             public void delete(boolean delete) {
                 presenter.delete(Integer.parseInt(petBean.getId_pet()));
+                delete_pet.dismiss();
             }
             @Override
             public void deleteOne(int id) {
@@ -227,10 +228,10 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         pet_name_profile.setText(petBean.getName_pet());
-        name_property_pet_profile.setText("@" + App.read(PREFERENCES.NAME_USER,"INVALID"));
         descripcion_pet_profile.setText(petBean.getDescripcion_pet());
         peso_pet_profile.setText(petBean.getPeso_pet() + "kg");
-        Glide.with(getContext()).load(petBean.getUrl_photo())
+        Log.e("CARGO_TUMBH","perror : " + petBean.getUrl_photo_tumbh());
+        Glide.with(getContext()).load(petBean.getUrl_photo_tumbh())
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
         .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).error(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_pet_info);
@@ -238,6 +239,7 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
         Log.e("PENDDD","-->" + petBean.getId_propietary() + "/" + App.read(PREFERENCES.ID_USER_FROM_WEB,0) );
         Log.e("ID_PETXX","-->" + petBean.getId_propietary() + "/" + App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         if(petBean.getId_propietary() == App.read(PREFERENCES.ID_USER_FROM_WEB,0)){
+            name_property_pet_profile.setText("@" + App.read(PREFERENCES.NAME_USER,"INVALID"));
             delete_trash.setVisibility(View.VISIBLE);
             icon_star_rated.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_editar));
             edit_photo_pet.setVisibility(View.VISIBLE);
@@ -246,6 +248,7 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
                 listener.onImageProfileUpdated("PROFILE_PHOTO_PET");
             });
         }else{
+            name_property_pet_profile.setText("@" + petBean.getName_propietary());
             rate_pet_card.setVisibility(View.VISIBLE);
             delete_trash.setVisibility(View.GONE);
             edit_photo_pet.setVisibility(View.GONE);
@@ -300,6 +303,11 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
     @Override
     public void petUpdated() {
         Toast.makeText(getActivity(),"Mascota Actualizada",Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void petDeleted() {
+        getActivity().onBackPressed();
     }
 
 

@@ -40,6 +40,7 @@ public class SideMenusActivities extends AppCompatActivity implements changue_fr
     private Stack<FragmentElement> stack_push;
     private Stack<FragmentElement> stack_codes_countries;
     int TYPE_MENU =0;
+    String URL="";
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +58,7 @@ public class SideMenusActivities extends AppCompatActivity implements changue_fr
         if(b!=null)
         {
             TYPE_MENU = b.getInt("TYPE_MENU");
+            URL = b.getString("URL");
         }
         changeStatusBarColor(R.color.white);
         setupFirstFragment(TYPE_MENU);
@@ -64,10 +66,11 @@ public class SideMenusActivities extends AppCompatActivity implements changue_fr
 
     private void setupFirstFragment(int type_fragment) {
         Bundle b = new Bundle();
+        b.putString("URL",URL);
         switch (type_fragment){
             case 0:
                 mCurrentFragment = new FragmentElement<>(null, FragmentWebTerms.newInstance(), FragmentElement.INSTANCE_WEB_TERMS, true);
-                change_to_terms(mCurrentFragment,null);
+                change_to_terms(mCurrentFragment,b);
                 break;
             case 1:
                 mCurrentFragment = new FragmentElement<>(null, FragmentAdministrateAccount.newInstance(), FragmentElement.INSTANCE_ADMINISTRATE_ACCOUNT, true);

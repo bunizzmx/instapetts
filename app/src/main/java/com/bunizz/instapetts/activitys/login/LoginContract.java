@@ -6,8 +6,9 @@ public interface LoginContract {
 
 
     interface Presenter {
-       void RegisterUser(UserBean userBean);
+        void RegisterUser(UserBean userBean);
         void updateUser(UserBean userBean);
+        void getFileBackup();
     }
 
     interface View{
@@ -16,6 +17,7 @@ public interface LoginContract {
         void registerError();
         void isFirstUser(int id_from_web);
         void UpdateFirsUserCompleted();
+        void fileBackupDownloaded();
 
     }
 }

@@ -2,6 +2,7 @@ package com.bunizz.instapetts.fragments.side_menus_activities;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,8 @@ public class FragmentWebTerms extends Fragment {
     @BindView(R.id.progres_image)
     SpinKitView progres_image;
 
+    String SUBDIRECTORY ="";
+
 
     public static FragmentWebTerms newInstance() {
         return new FragmentWebTerms();
@@ -52,13 +55,18 @@ public class FragmentWebTerms extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        Bundle bundle=getArguments();
+        if(bundle!=null){
+            SUBDIRECTORY = bundle.getString("URL");
+        }
         Style style = Style.values()[12];
         Sprite drawable = SpriteFactory.create(style);
         progres_image.setIndeterminateDrawable(drawable);
         progres_image.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         web_instapets.getSettings().setJavaScriptEnabled(true);
         web_instapets.getSettings().setPluginState(WebSettings.PluginState.ON);
-        web_instapets.loadUrl("http://instapetts.com/");
+        Log.e("URL_WEB","-->" + "http://instapetts.com/"+SUBDIRECTORY);
+        web_instapets.loadUrl("http://instapetts.com/"+SUBDIRECTORY);
         web_instapets.setWebViewClient(new WebViewClient() {
 
             @Override

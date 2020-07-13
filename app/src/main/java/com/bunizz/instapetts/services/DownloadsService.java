@@ -37,21 +37,6 @@ public class DownloadsService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.e("DOWNLOAD","SEGUIDOS");
-        db.collection(FIRESTORE.R_FOLLOWS).document(App.read(PREFERENCES.UUID,"INVALID")).collection(FIRESTORE.SEGUIDOS).get()
-                .addOnCompleteListener(task -> {
-                    Log.e("DOWNLOAD","SEGUIDOS COMPLETED");
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        UserBean userBean = document.toObject(UserBean.class);
-                        followsHelper.saveNewFriend(userBean);
-                    }
-                })
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-
-                })
-                .addOnFailureListener(e -> {
-
-                });
         Log.e("DOWNLOAD","FAVORITOS");
         db.collection(FIRESTORE.FAVORITES).document(App.read(PREFERENCES.UUID,"INVALID")).collection(FIRESTORE.FAVORITES).get()
                 .addOnCompleteListener(task -> {

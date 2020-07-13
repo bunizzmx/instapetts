@@ -3,7 +3,9 @@ package com.bunizz.instapetts.fragments.tips.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,20 +19,34 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity;
 import com.bunizz.instapetts.beans.AspectBean;
+import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.TipsBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.fragments.FragmentElement;
+import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.feed.UnifiedAddHolder;
 import com.bunizz.instapetts.listeners.PlayStopVideoListener;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.utils.Dots.DotsIndicator;
+import com.bunizz.instapetts.utils.ImagenCircular;
+import com.bunizz.instapetts.utils.ViewPagerAdapter;
+import com.bunizz.instapetts.utils.double_tap.DoubleTapLikeView;
+import com.bunizz.instapetts.utils.loadings.SpinKitView;
 import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAdView;
@@ -39,6 +55,8 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
+import static com.bunizz.instapetts.fragments.FragmentElement.INSTANCE_PREVIEW_PROFILE;
+
 public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     Context context;
@@ -46,6 +64,7 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_TIP_NORMAL = 2;
     private static final int TYPE_VIDEO = 3;
     private static final int TYPE_ADD = 4;
+    private static final int TYPE_HELPS = 5;
     private RequestManager requestManager_param;
     ArrayList<Object> data = new ArrayList<>();
     changue_fragment_parameters_listener listener;
@@ -81,7 +100,8 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void setData(ArrayList<Object> data) {
-        this.data = data;
+        this.data.clear();
+        this.data.addAll(data);
         notifyDataSetChanged();
     }
 
@@ -97,7 +117,10 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }else{
             if(recyclerViewItem instanceof UnifiedNativeAd){
                 return  TYPE_ADD;
-            }else{
+            }else if(recyclerViewItem instanceof PostBean){
+                return TYPE_HELPS;
+            }
+            else{
                 if(recyclerViewItem instanceof TipsBean){
                     TipsBean data_parsed = (TipsBean) recyclerViewItem;
                     if(data_parsed.getType_tip() == 0)
@@ -133,6 +156,10 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case TYPE_ADD:
                 view = getInflatedView(parent, R.layout.ad_unified);
                 return new UnifiedAddHolder(view);
+
+            case TYPE_HELPS:
+                view = getInflatedView(parent, R.layout.item_feed_post_help);
+                return new FeedHolder(view);
 
             case TYPE_TIP_NORMAL:
             default:
@@ -211,6 +238,151 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 hv.num_views.setText("" + data_parsed_video.getViews_tip());
                 hv.num_likes.setText(""+ data_parsed_video.getLikes_tip());
                 break;
+                case TYPE_HELPS:
+                    PostBean data_parsed_help= (PostBean) data.get(position);
+                    FeedHolder help = (FeedHolder)holder;
+                    if(!data_parsed_help.getAddress().equals("INVALID")) {
+                        help.addres_post.setVisibility(View.VISIBLE);
+                        help.addres_post.setText(data_parsed_help.getAddress());
+                    }
+                    else
+                        help.addres_post.setVisibility(View.GONE);
+
+                    help.l_icon_commentar.setOnClickListener(v -> {
+                     /*   if(data_parsed_help.getCan_comment()==1)
+                            listener_post.commentPost(data_parsed_help.getId_post_from_web(),false);
+                        else
+                            listener_post.commentPost(data_parsed_help.getId_post_from_web(),true);
+                            */
+
+                    });
+
+                    if(data_parsed_help.getNum_comentarios() > 0){
+                        help.num_comments_layout.setVisibility(View.VISIBLE);
+                        help.num_coments.setText("Ver " + data_parsed_help.getNum_comentarios() + " comentarios");
+                        help.num_comments_layout.setOnClickListener(v -> {
+                          /*  if(data_parsed_help.getCan_comment()==1)
+                                listener_post.commentPost(data_parsed_help.getId_post_from_web(),false);
+                            else
+                                listener_post.commentPost(data_parsed_help.getId_post_from_web(),true);
+                                */
+
+                        });
+                    }else{
+                        help.num_comments_layout.setVisibility(View.GONE);
+                    }
+
+                    if(is_multiple(data_parsed_help.getUrls_posts())) {
+                        help.card_number_indicator.setVisibility(View.VISIBLE);
+                        String s[]= data_parsed_help.getUrls_posts().split(",");
+                        int splits_number = s.length;
+                        help.label_number_indicator.setText("1/"+splits_number);
+                        help.progres_image.setVisibility(View.GONE);
+                        help.root_multiple_image.setVisibility(View.VISIBLE);
+                        help.single_image.setVisibility(View.GONE);
+                        ViewPagerAdapter adapter = new ViewPagerAdapter(context);
+                        if (data_parsed_help.getUrls_posts() != null)
+                            adapter.setUris_not_parsed(data_parsed_help.getUrls_posts());
+
+                        help.list_fotos.setAdapter(adapter);
+
+                        help.list_fotos.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                            @Override
+                            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                            }
+
+                            @Override
+                            public void onPageSelected(int position) {
+                                help.label_number_indicator.setText((position + 1) + "/"+splits_number);
+                            }
+
+                            @Override
+                            public void onPageScrollStateChanged(int state) {
+
+                            }
+                        });
+
+                        help.dots_indicator.setViewPager(help.list_fotos);
+
+                    }else{
+                       // help.progres_image.setIndeterminateDrawable(drawable);
+                        help.progres_image.setColor(context.getResources().getColor(R.color.colorPrimaryDark));
+                        help.root_multiple_image.setVisibility(View.GONE);
+                        help.single_image.setVisibility(View.VISIBLE);
+                        Glide.with(context).load(data_parsed_help.getUrls_posts())
+                                .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                                .error(context.getResources().getDrawable(R.drawable.ic_holder)).addListener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                help.progres_image.setVisibility(View.GONE);
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                help.progres_image.setVisibility(View.GONE);
+                                return false;
+                            }
+                        }).into(help.single_image);
+
+                    }
+                    help.l_icon_like.setOnClickListener(view -> {
+                        if(!data_parsed_help.isLiked()) {
+                            help.layout_double_tap_like.setVisibility(View.VISIBLE);
+                            help.layout_double_tap_like.animate_icon(help.layout_double_tap_like);
+                        }
+                        if(!data_parsed_help.isLiked()) {
+                            data_parsed_help.setLiked(true);
+                            help.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
+                            if(is_multiple(data_parsed_help.getUrls_posts())) {
+                                String s[]= data_parsed_help.getUrls_posts().split(",");
+                              //  listener_post.onLike(data_parsed_help.getId_post_from_web(), true, data_parsed_help.getId_usuario(),data_parsed_help.getThumb_video());
+                            }else{
+                               // listener_post.onLike(data_parsed_help.getId_post_from_web(), true, data_parsed_help.getId_usuario(), data_parsed_help.getThumb_video());
+                            }
+                        }else{
+                            data_parsed_help.setLiked(false);
+                            help.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
+                        }
+                    });
+                    help.root_preview_perfil_click.setOnClickListener(view ->{
+                        Bundle b = new Bundle();
+                        b.putString(BUNDLES.UUID,data_parsed_help.getUuid());
+                        Log.e("ID_USUARIO_POST","-->" + data_parsed_help.getId_usuario());
+                        b.putInt(BUNDLES.ID_USUARIO,data_parsed_help.getId_usuario());
+                        listener.change_fragment_parameter(INSTANCE_PREVIEW_PROFILE,b);
+                    });
+                    help.name_pet.setText(data_parsed_help.getName_pet());
+                    help.name_user_posts.setText(data_parsed_help.getName_user());
+                    if(data_parsed_help.getLikes()>0)
+                        help.num_likes_posts.setText( "" +data_parsed_help.getLikes() + " " + context.getResources().getString(R.string.likes));
+                    else
+                        help.num_likes_posts.setText(context.getResources().getString(R.string.first_like));
+                    if(data_parsed_help.getDescription().isEmpty()){
+                        help.description_posts.setVisibility(View.GONE);
+                    }else{
+                        help.description_posts.setVisibility(View.VISIBLE);
+                        help.description_posts.setText(data_parsed_help.getDescription());
+                    }
+
+                    Glide.with(context).load(context.getResources().getDrawable(R.drawable.logo))
+                            .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                            .error(context.getResources().getDrawable(R.drawable.ic_holder))
+                            .into(help.image_pet);
+                    Glide.with(context).load(data_parsed_help.getUrl_photo_user())
+                            .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
+                            .error(context.getResources().getDrawable(R.drawable.ic_holder))
+                            .into(help.mini_user_photo);
+                    help.date_post.setText( "Hace " + App.getInstance().fecha_lenguaje_humano(data_parsed_help.getDate_post()));
+
+                    if(data_parsed_help.isLiked()){
+                        help.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
+                    }else{
+                        help.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
+                    }
+                  //  help.open_options_posts.setOnClickListener(view -> listener_post.openMenuOptions(data_parsed_help.getId_post_from_web(),data_parsed_help.getId_usuario(),data_parsed_help.getUuid()));
+                    break;
             default:
                 TipsHolder f = (TipsHolder)holder;
                 TipsBean data_parsed_n = (TipsBean) data.get(position);
@@ -253,6 +425,14 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 populateNativeAdView(nativeAd, ((UnifiedAddHolder) holder).getAdView());
         }
 
+    }
+
+    public boolean is_multiple(String uris_not_parsed) {
+        String parsed[]  = uris_not_parsed.split(",");
+        if(parsed.length > 1)
+            return  true;
+        else
+            return false;
     }
 
     @Override
@@ -325,6 +505,55 @@ CardView tipo_tip_notice;
             tip_notice_text = itemView.findViewById(R.id.tip_notice_text);
             num_likes = itemView.findViewById(R.id.num_likes);
             num_views = itemView.findViewById(R.id.num_views);
+        }
+    }
+
+    public class FeedHolder extends RecyclerView.ViewHolder{
+        ViewPager list_fotos;
+        DotsIndicator dots_indicator;
+        RelativeLayout root_preview_perfil_click,open_options_posts;
+        TextView description_posts;
+        ImagenCircular image_pet;
+        TextView name_pet,name_user_posts,num_likes_posts;
+        RelativeLayout root_multiple_image;
+        ImageView single_image,icon_like;
+        TextView date_post;
+        DoubleTapLikeView layout_double_tap_like;
+        SpinKitView progres_image;
+        ImagenCircular mini_user_photo;
+        TextView addres_post;
+        CardView card_number_indicator;
+        TextView label_number_indicator;
+        ImageView icon_commentar;
+        TextView num_coments;
+        LinearLayout num_comments_layout;
+        CardView l_icon_like,l_icon_commentar;
+        public FeedHolder(@NonNull View itemView) {
+            super(itemView);
+            l_icon_commentar = itemView.findViewById(R.id.l_icon_commentar);
+            l_icon_like = itemView.findViewById(R.id.l_icon_like);
+            card_number_indicator = itemView.findViewById(R.id.card_number_indicator);
+            label_number_indicator = itemView.findViewById(R.id.label_number_indicator);
+            root_preview_perfil_click = itemView.findViewById(R.id.root_preview_perfil_click);
+            dots_indicator = itemView.findViewById(R.id.dots_indicator);
+            list_fotos = itemView.findViewById(R.id.list_fotos);
+            image_pet = itemView.findViewById(R.id.image_pet);
+            description_posts = itemView.findViewById(R.id.description_posts);
+            name_pet = itemView.findViewById(R.id.name_pet);
+            root_multiple_image = itemView.findViewById(R.id.root_multiple_image);
+            single_image = itemView.findViewById(R.id.single_image);
+            date_post = itemView.findViewById(R.id.date_post);
+            layout_double_tap_like = itemView.findViewById(R.id.layout_double_tap_like);
+            icon_like = itemView.findViewById(R.id.icon_like);
+            progres_image = itemView.findViewById(R.id.progres_image);
+            name_user_posts = itemView.findViewById(R.id.name_user_posts);
+            num_likes_posts = itemView.findViewById(R.id.num_likes_posts);
+            open_options_posts = itemView.findViewById(R.id.open_options_posts);
+            mini_user_photo = itemView.findViewById(R.id.mini_user_photo);
+            addres_post = itemView.findViewById(R.id.addres_post);
+            icon_commentar = itemView.findViewById(R.id.icon_commentar);
+            num_coments = itemView.findViewById(R.id.num_coments);
+            num_comments_layout = itemView.findViewById(R.id.num_comments_layout);
         }
     }
 

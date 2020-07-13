@@ -95,7 +95,6 @@ public class AdapterGridPostsProfile extends RecyclerView.Adapter<RecyclerView.V
             }else{
                 h.multiple_images_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_album));
             }
-            Log.e("ADAPTER_GRID_POIST","--> : " + data_parsed.getThumb_video());
             if(data_parsed.getCensored() == 1){
                 h.fisrt_stack_foto.setVisibility(View.GONE);
                 h.layout_censored.setVisibility(View.VISIBLE);

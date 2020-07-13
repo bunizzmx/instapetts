@@ -143,10 +143,11 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
     }
 
     @Override
-    public void showTips(ArrayList<TipsBean> tips_list) {
+    public void showTips(ArrayList<TipsBean> tips_list,ArrayList<PostBean> helps) {
         if(tips_list!=null) {
             data.clear();
             data.addAll(tips_list);
+            data.addAll(helps);
             refresh_tips.setRefreshing(false);
             root_loading.setVisibility(View.GONE);
             list_tips.setMediaObjects(data);

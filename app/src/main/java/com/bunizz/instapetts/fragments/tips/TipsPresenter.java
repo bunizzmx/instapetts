@@ -42,7 +42,7 @@ public class TipsPresenter implements TipsContract.Presenter {
                             @Override
                             public void onSuccess(ResponseTips responsePost) {
                                 if(responsePost.getCode_response()==200) {
-                                    mView.showTips(responsePost.getList_tips());
+                                    mView.showTips(responsePost.getList_tips(),responsePost.getHelps());
                                 }else{
                                     RETRY ++;
                                     if(RETRY < 3) {

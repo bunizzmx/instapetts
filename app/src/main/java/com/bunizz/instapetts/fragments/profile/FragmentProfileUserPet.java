@@ -293,6 +293,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
             follow_edit.setOnClickListener(view1 -> listener.change(FragmentElement.INSTANCE_EDIT_PROFILE_USER));
         descripcion_perfil_user.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
         URL_UPDATED = App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID");
+        Log.e("URL_PROFILE","--:>" +URL_UPDATED );
         Glide.with(getContext()).load(URL_UPDATED)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
@@ -393,7 +394,11 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
                 .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
         petsPropietaryAdapter.setPets(PETS);
         num_posts.setText(String.valueOf(USERBEAN.getPosts()));
-        num_rate_pets.setText(String.format("%.2f", RATE_PETS));
+        if(RATE_PETS > 0) {
+            num_rate_pets.setText(String.format("%.2f", RATE_PETS));
+        }else{
+            num_rate_pets.setText("5");
+        }
         num_followers.setText(String.valueOf(USERBEAN.getFolowers()));
         num_followed.setText(""+USERBEAN.getFollowed());
     }
@@ -409,10 +414,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         ArrayList<Object> results = new ArrayList<>();
         results.addAll(POSTS);
         if (frag instanceof FragmentPostGalery) {
-            Log.e("SHIW_POSTXXX","-->" + posts.size());
             ((FragmentPostGalery) frag).setData_posts(results);
-        }else{
-            Log.e("SHIW_POSTXXX","--> NO ES INSTANCIA" + posts.size());
         }
     }
 

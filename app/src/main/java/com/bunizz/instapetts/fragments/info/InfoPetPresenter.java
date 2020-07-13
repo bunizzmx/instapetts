@@ -3,7 +3,9 @@ package com.bunizz.instapetts.fragments.info;
 import android.content.Context;
 import android.util.Log;
 
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.beans.PetBean;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.db.helpers.LikesTipsHelper;
 import com.bunizz.instapetts.db.helpers.PetHelper;
@@ -43,6 +45,7 @@ public class InfoPetPresenter implements  InfoPetContract.Presenter {
         EventsPetsBean eventsPetsBean = new EventsPetsBean();
         eventsPetsBean.setTarget(WEBCONSTANTS.DELETE);
         eventsPetsBean.setId_pet(id_pet);
+        eventsPetsBean.setId_propietary(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         disposable.add(
                 apiService.deletePet(eventsPetsBean)
                         .subscribeOn(Schedulers.io())
@@ -51,7 +54,7 @@ public class InfoPetPresenter implements  InfoPetContract.Presenter {
                             @Override
                             public void onSuccess(SimpleResponse responsePost) {
                                 if(responsePost.getCode_response()==200) {
-
+                                      mView.petDeleted();
                                 }else{
                                     RETRY ++;
                                     if(RETRY < 3) {

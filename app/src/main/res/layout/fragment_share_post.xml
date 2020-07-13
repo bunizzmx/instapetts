@@ -35,6 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <RelativeLayout
+        android:background="?attr/selectableItemBackground"
         android:id="@+id/share_post_pet"
         android:layout_centerVertical="true"
         android:padding="10dp"

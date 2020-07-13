@@ -89,7 +89,21 @@ public class DialogShosePet extends BaseAlertDialog{
     }
 
     public void setPetBeans(ArrayList<PetBean> petBeans) {
-        this.petBeans = petBeans;
+        this.petBeans.clear();
+        this.petBeans.add(new PetBean(
+                "GENERAL PET",
+                "GENERAL",
+                "0",
+                "FFF",
+                "XXXX",
+                "M",
+                5.0f,
+                "Help instapetts",
+                0,
+                "-999",
+                -999
+        ));
+        this.petBeans.addAll(petBeans);
         adapter.setPetBeans(this.petBeans);
     }
 
@@ -174,7 +188,7 @@ public class DialogShosePet extends BaseAlertDialog{
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             chose_pet_holder h =(chose_pet_holder)holder;
-            Glide.with(context).load(petBeans.get(position).getUrl_photo_tumbh()).into(h.pet_chose_list);
+
             h.name_pet_chose_list.setText(petBeans.get(position).getName_pet());
             h.root_chose_pet.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -183,8 +197,15 @@ public class DialogShosePet extends BaseAlertDialog{
                 }
             });
             h.rate_pet_chose_pet.setText(""+ petBeans.get(position).getRate_pet());
-            h.edad_pet_chose.setText(App.getInstance().fecha_lenguaje_humano(petBeans.get(position).getEdad_pet().replace("T"," ").replace("T","")+" años"));
-            h.raza_mascota_chose_pet.setText(petBeans.get(position).getRaza_pet());
+            if(petBeans.get(position).getType_pet() == -999){
+                h.edad_pet_chose.setText("INDETERMINADO");
+                h.raza_mascota_chose_pet.setText("INDETERMINADO");
+                Glide.with(context).load(context.getResources().getDrawable(R.drawable.logo)).into(h.pet_chose_list);
+            }else{
+                Glide.with(context).load(petBeans.get(position).getUrl_photo_tumbh()).into(h.pet_chose_list);
+                h.edad_pet_chose.setText(App.getInstance().fecha_lenguaje_humano(petBeans.get(position).getEdad_pet().replace("T"," ").replace("T","")+" años"));
+                h.raza_mascota_chose_pet.setText(petBeans.get(position).getRaza_pet());
+            }
         }
 
         @Override

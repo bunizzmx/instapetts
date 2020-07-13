@@ -165,7 +165,6 @@ public class AdapterGridPosts extends RecyclerView.Adapter<RecyclerView.ViewHold
                         }else{
                             h.multiple_images_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_album));
                         }
-                        Log.e("ADAPTER_GRID_POIST","--> : " + data_parsed.getThumb_video());
                         Glide.with(context).load(data_parsed.getThumb_video()).placeholder(context.getResources().getDrawable(R.drawable.ic_holder)).into(h.fisrt_stack_foto);
                     }
 

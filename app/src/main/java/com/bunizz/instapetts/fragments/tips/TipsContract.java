@@ -13,7 +13,7 @@ public interface TipsContract {
     }
 
     interface View{
-        void showTips(ArrayList<TipsBean> tips_list);
+        void showTips(ArrayList<TipsBean> tips_list,ArrayList<PostBean> helps);
         void noInternet();
         void peticionError();
     }

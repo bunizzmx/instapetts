@@ -62,10 +62,11 @@
                android:layout_width="30dp"
                android:layout_height="40dp">
                <ImageView
+                   android:tint="@color/primary"
                    android:layout_centerVertical="true"
                    android:layout_centerHorizontal="true"
                    android:layout_marginTop="5dp"
-                   android:src="@drawable/ic_dots"
+                   android:src="@drawable/ic_alerta"
                    android:layout_width="15dp"
                    android:layout_height="15dp"/>
            </RelativeLayout>
@@ -81,6 +82,7 @@
         android:id="@+id/single_image"
         android:layout_width="match_parent"
         android:layout_height="450dp"/>
+
     <RelativeLayout
         android:id="@+id/root_multiple_image"
         android:layout_width="match_parent"
@@ -106,6 +108,8 @@
             app:progressMode="false"
             app:selectedDotColor="@color/primary"
             />
+
+
           <androidx.cardview.widget.CardView
               android:id="@+id/card_number_indicator"
               app:cardElevation="1dp"
@@ -148,56 +152,68 @@
             android:background="?selectableItemBackgroundBorderless"
             android:layout_width="60dp"
             android:layout_height="60dp" />
-    </RelativeLayout>
-    <RelativeLayout
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="40dp">
-        <RelativeLayout
-            android:layout_toRightOf="@+id/l_icon_like"
-            android:id="@+id/l_icon_commentar"
-            android:background="?attr/selectableItemBackground"
-            android:layout_width="50dp"
-            android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/icon_commentar"
-                android:layout_width="20dp"
-                android:layout_height="22dp"
-                android:layout_centerInParent="true"
-                android:layout_marginLeft="20dp"
-                android:src="@drawable/ic_commentar" />
-        </RelativeLayout>
         <RelativeLayout
-            android:id="@+id/l_icon_like"
-            android:background="?attr/selectableItemBackground"
-            android:layout_width="50dp"
-            android:layout_height="match_parent">
-            <ImageView
-                android:id="@+id/icon_like"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_corazon"
-                android:layout_width="25dp"
-                android:layout_height="25dp"/>
-        </RelativeLayout>
-        <RelativeLayout
+            android:paddingBottom="20dp"
+            android:paddingEnd="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_alignParentRight="true"
-            android:id="@+id/l_saved_post"
-            android:layout_gravity="end"
-            android:background="?attr/selectableItemBackground"
-            android:layout_width="50dp"
-            android:layout_height="match_parent">
-            <ImageView
-                android:layout_centerHorizontal="true"
-                android:id="@+id/save_posts"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/ic_favorite"
-                android:layout_width="25dp"
-                android:layout_height="25dp"/>
+            android:layout_alignParentBottom="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <androidx.cardview.widget.CardView
+                app:contentPadding="8dp"
+                app:cardCornerRadius="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/l_icon_like"
+                android:id="@+id/l_icon_commentar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/icon_commentar"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_commentar" />
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                app:cardCornerRadius="15dp"
+                android:id="@+id/l_icon_like"
+                app:contentPadding="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/icon_like"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_corazon"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"/>
+            </androidx.cardview.widget.CardView>
         </RelativeLayout>
+        <androidx.cardview.widget.CardView
+            app:cardElevation="1dp"
+            app:contentPaddingLeft="4dp"
+            app:contentPaddingRight="4dp"
+            app:contentPaddingTop="2dp"
+            app:contentPaddingBottom="2dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            app:cardBackgroundColor="@color/colorPrimaryDark"
+            app:cardCornerRadius="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textStyle="bold"
+                android:textSize="12dp"
+                android:textColor="@color/white"
+                android:text="HAYUDA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </androidx.cardview.widget.CardView>
+
     </RelativeLayout>
 
     <TextView

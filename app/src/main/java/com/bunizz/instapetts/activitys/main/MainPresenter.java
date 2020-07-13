@@ -62,9 +62,9 @@ public class MainPresenter implements MainContract.Presenter {
     private StorageReference storageReference;
     PetHelper petHelper;
     int RETRY_PETS=0;
+    IdsUsersHelper idsUsersHelper;
     private CompositeDisposable disposable = new CompositeDisposable();
     StorageMetadata metadata;
-    IdsUsersHelper idsUsersHelper;
     MainPresenter(MainContract.View view, Context context) {
         this.mView = view;
         this.mContext = context;

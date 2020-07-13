@@ -12,5 +12,6 @@ public interface InfoPetContract {
     interface View{
         void petRated();
         void petUpdated();
+        void petDeleted();
     }
 }

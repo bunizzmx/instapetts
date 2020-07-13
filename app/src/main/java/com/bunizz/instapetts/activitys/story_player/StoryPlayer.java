@@ -71,7 +71,7 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
             if(SELECTED_POSITION == i)
             bundle.putBoolean("AUTOPLAY",true);
             else
-            bundle.putBoolean("AUTOPLAY",true);
+            bundle.putBoolean("AUTOPLAY",false);
             Fragment f = new FragmentStoriView();
             f.setArguments(bundle);
             adapter.addFragment(f);

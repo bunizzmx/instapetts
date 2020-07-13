@@ -15,6 +15,7 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.login.LoginActivity;
 import com.bunizz.instapetts.activitys.main.Main;
 import com.bunizz.instapetts.activitys.searchqr.QrSearchActivity;
+import com.bunizz.instapetts.activitys.side_menus_activities.SideMenusActivities;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.side_menus_activities.FragmentConfigEmail;
 import com.bunizz.instapetts.listeners.open_side_menu;
@@ -47,11 +48,21 @@ public class SideFragment extends  Fragment{
     }
 
     @SuppressLint("MissingPermission")
-    @OnClick(R.id.menu_centro_ayuda)
-    void menu_centro_ayuda() {
+    @OnClick(R.id.politicas)
+    void politicas() {
         i.putExtra("TYPE_MENU",0);
+        i.putExtra("URL","privacidad");
         startActivity(i);
     }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.terms_use)
+    void terms_use() {
+        i.putExtra("TYPE_MENU",0);
+        i.putExtra("URL","terminos");
+        startActivity(i);
+    }
+
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.side_menu_administrate_account)
@@ -105,6 +116,7 @@ public class SideFragment extends  Fragment{
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        i = new Intent(getContext(), SideMenusActivities.class);
     }
 
         @Override

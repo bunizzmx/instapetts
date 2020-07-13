@@ -155,7 +155,7 @@ public class ComentariosPresenter implements ComentariosContract.Presenter {
     @Override
     public void getComentarios(int id_post) {
         ArrayList<CommentariosBean> COMMENTARIOS = new ArrayList<>();
-        db.collection(FIRESTORE.COLLECTION_COMENTARIOS).document(""+id_post).collection(FIRESTORE.COLLECTION_COMENTARIOS_SUBCOLECCION)
+        db.collection(FIRESTORE.COLLECTION_COMENTARIOS).document("-"+id_post+"-").collection(FIRESTORE.COLLECTION_COMENTARIOS_SUBCOLECCION)
                 .limit(20)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -192,7 +192,7 @@ public class ComentariosPresenter implements ComentariosContract.Presenter {
     @Override
     public void likeComment(int id_post, String id_document) {
         if(!comentariosHelper.isLikedComment(id_document)) {
-            db.collection(FIRESTORE.COLLECTION_COMENTARIOS).document("" + id_post)
+            db.collection(FIRESTORE.COLLECTION_COMENTARIOS).document("-" + id_post+"-")
                     .collection(FIRESTORE.COLLECTION_COMENTARIOS_SUBCOLECCION)
                     .document(id_document)
                     .update("likes", FieldValue.increment(1))
@@ -222,20 +222,17 @@ public class ComentariosPresenter implements ComentariosContract.Presenter {
     @Override
     public void loadNextComments(int id_post) {
         ArrayList<CommentariosBean> COMMENTARIOS = new ArrayList<>();
-        Log.e("DOWNLOAD_MORE",":lll");
         COMMENTARIOS.clear();
         Query query;
         if (x == null) {
-            Log.e("DOWNLOAD_MORE",":x es nulo");
             is_first_pagination = true;
-            query = db.collection(FIRESTORE.COLLECTION_COMENTARIOS).document("" + id_post)
+            query = db.collection(FIRESTORE.COLLECTION_COMENTARIOS).document("-" + id_post+"-")
                     .collection(FIRESTORE.COLLECTION_COMENTARIOS_SUBCOLECCION)
                     .limit(20);
         } else {
-            Log.e("DOWNLOAD_MORE",":x no es nulo");
             is_first_pagination = false;
             query = db.collection(FIRESTORE.COLLECTION_COMENTARIOS)
-                    .document(""+id_post)
+                    .document("-"+id_post+"-")
                     .collection(FIRESTORE.COLLECTION_COMENTARIOS_SUBCOLECCION)
                     .startAfter(x)
                     .limit(20);

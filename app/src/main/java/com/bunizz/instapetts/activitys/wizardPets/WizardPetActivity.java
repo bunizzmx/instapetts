@@ -232,7 +232,7 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
     public void onpetFinish(boolean pet_saved) {
         NEW_PET.setId_propietary(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         NEW_PET.setUuid(App.read(PREFERENCES.UUID,"INVALID"));
-        NEW_PET.setName_propietary(App.read(PREFERENCES.NAME_USER,"INVALID"));
+        NEW_PET.setName_propietary(App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"INVALID"));
         NEW_PET.setTarget(WEBCONSTANTS.NEW);
         presenter.newPet(NEW_PET);
     }

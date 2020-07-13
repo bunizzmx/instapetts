@@ -1,11 +1,21 @@
 package com.bunizz.instapetts.web.responses;
 
+import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.TipsBean;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
 public class ResponseTips {
+
+    @SerializedName("list_tips")
+    @Expose
     ArrayList<TipsBean> list_tips;
+
+    @SerializedName("helps")
+    @Expose
+    ArrayList<PostBean> helps;
     int code_response;
 
     public ResponseTips() {
@@ -30,5 +40,13 @@ public class ResponseTips {
 
     public void setCode_response(int code_response) {
         this.code_response = code_response;
+    }
+
+    public ArrayList<PostBean> getHelps() {
+        return helps;
+    }
+
+    public void setHelps(ArrayList<PostBean> helps) {
+        this.helps = helps;
     }
 }

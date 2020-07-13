@@ -335,7 +335,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         }else{
             if(IS_MY_FIRNED){
                 follow_edit.setText("Dejar de seguir");
-                follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_gmail));
+                follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_gmail_white));
                 follow_edit.setTextColor(Color.BLACK);
                 follow_edit.setOnClickListener(view -> {
                     listener_follow.followUser(USERBEAN,false);
@@ -414,7 +414,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     public void successFollow(boolean follow,int id_user) {
         if(follow){
             follow_edit.setText("Dejar de seguir");
-            follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_gmail));
+            follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_gmail_white));
             follow_edit.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
             follow_edit.setOnClickListener(view -> {
                 listener_follow.followUser(USERBEAN,false);

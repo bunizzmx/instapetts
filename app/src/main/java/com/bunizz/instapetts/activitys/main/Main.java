@@ -378,20 +378,7 @@ public class Main extends AppCompatActivity implements change_instance,
                 .placeholder(getResources().getDrawable(R.drawable.ic_holder)).into(icon_profile_pet);
         presenter.getIdentificadoresHistories();
 
-        if(App.read(PREFERENCES.FECHA_BACKUP_FILE,"-").equals("-"))
-        {
-            Log.e("SEND_FILE","1");
-            GenerateFileTask tskFile = new GenerateFileTask();
-            tskFile.execute();
-        }else{
-            if(App.read(PREFERENCES.FECHA_BACKUP_FILE,"-").equals(App.formatDateSimple(new Date()))){
-                Log.e("SEND_FILE","2");
-            }else{
-                Log.e("SEND_FILE","3");
-                GenerateFileTask tskFile = new GenerateFileTask();
-                tskFile.execute();
-            }
-        }
+
     }
 
     void download_pets(){
@@ -824,7 +811,8 @@ public class Main extends AppCompatActivity implements change_instance,
             IS_SHEET_OPEN= false;
             SIDE_OPEN =false;
             mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-            changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null,true);
+            if(mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET)
+             changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null,true);
 
         }
         else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_EDIT_PROFILE_USER){
@@ -923,7 +911,7 @@ public class Main extends AppCompatActivity implements change_instance,
 
     private void repaint_nav(int id ){
         icon_tips.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_food_pet));
-        icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_camera));
+        icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_hand_pet_stroke));
         icon_feed_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_home_pet));
         icon_search_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_search));
         icon_profile_pet.setBorderColor(getResources().getColor(R.color.white));
@@ -949,7 +937,7 @@ public class Main extends AppCompatActivity implements change_instance,
             icon_search_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_search_black));
         }
         else if(id == R.id.tab_add_image) {
-            icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_camera));
+            icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_hand_pet_stroke));
         }
     }
 
