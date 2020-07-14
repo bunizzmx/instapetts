@@ -91,7 +91,7 @@ public class DialogShosePet extends BaseAlertDialog{
     public void setPetBeans(ArrayList<PetBean> petBeans) {
         this.petBeans.clear();
         this.petBeans.add(new PetBean(
-                "GENERAL PET",
+                context.getString(R.string.help_pet),
                 "GENERAL",
                 "0",
                 "FFF",

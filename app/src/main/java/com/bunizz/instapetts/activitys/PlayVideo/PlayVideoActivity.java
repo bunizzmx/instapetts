@@ -281,7 +281,7 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
             exoPlayerManager = new ExoPlayerManager(this,videoSurfaceView, previewTimeBar,
                     (ImageView) findViewById(R.id.imageView), POST_BEAN.getThumb_video(),noise);
             exoPlayerManager.play(Uri.parse(POST_BEAN.getUrls_posts()));
-            if(POST_BEAN.getAspect().equals("16_9"))
+            if(POST_BEAN.getAspect().equals("16_9") || POST_BEAN.getAspect().equals("4_3"))
                 videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
             else
                 videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_ZOOM);

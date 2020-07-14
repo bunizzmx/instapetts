@@ -149,7 +149,7 @@ public class ImagePostsService extends Service {
             if(TYPE_NOTIFICATION == 1){
                 filename =App.read(PREFERENCES.UUID,"INVALID") +"/" +  CONST.FOLDER_PROFILE  + "/" + App.read(PREFERENCES.UUID,"INVALID") + ".jpg";
             }else if(TYPE_NOTIFICATION == 0){
-                filename = App.read(PREFERENCES.UUID,"INVALID") + "/" +  CONST.FOLDER_POSTS + "/" +  splits[index - 1];
+                filename = App.read(PREFERENCES.UUID,"INVALID") + "/" +  CONST.FOLDER_POSTS + "/"+ intent.getStringExtra(BUNDLES.VIDEO_ASPECT) + "/" +  splits[index - 1];
             }else if (TYPE_NOTIFICATION == 3){
                 filename = App.read(PREFERENCES.UUID,"INVALID") + "/" +  CONST.FOLDER_PETS + "/" + App.read(PREFERENCES.UUID,"INVALID")  +  NAME_PET + ".jpg" ;
             }else{

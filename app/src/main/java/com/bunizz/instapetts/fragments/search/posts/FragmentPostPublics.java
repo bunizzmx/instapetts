@@ -98,7 +98,7 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
         if(bundle!=null){
             IS_FORM_SAVED_POST = bundle.getInt("SAVED_POST");
         }
-        adapter_pager = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
+        adapter_pager = new ViewPagerAdapter(getChildFragmentManager());
         adapter_pager.addFragment(new FragmentListGalery(), getString(R.string.pager_discover));
         adapter_pager.addFragment(new FragmentListGalery(), getString(R.string.pager_more_views));
         adapter_pager.addFragment(new FragmentListGalery(), getString(R.string.pager_recent));

@@ -82,6 +82,7 @@ import com.bunizz.instapetts.utils.target.TapTarget;
 import com.bunizz.instapetts.utils.target.TapTargetView;
 import com.bunizz.instapetts.web.CONST;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -200,15 +201,16 @@ public class Main extends AppCompatActivity implements change_instance,
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tab_profile_pet)
     void tab_profile_pet() {
-        changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET,null,false);
-        repaint_nav(R.id.tab_profile_pet);
+        if(mCurrentFragment.getInstanceType() != FragmentElement.INSTANCE_PROFILE_PET) {
+            changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, false);
+            repaint_nav(R.id.tab_profile_pet);
+        }
     }
 
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.back_to_main_sliding)
     void back_to_main_sliding() {
-
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
     }
 
@@ -219,7 +221,6 @@ public class Main extends AppCompatActivity implements change_instance,
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tap_tips)
     void tap_tips() {
-
      if(mCurrentFragment.getInstanceType() != FragmentElement.INSTANCE_TIPS) {
          changeOfInstance(FragmentElement.INSTANCE_TIPS, null,false);
          repaint_nav(R.id.tap_tips);
@@ -566,19 +567,21 @@ public class Main extends AppCompatActivity implements change_instance,
         saveFragment();
 
         if(intanceType!=FragmentElement.INSTANCE_COMENTARIOS && intanceType!=FragmentElement.INSTANCE_EDIT_PROFILE_USER && intanceType != FragmentElement.INSTANCE_SIDE_MENU) {
-            Log.e("OCULTO_PORQUE","-->debo" + intanceType);
             runOnUiThread(() -> root_bottom_nav.setVisibility(View.VISIBLE));
         }
         else {
             runOnUiThread(() -> root_bottom_nav.setVisibility(View.GONE));
         }
+        if(mOldFragment!=null) {
 
-        if(mOldFragment.getInstanceType()==FragmentElement.INSTANCE_FEED){
-            ((FeedFragment) mOldFragment.getFragment()).stop_player();
+            if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_FEED) {
+                ((FeedFragment) mOldFragment.getFragment()).stop_player();
+            }
+
+            if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS)
+                ((FragmentTips) mOldFragment.getFragment()).stop_player();
         }
 
-        if(mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS)
-            ((FragmentTips) mOldFragment.getFragment()).stop_player();
 
         if (intanceType == FragmentElement.INSTANCE_FEED) {
             if (stack_feed.size() == 0) {
@@ -1197,6 +1200,7 @@ public class Main extends AppCompatActivity implements change_instance,
     public void logout() {
          DialogLogout dialogLogout = new DialogLogout(this);
         dialogLogout.setListener(() -> {
+            FirebaseAuth.getInstance().signOut();
             presenter.logout();
             presenter.delete_data();
             App.getInstance().clear_preferences();

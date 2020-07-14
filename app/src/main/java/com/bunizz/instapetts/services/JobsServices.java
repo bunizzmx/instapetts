@@ -84,7 +84,6 @@ public class JobsServices {
         scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleWithFixedDelay(() -> {
             try {
-                Log.e("SINCRONIZACION","RUN");
                db.collection(FIRESTORE.COLLECTION_NOTIFICATIONS).document(""+App.read(PREFERENCES.ID_USER_FROM_WEB,0))
                        .collection(FIRESTORE.COLLECTION_NOTIFICATIONS).get()
                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -97,7 +96,6 @@ public class JobsServices {
                            @Override
                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                   Log.e("SINCRONIZACION","encontre");
                                    NotificationBeanFirestore notification = document.toObject(NotificationBeanFirestore.class);
                                    NotificationBean NOTIFICACION = new NotificationBean(
                                            getTitleForNotification(notification.getTYPE_NOTIFICATION(),notification.getNAME_REMITENTE()),
@@ -171,7 +169,6 @@ public class JobsServices {
 
 
    public void  synchronizedNotifications(String id_document){
-       Log.e("SINCRONIZACION","BORRO WESTA:" + id_document);
         if(ids.size() > 0) {
             String ID_DOCUMENT = "";
             if (id_document.equals("-")) {

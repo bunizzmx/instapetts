@@ -66,9 +66,21 @@ public class AdapterGridPostsProfile extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public void setPosts(ArrayList<Object> posts) {
-        this.posts = posts;
-        notifyDataSetChanged();
+        if(posts.size()>0) {
+            this.posts.clear();
+            this.posts.addAll(posts);
+            notifyDataSetChanged();
+        }
     }
+
+    public void setPostsPaginate(ArrayList<Object> posts) {
+        if (this.posts.size() > 0) {
+            this.posts.addAll(posts);
+            notifyDataSetChanged();
+        }
+    }
+
+
 
     public void refresh(){
         notifyDataSetChanged();

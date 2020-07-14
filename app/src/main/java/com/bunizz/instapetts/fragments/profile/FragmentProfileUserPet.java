@@ -59,6 +59,7 @@ import com.bunizz.instapetts.utils.tabs2.SmartTabLayout;
 import com.bunizz.instapetts.utils.target.TapTarget;
 import com.bunizz.instapetts.utils.target.TapTargetView;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,6 +129,17 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
 
     @BindView(R.id.rotate_refresh)
     ImageView rotate_refresh;
+
+
+    @BindView(R.id.appbar)
+    AppBarLayout appbar;
+
+    @BindView(R.id.toolbar_prfile)
+    Toolbar toolbar_prfile;
+
+    @BindView(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout collapsing_toolbar;
+
 
 
 
@@ -252,6 +264,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
             }
         });
         list_pets_propietary.setAdapter(petsPropietaryAdapter);
+        viewpager_profile.setOffscreenPageLimit(3);
         viewpager_profile.setAdapter(adapter_pager);
         viewpager_profile.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -314,6 +327,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         presenter.getInfoUser(userBean);
 
+
     }
 
 
@@ -348,18 +362,13 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         my_pets_database.add(new PetBean());
         petsPropietaryAdapter.setPets(my_pets_database);
         if(listener_open_side!=null){
-            if(my_pets_database.size() <3) {
-                Log.e("MAS_DE_UN_PET","NO");
+            if(my_pets_database.size() <3)
                 listener_open_side.open_target_post();
-            }else{
-                Log.e("MAS_DE_UN_PET","SI");
-            }
         }
     }
 
     @Override
     public void showInfoUser(UserBean userBean, ArrayList<PetBean> pets) {
-        Log.e("NO TIENES_PETS","PETS" + pets.size());
         loanding_preview_root.setVisibility(View.GONE);
         root_info_ptofile.setVisibility(View.VISIBLE);
         float RATE_PETS=0;
@@ -371,7 +380,6 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         }
         if(PETS.size()==1) {
             if(pets.size()<1 && PETS.size() ==1){
-                Log.e("NO TIENES_PETS",":(");
                 fist_pet();
             }
         }
@@ -411,6 +419,20 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         Fragment frag = adapter_pager.getItem(POSITION_PAGER);
         POSTS.clear();
         POSTS.addAll(posts);
+        ArrayList<Object> results = new ArrayList<>();
+        results.addAll(POSTS);
+        if (frag instanceof FragmentPostGalery) {
+            ((FragmentPostGalery) frag).setData_posts(results);
+        }
+    }
+
+    @Override
+    public void showPostUserPaginate(ArrayList<PostBean> post) {
+        rotate_refresh.clearAnimation();
+        refresh_profile.setRefreshing(false);
+        Fragment frag = adapter_pager.getItem(POSITION_PAGER);
+        POSTS.clear();
+        POSTS.addAll(post);
         ArrayList<Object> results = new ArrayList<>();
         results.addAll(POSTS);
         if (frag instanceof FragmentPostGalery) {

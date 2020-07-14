@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bunizz.instapetts.R;
@@ -48,14 +49,24 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
     changue_fragment_parameters_listener listener;
     AdapterGridPostsProfile feedAdapter;
     ArrayList<Object> data_posts = new ArrayList<>();
+    private boolean loading =true;
+    private boolean IS_ALL = false;
 
+    int PAGINADOR = -999;
 
 
     public void setData_posts(ArrayList<Object> data_posts) {
+        IS_ALL = false;
+        PostBean ID_POST = (PostBean)data_posts.get(data_posts.size() - 1);
+        if(data_posts.size()>0) {
+            PAGINADOR = ID_POST.getId_post_from_web();
+        }else{
+            IS_ALL = true;
+        }
         if(data_posts !=null){
             if(data_posts.size()>0){
-                Log.e("DATAPOST_GRID","DATA POS menor a 0 ");
-                this.data_posts = data_posts;
+                this.data_posts.clear();
+                this.data_posts.addAll(data_posts);
                 if(feedAdapter!=null)
                     feedAdapter.setPosts(this.data_posts);
                 if(root_no_data!=null)
@@ -63,17 +74,18 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
             }else{
                 this.data_posts.clear();
                 feedAdapter.refresh();
-                Log.e("DATAPOST_GRID","DATA POS mayor 0");
                 if(root_no_data!=null)
                 root_no_data.setVisibility(View.VISIBLE);
             }
         }else{
-            Log.e("DATAPOST_GRID","DATA POS NULL");
             if(root_no_data!=null)
                root_no_data.setVisibility(View.VISIBLE);
         }
 
     }
+
+
+
 
     public boolean isDataAdded(){
         if(this.data_posts.size()>0)
@@ -103,7 +115,7 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        Log.e("ONVIEW_CREATED","galery");
+        Log.e("ONVIEW_CREATED","galeryxxxxxxx");
         list_galery.setLayoutManager(new GridLayoutManager(getContext(),3));
         list_galery.setAdapter(feedAdapter);
         feedAdapter.setListener(new changue_fragment_parameters_listener() {
@@ -161,6 +173,34 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
         });
         title_no_data.setText("No hay publicaciones");
         body_no_data.setText("Demuestrale al mundo la mascota linda que tienes escondida, todos queremos verla¡¡.");
+        list_galery.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleItemCount = recyclerView.getLayoutManager().getChildCount();
+                int totalItemCount = recyclerView.getLayoutManager().getItemCount();
+                int pastVisiblesItems = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                if (dy > 0) {
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                        if(loading){
+                            loading = false;
+                            if(IS_ALL == false) {
+                                Log.e("DONWLOAD_MORE_COMMENTS","SI");
+                                presenter.getMorePost(3,PAGINADOR);
+                            }else {
+                                Log.e("DONWLOAD_MORE_COMMENTS","NO");
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
     }
 
 
@@ -173,7 +213,25 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
 
     @Override
     public void showMorePost(ArrayList<PostBean> posts) {
-
+        if(posts.size()>0) {
+            PAGINADOR = posts.get(posts.size() - 1).getId_post_from_web();
+            if(posts.size() < 10 )
+                IS_ALL = true;
+        }else{
+            IS_ALL = true;
+        }
+        Log.e("PAGINADOR_NETX","-->: " + PAGINADOR);
+        loading = true;
+        if(data_posts !=null){
+            if(data_posts.size()>0){
+                data_posts.clear();
+                data_posts.addAll(posts);
+                if(feedAdapter!=null)
+                    feedAdapter.setPostsPaginate(this.data_posts);
+                if(root_no_data!=null)
+                    root_no_data.setVisibility(View.GONE);
+            }
+        }
     }
 }
 

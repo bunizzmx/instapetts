@@ -401,6 +401,11 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     }
 
     @Override
+    public void showPostUserPaginate(ArrayList<PostBean> post) {
+
+    }
+
+    @Override
     public void Error() {
         presenter.getInfoUser(userBean);
     }

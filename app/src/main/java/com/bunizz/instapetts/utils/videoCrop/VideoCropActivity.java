@@ -226,8 +226,8 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
         }
         mVideoPlayer = new VideoPlayer(this);
         mCropVideoView.setFixedAspectRatio(true);
-        ASPECT ="4_4";
-        mCropVideoView.setAspectRatio(10, 10);
+        ASPECT ="4_5";
+        mCropVideoView.setAspectRatio(4, 5);
         mCropVideoView.setPlayer(mVideoPlayer.getPlayer());
         mVideoPlayer.initMediaSource(this, uri);
         mVideoPlayer.setUpdateListener(this);
@@ -269,11 +269,16 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
     private void handleCropStart() {
 
         Rect cropRect = mCropVideoView.getCropRect();
-
+        if(STARTCROP < 0){
+            STARTCROP =0;
+        }
         String start = Util.getStringForTime(formatBuilder, formatter, STARTCROP);
         String duration = Util.getStringForTime(formatBuilder, formatter, DURATION);
         start += "." + STARTCROP % 1000;
         duration += "." + DURATION % 1000;
+
+        Log.e("INIDCES_VIDEO","--> : "+ STARTCROP + "/" + DURATION);
+        Log.e("INIDCES_VIDEO","--> : "+ start + "/" + duration);
 
         mFFMpeg = FFmpeg.getInstance(this);
         if (mFFMpeg.isSupported()) {

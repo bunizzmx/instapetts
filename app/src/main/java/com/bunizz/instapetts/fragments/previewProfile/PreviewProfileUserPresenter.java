@@ -136,6 +136,11 @@ public class PreviewProfileUserPresenter implements   ProfileUserContract.Presen
     }
 
     @Override
+    public void getPostUserPaginate(boolean one_user, int id_one, int filter, int paginador) {
+
+    }
+
+    @Override
     public void follow(int id_user,boolean follow) {
         FollowParameter followParameter= new FollowParameter();
         followParameter.setId_user(id_user);

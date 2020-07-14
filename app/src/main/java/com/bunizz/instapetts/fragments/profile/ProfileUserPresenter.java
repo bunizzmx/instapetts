@@ -88,6 +88,7 @@ public class ProfileUserPresenter implements   ProfileUserContract.Presenter {
         postFriendsBean.setId_one(id_one);
         postFriendsBean.setTarget("ONE");
         postFriendsBean.setFilter(filter);
+        postFriendsBean.setPaginador(-999);
         disposable.add(
                 apiService.getPosts(postFriendsBean)
                         .subscribeOn(Schedulers.io())
@@ -112,6 +113,58 @@ public class ProfileUserPresenter implements   ProfileUserContract.Presenter {
                                             post.get(i).setLiked(false);
                                     }
                                     mView.showPostUser(post);
+                                }  else{
+                                    RETRY ++;
+                                    if(RETRY < 3) {
+                                        mView.ErrorPostUsers();
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                RETRY ++;
+                                if(RETRY < 3) {
+                                    mView.ErrorPostUsers();
+                                }else{
+                                    Log.e("NUMBER_POSTS","-->EROR : " + e.getMessage());
+                                }
+
+                            }
+                        })
+        );
+    }
+
+    @Override
+    public void getPostUserPaginate(boolean one_user, int id_one, int filter, int paginador) {
+        PostFriendsBean postFriendsBean = new PostFriendsBean();
+        postFriendsBean.setId_one(id_one);
+        postFriendsBean.setTarget("ONE");
+        postFriendsBean.setFilter(filter);
+        postFriendsBean.setPaginador(paginador);
+        disposable.add(
+                apiService.getPosts(postFriendsBean)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<ResponsePost>() {
+                            @Override
+                            public void onSuccess(ResponsePost responsePost) {
+                                if(responsePost.getList_posts()!=null) {
+                                    if(responsePost.getList_posts()!=null)
+                                        Log.e("NUMBER_POSTS", "-->" + responsePost.getList_posts().size());
+                                    ArrayList<PostBean> post = new ArrayList<>();
+                                    post.addAll(responsePost.getList_posts());
+                                    for (int i = 0; i < post.size(); i++) {
+                                        if (savedPostHelper.searchPostById(post.get(i).getId_post_from_web()))
+                                            post.get(i).setSaved(true);
+                                        else
+                                            post.get(i).setSaved(false);
+
+                                        if (likePostHelper.searchPostById(post.get(i).getId_post_from_web()))
+                                            post.get(i).setLiked(true);
+                                        else
+                                            post.get(i).setLiked(false);
+                                    }
+                                    mView.showPostUserPaginate(post);
                                 }  else{
                                     RETRY ++;
                                     if(RETRY < 3) {

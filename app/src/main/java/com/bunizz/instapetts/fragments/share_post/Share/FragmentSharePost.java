@@ -172,14 +172,14 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
                 int index = splits.length;
                 if(i==0) {
                     if(is_video == 1) {
-                        concat_paths = App.getInstance().make_uri_video_hls(splits[index - 1]);
+                        concat_paths = App.getInstance().make_uri_video_hls(splits[index - 1],ASPECT);
                     }
                     else
                         concat_paths = App.getInstance().make_uri_bucket_posts(splits[index - 1]);
                 }
                 else {
                     if(is_video == 1)
-                        concat_paths = App.getInstance().make_uri_video_hls(splits[index - 1]);
+                        concat_paths = App.getInstance().make_uri_video_hls(splits[index - 1],ASPECT);
                     else
                         concat_paths += "," + App.getInstance().make_uri_bucket_posts(splits[index - 1]);
                 }
@@ -263,6 +263,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         Context context = getContext().getApplicationContext();
         Intent intent = new Intent(context, ImagePostsService.class);
         intent.putStringArrayListExtra(ImagePostsService.INTENT_KEY_NAME, filePaths);
+        intent.putExtra(BUNDLES.VIDEO_ASPECT, ASPECT);
         intent.putExtra(BUNDLES.NOTIFICATION_TIPE,0);
         if(is_video) {
             String uri_tuhmbh="";

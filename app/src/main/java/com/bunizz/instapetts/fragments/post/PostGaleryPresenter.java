@@ -72,6 +72,9 @@ public class PostGaleryPresenter implements  PostGaleryContract.Presenter{
             case 2:
                 postFriendsBean.setTarget(WEBCONSTANTS.RECENT);
                 break;
+            case 3:
+                postFriendsBean.setTarget(WEBCONSTANTS.ONE);
+                break;
             default:break;
         }
 

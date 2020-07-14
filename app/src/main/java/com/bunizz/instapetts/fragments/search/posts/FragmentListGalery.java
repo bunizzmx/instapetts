@@ -195,18 +195,15 @@ public class FragmentListGalery extends Fragment implements  ListGaleryContract.
             }
         });
         list_posts_publics.setAdapter(adapter);
-        adapter.setListener(new changue_fragment_parameters_listener() {
-            @Override
-            public void change_fragment_parameter(int type_fragment, Bundle data) {
-                ArrayList<Object> object_currents = new ArrayList<>();
-                int position = data.getInt("POSITION");
-                for (int i = position;i<data_posts.size();i++){
-                    object_currents.add(data_posts.get(i));
-                }
-                Bundle b = new Bundle();
-                b.putParcelable("POSTS", Parcels.wrap(object_currents));
-                listener.change_fragment_parameter(type_fragment,b);
+        adapter.setListener((type_fragment, data) -> {
+            ArrayList<Object> object_currents = new ArrayList<>();
+            int position = data.getInt("POSITION");
+            for (int i = position;i<data_posts.size();i++){
+                object_currents.add(data_posts.get(i));
             }
+            Bundle b = new Bundle();
+            b.putParcelable("POSTS", Parcels.wrap(object_currents));
+            listener.change_fragment_parameter(type_fragment,b);
         });
         list_posts_publics.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -230,6 +227,8 @@ public class FragmentListGalery extends Fragment implements  ListGaleryContract.
                             }else {
                                 Log.e("DONWLOAD_MORE_COMMENTS","NO");
                             }
+                        }else{
+                            Log.e("DONWLOAD_MORE_COMMENTS","ESTA CARGANDO");
                         }
                     }
                 }

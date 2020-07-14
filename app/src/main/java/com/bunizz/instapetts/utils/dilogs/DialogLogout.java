@@ -41,6 +41,7 @@ public class DialogLogout extends BaseAlertDialog{
 
         logout_yes.setOnClickListener(view -> {
             if(listener!=null){
+                dismiss();
                 listener.logout();
             }
         });
