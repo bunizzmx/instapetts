@@ -249,12 +249,11 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         help.addres_post.setVisibility(View.GONE);
 
                     help.l_icon_commentar.setOnClickListener(v -> {
-                     /*   if(data_parsed_help.getCan_comment()==1)
-                            listener_post.commentPost(data_parsed_help.getId_post_from_web(),false);
-                        else
-                            listener_post.commentPost(data_parsed_help.getId_post_from_web(),true);
-                            */
-
+                        Bundle b = new Bundle();
+                        b.putInt(BUNDLES.ID_POST,data_parsed_help.getId_post_from_web());
+                        b.putBoolean(BUNDLES.CAN_COMMENT,true);
+                        b.putInt(BUNDLES.TYPE_PET,data_parsed_help.getId_pet());
+                        listener.change_fragment_parameter(FragmentElement.INSTANCE_COMENTARIOS,b);
                     });
 
                     if(data_parsed_help.getNum_comentarios() > 0){

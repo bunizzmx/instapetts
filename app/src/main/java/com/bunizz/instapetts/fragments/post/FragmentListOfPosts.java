@@ -134,6 +134,7 @@ public class FragmentListOfPosts extends Fragment implements FeedContract.View {
                 Bundle b = new Bundle();
                 b.putInt(BUNDLES.ID_POST,id_post);
                 b.putBoolean(BUNDLES.CAN_COMMENT,can_comment);
+                b.putInt(BUNDLES.TYPE_PET,0);
                 listener.change_fragment_parameter(FragmentElement.INSTANCE_COMENTARIOS,b);
             }
         });

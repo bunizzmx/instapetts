@@ -101,6 +101,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
 
     int ID_POST=0;
     boolean CAN_COMMENT =true;
+    int TYPE_PET = 0;
 
     private boolean loading =true;
     private boolean IS_ALL = false;
@@ -124,6 +125,11 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
             commentariosBean.setCommentario(input_commentarios.getText().toString());
             commentariosBean.setName_user(App.read(PREFERENCES.NAME_USER, "INVALID"));
             commentariosBean.setLikes(0);
+            if(TYPE_PET < 0)
+                commentariosBean.setHelps_post(1);
+            else
+                commentariosBean.setHelps_post(0);
+
             presenter.comment(commentariosBean);
             input_commentarios.setText("");
             adapter.addBelow(commentariosBean);
@@ -155,6 +161,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
         if(bundle!=null){
            ID_POST = bundle.getInt(BUNDLES.ID_POST);
            CAN_COMMENT = bundle.getBoolean(BUNDLES.CAN_COMMENT);
+           TYPE_PET  = bundle.getInt(BUNDLES.TYPE_PET);
         }
     }
 

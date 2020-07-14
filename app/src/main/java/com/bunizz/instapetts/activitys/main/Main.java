@@ -839,9 +839,15 @@ public class Main extends AppCompatActivity implements change_instance,
                 finish();
             }
             else {
+                if(mOldFragment.getInstanceType()== FragmentElement.INSTANCE_TIPS){
+                    repaint_nav(R.id.tap_tips);
+                    changeOfInstance(FragmentElement.INSTANCE_TIPS, null, false);
+                }else{
+                    repaint_nav(R.id.tab_feed);
+                    changeOfInstance(FragmentElement.INSTANCE_FEED, null, false);
+                }
                 Log.e("ONBACKKK","333");
-                repaint_nav(R.id.tab_feed);
-                changeOfInstance(FragmentElement.INSTANCE_FEED, null, false);
+
             }
         }
 

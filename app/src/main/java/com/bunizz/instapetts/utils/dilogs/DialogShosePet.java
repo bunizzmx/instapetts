@@ -23,6 +23,7 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.SearchPetBean;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.listeners.chose_pet_listener;
 import com.bunizz.instapetts.utils.ImagenCircular;
@@ -99,7 +100,7 @@ public class DialogShosePet extends BaseAlertDialog{
                 "M",
                 5.0f,
                 "Help instapetts",
-                0,
+                App.read(PREFERENCES.ID_USER_FROM_WEB,0),
                 "-999",
                 -999
         ));

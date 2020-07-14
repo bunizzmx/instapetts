@@ -98,7 +98,12 @@ public class ComentariosPresenter implements ComentariosContract.Presenter {
             postLikeBean.setId_post(commentariosBean.getId_post());
             postLikeBean.setId_user(commentariosBean.getId_user());
             postLikeBean.setType_event(1);
-            postLikeBean.setTarget("NEW_COMMENT");
+            if(commentariosBean.getHelps_post() == 1){
+                postLikeBean.setTarget("NEW_COMMENT");
+            }else{
+                postLikeBean.setTarget("NEW_COMMENT_HELPS");
+            }
+
             disposable.add(
                     apiService.like_posts(postLikeBean)
                             .subscribeOn(Schedulers.io())
@@ -108,7 +113,8 @@ public class ComentariosPresenter implements ComentariosContract.Presenter {
                                 public void onSuccess(SimpleResponse responsePost) {
                                     if (responsePost != null) {
                                         if (responsePost.getCode_response() == 200) {
-                                            //mView.LikeSuccess();
+                                            if(commentariosBean.getId_user() !=  App.read(PREFERENCES.ID_USER_FROM_WEB,0)){
+                                                //mView.LikeSuccess();
                                          /*   Map<String, Object> data_notification = new HashMap<>();
                                             data_notification.put("TOKEN",responsePost.getResult_data_extra());
                                             data_notification.put("ID_RECURSO",postActions.getId_post());
@@ -123,7 +129,7 @@ public class ComentariosPresenter implements ComentariosContract.Presenter {
                                                     .addOnCompleteListener(task -> {})
                                                     .addOnSuccessListener(aVoid -> {});
                                                     */
-
+                                            }
                                         } else {
                                             RETRY++;
                                             if (RETRY < 3) {
