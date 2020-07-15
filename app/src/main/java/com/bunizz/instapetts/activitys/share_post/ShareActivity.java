@@ -244,6 +244,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
 
     private void change_share(FragmentElement fragment,Bundle bundle) {
+        Log.e("CONTAINS_A_PETssCO","-->" + bundle.getInt("CONTAINS_A_PET"));
         if (fragment != null) {
             mCurrentFragment = fragment;
             paths_themp.clear();
@@ -253,6 +254,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
                 stack_share.push(mCurrentFragment);
             }
         }
+        ((FragmentSharePost) mCurrentFragment.getFragment()).refresh_list();
         inflateFragment();
     }
 

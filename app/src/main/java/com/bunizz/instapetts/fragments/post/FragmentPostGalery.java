@@ -57,8 +57,9 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
 
     public void setData_posts(ArrayList<Object> data_posts) {
         IS_ALL = false;
-        PostBean ID_POST = (PostBean)data_posts.get(data_posts.size() - 1);
+
         if(data_posts.size()>0) {
+            PostBean ID_POST = (PostBean)data_posts.get(data_posts.size() - 1);
             PAGINADOR = ID_POST.getId_post_from_web();
         }else{
             IS_ALL = true;

@@ -18,6 +18,7 @@ import com.bunizz.instapetts.web.parameters.ParameterAvailableNames;
 import com.bunizz.instapetts.web.parameters.ParameterSearching;
 import com.bunizz.instapetts.web.parameters.PostFriendsBean;
 import com.bunizz.instapetts.web.parameters.PostLikeBean;
+import com.bunizz.instapetts.web.responses.HistoriesBeanResponse;
 import com.bunizz.instapetts.web.responses.IdentificadoresHistoriesResponse;
 import com.bunizz.instapetts.web.responses.PetsResponse;
 import com.bunizz.instapetts.web.responses.ResponseCatalogo;
@@ -83,6 +84,8 @@ public interface WebServices {
     // STORIES //////////////////////////////////////////////////////////
     @POST("test/newstories")
     Single<SimpleResponse> newStory( @Body HistoriesBean historiesBean );
+    @POST("test/newstories")
+    Single<HistoriesBeanResponse> getMyStories(@Body UserBean userBean );
     ////////////////////////////////////////////////////////////////////
 
     @POST("test/gettips")

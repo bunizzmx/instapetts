@@ -35,6 +35,7 @@ import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.listeners.chose_pet_listener;
+import com.bunizz.instapetts.listeners.remove_litener;
 import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.services.ImagePostsService;
 import com.bunizz.instapetts.utils.dilogs.DialogNoPets;
@@ -66,6 +67,11 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     @BindView(R.id.location_user)
     TextView location_user;
 
+    @BindView(R.id.label_contains_pet)
+    TextView label_contains_pet;
+
+
+
     @BindView(R.id.caracteres_share_post)
     TextView caracteres_share_post;
 
@@ -86,6 +92,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     PostBean post ;
     int DURACION =0;
     String ASPECT="";
+    int CONTAINS_A_PET =0;
 
     @OnClick(R.id.share_post_pet)
     void share_post_pet()
@@ -159,11 +166,21 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adapter = new ListSelectedAdapter(getContext());
+        adapter.setListener_remove(new remove_litener() {
+            @Override
+            public void remove(int size) {
+                paths.remove(size);
+                if(paths.size() == 0){
+                    getActivity().onBackPressed();
+                }
+            }
+        });
         presenter = new SharePostPresenter(this, getContext());
         Bundle bundle=getArguments();
         helper = new PetHelper(getContext());
         if(bundle!=null){
             paths.addAll(bundle.getStringArrayList("data_pahs"));
+            CONTAINS_A_PET = bundle.getInt("CONTAINS_A_PET");
             is_video = bundle.getInt("is_video");
             DURACION = bundle.getInt(BUNDLES.VIDEO_DURATION,30);
             ASPECT =   bundle.getString(BUNDLES.VIDEO_ASPECT);
@@ -234,6 +251,30 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         });
 
         presenter.getLocation();
+        if(CONTAINS_A_PET == 0){
+            label_contains_pet.setVisibility(View.VISIBLE);
+            label_contains_pet.setTextColor(getContext().getResources().getColor(R.color.primary));
+            label_contains_pet.setText("TUS FOTOS NO CONTIENEN MASCOTAS POR LO QUE SRAN MENOS VISIBLES");
+        }else{
+            label_contains_pet.setVisibility(View.GONE);
+        }
+    }
+
+    public void refresh_list(){
+        if(list_image_selected!=null && adapter!=null){
+            paths.clear();
+            Bundle bundle=getArguments();
+            paths.addAll(bundle.getStringArrayList("data_pahs"));
+            CONTAINS_A_PET = bundle.getInt("CONTAINS_A_PET");
+            adapter.setData(paths);
+            if(CONTAINS_A_PET == 0){
+                label_contains_pet.setVisibility(View.VISIBLE);
+                label_contains_pet.setTextColor(getContext().getResources().getColor(R.color.primary));
+                label_contains_pet.setText("TUS FOTOS NO CONTIENEN MASCOTAS POR LO QUE SRAN MENOS VISIBLES");
+            }else{
+                label_contains_pet.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override

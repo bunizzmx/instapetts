@@ -27,11 +27,18 @@ import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.uploads;
 
 import com.bunizz.instapetts.utils.crop2.view.ImageCropView;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
+import com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -80,6 +87,8 @@ public class ImageCropFragment extends Fragment {
 
     ArrayAdapter albumAdapter;
     boolean IS_CROPED_IMAGE_FINISH = false;
+    int CONTAINS_A_PET = 0;
+    String fileex  ="";
 
     @OnClick(R.id.changue_to_4_3)
     void changue_to_4_3()
@@ -151,6 +160,9 @@ public class ImageCropFragment extends Fragment {
     public void update_croper(){
         Bundle bundle=getArguments();
         if(bundle!=null){
+            array_list_cropes.clear();
+            paths.clear();
+            seleccionadas.clear();
             is_from_profile = bundle.getInt("FROM_PROFILE");
             paths = bundle.getStringArrayList("PATH_SELECTED");
             Log.e("FROM_PROFILE","--->" + is_from_profile);
@@ -184,60 +196,12 @@ public class ImageCropFragment extends Fragment {
         ButterKnife.bind(this, view);
         liste_image_selected.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
         liste_image_selected.setAdapter(adapter);
-        /*(new OnCropListener() {
-            @Override
-            public void onSuccess(@NotNull Bitmap bitmap) {
-                if(saveImage(bitmap,"Instapetts","Instapetts_", Bitmap.CompressFormat.JPEG)){
-                    if(IS_FROM_CAMERA ==1){
-                        File file = new File(paths.get(0));
-                        try {
-                            if (file.delete()) {
-                                getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(new File(paths.get(0)))));
-                            }
-                        }catch (Exception e){}
-                    }
-                    if(CURRENT_INDEX < paths.size()-1){
-                        if(CURRENT_INDEX==paths.size()-1){
-                            Log.e("lkjhdfjkdsh","POST");
-                            Bundle b = new Bundle();
-                            b.putStringArrayList("data_pahs",array_list_cropes);
-                            listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
-                        }else{
-                            CURRENT_INDEX ++;
-                            if(CURRENT_INDEX == paths.size()-1)
-                              crop_now_selected.setText("Finalizar");
-
-                            cropLayout.setUri(Uri.parse(paths.get(CURRENT_INDEX)));
-                        }
-
-                    }else{
-                        if (App.read(PREFERENCES.FROM_PICKER, "PROFILE").equals("PROFILE")) {
-                            Log.e("lkjhdfjkdsh","PROFILE");
-                            listener_uploads.setResultForOtherChanges(array_list_cropes.get(0));
-                        }else{
-                            Log.e("lkjhdfjkdsh","POST");
-                            Bundle b = new Bundle();
-                            b.putStringArrayList("data_pahs",array_list_cropes);
-                            listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
-                            CURRENT_INDEX =0;
-                        }
-                    }
-
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Exception e) {
-
-            }
-        });*/
         indicator_4_4.setVisibility(View.VISIBLE);
         cropLayout.setImageFilePath(paths.get(CURRENT_INDEX));
-        if (paths.size() == 1){
+        if (paths.size() == 1)
             crop_now_selected.setText("Finalizar");
-        }else{
+        else
             crop_now_selected.setText("Siguiente");
-        }
         crop_now_selected.setOnClickListener(view1 -> {
             if(CURRENT_INDEX < paths.size()-1){
                 adapter.update_croped_item(CURRENT_INDEX);
@@ -246,74 +210,126 @@ public class ImageCropFragment extends Fragment {
                 saveImage(cropLayout.getCroppedImage(),"Instapetts","Instapetts_", Bitmap.CompressFormat.JPEG);
             }
         });
+    }
+
+
+
+    public  void saveImage(Bitmap bitmap, String folderName, String filename, Bitmap.CompressFormat compressFormat) {
+        FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);
+        FirebaseVisionImageLabeler labeler = FirebaseVision.getInstance()
+                .getOnDeviceImageLabeler();
+        if(is_from_profile == 1){
+            fileex = filename + App.read(PREFERENCES.UUID,"INVALID");
+        }else{
+            fileex = filename + UUID.randomUUID();
+        }
+        labeler.processImage(image)
+                .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionImageLabel>>() {
+                    @Override
+                    public void onSuccess(List<FirebaseVisionImageLabel> labels) {
+                        for(int i =0;i< labels.size();i++){
+                            Log.e("LABELS","-->" + labels.get(i).getText());
+                           if(determinatePet(labels.get(i).getText())){
+                               CONTAINS_A_PET = 1;
+                               break;
+                           }else{
+                               CONTAINS_A_PET = 0;
+                           }
+                        }
+                        if(CONTAINS_A_PET == 1){
+                            Log.e("ANALSISI_IMAGEN","--> SI TIENE UN PET");
+                        }else{
+                            Log.e("ANALSISI_IMAGEN","--> NO TIENE MASCOTA");
+                        }
+                        if(is_from_profile == 1){
+                            fileex = fileex + App.read(PREFERENCES.UUID,"INVALID");
+                        }else{
+                            fileex = fileex + UUID.randomUUID();
+                        }
+
+                        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + folderName);
+                        if (!file.exists()) {
+                            file.mkdir();
+                        }
+                        file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + folderName + File.separator + fileex + ".jpg");
+                        try {
+                            FileOutputStream out = new FileOutputStream(file);
+                            bitmap.compress(compressFormat, 90, out);
+                            out.flush();
+                            out.close();
+                            PATH_TEMP = file.getPath();
+                            Log.e("PATH_CROPED","-->" + PATH_TEMP);
+                            array_list_cropes.add(PATH_TEMP);
+                            try {
+                                Intent mediaScannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                                Uri fileContentUri = Uri.fromFile(file);
+                                mediaScannerIntent.setData(fileContentUri);
+                                getContext().sendBroadcast(mediaScannerIntent);
+
+                                if(CURRENT_INDEX < paths.size()-1){
+                                    if(CURRENT_INDEX==paths.size()-1){
+                                        Bundle b = new Bundle();
+                                        b.putStringArrayList("data_pahs",array_list_cropes);
+                                        b.putInt("CONTAINS_A_PET",CONTAINS_A_PET);
+                                        Log.e("CONTAINS_Ay_PETssCO","-->" + CONTAINS_A_PET);
+                                        adapter.clear();
+                                        listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
+                                    }else{
+                                        CURRENT_INDEX ++;
+                                        if(CURRENT_INDEX == paths.size()-1)
+                                            crop_now_selected.setText("Finalizar");
+                                        cropLayout.setImageFilePath(paths.get(CURRENT_INDEX));
+                                    }
+
+                                }else{
+                                    if (App.read(PREFERENCES.FROM_PICKER, "PROFILE").equals("PROFILE")) {
+                                        Log.e("lkjhdfjkdsh","PROFILE");
+                                        listener_uploads.setResultForOtherChanges(array_list_cropes.get(0));
+                                    }else{
+                                        Log.e("lkjhdfjkdsh","POST");
+                                        Bundle b = new Bundle();
+                                        b.putInt("CONTAINS_A_PET",CONTAINS_A_PET);
+                                        b.putStringArrayList("data_pahs",array_list_cropes);
+                                        adapter.clear();
+                                        Log.e("CONTAINS_A_xPETssCO","-->" + CONTAINS_A_PET);
+                                        listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
+                                        CURRENT_INDEX =0;
+                                    }
+                                }
+
+
+                            }catch (Exception e){
+                                Log.e("ERROR_BROADCAST",":)");
+                            }
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                            Log.e("ImageViewZoom", exception.getMessage());
+
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Task failed with an exception
+                        // ...
+                    }
+                });
 
     }
 
 
 
-    public  boolean saveImage(Bitmap bitmap, String folderName, String filename, Bitmap.CompressFormat compressFormat) {
-        if(is_from_profile == 1){
-            filename = filename + App.read(PREFERENCES.UUID,"INVALID");
-        }else{
-            filename = filename + UUID.randomUUID();
-        }
-
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + folderName);
-        if (!file.exists()) {
-            file.mkdir();
-        }
-        file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + folderName + File.separator + filename + ".jpg");
-        try {
-            FileOutputStream out = new FileOutputStream(file);
-            bitmap.compress(compressFormat, 90, out);
-            out.flush();
-            out.close();
-            PATH_TEMP = file.getPath();
-            Log.e("PATH_CROPED","-->" + PATH_TEMP);
-            array_list_cropes.add(PATH_TEMP);
-            try {
-                Intent mediaScannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                Uri fileContentUri = Uri.fromFile(file);
-                mediaScannerIntent.setData(fileContentUri);
-                getContext().sendBroadcast(mediaScannerIntent);
-
-                if(CURRENT_INDEX < paths.size()-1){
-                    if(CURRENT_INDEX==paths.size()-1){
-                        Log.e("lkjhdfjkdsh","POST");
-                        Bundle b = new Bundle();
-                        b.putStringArrayList("data_pahs",array_list_cropes);
-                        listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
-                    }else{
-                        CURRENT_INDEX ++;
-                        if(CURRENT_INDEX == paths.size()-1)
-                            crop_now_selected.setText("Finalizar");
-                        cropLayout.setImageFilePath(paths.get(CURRENT_INDEX));
-                    }
-
-                }else{
-                    if (App.read(PREFERENCES.FROM_PICKER, "PROFILE").equals("PROFILE")) {
-                        Log.e("lkjhdfjkdsh","PROFILE");
-                        listener_uploads.setResultForOtherChanges(array_list_cropes.get(0));
-                    }else{
-                        Log.e("lkjhdfjkdsh","POST");
-                        Bundle b = new Bundle();
-                        b.putStringArrayList("data_pahs",array_list_cropes);
-                        listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
-                        CURRENT_INDEX =0;
-                    }
-                }
-
-
-            }catch (Exception e){
-                Log.e("ERROR_BROADCAST",":)");
+    public boolean determinatePet(String label){
+        String[] pets = {"CAT", "DOG", "PET", "ANIMAL"};
+        for (int i = 0; i< pets.length;i++){
+            if(label.toUpperCase().contains(pets[i])){
+                return true;
+            }else{
+                continue;
             }
-            return true;
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            Log.e("ImageViewZoom", exception.getMessage());
-            return true;
-
         }
+        return  false;
     }
 
 
@@ -343,6 +359,10 @@ public class ImageCropFragment extends Fragment {
         public void update_croped_item(int index){
             this.seleteds.get(index).setIs_selected(true);
             notifyDataSetChanged();
+        }
+
+        public void clear(){
+            this.seleteds.clear();
         }
 
         public void setSeleteds(ArrayList<SelectedsImagesBean> seleteds) {

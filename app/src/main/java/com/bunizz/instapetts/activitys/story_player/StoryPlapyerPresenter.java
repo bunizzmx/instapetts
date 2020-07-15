@@ -4,11 +4,14 @@ import android.content.Context;
 import android.util.Log;
 
 import com.bunizz.instapetts.App;
+import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.IdentificadoresHistoriesBean;
+import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.FIRESTORE;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.db.helpers.IdentificadoresHistoriesHelper;
 import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
 import com.bunizz.instapetts.db.helpers.MyStoryHelper;
@@ -22,6 +25,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -238,7 +243,59 @@ public class StoryPlapyerPresenter implements  StoryPlayerContract.Presenter {
 
     @Override
     public void deleteMyHistory(String id_ide_tificador) {
+        String concat_stories="";
         myStoryHelper.deleteHistory(id_ide_tificador);
+        HistoriesBean historiesBean = new HistoriesBean();
+        ArrayList<IndividualDataPetHistoryBean> lista = new ArrayList<>();
+        lista = myStoryHelper.getMyStories();
+        for(int i =0; i< lista.size();i++){
+            if(i<lista.size()) {
+                concat_stories +=
+                        lista.get(i).getName_pet() + ";" +
+                                lista.get(i).getPhoto_pet() + ";" +
+                                lista.get(i).getId_pet() + ";" +
+                                lista.get(i).getTumbh_video() + ";" +
+                                lista.get(i).getUrl_photo() + ";" +
+                                lista.get(i).getIdentificador() + ";" +
+                                lista.get(i).getDate_story() +",";
+            }else{
+                concat_stories +=
+                        lista.get(i).getName_pet() + ";" +
+                                lista.get(i).getPhoto_pet() + ";" +
+                                lista.get(i).getId_pet() + ";" +
+                                lista.get(i).getTumbh_video() + ";" +
+                                lista.get(i).getUrl_photo() + ";" +
+                                lista.get(i).getIdentificador() + ";" +
+                                lista.get(i).getDate_story();
+            }
+        }
+        historiesBean.setId_user(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        historiesBean.setName_user(App.read(PREFERENCES.NAME_USER,"INVALID"));
+        historiesBean.setPhoto_user(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
+        historiesBean.setUltima_fecha(App.formatDateGMT(new Date()));
+        historiesBean.setHistorias(concat_stories);
+        if(lista.size()==1)
+            historiesBean.setTarget(WEBCONSTANTS.NEW);
+        else if(lista.size() <= 0)
+            historiesBean.setTarget(WEBCONSTANTS.DELETE);
+        else
+            historiesBean.setTarget(WEBCONSTANTS.UPDATE);
+
+        disposable.add(
+                apiService
+                        .newStory(historiesBean)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                            @Override
+                            public void onSuccess(SimpleResponse user) {
+                                // mView.psuccessProfileUpdated();
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.e("ERROR","UPDATED PROFILE");
+                            }
+                        }));
     }
 
 

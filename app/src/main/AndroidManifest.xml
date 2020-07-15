@@ -19,6 +19,7 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme"
+        android:largeHeap="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="q">
         <meta-data

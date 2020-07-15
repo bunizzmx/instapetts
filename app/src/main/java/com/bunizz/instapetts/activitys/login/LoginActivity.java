@@ -561,6 +561,18 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     }
 
     @Override
+    public void HistoriesSaved() {
+        Intent i ;
+        i = new Intent(LoginActivity.this, Main.class);
+        i.putExtra("LOGIN_AGAIN",1);
+        i.putExtra(BUNDLES.DOWNLOADS_INFO,1);
+        i.putExtra("NEW_USER",0);
+        i.putExtra("FROM_PUSH",0);
+        startActivity(i);
+        finish();
+    }
+
+    @Override
     public void loginCompleted(UserBean userBean) {
         startService(intent_service);
         App.write(PREFERENCES.FOTO_PROFILE_USER,userBean.getPhoto_user());
@@ -609,14 +621,8 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     @Override
     public void fileBackupDownloaded() {
         dialogLoanding.dismiss();
-        Intent i ;
-        i = new Intent(LoginActivity.this, Main.class);
-        i.putExtra("LOGIN_AGAIN",1);
-        i.putExtra(BUNDLES.DOWNLOADS_INFO,1);
-        i.putExtra("NEW_USER",0);
-        i.putExtra("FROM_PUSH",0);
-        startActivity(i);
-        finish();
+        presenter.getMyStories();
+
     }
 
     @SuppressLint("CheckResult")

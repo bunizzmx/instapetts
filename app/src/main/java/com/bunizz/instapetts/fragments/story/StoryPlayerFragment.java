@@ -119,11 +119,9 @@ public class StoryPlayerFragment extends Fragment {
                 view_pager_stories.setCurrentItem(CURRENT_ITEM + 1);
             }
             else {
-                Log.e("PAGER_HISTORIES","es la ultima lo termino");
                 getActivity().finish();
             }
         }else{
-            Log.e("PAGER_HISTORIES","a la verga");
             getActivity().finish();
         }
     }

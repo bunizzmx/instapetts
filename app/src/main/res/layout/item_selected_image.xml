@@ -3,8 +3,9 @@
     android:layout_marginLeft="5dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="60dp"
-    android:layout_height="80dp">
+    android:layout_width="65dp"
+    android:layout_height="85dp">
+
 <androidx.cardview.widget.CardView
     android:layout_centerHorizontal="true"
     android:layout_centerVertical="true"
@@ -12,7 +13,7 @@
     android:orientation="vertical"
     app:cardCornerRadius="5dp"
     android:layout_margin="2dp"
-    app:cardElevation="4dp"
+    app:cardElevation="3dp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
   <RelativeLayout
@@ -35,4 +36,19 @@
   </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
+  <androidx.cardview.widget.CardView
+      android:visibility="gone"
+      android:id="@+id/delete_selection"
+      app:contentPadding="3dp"
+      app:cardBackgroundColor="@color/white"
+      app:cardCornerRadius="5dp"
+      app:cardElevation="4dp"
+      android:layout_alignParentRight="true"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content">
+    <ImageView
+        android:src="@drawable/ic_trash"
+        android:layout_width="10dp"
+        android:layout_height="10dp"/>
+  </androidx.cardview.widget.CardView>
 </RelativeLayout>

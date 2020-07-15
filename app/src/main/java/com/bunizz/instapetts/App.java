@@ -324,7 +324,7 @@ public class App extends Application {
 
     }
 
-    public static long horas_restantes_top(String fecha){
+    public static int horas_restantes_top(String fecha){
         Log.e("FECHA_TOP","-->" + fecha);
         if(fecha.equals("null")){return 999;}else {
             try {
@@ -342,9 +342,9 @@ public class App extends Application {
         }
     }
 
-    public static long  cantidadTotalHoras_top(Calendar fechaInicial , Calendar fechaFinal){
-        long totalMinutos=0;
-        totalMinutos=((fechaFinal.getTimeInMillis()-fechaInicial.getTimeInMillis())/1000/60/60);
+    public static int  cantidadTotalHoras_top(Calendar fechaInicial , Calendar fechaFinal){
+        int totalMinutos=0;
+        totalMinutos= (int) ((fechaFinal.getTimeInMillis()-fechaInicial.getTimeInMillis())/1000/60/60);
         return  totalMinutos;
     }
 

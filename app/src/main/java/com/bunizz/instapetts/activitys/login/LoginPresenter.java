@@ -4,14 +4,18 @@ import android.content.Context;
 import android.util.Log;
 
 import com.bunizz.instapetts.App;
+import com.bunizz.instapetts.beans.HistoriesBean;
+import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
+import com.bunizz.instapetts.db.helpers.MyStoryHelper;
 import com.bunizz.instapetts.fragments.login.MainLogin;
 import com.bunizz.instapetts.fragments.login.MainLoginContract;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.CONST;
 import com.bunizz.instapetts.web.WebServices;
+import com.bunizz.instapetts.web.responses.HistoriesBeanResponse;
 import com.bunizz.instapetts.web.responses.SimpleResponse;
 import com.bunizz.instapetts.web.responses.SimpleResponseLogin;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -35,6 +39,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     private static final String TAG = MainLogin.class.getSimpleName();
     private StorageReference storageReference;
     IdsUsersHelper idsUsersHelper;
+    MyStoryHelper myStoryHelper;
     int COUNTER_FRIENDS =0;
     LoginPresenter(LoginContract.View view, Context context) {
         this.mView = view;
@@ -43,6 +48,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                 .create(WebServices.class);
         storageReference = FirebaseStorage.getInstance(CONST.BUCKET_FILES_BACKUP).getReference();
         idsUsersHelper = new IdsUsersHelper(mContext);
+        myStoryHelper = new MyStoryHelper(mContext);
     }
     @Override
     public void RegisterUser(UserBean userBean) {
@@ -139,5 +145,56 @@ public class LoginPresenter implements LoginContract.Presenter {
                 mView.fileBackupDownloaded();
             }
         });
+    }
+
+    @Override
+    public void getMyStories() {
+        UserBean userBean = new UserBean();
+        userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        userBean.setTarget("GET_MY");
+        disposable.add(
+                apiService
+                        .getMyStories(userBean)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<HistoriesBeanResponse>() {
+                            @Override
+                            public void onSuccess(HistoriesBeanResponse user) {
+                                if(user!=null) {
+                                    Log.e("MY_STORY_DOWNLOAD", "--->" + user.getList_stories().get(0).getHistorias());
+                                    String splitItems[] = user.getList_stories().get(0).getHistorias().split(",");
+                                    String splitSubitems[] = splitItems[splitItems.length-1].split(";");
+                                    for(int i=0;i<splitItems.length;i++){
+                                        myStoryHelper.saveMyStory(new IndividualDataPetHistoryBean(
+                                               splitSubitems[0],
+                                               splitSubitems[1],
+                                                Integer.parseInt(splitSubitems[2]),
+                                                splitSubitems[4],
+                                                splitSubitems[5] ,
+                                                splitSubitems[6]));
+                                    }
+                                    mView.HistoriesSaved();
+                                }
+                                else{
+                                    RETRY ++;
+                                    if(RETRY < 3) {
+                                        updateUser(userBean);
+                                    }else{
+                                        mView.registerError();
+                                    }
+                                }
+
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                RETRY ++;
+                                if(RETRY < 3) {
+                                    updateUser(userBean);
+                                }else{
+                                    Log.e("NO_INTERNET","-->error" );
+                                    mView.registerError();
+                                }
+                            }
+                        }));
     }
 }

@@ -43,13 +43,22 @@ public class IndividualDataPetHistoryBean {
     }
 
 
-    public IndividualDataPetHistoryBean(String url_photo, String name_pet, String photo_pet, int id_pet, String date_story, int views) {
+    public IndividualDataPetHistoryBean(String name_pet,String url_photo ,String photo_pet, int id_pet,int views,String date_story) {
         this.url_photo = url_photo;
         this.name_pet = name_pet;
         this.photo_pet = photo_pet;
         this.id_pet = id_pet;
         this.date_story = date_story;
         this.views = views;
+    }
+
+    public IndividualDataPetHistoryBean(String name_pet,String photo_pet ,int id_pet,String url_photo,String identificador,String date_story) {
+        this.url_photo = url_photo;
+        this.name_pet = name_pet;
+        this.photo_pet = photo_pet;
+        this.id_pet = id_pet;
+        this.date_story = date_story;
+        this.identificador = identificador;
     }
 
 

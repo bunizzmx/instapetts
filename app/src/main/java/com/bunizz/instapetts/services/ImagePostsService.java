@@ -130,16 +130,20 @@ public class ImagePostsService extends Service {
         TransferObserver transferObserver;
         SIZE_OF_FILES = key.size();
         for(int i =0;i<key.size();i++){
-            if(TYPE_NOTIFICATION == 2){
+            if(TYPE_NOTIFICATION ==  2){
                 file = new Compressor(this).compressToFile(new File(key.get(i)));
             }else{
-                file = new File(key.get(i));
+
                 if(intent.getIntExtra(BUNDLES.POST_TYPE,0) ==1){
+                    file = new File(key.get(i));
                     file_thumbh = new File(intent.getStringExtra(BUNDLES.PHOTO_TUMBH));
                     String splits[] =intent.getStringExtra(BUNDLES.PHOTO_TUMBH).split("/");
                     Log.e("NAME_DEL_TUMBH","--> 1" + intent.getStringExtra(BUNDLES.PHOTO_TUMBH).split("/"));
                     name_file_thumbh = splits[splits.length-1];
                     Log.e("NAME_DEL_TUMBH","--> 2" + name_file_thumbh);
+                }else{
+                    Log.e("COMPRIMO_POST","-->");
+                    file = new Compressor(this).compressToFile(new File(key.get(i)));
                 }
             }
 
@@ -149,7 +153,11 @@ public class ImagePostsService extends Service {
             if(TYPE_NOTIFICATION == 1){
                 filename =App.read(PREFERENCES.UUID,"INVALID") +"/" +  CONST.FOLDER_PROFILE  + "/" + App.read(PREFERENCES.UUID,"INVALID") + ".jpg";
             }else if(TYPE_NOTIFICATION == 0){
-                filename = App.read(PREFERENCES.UUID,"INVALID") + "/" +  CONST.FOLDER_POSTS + "/"+ intent.getStringExtra(BUNDLES.VIDEO_ASPECT) + "/" +  splits[index - 1];
+                if(intent.getIntExtra(BUNDLES.POST_TYPE,0) ==1){
+                    filename = App.read(PREFERENCES.UUID, "INVALID") + "/" + CONST.FOLDER_POSTS + "/" + intent.getStringExtra(BUNDLES.VIDEO_ASPECT) + "/" + splits[index - 1];
+                }else{
+                    filename = App.read(PREFERENCES.UUID, "INVALID") + "/" + CONST.FOLDER_POSTS +"/" + splits[index - 1];
+                }
             }else if (TYPE_NOTIFICATION == 3){
                 filename = App.read(PREFERENCES.UUID,"INVALID") + "/" +  CONST.FOLDER_PETS + "/" + App.read(PREFERENCES.UUID,"INVALID")  +  NAME_PET + ".jpg" ;
             }else{

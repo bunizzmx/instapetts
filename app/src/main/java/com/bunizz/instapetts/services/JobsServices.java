@@ -19,6 +19,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.main.Main;
+import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.NotificationBean;
 import com.bunizz.instapetts.beans.NotificationBeanFirestore;
 import com.bunizz.instapetts.beans.PostBean;
@@ -70,6 +71,7 @@ public class JobsServices {
     StorageMetadata metadata;
     private StorageReference storageReference;
     ArrayList<Integer> list_ids = new ArrayList<>();
+    ArrayList<IndividualDataPetHistoryBean> histories= new ArrayList<>();
     public JobsServices(Context context) {
         this.context = context;
         this.db = App.getIntanceFirestore();
@@ -160,6 +162,16 @@ public class JobsServices {
                         Log.e("Exception", "File write failed: " + e.toString());
                     }
                 }
+                histories.addAll(myStoryHelper.getMyStories());
+                for(int i =0;i<histories.size();i++){
+                    int horas = App.horas_restantes_top(histories.get(i).getDate_story());
+                    Log.e("DELETE_MY_HISTORY","horas:" + horas);
+                    if(horas > 25){
+                        Log.e("DELETE_MY_HISTORY","si");
+                        myStoryHelper.deleteHistory(histories.get(i).getIdentificador());
+                    }
+                }
+
 
             } catch (Exception ex) {
                 Log.e(TAG, "Error en la ejecución de peticion de tramas", ex);

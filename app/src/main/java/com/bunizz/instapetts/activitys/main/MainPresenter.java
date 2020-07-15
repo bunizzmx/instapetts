@@ -133,9 +133,10 @@ public class MainPresenter implements MainContract.Presenter {
         historiesBean.setHistorias(concat_stories);
         if(lista.size()==1)
             historiesBean.setTarget(WEBCONSTANTS.NEW);
+        else if(lista.size() <= 0)
+            historiesBean.setTarget(WEBCONSTANTS.DELETE);
         else
             historiesBean.setTarget(WEBCONSTANTS.UPDATE);
-
 
         disposable.add(
                 apiService
