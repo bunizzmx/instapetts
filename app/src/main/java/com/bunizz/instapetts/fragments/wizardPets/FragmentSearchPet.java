@@ -67,7 +67,15 @@ public class FragmentSearchPet extends Fragment  implements SearchPetContract.Vi
         }
         //changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET);
     }
-  ArrayList<RazaBean> razasfor_database = new ArrayList<>();
+
+    @OnClick(R.id.back_to_main)
+    void back_to_main()
+    {
+        getActivity().onBackPressed();
+    }
+
+
+    ArrayList<RazaBean> razasfor_database = new ArrayList<>();
     SearchRazaAdapter adapter;
     SearchPetPresenter presenter;
     change_instance_wizard listener;

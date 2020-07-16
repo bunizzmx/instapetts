@@ -30,6 +30,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class FragmentTypePet extends Fragment{
 
@@ -44,6 +45,13 @@ public class FragmentTypePet extends Fragment{
     public static FragmentTypePet newInstance() {
         return new FragmentTypePet();
     }
+
+    @OnClick(R.id.back_to_main)
+    void back_to_main()
+    {
+        getActivity().onBackPressed();
+    }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,7 +76,8 @@ public class FragmentTypePet extends Fragment{
         petTtypes.add(new PetTtype(R.drawable.ic_mascota_perico,getContext().getResources().getString(R.string.pet_type_ave),3));
         petTtypes.add(new PetTtype(R.drawable.ic_mascota_conejo,getContext().getResources().getString(R.string.pet_type_conejo),4));
         petTtypes.add(new PetTtype(R.drawable.ic_mascota_hamster,getContext().getResources().getString(R.string.pet_type_hamster),5));
-        petTtypes.add(new PetTtype(R.drawable.ic_perro,getContext().getResources().getString(R.string.pet_type_otro),6));
+        petTtypes.add(new PetTtype(R.drawable.ic_serpiente,getContext().getResources().getString(R.string.reptil),6));
+        petTtypes.add(new PetTtype(R.drawable.ic_otro,getContext().getResources().getString(R.string.pet_type_otro),7));
         adapter.setPetTtypes(petTtypes);
     }
 

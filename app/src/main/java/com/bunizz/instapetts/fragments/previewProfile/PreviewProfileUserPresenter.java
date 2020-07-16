@@ -84,7 +84,7 @@ public class PreviewProfileUserPresenter implements   ProfileUserContract.Presen
     @Override
     public void getPostUser(boolean one_user,int id_one,int filter) {
         PostFriendsBean postFriendsBean = new PostFriendsBean();
-        postFriendsBean.setPaginador(-1);
+        postFriendsBean.setPaginador(-999);
         if(one_user){
             postFriendsBean.setId_one(id_one);
             postFriendsBean.setTarget("ONE");

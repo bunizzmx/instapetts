@@ -47,6 +47,7 @@
                 android:textColor="@color/black"
                 android:textSize="20dp" />
             <EditText
+                android:id="@+id/otra_mascota"
                 android:fontFamily="@font/avenir_black"
                 android:textSize="30dp"
                 android:textAlignment="center"

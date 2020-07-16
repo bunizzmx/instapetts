@@ -31,6 +31,7 @@ public class DialogDeletes extends BaseAlertDialog{
     TextView description_deletes;
     TextView confirm_deletes;
     TextView confirm_decline;
+    boolean is_cancelable =true;
 
     public delete getListener() {
         return listener;
@@ -52,6 +53,7 @@ public class DialogDeletes extends BaseAlertDialog{
         confirm_decline = dialogView.findViewById(R.id.confirm_decline);
         layout_delete_algo = dialogView.findViewById(R.id.layout_delete_algo);
         if(type_dialog == 0) {
+            is_cancelable =true;
             layout_delete_algo.setVisibility(View.GONE);
             text_delete_dialog.setText(getContext().getResources().getString(R.string.delete_button_alt));
             delete_now_layout.setOnClickListener(v -> {
@@ -66,6 +68,7 @@ public class DialogDeletes extends BaseAlertDialog{
             });
         }
         else if(type_dialog == 1) {
+            is_cancelable =true;
             layout_delete_algo.setVisibility(View.GONE);
             text_delete_dialog.setText("Eliminar todas");
             delete_now_layout.setOnClickListener(v -> {
@@ -113,7 +116,7 @@ public class DialogDeletes extends BaseAlertDialog{
 
     @Override
     public void show(){
-        dialog.setCancelable(false);
+        dialog.setCancelable(is_cancelable);
         dialog.show();
     }
 

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.listeners.change_instance_wizard;
 
 public class DialogOtherPet extends BaseAlertDialog{
@@ -27,6 +29,7 @@ public class DialogOtherPet extends BaseAlertDialog{
     Button add_other_pet;
     String title_permision;
     change_instance_wizard listener;
+    EditText otra_mascota;
 
     public change_instance_wizard getListener() {
         return listener;
@@ -41,10 +44,13 @@ public class DialogOtherPet extends BaseAlertDialog{
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this.context);
         LayoutInflater inflater = LayoutInflater.from(this.context);
         dialogView = inflater.inflate(R.layout.dialog_other_pet, null);
+        otra_mascota = dialogView.findViewById(R.id.otra_mascota);
         add_other_pet = dialogView.findViewById(R.id.add_other_pet);
         add_other_pet.setOnClickListener(view -> {
             if(listener!=null){
                 Bundle b = new Bundle();
+                b.putInt(BUNDLES.TYPE_PET,7);
+                b.putString("OTHER_PET_NAME",otra_mascota.getText().toString());
                 listener.onchange(0,b);
             }
         });

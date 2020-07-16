@@ -270,8 +270,11 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
             case 5:
                 icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mascota_hamster));
                 break;
-            case 6:break;
-            case 7:break;
+            case 6:
+                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_serpiente));
+                break;
+            case 7:
+                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_otro));break;
             case 8:break;
             case 9:break;
             case 10:break;
@@ -284,8 +287,16 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
             default:break;
 
         }
+        if(petBean.getRaza_pet() == null ){
+            name_raza_pet.setText("DESCONOCIDA");
+        }else{
+            if(petBean.getRaza_pet().trim().isEmpty() || petBean.getRaza_pet().equals("undefined")){
+                name_raza_pet.setText("DESCONOCIDA");
+            }else{
+                name_raza_pet.setText(petBean.getRaza_pet());
+            }
+        }
 
-        name_raza_pet.setText(petBean.getRaza_pet());
         if(petBean.getGenero_pet().equals("M")){
             icon_genero_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_macho));
         }else{

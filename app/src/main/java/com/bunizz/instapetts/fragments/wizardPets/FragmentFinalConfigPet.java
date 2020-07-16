@@ -37,6 +37,14 @@ public class FragmentFinalConfigPet extends Fragment {
     process_save_pet_listener listener_pet_config;
     String URL_PET="";
 
+    @OnClick(R.id.back_to_main)
+    void back_to_main()
+    {
+        getActivity().onBackPressed();
+    }
+
+
+
     @SuppressLint("MissingPermission")
     @OnClick(R.id.finalice_pet)
     void finalice_pet()

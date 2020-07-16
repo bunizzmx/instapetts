@@ -106,6 +106,17 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         notificationsAdapter = new NotificationsAdapter(getContext());
+        notificationsAdapter.setDelete_listener(new delete() {
+            @Override
+            public void delete(boolean delete) {
+
+            }
+
+            @Override
+            public void deleteOne(int id) {
+               presenter.deleteNotification(id);
+            }
+        });
         notificationsAdapter.setListener(new notifications_events() {
             @Override
             public void delete(int id) {
@@ -185,6 +196,7 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
         ArrayList<NotificationBean> notificationBeans = new ArrayList<>();
         Context context;
         notifications_events listener;
+        delete delete_listener;
         changue_fragment_parameters_listener listener_changue_instance;
 
         public changue_fragment_parameters_listener getListener_changue_instance() {
@@ -193,6 +205,14 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
 
         public void setListener_changue_instance(changue_fragment_parameters_listener listener_changue_instance) {
             this.listener_changue_instance = listener_changue_instance;
+        }
+
+        public delete getDelete_listener() {
+            return delete_listener;
+        }
+
+        public void setDelete_listener(delete delete_listener) {
+            this.delete_listener = delete_listener;
         }
 
         public notifications_events getListener() {
@@ -255,7 +275,7 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
                 }
             }
            Log.e("FECHA_NOTIFICACION","-->:" + notificationBeans.get(position).getFecha());
-            h.fecha_notificacion.setText(notificationBeans.get(position).getFecha());
+            h.fecha_notificacion.setText(App.getInstance().fecha_lenguaje_humano(notificationBeans.get(position).getFecha()));
                 h.title_notification.setText(notificationBeans.get(position).getTitle());
                 h.delete_notification.setOnClickListener(v -> {
                     if(listener!=null)
@@ -264,13 +284,7 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
                     notifyDataSetChanged();
                 });
                 if(notificationBeans.get(position).getType_notification()==0) {
-                    h.root_notification.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View v) {
 
-                            return false;
-                        }
-                    });
                     h.delete_notification.setVisibility(View.GONE);
                     h.image_extra.setVisibility(View.VISIBLE);
                     Glide.with(context).load(notificationBeans.get(position).getUrl_image_extra()).into(h.image_extra);
@@ -313,6 +327,29 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
                             listener_changue_instance.change_fragment_parameter(FragmentElement.INSTANCE_TIPS,b);
                             break;
                         default:break;
+                    }
+                });
+
+                h.root_notification.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        DialogDeletes  dialogDeletes = new DialogDeletes(getContext(),0,0);
+                        dialogDeletes.setListener(new delete() {
+                            @Override
+                            public void delete(boolean delete) {
+                                Log.e("EJECUTO_DELETE","SI");
+                                delete_listener.deleteOne(notificationBeans.get(position).getId_database());
+                                notificationBeans.remove(position  );
+                                notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void deleteOne(int id) {
+
+                            }
+                        });
+                        dialogDeletes.show();
+                        return false;
                     }
                 });
 

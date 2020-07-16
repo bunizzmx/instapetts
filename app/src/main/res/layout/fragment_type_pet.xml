@@ -19,18 +19,6 @@
         android:layout_width="15dp"
         android:layout_height="15dp"/>
   </androidx.cardview.widget.CardView>
-  <TextView
-      android:textColor="@color/black"
-      android:fontFamily="@font/avenir_black"
-      android:text="Tipo Mascota"
-      android:layout_marginBottom="10dp"
-      android:layout_marginTop="10dp"
-      android:layout_marginLeft="10dp"
-      android:layout_below="@+id/back_to_main"
-      android:id="@+id/title_type_pet"
-      android:textSize="28dp"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"/>
   <androidx.recyclerview.widget.RecyclerView
       android:layout_below="@+id/title_type_pet"
       android:id="@+id/list_types_pet"

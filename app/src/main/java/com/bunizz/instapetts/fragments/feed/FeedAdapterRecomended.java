@@ -73,14 +73,18 @@ public class FeedAdapterRecomended extends RecyclerView.Adapter<RecyclerView.Vie
             Glide.with(context).load(data_parsed.getThumb_video()).into(h.image_post_recomended);
         }
         Glide.with(context).load(data_parsed.getUrl_photo_user()).into(h.image_user_recomended);
-        h.name_user_recomended.setText(data_parsed.getName_user());
-        h.date_user_recomended.setText(App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()));
-        h.root_simple_recomended_user.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onSelectUser(data_parsed.getId_usuario(),data_parsed.getUuid());
-            }
-        });
+
+        if(data_parsed.getName_user().trim().length() > 20)
+           h.name_user_recomended.setText(data_parsed.getName_user().substring(0,18) + "...");
+        else
+            h.name_user_recomended.setText(data_parsed.getName_user());
+        if(App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()).contains(context.getString(R.string.hace))){
+            h.date_user_recomended.setText( App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()));
+        }else{
+            h.date_user_recomended.setText(context.getString(R.string.hace) + " "  + App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()));
+        }
+
+        h.root_simple_recomended_user.setOnClickListener(view -> listener.onSelectUser(data_parsed.getId_usuario(),data_parsed.getUuid()));
 
         switch (data_parsed.getType_pet()){
             case 1:

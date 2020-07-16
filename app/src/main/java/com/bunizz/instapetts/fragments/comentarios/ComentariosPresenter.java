@@ -98,7 +98,7 @@ public class ComentariosPresenter implements ComentariosContract.Presenter {
             postLikeBean.setId_post(commentariosBean.getId_post());
             postLikeBean.setId_user(commentariosBean.getId_user());
             postLikeBean.setType_event(1);
-            if(commentariosBean.getHelps_post() == 1){
+            if(commentariosBean.getHelps_post() == 0){
                 postLikeBean.setTarget("NEW_COMMENT");
             }else{
                 postLikeBean.setTarget("NEW_COMMENT_HELPS");

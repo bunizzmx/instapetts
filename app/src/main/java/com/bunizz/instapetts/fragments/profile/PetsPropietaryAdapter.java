@@ -96,8 +96,12 @@ public class PetsPropietaryAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
                     case 5:
                         h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_mascota_hamster));
                         break;
-                    case 6:break;
-                    case 7:break;
+                    case 6:
+                        h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_serpiente));
+                        break;
+                    case 7:
+                        h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_otro));
+                        break;
                     case 8:break;
                     case 9:break;
                     case 10:break;
@@ -107,7 +111,9 @@ public class PetsPropietaryAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
                     case 14:break;
                     case 15:break;
                     case 16:break;
-                    default:break;
+                    default:
+                        h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_otro));
+                        break;
 
                 }
                 if(pets.get(position).getName_pet().length() > 12)

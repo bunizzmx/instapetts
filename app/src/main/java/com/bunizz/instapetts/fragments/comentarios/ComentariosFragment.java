@@ -130,6 +130,8 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
             else
                 commentariosBean.setHelps_post(0);
 
+            Log.e("HELP_PET_STSTU","--->" + TYPE_PET);
+
             presenter.comment(commentariosBean);
             input_commentarios.setText("");
             adapter.addBelow(commentariosBean);
@@ -172,6 +174,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
             if (bundle != null) {
                 ID_POST = bundle.getInt(BUNDLES.ID_POST);
                 CAN_COMMENT = bundle.getBoolean(BUNDLES.CAN_COMMENT);
+                TYPE_PET  = bundle.getInt(BUNDLES.TYPE_PET);
             }
             adapter.clear();
             presenter.getComentarios(ID_POST);

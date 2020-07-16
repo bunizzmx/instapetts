@@ -233,7 +233,7 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 hv.root_multiple_image.setOnClickListener(v -> {
                     listener_video.MuteVideo();
                 });
-                hv.tip_notice_text.setText("Video");
+                hv.tip_notice_text.setText(context.getString(R.string.video));
                 hv.tipo_tip_notice.setCardBackgroundColor(context.getResources().getColor(R.color.azul_facebook));
                 hv.num_views.setText("" + data_parsed_video.getViews_tip());
                 hv.num_likes.setText(""+ data_parsed_video.getLikes_tip());
@@ -252,19 +252,19 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         Bundle b = new Bundle();
                         b.putInt(BUNDLES.ID_POST,data_parsed_help.getId_post_from_web());
                         b.putBoolean(BUNDLES.CAN_COMMENT,true);
-                        b.putInt(BUNDLES.TYPE_PET,data_parsed_help.getId_pet());
+                        b.putInt(BUNDLES.TYPE_PET,-999);
                         listener.change_fragment_parameter(FragmentElement.INSTANCE_COMENTARIOS,b);
                     });
 
                     if(data_parsed_help.getNum_comentarios() > 0){
                         help.num_comments_layout.setVisibility(View.VISIBLE);
-                        help.num_coments.setText("Ver " + data_parsed_help.getNum_comentarios() + " comentarios");
+                        help.num_coments.setText(context.getString(R.string.comentarios) + data_parsed_help.getNum_comentarios() + context.getString(R.string.comentarios));
                         help.num_comments_layout.setOnClickListener(v -> {
-                          /*  if(data_parsed_help.getCan_comment()==1)
-                                listener_post.commentPost(data_parsed_help.getId_post_from_web(),false);
-                            else
-                                listener_post.commentPost(data_parsed_help.getId_post_from_web(),true);
-                                */
+                            Bundle b = new Bundle();
+                            b.putInt(BUNDLES.ID_POST,data_parsed_help.getId_post_from_web());
+                            b.putBoolean(BUNDLES.CAN_COMMENT,true);
+                            b.putInt(BUNDLES.TYPE_PET,-999);
+                            listener.change_fragment_parameter(FragmentElement.INSTANCE_COMENTARIOS,b);
 
                         });
                     }else{

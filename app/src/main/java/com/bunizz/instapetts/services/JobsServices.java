@@ -106,7 +106,7 @@ public class JobsServices {
                                            notification.getTYPE_NOTIFICATION(),
                                            notification.getID_REMITENTE(),
                                            notification.getURL_EXTRA(),
-                                           App.getInstance().fecha_lenguaje_humano(notification.getFECHA())
+                                           notification.getFECHA()
                                    );
                                    NOTIFICACION.setId_recurso(notification.getID_RECURSO());
                                    NOTIFICACION.setId_document_notification(""+document.getId());
@@ -203,6 +203,7 @@ public class JobsServices {
                             }else{
                                 NotificationBean NOTIFICACION ;
                                 NOTIFICACION = notificationHelper.getLastNotifications();
+                                Log.e("DATA_NOTIFICATIOON","->" + NOTIFICACION.getId_recurso() + "/" + NOTIFICACION.getId_usuario());
                                 if(NOTIFICACION!=null)
                                  makeLocalNotification(NOTIFICACION);
                                 Log.e("NOTIFICACION_SYN", "-> YA SINCRONICE TODO" );
@@ -279,13 +280,13 @@ public class JobsServices {
         intent.putExtra("FROM_PUSH",1);
         intent.putExtra("LOGIN_AGAIN",0);
         if(notificationBean.getType_notification() == 0){
-            intent.putExtra("ID_RESOURCE",notificationBean.getId_recurso());
+            intent.putExtra("ID_RESOURCE",notificationBean.getId_usuario());
             intent.putExtra("TYPE_FRAGMENT", FragmentElement.INSTANCE_PREVIEW_PROFILE);
         }else if(notificationBean.getType_notification() == 1){
             intent.putExtra("ID_RESOURCE",notificationBean.getId_recurso());
             intent.putExtra("TYPE_FRAGMENT", FragmentElement.INSTANCE_COMENTARIOS);
         }else if(notificationBean.getType_notification() == 2){
-            intent.putExtra("ID_RESOURCE",notificationBean.getId_recurso());
+            intent.putExtra("ID_RESOURCE",notificationBean.getId_usuario());
             intent.putExtra("TYPE_FRAGMENT", FragmentElement.INSTANCE_PREVIEW_PROFILE);
         }
         else if(notificationBean.getType_notification() == 3){
