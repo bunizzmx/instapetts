@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -276,40 +277,39 @@ public class Main extends AppCompatActivity implements change_instance,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ButterKnife.bind(this);
-        presenter = new MainPresenter(this,this);
+        presenter = new MainPresenter(this, this);
         i = new Intent(Main.this, SideMenusActivities.class);
         changeStatusBarColor(R.color.white);
-        Intent iin= getIntent();
+        Intent iin = getIntent();
         Bundle b = iin.getExtras();
         IntentFilter server_connected = new IntentFilter(POST_SUCCESFULL);
         registerReceiver(mainPagerReceiver, server_connected);
-        if(b!=null)
-        {
+        if (b != null) {
             FROM_PUSH = b.getInt("FROM_PUSH");
-            int res  = b.getInt(BUNDLES.DOWNLOADS_INFO);
+            int res = b.getInt(BUNDLES.DOWNLOADS_INFO);
             int is_login_again = b.getInt("LOGIN_AGAIN");
             int new_u = b.getInt("NEW_USER");
-            if(new_u == 1)
-                NEW_USER =true;
+            if (new_u == 1)
+                NEW_USER = true;
             else
                 NEW_USER = false;
-            if(res == 1){
+            if (res == 1) {
                 petHelper = new PetHelper(this);
                 DOWNLOAD_INFO = true;
             }
-            if(is_login_again == 1){
+            if (is_login_again == 1) {
                 presenter.getFileBackup();
             }
-            if(FROM_PUSH == 1){
-                int ID_RESOURCE=0;
+            if (FROM_PUSH == 1) {
+                int ID_RESOURCE = 0;
                 TYPE_FRAGMENT_PUSH = b.getInt("TYPE_FRAGMENT");
                 ID_RESOURCE = b.getInt("ID_RESOURCE");
-                Log.e("ID_FROM_PUSH","-->" + ID_RESOURCE);
-                if(TYPE_FRAGMENT_PUSH == FragmentElement.INSTANCE_PREVIEW_PROFILE){
-                    b_from_push.putInt(BUNDLES.ID_USUARIO,ID_RESOURCE);
-                }else if(TYPE_FRAGMENT_PUSH == FragmentElement.INSTANCE_COMENTARIOS){
-                    b_from_push.putInt(BUNDLES.ID_POST,ID_RESOURCE);
-                    b_from_push.putBoolean(BUNDLES.CAN_COMMENT,true);
+                Log.e("ID_FROM_PUSH", "-->" + ID_RESOURCE);
+                if (TYPE_FRAGMENT_PUSH == FragmentElement.INSTANCE_PREVIEW_PROFILE) {
+                    b_from_push.putInt(BUNDLES.ID_USUARIO, ID_RESOURCE);
+                } else if (TYPE_FRAGMENT_PUSH == FragmentElement.INSTANCE_COMENTARIOS) {
+                    b_from_push.putInt(BUNDLES.ID_POST, ID_RESOURCE);
+                    b_from_push.putBoolean(BUNDLES.CAN_COMMENT, true);
                 }
             }
         }
@@ -321,7 +321,7 @@ public class Main extends AppCompatActivity implements change_instance,
         stack_serch_pet = new Stack<>();
         stack_notifications = new Stack<>();
         stack_tip_detail = new Stack<>();
-        stack_edit_profile= new Stack<>();
+        stack_edit_profile = new Stack<>();
         stack_preview_perfil = new Stack<>();
         stack_posts_publics_search = new Stack<>();
         stack_posts_search_advanced = new Stack<>();
@@ -348,11 +348,8 @@ public class Main extends AppCompatActivity implements change_instance,
             }
         });
 
-        if(DOWNLOAD_INFO)
+        if (DOWNLOAD_INFO)
             download_pets();
-
-
-
 
 
         presenter.have_pets();
@@ -364,23 +361,27 @@ public class Main extends AppCompatActivity implements change_instance,
                     Toast.LENGTH_LONG).show();
             return;
         }
-        Log.e("LAT_LON","-->" + App.read(PREFERENCES.LAT,0f) + "/" + App.read(PREFERENCES.LON,0f));
+        Log.e("LAT_LON", "-->" + App.read(PREFERENCES.LAT, 0f) + "/" + App.read(PREFERENCES.LON, 0f));
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
             String token = instanceIdResult.getToken();
             UserBean U_TOK = new UserBean();
             U_TOK.setToken(token);
             U_TOK.setTarget("TOKEN");
-            U_TOK.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+            U_TOK.setId(App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
             presenter.update_token(U_TOK);
         });
 
-        Glide.with(Main.this).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"))
+        Glide.with(Main.this).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH, "INVALID"))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .placeholder(getResources().getDrawable(R.drawable.ic_holder)).into(icon_profile_pet);
         presenter.getIdentificadoresHistories();
 
 
+        // ATTENTION: This was auto-generated to handle app links.
+        Intent appLinkIntent = getIntent();
+        String appLinkAction = appLinkIntent.getAction();
+        Uri appLinkData = appLinkIntent.getData();
     }
 
     void download_pets(){
@@ -911,6 +912,14 @@ public class Main extends AppCompatActivity implements change_instance,
                 int id_pet= data.getIntExtra(BUNDLES.ID_PET,0);
                 String name_pet = data.getStringExtra(BUNDLES.NAME_PET);
                 String photo_pet = data.getStringExtra(BUNDLES.URL_PHOTO_PET);
+                Glide.with(Main.this).load(url)
+                        .placeholder(R.drawable.ic_holder)
+                        .error(R.drawable.ic_holder)
+                        .into(image_preview_smoot);
+                smoot_progress.setVisibility(View.VISIBLE);
+                root_progres_publish.setVisibility(View.VISIBLE);
+                close_smoot.setVisibility(View.GONE);
+                text_smoot.setText("En progreso...");
                 upload_story(url,name_pet,id_pet,photo_pet);
             }
         }
@@ -1391,57 +1400,7 @@ public class Main extends AppCompatActivity implements change_instance,
         }
     };
 
-    private class GenerateFileTask extends AsyncTask<Void, Integer, Boolean> {
-       ArrayList<Integer> list_ids = new ArrayList<>();
-        @Override
-        protected void onPreExecute() {
 
-        }
-        @Override
-        protected Boolean doInBackground(Void... params) {
-                String fileToWrite = App.read(PREFERENCES.UUID, "INVALID") + ".txt";
-                File file = new File(fileToWrite);
-                if (!file.exists()) {
-                    file.mkdirs();
-                }
-                    try {
-                        list_ids = presenter.getIdsFolows();
-                        if(list_ids.size()>0) {
-                            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput(fileToWrite, Context.MODE_PRIVATE));
-                            for (int i = 0; i < list_ids.size(); i++) {
-                                if (i==list_ids.size()-1)
-                                    outputStreamWriter.write(list_ids.get(i) + "");
-                                else
-                                    outputStreamWriter.write(list_ids.get(i) + ",");
-                            }
-                            outputStreamWriter.close();
-                            return  true;
-                        }else{
-                            return  false;
-                        }
-                    }
-                    catch (IOException e) {
-                        Log.e("SEND_FILE","error: " + e.getMessage());
-                        Log.e("Exception", "File write failed: " + e.toString());
-                        return  false;
-                    }
-        }
-
-        // actualiza el progreso
-        @Override
-        protected void onProgressUpdate(Integer... values) {}
-
-        // despues de ejecutar el hilo secundario principal
-        @Override
-        protected void onPostExecute(Boolean result) {
-           if(result){
-               Log.e("SEND_FILE","REGRESO TRUE");
-               presenter.sendFileBackup();
-           }else{
-               Log.e("SEND_FILE","REGRESO FALSO");
-           }
-        }
-    }
 
 
 

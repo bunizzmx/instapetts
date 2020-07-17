@@ -165,6 +165,11 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
     }
 
     @Override
+    public boolean IsItemLiked(String identificador) {
+        return presenter.isItemLiked(identificador);
+    }
+
+    @Override
     public IdentificadoresHistoriesBean getIdenTificador(String identificador) {
         return presenter.getIdentificador(identificador);
     }

@@ -56,6 +56,7 @@ public class DataSQLite extends SQLiteOpenHelper {
         db.execSQL(context.getString(R.string.table_likes_tips));
         db.execSQL(context.getString(R.string.table_identificadores_histories));
         db.execSQL(context.getString(R.string.table_ids_users_follows));
+        db.execSQL(context.getString(R.string.table_liked_stories));
     }
 
     @Override

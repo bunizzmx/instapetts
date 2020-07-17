@@ -18,4 +18,5 @@
     <string name="table_likes_tips">CREATE TABLE IF NOT EXISTS likes_tips(id INTEGER PRIMARY KEY AUTOINCREMENT, id_tip INTEGER)</string>
     <string name="table_ids_users_follows">CREATE TABLE IF NOT EXISTS ids_users_follows(id INTEGER PRIMARY KEY AUTOINCREMENT, id_user INTEGER)</string>
     <string name="table_identificadores_histories">CREATE TABLE IF NOT EXISTS identificadores_histories(id INTEGER PRIMARY KEY AUTOINCREMENT, num_likes INTEGER,num_views INTEGER,identificador TEXT)</string>
+    <string name="table_liked_stories">CREATE TABLE IF NOT EXISTS liked_stories(id INTEGER PRIMARY KEY AUTOINCREMENT, identificador TEXT);</string>
 </resources>

@@ -258,6 +258,12 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
             return;
         }
 
+        if(listener.IsItemLiked(uris_fotos.get(COUNTER).getIdentificador())){
+            icon_like_history.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_corazon_black));
+        }else{
+            icon_like_history.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_corazon_w));
+        }
+
         if(HISTORY_BEAN.getId_user() == App.read(PREFERENCES.ID_USER_FROM_WEB,0)) {
             IdentificadoresHistoriesBean ide  = listener.getIdenTificador(uris_fotos.get(COUNTER).getIdentificador());
             int num_likes = ide.getNum_likes();

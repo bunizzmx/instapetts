@@ -205,6 +205,7 @@ public class AdapterGridPosts extends RecyclerView.Adapter<RecyclerView.ViewHold
                             }else{
                                 Intent i = new Intent(context, PlayVideoActivity.class);
                                 i.putExtra("TYPE_PLAYER",1);
+                                Log.e("CLICK_PARSED","-->");
                                 i.putExtra("BEAN", Parcels.wrap(data_parsed));
                                 context.startActivity(i);
                             }

@@ -7,5 +7,6 @@ public interface story_finished_listener {
     void onItemView(String identificador,int id_usuario);
     void onItemLiked(String identificador,int id_usuario);
     void onItemDeleted(String history);
+    boolean IsItemLiked(String identificador);
     IdentificadoresHistoriesBean getIdenTificador(String identificador);
 }

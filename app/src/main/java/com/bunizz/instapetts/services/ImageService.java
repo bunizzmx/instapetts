@@ -1,5 +1,7 @@
 package com.bunizz.instapetts.services;
 
+import android.annotation.SuppressLint;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -7,7 +9,9 @@ import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -19,10 +23,16 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferNetworkLossHand
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.main.Main;
+import com.bunizz.instapetts.beans.NotificationBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.utils.compresor.Compressor;
 import com.bunizz.instapetts.web.CONST;
 import com.google.android.gms.tasks.Task;
@@ -35,6 +45,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 public class ImageService extends Service {
@@ -47,20 +59,18 @@ public class ImageService extends Service {
     File file;
     private final static String TAG = ImageService.class.getSimpleName();
     public static  NotificationManager notificationManager;
-    public static int TOTAL_LENGTH_ARCHIVES = 0;
-    public static int TOTAL_PERCENTAGE= 0;
-    int PROGRESS_CURRENT = 0;
     public  static int notificationId = 1;
     public  static  NotificationCompat.Builder mBuilder=null;
-    public static int INDEX_OF_COMPLETE=0;
     public static int SIZE_OF_FILES=0;
     public static int TYPE_NOTIFICATION=0;
     public static String TITLE="";
-    public static String TITLE_SUCCESS="";
     public static String BODY="";
     String NAME_PET ="";
     private StorageReference storageReference;
     StorageMetadata metadata;
+    Intent intent_broadcast = new Intent();
+
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -70,24 +80,7 @@ public class ImageService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         TYPE_NOTIFICATION = intent.getIntExtra("NOTIFICATION_TIPE",0);
-        if(TYPE_NOTIFICATION == 0) {
-            TITLE = "SUBIENDO POST";
-            TITLE_SUCCESS = "COMPLETADO";
-        }
-        else if(TYPE_NOTIFICATION == 1) {
-            TITLE_SUCCESS ="PERFIL ACTUALIZADO";
-            TITLE = "ACTUALIZANDO PERFIL";
-        }
-        else if(TYPE_NOTIFICATION == 2) {
-            TITLE_SUCCESS ="HISTORIA SUBIDA";
-            TITLE = "SUBIENDO HISTORIAS";
-        }
-        else if(TYPE_NOTIFICATION == 3) {
-            TITLE_SUCCESS ="MASCOTA CREADA";
-            TITLE = "CONFIGURANDO TU MASCOTA";
-            NAME_PET = intent.getStringExtra(BUNDLES.NAME_PET);
-        }
-
+        TITLE = this.getString(R.string.completed);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_ONE_SHOT);
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         String channelId = "channel-01";
@@ -101,13 +94,13 @@ public class ImageService extends Service {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         mBuilder = new NotificationCompat.Builder(getApplicationContext(), channelId);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mBuilder.setSmallIcon(R.mipmap.ic_splash_foreground)
+            mBuilder.setSmallIcon(R.drawable.logoapp)
                     .setContentTitle(TITLE)
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)
                     .setContentIntent(pendingIntent);
         }else {
-            mBuilder.setSmallIcon(R.mipmap.ic_splash_foreground)
+            mBuilder.setSmallIcon(R.drawable.logoapp)
                     .setContentTitle(TITLE)
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)
@@ -122,10 +115,6 @@ public class ImageService extends Service {
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
         mBuilder.setContentIntent(resultPendingIntent);
-        mBuilder
-                .setProgress(100,1,false);
-        notificationManager.notify(notificationId, mBuilder.build());
-
         final ArrayList<String> key = intent.getStringArrayListExtra(INTENT_KEY_NAME);
         SIZE_OF_FILES = key.size();
         for(int i =0;i<key.size();i++){
@@ -173,12 +162,67 @@ public class ImageService extends Service {
             return reference.getDownloadUrl();
         }).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                mBuilder.setProgress(100,100,false);
-                mBuilder.setContentTitle(TITLE_SUCCESS);
-                notificationManager.notify(notificationId, mBuilder.build());
+                 notificationManager.notify(notificationId, mBuilder.build());
+                 intent_broadcast.putExtra("COMPLETED", false);
+                 intent_broadcast.setAction(Main.POST_SUCCESFULL);
+                  sendBroadcast(intent_broadcast);
+                  make_notification(file.getAbsolutePath());
+
             }
         });
     }
+
+    void make_notification(String url){
+        final Bitmap[] bitmap = {null};
+        Glide.with(this)
+                .asBitmap()
+                .load(url)
+                .into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+
+                        bitmap[0] = resource;
+                        mBuilder.setContentTitle(TITLE);
+                        notificationManager.notify(notificationId, mBuilder.build());
+                        // TODO Do some work: pass this bitmap
+                        buildNotification(bitmap[0]);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
+                });
+    }
+
+
+    void buildNotification(Bitmap bitmap){
+
+        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        int notificationId = 1;
+        String channelId = "channel-01";
+        String channelName = "Channel Name";
+        int importance = NotificationManager.IMPORTANCE_HIGH;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel mChannel = new NotificationChannel(
+                    channelId, channelName, importance);
+            notificationManager.createNotificationChannel(mChannel);
+        }
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        @SuppressLint("WrongConstant")
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(R.drawable.ic_stat_name)
+                .setBadgeIconType(R.drawable.ic_stat_name)
+                .setLargeIcon(bitmap)
+                .setContentTitle(TITLE)
+                .setContentText("Fotografia subida correctamente")
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setVibrate(new long[] { 1000, 1000});
+        mBuilder.setDefaults( Notification.DEFAULT_VIBRATE);
+        notificationManager.notify(notificationId, mBuilder.build());
+    }
+
 
 
     @Override

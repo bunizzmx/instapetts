@@ -129,8 +129,13 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
         stack_picker_camera = new Stack<>();
         stack_crop_video = new Stack<>();
         stack_crop_images = new Stack<>();
-        stack_share = new Stack<>();   Intent iin= getIntent();
-        Bundle b = iin.getExtras();
+        stack_share = new Stack<>();
+
+
+        Intent intent = getIntent();
+
+
+        Bundle b = intent.getExtras();
         if(b!=null)
         {
             String j =(String) b.get("FROM");
@@ -159,6 +164,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
         if(is_from_profile){
             changue_to_videos.setVisibility(View.GONE);
         }
+
 
     }
 

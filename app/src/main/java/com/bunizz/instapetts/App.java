@@ -506,7 +506,7 @@ public class App extends Application {
         }
         else if(aspect.equals("4_5")){
             width=metrics.widthPixels;
-            height = width + (width/4);
+            height = width;
         }
       return new AspectBean(width,height);
     }

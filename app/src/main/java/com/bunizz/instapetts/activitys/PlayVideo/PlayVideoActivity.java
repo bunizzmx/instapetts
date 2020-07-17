@@ -210,10 +210,18 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
             TYPE_PLAYER = getIntent().getIntExtra("TYPE_PLAYER",0);
             if(TYPE_PLAYER == 0)
                 TIPS_BEAN = Parcels.unwrap(getIntent().getParcelableExtra("BEAN"));
-            else
+            else {
+                if( Parcels.unwrap(getIntent().getParcelableExtra("BEAN")) instanceof  PostBean){
+                    Log.e("CLICK_PARSED","-->es post");
+                }else{
+                    Log.e("CLICK_PARSED","-->no es post");
+                }
                 POST_BEAN = Parcels.unwrap(getIntent().getParcelableExtra("BEAN"));
+            }
 
         }
+
+
 
         if(TYPE_PLAYER == 1) {
             if (presenter.isLiked(POST_BEAN.getId_post_from_web()))

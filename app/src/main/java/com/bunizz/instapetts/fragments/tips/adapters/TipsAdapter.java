@@ -258,7 +258,7 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                     if(data_parsed_help.getNum_comentarios() > 0){
                         help.num_comments_layout.setVisibility(View.VISIBLE);
-                        help.num_coments.setText(context.getString(R.string.comentarios) + data_parsed_help.getNum_comentarios() + context.getString(R.string.comentarios));
+                        help.num_coments.setText(data_parsed_help.getNum_comentarios() + " " +context.getString(R.string.comentarios));
                         help.num_comments_layout.setOnClickListener(v -> {
                             Bundle b = new Bundle();
                             b.putInt(BUNDLES.ID_POST,data_parsed_help.getId_post_from_web());

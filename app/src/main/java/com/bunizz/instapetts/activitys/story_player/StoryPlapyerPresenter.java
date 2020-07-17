@@ -14,6 +14,7 @@ import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.db.helpers.IdentificadoresHistoriesHelper;
 import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
+import com.bunizz.instapetts.db.helpers.LikeStoryHelper;
 import com.bunizz.instapetts.db.helpers.MyStoryHelper;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
@@ -47,6 +48,7 @@ public class StoryPlapyerPresenter implements  StoryPlayerContract.Presenter {
     MyStoryHelper myStoryHelper;
     FirebaseFirestore db;
     IdsUsersHelper idsUsersHelper;
+    LikeStoryHelper likeStoryHelper;
     StoryPlapyerPresenter(StoryPlayerContract.View view, Context context) {
         this.mView = view;
         this.mContext = context;
@@ -56,6 +58,7 @@ public class StoryPlapyerPresenter implements  StoryPlayerContract.Presenter {
         db = App.getIntanceFirestore();
         idsUsersHelper = new IdsUsersHelper(mContext);
         myStoryHelper = new MyStoryHelper(mContext);
+        likeStoryHelper = new LikeStoryHelper(mContext);
     }
 
     @Override
@@ -96,6 +99,7 @@ public class StoryPlapyerPresenter implements  StoryPlayerContract.Presenter {
         identificadorHistoryParameter.setIdentificador(identificador);
         identificadorHistoryParameter.setId_usuario(id_usuario);
         identificadorHistoryParameter.setTarget("NEW_LIKE");
+        likeStoryHelper.saveLikeStory(identificador);
         disposable.add(
                 apiService.newLikeHistoryUser(identificadorHistoryParameter)
                         .subscribeOn(Schedulers.io())
@@ -296,6 +300,11 @@ public class StoryPlapyerPresenter implements  StoryPlayerContract.Presenter {
                                 Log.e("ERROR","UPDATED PROFILE");
                             }
                         }));
+    }
+
+    @Override
+    public boolean isItemLiked(String identificador) {
+        return  likeStoryHelper.isLikedHistory(identificador);
     }
 
 

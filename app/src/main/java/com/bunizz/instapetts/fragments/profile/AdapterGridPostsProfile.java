@@ -66,16 +66,22 @@ public class AdapterGridPostsProfile extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public void setPosts(ArrayList<Object> posts) {
+        this.posts.clear();
         if(posts.size()>0) {
-            this.posts.clear();
-            this.posts.addAll(posts);
+            for(int i = 0;i<posts.size();i++){
+                if(posts.get(i) instanceof  PostBean)
+                this.posts.add(posts.get(i));
+            }
             notifyDataSetChanged();
         }
     }
 
     public void setPostsPaginate(ArrayList<Object> posts) {
         if (this.posts.size() > 0) {
-            this.posts.addAll(posts);
+            for(int i = 0;i<posts.size();i++){
+                if(posts.get(i) instanceof  PostBean)
+                    this.posts.add(posts.get(i));
+            }
             notifyDataSetChanged();
         }
     }
@@ -84,6 +90,9 @@ public class AdapterGridPostsProfile extends RecyclerView.Adapter<RecyclerView.V
 
     public void refresh(){
         notifyDataSetChanged();
+    }
+    public void clear(){
+        this.posts.clear();
     }
 
     @NonNull
@@ -141,6 +150,12 @@ public class AdapterGridPostsProfile extends RecyclerView.Adapter<RecyclerView.V
                     Intent i = new Intent(context, PlayVideoActivity.class);
                     i.putExtra("TYPE_PLAYER",1);
                     i.putExtra("BEAN", Parcels.wrap(data_parsed));
+                    if(data_parsed instanceof  PostBean){
+                        Log.e("CLICK_PARSED","-->2xxxxx");
+                    }else{
+                        Log.e("CLICK_PARSED","-->2yyyyy");
+                    }
+                    Log.e("CLICK_PARSED","-->2");
                     context.startActivity(i);
                 }else{
                     DialogPreviewPost dialogPreviewPost = new DialogPreviewPost(context,data_parsed);

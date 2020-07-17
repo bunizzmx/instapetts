@@ -2,14 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.bunizz.instapetts">
-    <uses-sdk tools:overrideLibrary="androidx.security"/>
+
+    <uses-sdk tools:overrideLibrary="androidx.security" />
+
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -25,7 +28,25 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3652627287925800~2029449466" />
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/> <activity android:name="com.facebook.FacebookActivity" android:configChanges= "keyboard|keyboardHidden|screenLayout|screenSize|orientation" android:label="@string/app_name" /> <activity android:name="com.facebook.CustomTabActivity" android:exported="true"> <intent-filter> <action android:name="android.intent.action.VIEW" /> <category android:name="android.intent.category.DEFAULT" /> <category android:name="android.intent.category.BROWSABLE" /> <data android:scheme="@string/fb_login_protocol_scheme" /> </intent-filter> </activity>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter><action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
 
         <provider
             android:name=".utils.GenericFileProvider"
@@ -34,45 +55,106 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
         <!-- ACTIVIDADES  -->
-        <activity android:name=".activitys.Splash" android:theme="@style/Style_Splash" >
+        <activity
+            android:name=".activitys.Splash"
+            android:theme="@style/Style_Splash">
             <intent-filter>
+
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activitys.PlayVideo.PlayVideoActivity"
-            android:configChanges="keyboardHidden|orientation"/>
-        <activity android:name=".utils.videoCrop.VideoCropActivity"/>
-        <activity android:name=".activitys.side_menus_activities.SideMenusActivities"/>
+        <activity
+            android:name=".activitys.PlayVideo.PlayVideoActivity"
+            android:configChanges="keyboardHidden|orientation" />
+        <activity android:name=".utils.videoCrop.VideoCropActivity" />
+        <activity android:name=".activitys.side_menus_activities.SideMenusActivities" />
         <activity android:name=".activitys.intro.IntroActivity" />
         <activity android:name=".activitys.login.LoginActivity" />
-        <activity android:name=".activitys.main.Main" android:windowSoftInputMode="adjustPan" android:screenOrientation="fullSensor"/>
-        <activity android:name=".activitys.wizardPets.WizardPetActivity" android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".activitys.story_player.StoryPlayer"/>
-        <activity android:name=".activitys.share_post.ShareActivity" android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".activitys.camera_history.CameraHistoryActivity"    android:screenOrientation="fullUser"
-            android:rotationAnimation="seamless"/>
-        <activity android:name=".activitys.reports.ReportActiviy"/>
-        <activity android:name=".activitys.searchqr.QrSearchActivity"/>
-        <service android:name=".services.ImageService"
-            android:enabled="true"/>
-        <service android:name=".services.ImagePostsService"
-            android:enabled="true"/>
-        <service android:name=".services.NotificationsService"
-            android:enabled="true"/>
-        <service android:name=".notifications.NotificationsManagers"
+        <activity
+            android:name=".activitys.main.Main"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="fullSensor">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="www.instapetts.com" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="com.bunizz.instapetts" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="app"
+                    android:host="www.instapetts.com" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="app"
+                    android:host="com.bunizz.instapetts" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activitys.wizardPets.WizardPetActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".activitys.story_player.StoryPlayer" />
+        <activity
+            android:name=".activitys.share_post.ShareActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activitys.camera_history.CameraHistoryActivity"
+            android:screenOrientation="fullUser"
+            android:rotationAnimation="seamless" />
+        <activity android:name=".activitys.reports.ReportActiviy" />
+        <activity android:name=".activitys.searchqr.QrSearchActivity" />
+
+        <service
+            android:name=".services.ImageService"
+            android:enabled="true" />
+        <service
+            android:name=".services.ImagePostsService"
+            android:enabled="true" />
+        <service
+            android:name=".services.NotificationsService"
+            android:enabled="true" />
+        <service
+            android:name=".notifications.NotificationsManagers"
             android:enabled="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".services.DownloadsService"  android:enabled="true"/>
+        <service
+            android:name=".services.DownloadsService"
+            android:enabled="true" />
         <service
             android:name=".services.FetchAddressIntentService"
-            android:exported="false"/>
+            android:exported="false" />
         <!-- ACTIVIDADES  -->
     </application>
 
