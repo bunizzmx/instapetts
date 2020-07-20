@@ -132,10 +132,12 @@ public class IntroActivity extends AppCompatActivity implements VisibleItem {
                     Intent i = new Intent(IntroActivity.this, LoginActivity.class);
                     startActivity(i);
                     App.write(IS_INTRO_COMPLETED,true);
+                    finish();
                 }else{
                     Intent i = new Intent(IntroActivity.this, LoginActivity.class);
                     startActivity(i);
                     App.write(IS_INTRO_COMPLETED,true);
+                    finish();
                 }
 
             });

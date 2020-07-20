@@ -44,6 +44,7 @@ import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.folowFavoriteListener;
 import com.bunizz.instapetts.listeners.open_sheet_listener;
 import com.bunizz.instapetts.utils.ImagenCircular;
+import com.bunizz.instapetts.utils.dilogs.DialogPreviewImage;
 import com.bunizz.instapetts.utils.loadings.SpinKitView;
 import com.bunizz.instapetts.utils.loadings.SpriteFactory;
 import com.bunizz.instapetts.utils.loadings.Style;
@@ -272,6 +273,14 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         userBean.setUuid("xxxx");
         presenter.getInfoUser(userBean);
         presenter.getPostUser(true,userBean.getId(),POSITION_PAGER);
+        image_profile_property_pet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogPreviewImage dialogPreviewImage = new DialogPreviewImage(getContext(),USERBEAN.getPhoto_user());
+                dialogPreviewImage.show();
+            }
+        });
+
     }
 
 

@@ -325,6 +325,10 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     @Override
     public void onBackPressed() {
+        Log.e("INSTANCELOGIN","-->" + mCurrentFragment.getInstanceType());
+        if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_MAIN_LOGIN)
+            finish();
+        else
             changeOfInstance(FragmentElement.INSTANCE_MAIN_LOGIN,true);
     }
 

@@ -39,6 +39,7 @@ import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.services.ImageService;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.dilogs.DialogDeletes;
+import com.bunizz.instapetts.utils.dilogs.DialogPreviewImage;
 import com.bunizz.instapetts.utils.dilogs.DialogRatePet;
 
 import org.parceler.Parcels;
@@ -188,7 +189,7 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
 
     public void refresh_data_on_pet(String url) {
         REFRESH_IMAGE = url;
-        Log.e("REFRESH_OFTO_PET","-->A: " + url);
+        Log.e("REFRESH_OFTO_PET","-->A: " + url+"/" + petBean.getName_pet());
         Glide.with(getContext()).load(url)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
@@ -304,6 +305,15 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
         }
 
         edad_pet.setText(App.getInstance().fecha_lenguaje_humano(petBean.getEdad_pet().replace("T"," ").replace("Z","")));
+
+        image_pet_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogPreviewImage dialogPreviewImage = new DialogPreviewImage(getContext(),petBean.getUrl_photo());
+                dialogPreviewImage.show();
+            }
+        });
+
     }
 
     @Override

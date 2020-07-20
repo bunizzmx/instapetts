@@ -51,6 +51,7 @@ import com.bunizz.instapetts.listeners.folowFavoriteListener;
 import com.bunizz.instapetts.listeners.open_sheet_listener;
 import com.bunizz.instapetts.listeners.open_side_menu;
 import com.bunizz.instapetts.utils.ImagenCircular;
+import com.bunizz.instapetts.utils.dilogs.DialogPreviewImage;
 import com.bunizz.instapetts.utils.loadings.SpinKitView;
 import com.bunizz.instapetts.utils.loadings.SpriteFactory;
 import com.bunizz.instapetts.utils.loadings.Style;
@@ -326,7 +327,13 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         UserBean userBean = new UserBean();
         userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         presenter.getInfoUser(userBean);
-
+        image_profile_property_pet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogPreviewImage dialogPreviewImage = new DialogPreviewImage(getContext(),USERBEAN.getPhoto_user());
+                dialogPreviewImage.show();
+            }
+        });
 
     }
 
@@ -407,8 +414,18 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         }else{
             num_rate_pets.setText("5");
         }
-        num_followers.setText(String.valueOf(USERBEAN.getFolowers()));
-        num_followed.setText(""+USERBEAN.getFollowed());
+
+        if(USERBEAN.getFolowers() < 0)
+            num_followers.setText("");
+        else
+            num_followers.setText(String.valueOf(USERBEAN.getFolowers()));
+
+
+
+        if(USERBEAN.getFollowed() < 0)
+          num_followed.setText("0");
+        else
+            num_followed.setText(""+USERBEAN.getFollowed());
     }
 
 

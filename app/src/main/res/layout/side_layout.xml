@@ -86,6 +86,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/side_menu_share_profile"
             android:background="?attr/selectableItemBackground"
             android:paddingBottom="10dp"

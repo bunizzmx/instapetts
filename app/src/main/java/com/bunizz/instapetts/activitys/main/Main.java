@@ -1230,6 +1230,7 @@ public class Main extends AppCompatActivity implements change_instance,
             App.getInstance().clear_preferences();
             Intent i = new Intent(Main.this, LoginActivity.class);
             startActivity(i);
+            finish();
         });
         dialogLogout.show();
     }

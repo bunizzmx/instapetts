@@ -55,6 +55,10 @@ public class ListSelectedAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.listener_remove = listener_remove;
     }
 
+    public ArrayList<String> get_selecteds(){
+        return this.data
+    ;}
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -68,7 +72,7 @@ public class ListSelectedAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         Glide.with(context).load(data.get(position)).into(h.image_selected);
         h.delete_selection.setVisibility(View.VISIBLE);
         h.delete_selection.setOnClickListener(v -> {
-            data.remove(position);
+            this.data.remove(position);
             notifyDataSetChanged();
             listener_remove.remove(position);
         });

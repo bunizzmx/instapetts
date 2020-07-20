@@ -115,17 +115,42 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
                     else
                         post.setCan_comment(0);
 
-                    Log.e("POSICIONES","--->" + post.getLon() + "/" + post.getLat() + "/" + post.getCp());
+                    paths.clear();
+                    paths = adapter.get_selecteds();
+                    for (int i =0;i< paths.size();i++){
+                        String splits[] = paths.get(i).split("/");
+                        int index = splits.length;
+                        if(i==0) {
+                            if(is_video == 1) {
+                                concat_paths = App.getInstance().make_uri_video_hls(splits[index - 1],ASPECT);
+                            }
+                            else
+                                concat_paths = App.getInstance().make_uri_bucket_posts(splits[index - 1]);
+                        }
+                        else {
+                            if(is_video == 1)
+                                concat_paths = App.getInstance().make_uri_video_hls(splits[index - 1],ASPECT);
+                            else
+                                concat_paths += "," + App.getInstance().make_uri_bucket_posts(splits[index - 1]);
+                        }
+                        if(is_video !=1) {
+                            ULTIMATE_IMAGE_THUMBH = App.getInstance().make_uri_bucket_posts_thumbh(splits[index - 1]);
+                        }
+                    }
+
+
+
+                    Log.e("POSICIONES","--->" +adapter.get_selecteds().size());
                     if(is_video==1) {
                         post.setDuracion(DURACION);
                         post.setAspect(ASPECT);
-                        beginUploadInBackground(paths, true);
+                        beginUploadInBackground(adapter.get_selecteds(), true);
                     }
                     else {
                         post.setDuracion(0);
                         post.setAspect("-");
                         post.setThumb_video(ULTIMATE_IMAGE_THUMBH);
-                        beginUploadInBackground(paths, false);
+                        beginUploadInBackground(adapter.get_selecteds(), false);
                     }
                 }
 
@@ -184,26 +209,6 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             is_video = bundle.getInt("is_video");
             DURACION = bundle.getInt(BUNDLES.VIDEO_DURATION,30);
             ASPECT =   bundle.getString(BUNDLES.VIDEO_ASPECT);
-            for (int i =0;i< paths.size();i++){
-                String splits[] = paths.get(i).split("/");
-                int index = splits.length;
-                if(i==0) {
-                    if(is_video == 1) {
-                        concat_paths = App.getInstance().make_uri_video_hls(splits[index - 1],ASPECT);
-                    }
-                    else
-                        concat_paths = App.getInstance().make_uri_bucket_posts(splits[index - 1]);
-                }
-                else {
-                    if(is_video == 1)
-                        concat_paths = App.getInstance().make_uri_video_hls(splits[index - 1],ASPECT);
-                    else
-                        concat_paths += "," + App.getInstance().make_uri_bucket_posts(splits[index - 1]);
-                }
-                if(is_video !=1) {
-                    ULTIMATE_IMAGE_THUMBH = App.getInstance().make_uri_bucket_posts_thumbh(splits[index - 1]);
-                }
-            }
         }
         adapter.setData(paths);
         pets_cuerrent = helper.getMyPets();
