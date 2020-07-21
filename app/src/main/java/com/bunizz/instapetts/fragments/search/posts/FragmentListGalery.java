@@ -15,6 +15,7 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.BuildConfig;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
 import com.bunizz.instapetts.fragments.profile.AdapterGridPostsProfile;
 import com.bunizz.instapetts.fragments.search.AdapterGridPosts;
@@ -137,6 +138,7 @@ public class FragmentListGalery extends Fragment implements  ListGaleryContract.
                 postActions.setId_usuario(id_usuario);
                 postActions.setValor("1");
                 postActions.setExtra(url_image);
+                if(id_usuario != App.read(PREFERENCES.ID_USER_FROM_WEB,0))
                 presenter.likePost(postActions);
             }
 

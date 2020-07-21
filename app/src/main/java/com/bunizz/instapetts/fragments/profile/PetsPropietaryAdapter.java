@@ -34,14 +34,21 @@ public class PetsPropietaryAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
 
     public void setPets(ArrayList<PetBean> pets) {
         IS_ME = true;
-        this.pets = pets;
-        notifyDataSetChanged();
+        if (pets.size() > 0) {
+            this.pets.clear();
+            this.pets.addAll(pets);
+            notifyDataSetChanged();
+        }
+
     }
     public void setPetsforOtherUser(ArrayList<PetBean> pets) {
         Log.e("OTHER_PET","-->" +pets.size());
         IS_ME = false;
-        this.pets = pets;
-        notifyDataSetChanged();
+        if (pets.size() > 0) {
+            this.pets.clear();
+            this.pets.addAll(pets);
+            notifyDataSetChanged();
+        }
     }
 
     public void add_new_pet(PetBean petBean){

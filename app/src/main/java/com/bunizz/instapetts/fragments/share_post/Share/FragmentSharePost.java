@@ -395,7 +395,8 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         if(App.read(PREFERENCES.ALLOW_LOCATION_POST,true))
             post.setAddress(App.read(PREFERENCES.ADDRESS_USER,"INVALID"));
         post.setId_usuario(App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
-        if(post.getId_pet() == - 999){
+        Log.e("ID_PETxxx","-->" + post.getId_pet());
+        if(post.getId_pet() == -999){
             presenter.sendPostHelpPet(post);
         }else{
             presenter.sendPost(post);

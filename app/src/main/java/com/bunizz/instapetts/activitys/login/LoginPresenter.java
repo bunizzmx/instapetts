@@ -161,19 +161,20 @@ public class LoginPresenter implements LoginContract.Presenter {
                             @Override
                             public void onSuccess(HistoriesBeanResponse user) {
                                 if(user!=null) {
-                                    Log.e("MY_STORY_DOWNLOAD", "--->" + user.getList_stories().get(0).getHistorias());
-                                    String splitItems[] = user.getList_stories().get(0).getHistorias().split(",");
-                                    String splitSubitems[] = splitItems[splitItems.length-1].split(";");
-                                    for(int i=0;i<splitItems.length;i++){
-                                        myStoryHelper.saveMyStory(new IndividualDataPetHistoryBean(
-                                               splitSubitems[0],
-                                               splitSubitems[1],
-                                                Integer.parseInt(splitSubitems[2]),
-                                                splitSubitems[4],
-                                                splitSubitems[5] ,
-                                                splitSubitems[6]));
+                                    if(user.getList_stories().size()>0) {
+                                        String splitItems[] = user.getList_stories().get(0).getHistorias().split(",");
+                                        String splitSubitems[] = splitItems[splitItems.length - 1].split(";");
+                                        for (int i = 0; i < splitItems.length; i++) {
+                                            myStoryHelper.saveMyStory(new IndividualDataPetHistoryBean(
+                                                    splitSubitems[0],
+                                                    splitSubitems[1],
+                                                    Integer.parseInt(splitSubitems[2]),
+                                                    splitSubitems[4],
+                                                    splitSubitems[5],
+                                                    splitSubitems[6]));
+                                        }
+                                        mView.HistoriesSaved();
                                     }
-                                    mView.HistoriesSaved();
                                 }
                                 else{
                                     RETRY ++;

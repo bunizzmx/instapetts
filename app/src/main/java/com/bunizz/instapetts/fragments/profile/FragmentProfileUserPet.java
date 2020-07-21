@@ -228,6 +228,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
                 PETS.addAll(my_pets_database);
             }
            PETS.add(new PetBean());
+        Log.e("REFRESH_MY_PETS","-->3"  +PETS.size());
             petsPropietaryAdapter.setPets(PETS);
         adapter_pager = new ViewPagerAdapter(getChildFragmentManager());
         adapter_pager.addFragment(new FragmentPostGalery(), "Publicaciones");
@@ -307,7 +308,6 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
             follow_edit.setOnClickListener(view1 -> listener.change(FragmentElement.INSTANCE_EDIT_PROFILE_USER));
         descripcion_perfil_user.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
         URL_UPDATED = App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID");
-        Log.e("URL_PROFILE","--:>" +URL_UPDATED );
         Glide.with(getContext()).load(URL_UPDATED)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
@@ -364,12 +364,14 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     }
 
     public void refresh_list_pets(){
+
         ArrayList<PetBean> my_pets_database = new ArrayList<>();
         my_pets_database.addAll(petHelper.getMyPets());
         my_pets_database.add(new PetBean());
+        Log.e("REFRESH_MY_PETS","-->1" + my_pets_database.size());
         petsPropietaryAdapter.setPets(my_pets_database);
         if(listener_open_side!=null){
-            if(my_pets_database.size() <3)
+            if(my_pets_database.size() < 1)
                 listener_open_side.open_target_post();
         }
     }
@@ -378,6 +380,9 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     public void showInfoUser(UserBean userBean, ArrayList<PetBean> pets) {
         loanding_preview_root.setVisibility(View.GONE);
         root_info_ptofile.setVisibility(View.VISIBLE);
+        for (int i =0;i<pets.size();i++){
+            petHelper.savePet(pets.get(i));
+        }
         float RATE_PETS=0;
         float ACOMULATIVO_RATE=0;
         if(pets.size()>0) {
@@ -407,6 +412,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
+        Log.e("REFRESH_MY_PETS","-->2" + PETS.size());
         petsPropietaryAdapter.setPets(PETS);
         num_posts.setText(String.valueOf(USERBEAN.getPosts()));
         if(RATE_PETS > 0) {
@@ -530,6 +536,10 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         });
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        refresh_list_pets();
+    }
 }
 

@@ -45,10 +45,29 @@ public class PetHelper extends GenericHelper {
 
     public void savePet(PetBean pet) {
         SQLiteDatabase writableDatabase = getWritableDatabase();
+
+        String selection = "name_pet =?";
+        String[] selectionArgs = {String.valueOf(pet.getName_pet())};
+        final Cursor cursor = getReadableDatabase().query(
+                TABLE_NAME,
+                null,
+                selection,
+                selectionArgs , null, null, null, null);
         try {
-            writableDatabase.insertOrThrow(TABLE_NAME, null, pet.toContentValues());
+            if (cursor.moveToFirst())
+                Log.e("SI_HALLE_PET","si");
+           else{
+                try {
+                    writableDatabase.insertOrThrow(TABLE_NAME, null, pet.toContentValues());
+                } catch (SQLiteConstraintException | IllegalStateException e) {
+                    e.printStackTrace();
+                }
+            }
         } catch (SQLiteConstraintException | IllegalStateException e) {
             e.printStackTrace();
+        } finally {
+            if (cursor != null)
+                cursor.close();
         }
     }
 

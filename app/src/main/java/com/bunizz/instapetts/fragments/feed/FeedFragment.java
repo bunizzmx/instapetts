@@ -145,6 +145,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
                 postActions.setId_usuario(id_usuario);
                 postActions.setValor("1");
                 postActions.setExtra(url_image);
+                if(id_usuario != App.read(PREFERENCES.ID_USER_FROM_WEB,0))
                 mPresenter.likePost(postActions);
             }
 
