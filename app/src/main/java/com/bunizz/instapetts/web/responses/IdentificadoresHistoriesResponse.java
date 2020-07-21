@@ -12,6 +12,10 @@ public class IdentificadoresHistoriesResponse {
     @Expose
     ArrayList<IdentificadoresHistoriesBean> identificadores;
 
+    @SerializedName("ids_users")
+    @Expose
+    ArrayList<Integer> ids_users;
+
     @SerializedName("code_response")
     @Expose
     int code_response;
@@ -38,5 +42,13 @@ public class IdentificadoresHistoriesResponse {
 
     public void setCode_response(int code_response) {
         this.code_response = code_response;
+    }
+
+    public ArrayList<Integer> getIds_users() {
+        return ids_users;
+    }
+
+    public void setIds_users(ArrayList<Integer> ids_users) {
+        this.ids_users = ids_users;
     }
 }

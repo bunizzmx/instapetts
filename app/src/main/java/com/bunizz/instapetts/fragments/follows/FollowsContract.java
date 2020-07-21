@@ -13,7 +13,7 @@ public interface FollowsContract {
         void getFirstFollowed(String uuid);
         void nextFollowers();
         void nextFollowed();
-        void unfollowUser(String uuid,String name_tag,int id_usuario);
+        void unfollowUser(String uuid,String name_tag,int id_usuario,boolean delete_me_friends);
     }
 
     interface View{

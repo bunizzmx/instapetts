@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.activitys.Splash;
 import com.bunizz.instapetts.activitys.main.Main;
 import com.bunizz.instapetts.activitys.share_post.ShareActivity;
 import com.bunizz.instapetts.beans.PetBean;
@@ -26,45 +25,29 @@ import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.Utilities;
-import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.login.MainLogin;
 import com.bunizz.instapetts.fragments.login.first_user.FragmentFirstUser;
 import com.bunizz.instapetts.fragments.login.login.FragmentLogin;
 import com.bunizz.instapetts.fragments.login.sigin.FragmentSigin;
-import com.bunizz.instapetts.fragments.profile.FragmentEditProfileUser;
-import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.login_listener;
 import com.bunizz.instapetts.listeners.uploads;
-import com.bunizz.instapetts.services.DownloadsService;
 import com.bunizz.instapetts.services.ImageService;
 import com.bunizz.instapetts.utils.AndroidIdentifier;
 import com.bunizz.instapetts.utils.dilogs.DialogLoanding;
 import com.bunizz.instapetts.utils.snackbar.SnackBar;
-import com.bunizz.instapetts.web.CONST;
 import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.Profile;
-import com.facebook.ProfileTracker;
-import com.facebook.login.LoginFragment;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -75,12 +58,9 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
-import org.json.JSONObject;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Stack;
 
 import androidx.annotation.NonNull;
@@ -107,7 +87,6 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     static final int NEW_PHOTO_UPLOADED= 3;
     RxPermissions rxPermissions ;
     DialogLoanding dialogLoanding ;
-    Intent intent_service ;
     FirebaseUser user ;
 
     @SuppressLint("CheckResult")
@@ -132,8 +111,6 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
             Log.e("KeyHash:","ERROR2" + e.getMessage());
         }
 
-
-        intent_service = new Intent(this, DownloadsService.class);
         dialogLoanding = new DialogLoanding(this);
         stack_sigin = new Stack<>();
         stack_main_login = new Stack<>();
@@ -500,6 +477,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        Log.e("ERROR_LOGIN","-->TODO MAL AL V"  + credential.getProvider());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
@@ -512,12 +490,39 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                             App.write(PREFERENCES.TOKEN,token);
                             Log.e("ERROR_LOGIN","-->TODO BIEN" +token);
                             generate_user_bean();
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e("ERROR_LOGIN","-->fail token " + e.getMessage());
+                            }
                         });
                     } else {
+                        Log.e("ERROR_LOGIN","-->errororororo");
                         Toast.makeText(LoginActivity.this, "Intente de nuevo", Toast.LENGTH_LONG).show();
 
                     }
-                });
+                }
+                )
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if (e.getMessage().contains("network error")){
+                    Toast.makeText(LoginActivity.this, "Sin internet", Toast.LENGTH_LONG).show();
+                }
+                    Log.e("ERROR_LOGIN", "-->TODO BIEN" + e.getMessage());
+            }
+        }).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                Log.e("ERROR_LOGIN","-->TODO aaaaaaaa" );
+            }
+        })
+        .addOnCanceledListener(new OnCanceledListener() {
+            @Override
+            public void onCanceled() {
+                Log.e("ERROR_LOGIN","-->TODO cancelado" );
+            }
+        });
     }
 
     void generate_user_bean(){
@@ -552,7 +557,6 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     @Override
     public void registerCompleted() {
-            startService(intent_service);
             App.write(IS_LOGUEDD,true);
             Intent i ;
             i = new Intent(LoginActivity.this, Main.class);
@@ -578,7 +582,6 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     @Override
     public void loginCompleted(UserBean userBean) {
-        startService(intent_service);
         App.write(PREFERENCES.FOTO_PROFILE_USER,userBean.getPhoto_user());
         App.write(PREFERENCES.FOTO_PROFILE_USER_THUMBH,userBean.getPhoto_user_thumbh());
         App.write(PREFERENCES.DESCRIPCCION,userBean.getDescripcion());
@@ -608,7 +611,6 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     @Override
     public void UpdateFirsUserCompleted() {
-        startService(intent_service);
         try {
             dialogLoanding.dismiss();
         }catch (Exception e){}

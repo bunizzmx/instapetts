@@ -422,7 +422,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         }
 
         if(USERBEAN.getFolowers() < 0)
-            num_followers.setText("");
+            num_followers.setText("0");
         else
             num_followers.setText(String.valueOf(USERBEAN.getFolowers()));
 

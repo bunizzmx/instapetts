@@ -23,6 +23,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.IOException;
+
 import androidx.annotation.NonNull;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -116,35 +118,50 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void getFileBackup() {
-
+        StorageReference islandRef = null;
         Log.e("LEO_ARCHIVO_DESCARGADO","----SI");
-        StorageReference islandRef = storageReference.child(App.read(PREFERENCES.UUID,"INVALID") + "_BACKUP.txt");
+        try{
+            islandRef = storageReference.child(App.read(PREFERENCES.UUID,"INVALID") + "_BACKUP.txt");
+            Log.e("LEO_ARCHIVO_DESCARGADO","----HH" + islandRef.toString());
+        }
+        catch (Exception eio){
+            Log.e("LEO_ARCHIVO_DESCARGADO","----SI" + eio.getMessage());
+        }
         final long ONE_MEGABYTE = 1024 * 1024;
-        islandRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                idsUsersHelper.cleanTable();
-                for(int i =0;i<bytes.length;i++){
-                    try{
-                        int id = Integer.parseInt(""+(char)bytes[i]);
-                        Log.e("VALOR_FILE","NUMERO: "  + id);
-                        idsUsersHelper.saveId(id);
-                        COUNTER_FRIENDS ++;
-                    }catch (Exception e){
-                        Log.e("VALOR_FILE","ES UNA COMA"  + (char)bytes[i]);
-                    }
-                }
-                App.write(PREFERENCES.CURRENTS_FRIENDS,COUNTER_FRIENDS);
-                COUNTER_FRIENDS =0;
-                mView.fileBackupDownloaded();
-                // Data for "images/island.jpg" is returns, use this as needed
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                mView.fileBackupDownloaded();
-            }
-        });
+        if(islandRef!=null) {
+           try {
+               islandRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                   @Override
+                   public void onSuccess(byte[] bytes) {
+                       idsUsersHelper.cleanTable();
+                       for (int i = 0; i < bytes.length; i++) {
+                           try {
+                               int id = Integer.parseInt("" + (char) bytes[i]);
+                               Log.e("VALOR_FILE", "NUMERO: " + id);
+                               idsUsersHelper.saveId(id);
+                               COUNTER_FRIENDS++;
+                           } catch (Exception e) {
+                               Log.e("VALOR_FILE", "ES UNA COMA" + (char) bytes[i]);
+                           }
+                       }
+                       App.write(PREFERENCES.CURRENTS_FRIENDS, COUNTER_FRIENDS);
+                       COUNTER_FRIENDS = 0;
+                       mView.fileBackupDownloaded();
+                       // Data for "images/island.jpg" is returns, use this as needed
+                   }
+               }).addOnFailureListener(new OnFailureListener() {
+                   @Override
+                   public void onFailure(@NonNull Exception exception) {
+                       mView.fileBackupDownloaded();
+                   }
+               });
+           }catch (Exception e){
+               Log.e("VALOR_FILE", "NUMERO: " + e.getMessage());
+               mView.fileBackupDownloaded();
+           }
+        }else{
+            mView.fileBackupDownloaded();
+        }
     }
 
     @Override
@@ -173,6 +190,8 @@ public class LoginPresenter implements LoginContract.Presenter {
                                                     splitSubitems[5],
                                                     splitSubitems[6]));
                                         }
+                                        mView.HistoriesSaved();
+                                    }else{
                                         mView.HistoriesSaved();
                                     }
                                 }

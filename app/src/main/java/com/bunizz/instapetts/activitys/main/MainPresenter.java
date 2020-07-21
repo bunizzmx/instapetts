@@ -3,6 +3,7 @@ package com.bunizz.instapetts.activitys.main;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -25,6 +26,7 @@ import com.bunizz.instapetts.fragments.share_post.Share.SharePostContract;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.CONST;
 import com.bunizz.instapetts.web.WebServices;
+import com.bunizz.instapetts.web.parameters.FollowParameter;
 import com.bunizz.instapetts.web.parameters.IdentificadorHistoryParameter;
 import com.bunizz.instapetts.web.responses.IdentificadoresHistoriesResponse;
 import com.bunizz.instapetts.web.responses.PetsResponse;
@@ -220,7 +222,51 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void unfollowUser(String id_document) {
+    public void unfollowUser(String id_document,int id_usuario,String name_tag) {
+
+        FollowParameter followParameter= new FollowParameter();
+        followParameter.setId_user(id_usuario);
+        followParameter.setTarget("UNFOLLOW");
+        followParameter.setId_my_user(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        disposable.add(
+                apiService.follows(followParameter)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                            @Override
+                            public void onSuccess(SimpleResponse responsePost) {
+                                if(responsePost!=null) {
+                                    if(responsePost.getCode_response()==200){
+                                        idsUsersHelper.deleteId(id_usuario);
+                                        db.collection(FIRESTORE.R_FOLLOWS).document(id_document).collection(FIRESTORE.SEGUIDORES)
+                                                .document(App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"INVALID"))
+                                                .delete()
+                                                .addOnSuccessListener(aVoid -> {    Log.e("BORRE_FOLLOW","DE EL"); })
+                                                .addOnFailureListener(e -> { })
+                                                .addOnCompleteListener(task -> {
+                                                    Log.e("BORRE_FOLLOW","DE EL");});
+                                        db.collection(FIRESTORE.R_FOLLOWS).document(App.read(PREFERENCES.UUID,"INVALID")).collection(FIRESTORE.SEGUIDOS)
+                                                .document(name_tag)
+                                                .delete()
+                                                .addOnSuccessListener(aVoid -> {
+                                                    Log.e("BORRE_FOLLOW","DE MI");
+                                                })
+                                                .addOnFailureListener(e -> { })
+                                                .addOnCompleteListener(task -> {
+                                                    Log.e("BORRE_FOLLOW","DE MI");});
+                                    }
+                                }  else{
+                                    Toast.makeText(mContext,"No se pudo eliminar intente de nuevo",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                Toast.makeText(mContext,"No se pudo eliminar intente de nuevo",Toast.LENGTH_SHORT).show();
+                            }
+                        })
+        );
+
+
         db.collection(FIRESTORE.R_FOLLOWS).document(id_document).collection(FIRESTORE.SEGUIDORES)
                 .document(App.read(PREFERENCES.UUID,"INVALID"))
                 .delete()
@@ -237,36 +283,7 @@ public class MainPresenter implements MainContract.Presenter {
                 .addOnCompleteListener(task -> {    Log.e("BORRE_FOLLOW","DE MI");});
     }
 
-    @Override
-    public void favoritePet(UserBean userBean, PetBean petBean) {
-        Map<String,Object> followPetData = new HashMap<>();
-        followPetData.put("name_user",userBean.getName_user());
-        followPetData.put("url_photo_user",userBean.getPhoto_user());
-        followPetData.put("uuid_user",userBean.getUuid());
-        followPetData.put("id_user",userBean.getId());
-        followPetData.put("name_nip_user",userBean.getName_user());
-        db.collection(FIRESTORE.R_FAVORITES).document(App.read(PREFERENCES.UUID,"INVALID")).collection(FIRESTORE.FAVORITES)
-                .document(String.valueOf(userBean.getUuid()))
-                .set(followPetData)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
 
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                })
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-
-                    }
-                });
-    }
 
     @Override
     public void downloadMyPets(UserBean userBean) {
@@ -347,6 +364,7 @@ public class MainPresenter implements MainContract.Presenter {
                             @Override
                             public void onSuccess(IdentificadoresHistoriesResponse response) {
                                 ArrayList<IdentificadoresHistoriesBean> identificadoresHistoriesBeans = new ArrayList<>();
+                                ArrayList<Integer> ids = new ArrayList<>();
                                 if(response.getCode_response() == 200){
                                     if(response.getIdentificadores().size()>0){
                                         Log.e("IDENTIFICADORES_MIOIS","si encontre:");
@@ -355,6 +373,42 @@ public class MainPresenter implements MainContract.Presenter {
                                             identificadoresHistoriesHelper.saveIdentificador(response.getIdentificadores().get(i));
                                         }
                                     }
+                                    if(response.getIds_users()!=null)
+                                    {
+                                        if(response.getIds_users().size()>0){
+                                            ids.clear();
+                                            ids.addAll(response.getIds_users());
+                                            for (int i =0;i<ids.size();i++){
+                                                Log.e("ME_AUTOELIMINARON"," :( ->" + ids.get(i));
+                                                idsUsersHelper.deleteId(ids.get(i));
+                                            }
+                                            FollowParameter followParameter= new FollowParameter();
+                                            followParameter.setId_user(0);
+                                            followParameter.setTarget("DELETE_DELETE_OF_FRIENDS");
+                                            followParameter.setId_my_user(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+
+                                            disposable.add(
+                                                    apiService.follows(followParameter)
+                                                            .subscribeOn(Schedulers.io())
+                                                            .observeOn(AndroidSchedulers.mainThread())
+                                                            .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                                                                @Override
+                                                                public void onSuccess(SimpleResponse responsePost) {
+                                                                    if(responsePost!=null) {
+                                                                        if(responsePost.getCode_response()==200){
+                                                                            Log.e("NUMBER_POSTS","-->boroo  is eliminacioses : ");
+                                                                        }
+                                                                    }
+                                                                }
+                                                                @Override
+                                                                public void onError(Throwable e) {
+                                                                        Log.e("NUMBER_POSTS","-->EROR : " + e.getMessage());
+                                                                }
+                                                            })
+                                            );
+                                        }
+                                    }
+
                                 }
                             }
                             @Override

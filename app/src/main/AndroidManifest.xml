@@ -150,9 +150,6 @@
             </intent-filter>
         </service>
         <service
-            android:name=".services.DownloadsService"
-            android:enabled="true" />
-        <service
             android:name=".services.FetchAddressIntentService"
             android:exported="false" />
         <!-- ACTIVIDADES  -->

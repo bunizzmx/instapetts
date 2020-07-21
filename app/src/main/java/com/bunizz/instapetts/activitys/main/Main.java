@@ -1186,13 +1186,18 @@ public class Main extends AppCompatActivity implements change_instance,
         if(follow_unfollow)
             presenter.followUser(userBeanx);
         else
-            presenter.unfollowUser(userBeanx.getUuid());
+            presenter.unfollowUser(userBeanx.getUuid(),userBeanx.getId(),userBeanx.getName_tag());
     }
 
     @Override
+    public void delete_of_my_friends(UserBean userBean, boolean follow_unfollow) {
+        presenter.unfollowUser(userBean.getUuid(),userBean.getId(),userBean.getName_tag());
+    }
+
+   /* @Override
     public void favoritePet(UserBean userBean, PetBean petBean) {
       presenter.favoritePet(userBean,petBean);
-    }
+    }*/
 
     @Override
     public void open_side() {

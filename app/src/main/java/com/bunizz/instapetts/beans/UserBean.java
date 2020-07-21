@@ -80,6 +80,7 @@ public class UserBean {
     @Expose
     String name_tag;
 
+
     public UserBean() {
     }
 

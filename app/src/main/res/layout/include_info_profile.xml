@@ -55,6 +55,7 @@
                     android:layout_height="wrap_content"/>
             </LinearLayout>
             <LinearLayout
+                android:background="?attr/selectableItemBackground"
                 android:id="@+id/open_followiongs"
                 android:layout_weight="1"
                 android:orientation="vertical"
@@ -77,6 +78,7 @@
                     android:layout_height="wrap_content"/>
             </LinearLayout>
             <LinearLayout
+                android:background="?attr/selectableItemBackground"
                 android:id="@+id/open_followers"
                 android:layout_weight="1"
                 android:orientation="vertical"

@@ -385,14 +385,22 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         Glide.with(getContext()).load(USERBEAN.getPhoto_user()).placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
         petsPropietaryAdapter.setPetsforOtherUser(PETS);
         title_name_preview.setText(USERBEAN.getName_user());
-        num_posts.setText(String.valueOf(USERBEAN.getNum_pets()));
+        num_posts.setText(String.valueOf(USERBEAN.getPosts()));
         if(RATE_PETS <=0)
             num_rate_pets.setText("0.0");
         else
             num_rate_pets.setText(String.format("%.2f", RATE_PETS));
 
-        num_followers.setText(String.valueOf(USERBEAN.getFolowers()));
-        num_followed.setText(""+USERBEAN.getFollowed());
+        if(USERBEAN.getFolowers() < 0)
+            num_followers.setText("0");
+        else
+            num_followers.setText(String.valueOf(USERBEAN.getFolowers()));
+
+
+        if(userBean.getFollowed() < 0)
+            num_followed.setText("0");
+        else
+            num_followed.setText(""+USERBEAN.getFollowed());
 
     }
 

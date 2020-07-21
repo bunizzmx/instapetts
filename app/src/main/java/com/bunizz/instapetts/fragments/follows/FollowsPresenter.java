@@ -63,6 +63,7 @@ public class FollowsPresenter implements FollowsContract.Presenter {
 
     @Override
     public void getFirstFolowers(String uuid) {
+        x_followers = null;
         Log.e("UUID-PETICION","-->"+uuid);
         ArrayList<FollowsBean> followsBeans=new ArrayList<>();
         db.collection(FIRESTORE.R_FOLLOWS).document(uuid).collection(FIRESTORE.SEGUIDORES).limit(10)
@@ -206,10 +207,13 @@ public class FollowsPresenter implements FollowsContract.Presenter {
     }
 
     @Override
-    public void unfollowUser(String uuid,String name_tag,int id_usuario) {
+    public void unfollowUser(String uuid,String name_tag,int id_usuario,boolean delete_me_friends) {
         FollowParameter followParameter= new FollowParameter();
         followParameter.setId_user(id_usuario);
-        followParameter.setTarget("UNFOLLOW");
+        if(delete_me_friends)
+           followParameter.setTarget("DELETE_OF_MY_FRIENDS");
+        else
+            followParameter.setTarget("UNFOLLOW");
         followParameter.setId_my_user(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         disposable.add(
                 apiService.follows(followParameter)
@@ -220,25 +224,58 @@ public class FollowsPresenter implements FollowsContract.Presenter {
                             public void onSuccess(SimpleResponse responsePost) {
                                 if(responsePost!=null) {
                                     if(responsePost.getCode_response()==200){
-                                        followsHelper.deleteId(id_usuario);
-                                        db.collection(FIRESTORE.R_FOLLOWS).document(uuid).collection(FIRESTORE.SEGUIDORES)
-                                                .document(App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"INVALID"))
-                                                .delete()
-                                                .addOnSuccessListener(aVoid -> {    Log.e("BORRE_FOLLOW","DE EL"); })
-                                                .addOnFailureListener(e -> { })
-                                                .addOnCompleteListener(task -> {
-                                                    mView.UnfollowSuccess();
-                                                    Log.e("BORRE_FOLLOW","DE EL");});
-                                        db.collection(FIRESTORE.R_FOLLOWS).document(App.read(PREFERENCES.UUID,"INVALID")).collection(FIRESTORE.SEGUIDOS)
-                                                .document(name_tag)
-                                                .delete()
-                                                .addOnSuccessListener(aVoid -> {
-                                                    Log.e("BORRE_FOLLOW","DE MI");
-                                                })
-                                                .addOnFailureListener(e -> { })
-                                                .addOnCompleteListener(task -> {
-                                                    mView.UnfollowSuccess();
-                                                    Log.e("BORRE_FOLLOW","DE MI");});
+                                        if(delete_me_friends) {
+                                            db.collection(FIRESTORE.R_FOLLOWS).document(uuid).collection(FIRESTORE.SEGUIDOS)
+                                                    .document(App.read(PREFERENCES.NAME_TAG_INSTAPETTS, "INVALID"))
+                                                    .delete()
+                                                    .addOnSuccessListener(aVoid -> {
+                                                        Log.e("BORRE_FOLLOW", "DE EL");
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                    })
+                                                    .addOnCompleteListener(task -> {
+                                                        mView.UnfollowSuccess();
+                                                        Log.e("BORRE_FOLLOW", "DE EL");
+                                                    });
+                                            db.collection(FIRESTORE.R_FOLLOWS).document(App.read(PREFERENCES.UUID, "INVALID")).collection(FIRESTORE.SEGUIDORES)
+                                                    .document(name_tag)
+                                                    .delete()
+                                                    .addOnSuccessListener(aVoid -> {
+                                                        Log.e("BORRE_FOLLOW", "DE MI");
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                    })
+                                                    .addOnCompleteListener(task -> {
+                                                        mView.UnfollowSuccess();
+                                                        Log.e("BORRE_FOLLOW", "DE MI");
+                                                    });
+                                        }else{
+                                            followsHelper.deleteId(id_usuario);
+                                            db.collection(FIRESTORE.R_FOLLOWS).document(uuid).collection(FIRESTORE.SEGUIDORES)
+                                                    .document(App.read(PREFERENCES.NAME_TAG_INSTAPETTS, "INVALID"))
+                                                    .delete()
+                                                    .addOnSuccessListener(aVoid -> {
+                                                        Log.e("BORRE_FOLLOW", "DE EL");
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                    })
+                                                    .addOnCompleteListener(task -> {
+                                                        mView.UnfollowSuccess();
+                                                        Log.e("BORRE_FOLLOW", "DE EL");
+                                                    });
+                                            db.collection(FIRESTORE.R_FOLLOWS).document(App.read(PREFERENCES.UUID, "INVALID")).collection(FIRESTORE.SEGUIDOS)
+                                                    .document(name_tag)
+                                                    .delete()
+                                                    .addOnSuccessListener(aVoid -> {
+                                                        Log.e("BORRE_FOLLOW", "DE MI");
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                    })
+                                                    .addOnCompleteListener(task -> {
+                                                        mView.UnfollowSuccess();
+                                                        Log.e("BORRE_FOLLOW", "DE MI");
+                                                    });
+                                        }
                                     }
                                 }  else{
                                     mView.UnfollowSuccess();

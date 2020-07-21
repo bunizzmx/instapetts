@@ -119,12 +119,12 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
         adapter.setListener_follow(new folowFavoriteListener() {
             @Override
             public void followUser(UserBean userBean, boolean follow_unfollow) {
-                presenter.unfollowUser(userBean.getUuid(),userBean.getName_tag(),userBean.getId());
+                presenter.unfollowUser(userBean.getUuid(),userBean.getName_tag(),userBean.getId(),false);
             }
 
             @Override
-            public void favoritePet(UserBean userBean, PetBean petBean) {
-
+            public void delete_of_my_friends(UserBean userBean, boolean follow_unfollow) {
+                presenter.unfollowUser(userBean.getUuid(),userBean.getName_tag(),userBean.getId(),true);
             }
         });
         adapter.setTipo_descarga(tipo_descarga);
@@ -203,6 +203,8 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
     @Override
     public void showFirstFollowers(ArrayList<FollowsBean> followsBeans) {
         if(followsBeans.size()>0){
+            adapter.clear();
+            root_no_internet.setVisibility(View.GONE);
             spin_kit.setVisibility(View.GONE);
             adapter.setUserBeans(followsBeans);
         }else{
@@ -231,8 +233,10 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
         ArrayList<FollowsBean> FIRST_FOLLOWEDS = new ArrayList<>();
         FIRST_FOLLOWEDS.addAll(followsBeans);
         if(FIRST_FOLLOWEDS.size()>0){
+            adapter.clear();
             spin_kit.setVisibility(View.GONE);
             adapter.setUserBeans(FIRST_FOLLOWEDS);
+            root_no_internet.setVisibility(View.GONE);
         }else{
             body_no_data.setText("Cuando sigas 1 o mas cuentas apareceran aqui");
             title_no_internet.setText("Aun no sigues a nadie");
@@ -325,6 +329,11 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
             this.userBeans.addAll(userBeans);
             notifyDataSetChanged();
         }
+
+        public void clear(){
+            this.userBeans.clear();
+            notifyDataSetChanged();
+        }
         public int size_items(){
             return  this.userBeans.size();
         }
@@ -360,7 +369,10 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
                 user.setName_tag(userBeans.get(position).getName_nip_user());
                 user.setUuid(userBeans.get(position).getUuid_user());
                 user.setId(userBeans.get(position).getId_user());
-                listener_follow.followUser(user,false);
+                if(tipo_descarga == 2)
+                      listener_follow.delete_of_my_friends(user,false);
+                else
+                      listener_follow.followUser(user,false);
                 userBeans.remove(position);
             });
 
@@ -371,6 +383,10 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
             }else{
                 h.label_unfollow.setText("Dejar de seguir");
             }
+            if(userBeans.get(position).getId_user() == App.read(PREFERENCES.ID_USER_FROM_WEB,0))
+                h.delete_recent.setVisibility(View.GONE);
+            else
+                h.delete_recent.setVisibility(View.VISIBLE);
         }
 
         @Override

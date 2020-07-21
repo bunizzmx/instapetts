@@ -14,8 +14,7 @@ public interface MainContract {
         void UpdateProfile(UserBean userBean);
         void saveMyStory(IndividualDataPetHistoryBean historiesBean);
         void followUser(UserBean userBean);
-        void unfollowUser(String id_document);
-        void favoritePet(UserBean userBean, PetBean petBean);
+        void unfollowUser(String id_document,int id_usuario,String name_tag);
         void downloadMyPets(UserBean userBean);
         void have_pets();
         void update_token(UserBean userBean);
