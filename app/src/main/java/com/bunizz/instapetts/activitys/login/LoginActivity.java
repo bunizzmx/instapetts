@@ -95,22 +95,6 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         changeStatusBarColor(R.color.white);
-
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.bunizz.instapetts",                  //Insert your own package name.
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e("KeyHash:","ERROR" + e.getMessage());
-        } catch (NoSuchAlgorithmException e) {
-            Log.e("KeyHash:","ERROR2" + e.getMessage());
-        }
-
         dialogLoanding = new DialogLoanding(this);
         stack_sigin = new Stack<>();
         stack_main_login = new Stack<>();

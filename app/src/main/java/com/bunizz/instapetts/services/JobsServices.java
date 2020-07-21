@@ -136,14 +136,15 @@ public class JobsServices {
                 if(list_ids.size() == App.read(PREFERENCES.CURRENTS_FRIENDS,0) && list_ids.size() > 0){
                   Log.e("CURRENT_FRIEND","TENGO LOS MISMOS AMIGOS NO HAGO NADA");
                 }else{
-                    Log.e("CURRENT_FRIEND","YA TENGO MAS AMIGOS ..ACTUALIZO FILE");
-                    String fileToWrite = App.read(PREFERENCES.UUID, "INVALID") + ".txt";
-                    File file = new File(fileToWrite);
-                    if (!file.exists()) {
-                        file.mkdirs();
-                    }
+
                     try {
                         if(list_ids.size()>0) {
+                            Log.e("CURRENT_FRIEND","YA TENGO MAS AMIGOS ..ACTUALIZO FILE");
+                            String fileToWrite = App.read(PREFERENCES.UUID, "INVALID") + ".txt";
+                            File file = new File(fileToWrite);
+                            if (!file.exists()) {
+                                file.mkdirs();
+                            }
                             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput(fileToWrite, Context.MODE_PRIVATE));
                             for (int i = 0; i < list_ids.size(); i++) {
                                 if (i==list_ids.size()-1)

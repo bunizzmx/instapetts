@@ -10,6 +10,7 @@ import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.DisplayMetrics;
@@ -90,10 +91,16 @@ public class App extends Application {
         Log.e("IDIOMA","-->" + idioma);
         write("IDIOMA",idioma);
         write(PREFERENCES.ANDROID_ID, Utilities.Md5Hash(new AndroidIdentifier(this).generateCombinationID()));
-        MobileAds.initialize(this ,this.getResources().getString(R.string.app_admob));
-        generateItemsForAds();
         jobsServices = new JobsServices(this);
         jobsServices.startNotificationsRequest();
+        new Handler().postDelayed(() ->App.getInstance().inicializar_ads(), 4000);
+    }
+
+    public void inicializar_ads(){
+        Log.e("INCIALIZO_ONE","SI");
+        MobileAds.initialize(this, initializationStatus -> {
+            generateItemsForAds();
+        });
     }
 
    public  void clear_preferences(){

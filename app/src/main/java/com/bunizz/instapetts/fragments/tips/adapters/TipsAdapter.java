@@ -345,13 +345,13 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             help.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
                         }
                     });
-                    help.root_preview_perfil_click.setOnClickListener(view ->{
+                    /*help.root_preview_perfil_click.setOnClickListener(view ->{
                         Bundle b = new Bundle();
                         b.putString(BUNDLES.UUID,data_parsed_help.getUuid());
                         Log.e("ID_USUARIO_POST","-->" + data_parsed_help.getId_usuario());
                         b.putInt(BUNDLES.ID_USUARIO,data_parsed_help.getId_usuario());
                         listener.change_fragment_parameter(INSTANCE_PREVIEW_PROFILE,b);
-                    });
+                    });*/
                     help.name_pet.setText(data_parsed_help.getName_pet());
                     help.name_user_posts.setText(data_parsed_help.getName_user());
                     if(data_parsed_help.getLikes()>0)
