@@ -289,4 +289,7 @@
     <string name="ver"> Ver </string>
     <string name="comentarios">comentarios</string>
     <string name="video"> Video </string>
+
+    <string name="unfollow_user">Dejar de seguir</string>
+    <string name="follow_user">Seguir</string>
 </resources>

@@ -343,18 +343,24 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
             follow_edit.setOnClickListener(view1 -> listener.change(FragmentElement.INSTANCE_EDIT_PROFILE_USER));
         }else{
             if(IS_MY_FIRNED){
-                follow_edit.setText("Dejar de seguir");
+                follow_edit.setText(getContext().getString(R.string.unfollow_user));
                 follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_gmail_white));
                 follow_edit.setTextColor(Color.BLACK);
                 follow_edit.setOnClickListener(view -> {
+                    follow_edit.setText(getContext().getString(R.string.follow_user));
+                    follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_follow));
+                    follow_edit.setTextColor(Color.WHITE);
                     listener_follow.followUser(USERBEAN,false);
                     presenter.follow(USERBEAN.getId(),false);
                 });
             }else{
-                follow_edit.setText("Seguir");
+                follow_edit.setText(getContext().getString(R.string.follow_user));
                 follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_follow));
                 follow_edit.setTextColor(Color.WHITE);
                 follow_edit.setOnClickListener(view -> {
+                    follow_edit.setText(getContext().getString(R.string.unfollow_user));
+                    follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_gmail_white));
+                    follow_edit.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
                     listener_follow.followUser(USERBEAN,true);
                     presenter.follow(USERBEAN.getId(),true);
                 });
@@ -435,7 +441,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     @Override
     public void successFollow(boolean follow,int id_user) {
         if(follow){
-            follow_edit.setText("Dejar de seguir");
+            follow_edit.setText(getContext().getString(R.string.unfollow_user));
             follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_gmail_white));
             follow_edit.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
             follow_edit.setOnClickListener(view -> {
@@ -443,7 +449,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
                 presenter.follow(USERBEAN.getId(),false);
             });
         }else{
-            follow_edit.setText("Seguir");
+            follow_edit.setText(getContext().getString(R.string.follow_user));
             follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_follow));
             follow_edit.setTextColor(Color.WHITE);
             follow_edit.setOnClickListener(view -> {
