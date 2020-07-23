@@ -226,7 +226,7 @@ public class MainPresenter implements MainContract.Presenter {
 
         FollowParameter followParameter= new FollowParameter();
         followParameter.setId_user(id_usuario);
-        followParameter.setTarget("UNFOLLOW");
+        followParameter.setTarget(WEBCONSTANTS.UNFOLLOW);
         followParameter.setId_my_user(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         disposable.add(
                 apiService.follows(followParameter)

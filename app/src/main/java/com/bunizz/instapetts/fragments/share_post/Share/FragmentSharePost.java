@@ -93,6 +93,8 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     int DURACION =0;
     String ASPECT="";
     int CONTAINS_A_PET =0;
+    ArrayList<String> paths = new ArrayList<>();
+    ArrayList<String> aspects = new ArrayList<>();
 
     @OnClick(R.id.share_post_pet)
     void share_post_pet()
@@ -148,7 +150,15 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
                     }
                     else {
                         post.setDuracion(0);
-                        post.setAspect("-");
+                        if(paths.size() == 1) {
+                            if (aspects.size() > 0) {
+                                post.setAspect(aspects.get(0));
+                            } else {
+                                post.setAspect("4_4");
+                            }
+                        }
+                        else
+                            post.setAspect("4_4");
                         post.setThumb_video(ULTIMATE_IMAGE_THUMBH);
                         beginUploadInBackground(adapter.get_selecteds(), false);
                     }
@@ -178,7 +188,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             dialogNoPets.show();
         }
     }
-    ArrayList<String> paths = new ArrayList<>();
+
     SharePostPresenter presenter;
     int is_video =0;
     ListSelectedAdapter adapter;
@@ -205,6 +215,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         helper = new PetHelper(getContext());
         if(bundle!=null){
             paths.addAll(bundle.getStringArrayList("data_pahs"));
+            aspects.addAll(bundle.getStringArrayList("array_aspect"));
             CONTAINS_A_PET = bundle.getInt("CONTAINS_A_PET");
             is_video = bundle.getInt("is_video");
             DURACION = bundle.getInt(BUNDLES.VIDEO_DURATION,30);
@@ -270,6 +281,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             paths.clear();
             Bundle bundle=getArguments();
             paths.addAll(bundle.getStringArrayList("data_pahs"));
+            aspects.addAll(bundle.getStringArrayList("array_aspect"));
             CONTAINS_A_PET = bundle.getInt("CONTAINS_A_PET");
             adapter.setData(paths);
             if(CONTAINS_A_PET == 0){

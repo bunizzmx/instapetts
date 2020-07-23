@@ -9,4 +9,9 @@ public interface WEBCONSTANTS {
     String DELETE ="DELETE";
     String NEW ="NEW";
     String GET ="GET";
+    String FOLLOW ="FOLLOW";
+    String UNFOLLOW = "UNFOLLOW";
+    String DELETE_OF_MY_FRIENDS ="DELETE_OF_MY_FRIENDS";
+    String MULTIPLE ="MULTIPLE";
+    String TOKEN ="TOKEN";
 }

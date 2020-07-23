@@ -2,6 +2,7 @@ package com.bunizz.instapetts.fragments.feed;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -36,8 +37,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.Request;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.AspectBean;
@@ -451,13 +456,20 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     f.dots_indicator.setViewPager(f.list_fotos);
 
                 }else{
+                    AspectBean aspect_image = new AspectBean();
+                    aspect_image = App.getInstance().getAspect(data_parsed.getAspect());
+                    RelativeLayout.LayoutParams tam_img = new RelativeLayout.LayoutParams(aspect_image.getWidth(), aspect_image.getHeight());
+                    f.single_image.setLayoutParams(tam_img);
                     f.progres_image.setIndeterminateDrawable(drawable);
                     f.progres_image.setColor(context.getResources().getColor(R.color.colorPrimaryDark));
                     f.root_multiple_image.setVisibility(View.GONE);
                     f.single_image.setVisibility(View.VISIBLE);
+
+
                     Glide.with(context).load(data_parsed.getUrls_posts())
                             .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
-                            .error(context.getResources().getDrawable(R.drawable.ic_holder)).addListener(new RequestListener<Drawable>() {
+                            .error(context.getResources().getDrawable(R.drawable.ic_holder))
+                            .addListener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                             f.progres_image.setVisibility(View.GONE);

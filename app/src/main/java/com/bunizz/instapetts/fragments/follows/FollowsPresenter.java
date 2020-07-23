@@ -7,6 +7,7 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.beans.FollowsBean;
 import com.bunizz.instapetts.constantes.FIRESTORE;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.db.helpers.FollowsHelper;
 import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
 import com.bunizz.instapetts.db.helpers.MyStoryHelper;
@@ -211,9 +212,9 @@ public class FollowsPresenter implements FollowsContract.Presenter {
         FollowParameter followParameter= new FollowParameter();
         followParameter.setId_user(id_usuario);
         if(delete_me_friends)
-           followParameter.setTarget("DELETE_OF_MY_FRIENDS");
+           followParameter.setTarget(WEBCONSTANTS.DELETE_OF_MY_FRIENDS);
         else
-            followParameter.setTarget("UNFOLLOW");
+            followParameter.setTarget(WEBCONSTANTS.UNFOLLOW);
         followParameter.setId_my_user(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         disposable.add(
                 apiService.follows(followParameter)

@@ -326,6 +326,10 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     f.progres_image.setColor(context.getResources().getColor(R.color.primary));
                     f.root_multiple_image.setVisibility(View.GONE);
                     f.single_image.setVisibility(View.VISIBLE);
+                    AspectBean aspect_image = new AspectBean();
+                    aspect_image = App.getInstance().getAspect(data_parsed.getAspect());
+                    RelativeLayout.LayoutParams tam_img = new RelativeLayout.LayoutParams(aspect_image.getWidth(), aspect_image.getHeight());
+                    f.single_image.setLayoutParams(tam_img);
                     Glide.with(context).load(data_parsed.getUrls_posts()).addListener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -335,6 +339,9 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                         @Override
                         public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            int width = resource.getIntrinsicWidth();
+                            int height = resource.getIntrinsicHeight();
+                            Log.e("WIDYH_HEIGHT","-->" + width + "/" + height);
                             f.progres_image.setVisibility(View.GONE);
                             return false;
                         }

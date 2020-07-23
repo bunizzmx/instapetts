@@ -292,4 +292,5 @@
 
     <string name="unfollow_user">Dejar de seguir</string>
     <string name="follow_user">Seguir</string>
+    <string name="in_progress">En progreso...</string>
 </resources>

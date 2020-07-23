@@ -366,7 +366,7 @@ public class Main extends AppCompatActivity implements change_instance,
             String token = instanceIdResult.getToken();
             UserBean U_TOK = new UserBean();
             U_TOK.setToken(token);
-            U_TOK.setTarget("TOKEN");
+            U_TOK.setTarget(WEBCONSTANTS.TOKEN);
             U_TOK.setId(App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
             presenter.update_token(U_TOK);
         });
@@ -376,16 +376,6 @@ public class Main extends AppCompatActivity implements change_instance,
                 .skipMemoryCache(true)
                 .placeholder(getResources().getDrawable(R.drawable.ic_holder)).into(icon_profile_pet);
         presenter.getIdentificadoresHistories();
-
-
-        // ATTENTION: This was auto-generated to handle app links.
-        Intent appLinkIntent = getIntent();
-        String appLinkAction = appLinkIntent.getAction();
-        Uri appLinkData = appLinkIntent.getData();
-
-
-
-
     }
 
     @Override
@@ -700,10 +690,8 @@ public class Main extends AppCompatActivity implements change_instance,
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             if (mOldFragment != null) {
-                Log.e("current_fragment","" + mCurrentFragment.getInstanceType() + "/" + mOldFragment.getInstanceType());
                 if (mCurrentFragment.getFragment().isAdded()) {
                     if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SIDE_MENU || (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_SIDE_MENU  && mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET )){
-                        Log.e("ANIMATIONXX","1");
                         if(is_back){
                             fragmentManager
                                     .beginTransaction()
@@ -721,7 +709,6 @@ public class Main extends AppCompatActivity implements change_instance,
                         }
 
                     }else{
-                        Log.e("ANIMATIONXX","2");
                         fragmentManager
                                 .beginTransaction()
                                 .addToBackStack(null)
@@ -730,7 +717,6 @@ public class Main extends AppCompatActivity implements change_instance,
                     }
                 } else {
                     if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SIDE_MENU || (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_SIDE_MENU  && mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET )){
-                        Log.e("ANIMATIONXX","3");
                         if(is_back){
                             fragmentManager
                                     .beginTransaction()
@@ -748,7 +734,6 @@ public class Main extends AppCompatActivity implements change_instance,
 
                         }
                     }else{
-                        Log.e("ANIMATIONXX","4");
                         fragmentManager
                                 .beginTransaction()
                                 .addToBackStack(null)
@@ -799,19 +784,16 @@ public class Main extends AppCompatActivity implements change_instance,
             repaint_nav(R.id.tab_feed);
             changeOfInstance(FragmentElement.INSTANCE_FEED, null, false);
         }else{
-            Log.e("ONBACKKK","111");
             if(mOldFragment!=null) {
                 if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS)
                     ((FragmentTips) mOldFragment.getFragment()).stop_player();
             }
-
 
             if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_TIP_DETAIL){
                 repaint_nav(R.id.tap_tips);
                 changeOfInstance(FragmentElement.INSTANCE_TIPS,null,false);
             }
             else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH || mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED){
-                Log.e("ONBACKKK","444");
                 if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED){
                     ((FragmentListOfPosts) mCurrentFragment.getFragment()).stop_player();
                 }
@@ -828,7 +810,6 @@ public class Main extends AppCompatActivity implements change_instance,
                 changeOfInstance(FragmentElement.INSTANCE_SEARCH,null,false);
             }
             else if(IS_SHEET_OPEN || SIDE_OPEN){
-                Log.e("ONBACKKK","555");
                 IS_SHEET_OPEN= false;
                 SIDE_OPEN =false;
                 mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
@@ -837,12 +818,10 @@ public class Main extends AppCompatActivity implements change_instance,
 
             }
             else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_EDIT_PROFILE_USER){
-                Log.e("ONBACKKK","666");
                 Bundle b = new Bundle();
                 b.putString(BUNDLES.PHOTO_LOCAL,App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
                 changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET,b,false);
             }else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_FOLLOWS_USER){
-                Log.e("ONBACKKK","777");
                 if(mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE){
                     changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE,null,true);
                 }else if(mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET){
@@ -852,10 +831,8 @@ public class Main extends AppCompatActivity implements change_instance,
                 }
             }
             else{
-                if(mCurrentFragment.getInstanceType()== FragmentElement.INSTANCE_FEED) {
-                    Log.e("ONBACKKK","222");
+                if(mCurrentFragment.getInstanceType()== FragmentElement.INSTANCE_FEED)
                     finish();
-                }
                 else {
                     if(mOldFragment.getInstanceType()== FragmentElement.INSTANCE_TIPS){
                         repaint_nav(R.id.tap_tips);
@@ -864,7 +841,6 @@ public class Main extends AppCompatActivity implements change_instance,
                         repaint_nav(R.id.tab_feed);
                         changeOfInstance(FragmentElement.INSTANCE_FEED, null, false);
                     }
-                    Log.e("ONBACKKK","333");
 
                 }
             }
@@ -875,10 +851,8 @@ public class Main extends AppCompatActivity implements change_instance,
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == NEW_PET_REQUEST) {
-            // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 if (mCurrentFragment.getFragment() instanceof FragmentProfileUserPet) {
                             ((FragmentProfileUserPet) mCurrentFragment.getFragment()).refresh_list_pets();
@@ -886,8 +860,8 @@ public class Main extends AppCompatActivity implements change_instance,
             }
         }else if(requestCode == NEW_POST_REQUEST){
             if(data!=null) {
-                if(data.getStringExtra("PET_REQUEST")!=null){
-                    if(data.getStringExtra("PET_REQUEST").equals("PET_REQUEST")) {
+                if(data.getStringExtra(BUNDLES.PET_REQUEST)!=null){
+                    if(data.getStringExtra(BUNDLES.PET_REQUEST).equals(BUNDLES.PET_REQUEST)) {
                         Intent i = new Intent(Main.this, WizardPetActivity.class);
                         startActivityForResult(i, NEW_PET_REQUEST);
                     }else{
@@ -898,7 +872,7 @@ public class Main extends AppCompatActivity implements change_instance,
                         smoot_progress.setVisibility(View.VISIBLE);
                         root_progres_publish.setVisibility(View.VISIBLE);
                         close_smoot.setVisibility(View.GONE);
-                        text_smoot.setText("En progreso...");
+                        text_smoot.setText(getString(R.string.in_progress));
                     }
                 }
             }
@@ -907,13 +881,10 @@ public class Main extends AppCompatActivity implements change_instance,
         else if(requestCode == NEW_PHOTO_UPLOADED){
             if(data!=null) {
                String url =  data.getStringExtra(BUNDLES.URI_FOTO);
-                   if (mCurrentFragment.getFragment() instanceof FragmentEditProfileUser) {
+                   if (mCurrentFragment.getFragment() instanceof FragmentEditProfileUser)
                        ((FragmentEditProfileUser) mCurrentFragment.getFragment()).change_image_profile(url);
-                   }
-                    else{
-                       Log.e("REFRESH_OFTO_PET","-->: " + url);
+                    else
                        ((InfoPetFragment) mCurrenSheet.getFragment()).refresh_data_on_pet(url);
-                   }
             }
         }
         else if(requestCode == NEW_PHOTO_FOR_HISTORY){
@@ -929,7 +900,7 @@ public class Main extends AppCompatActivity implements change_instance,
                 smoot_progress.setVisibility(View.VISIBLE);
                 root_progres_publish.setVisibility(View.VISIBLE);
                 close_smoot.setVisibility(View.GONE);
-                text_smoot.setText("En progreso...");
+                text_smoot.setText(getString(R.string.in_progress));
                 upload_story(url,name_pet,id_pet,photo_pet);
             }
         }

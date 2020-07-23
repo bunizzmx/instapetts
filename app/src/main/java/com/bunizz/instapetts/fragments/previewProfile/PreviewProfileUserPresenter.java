@@ -9,6 +9,7 @@ import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.db.helpers.FollowsHelper;
 import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
 import com.bunizz.instapetts.db.helpers.LikePostHelper;
@@ -29,6 +30,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.bunizz.instapetts.constantes.WEBCONSTANTS.UNFOLLOW;
 
 public class PreviewProfileUserPresenter implements   ProfileUserContract.Presenter {
 
@@ -87,9 +90,9 @@ public class PreviewProfileUserPresenter implements   ProfileUserContract.Presen
         postFriendsBean.setPaginador(-999);
         if(one_user){
             postFriendsBean.setId_one(id_one);
-            postFriendsBean.setTarget("ONE");
+            postFriendsBean.setTarget(WEBCONSTANTS.ONE);
         }else{
-            postFriendsBean.setTarget("MULTIPLE");
+            postFriendsBean.setTarget(WEBCONSTANTS.MULTIPLE);
             postFriendsBean.setIds(followsHelper.getMyFriendsForPost());
         }
         postFriendsBean.setFilter(filter);
@@ -145,9 +148,9 @@ public class PreviewProfileUserPresenter implements   ProfileUserContract.Presen
         FollowParameter followParameter= new FollowParameter();
         followParameter.setId_user(id_user);
         if(follow)
-            followParameter.setTarget("FOLLOW");
+            followParameter.setTarget(WEBCONSTANTS.FOLLOW);
         else {
-            followParameter.setTarget("UNFOLLOW");
+            followParameter.setTarget(UNFOLLOW);
         }
 
         followParameter.setId_my_user(App.read(PREFERENCES.ID_USER_FROM_WEB,0));

@@ -79,21 +79,20 @@ public class ImageCropFragment extends Fragment {
     CardView indicator_16_9;
 
     ArrayList<String> array_list_cropes = new ArrayList<>();
+    ArrayList<String> array_aspect = new ArrayList<>();
     int CURRENT_INDEX=0;
     int IS_FROM_CAMERA = 0;
-
     uploads listener_uploads;
     int INDEX_IMAGE=0;
-
-    ArrayAdapter albumAdapter;
-    boolean IS_CROPED_IMAGE_FINISH = false;
     int CONTAINS_A_PET = 0;
     String fileex  ="";
+    String ASPECT ="4_4";
 
     @OnClick(R.id.changue_to_4_3)
     void changue_to_4_3()
     {
-      cropLayout.setAspectRatio(4,3);//1f,Uri.parse(paths.get(CURRENT_INDEX)));
+        ASPECT ="4_3";
+        cropLayout.setAspectRatio(4,3);//1f,Uri.parse(paths.get(CURRENT_INDEX)));
         indicator_4_3.setVisibility(View.VISIBLE);
         indicator_4_4.setVisibility(View.GONE);
         indicator_16_9.setVisibility(View.GONE);
@@ -102,6 +101,7 @@ public class ImageCropFragment extends Fragment {
     @OnClick(R.id.changue_to_4_4)
     void changue_to_4_4()
     {
+        ASPECT ="4_4";
         cropLayout.setAspectRatio(1,1);//0.5f,Uri.parse(paths.get(CURRENT_INDEX)));
         indicator_4_3.setVisibility(View.GONE);
         indicator_4_4.setVisibility(View.VISIBLE);
@@ -111,6 +111,7 @@ public class ImageCropFragment extends Fragment {
     @OnClick(R.id.changue_to_16_9)
     void changue_to_16_9()
     {
+        ASPECT ="16_9";
         cropLayout.setAspectRatio(16,9);//0.5f,Uri.parse(paths.get(CURRENT_INDEX)));
         indicator_4_3.setVisibility(View.GONE);
         indicator_4_4.setVisibility(View.GONE);
@@ -260,6 +261,7 @@ public class ImageCropFragment extends Fragment {
                             PATH_TEMP = file.getPath();
                             Log.e("PATH_CROPED","-->" + PATH_TEMP);
                             array_list_cropes.add(PATH_TEMP);
+                            array_aspect.add(ASPECT);
                             try {
                                 Intent mediaScannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                                 Uri fileContentUri = Uri.fromFile(file);
@@ -270,6 +272,7 @@ public class ImageCropFragment extends Fragment {
                                     if(CURRENT_INDEX==paths.size()-1){
                                         Bundle b = new Bundle();
                                         b.putStringArrayList("data_pahs",array_list_cropes);
+                                        b.putStringArrayList("array_aspect",array_aspect);
                                         b.putInt("CONTAINS_A_PET",CONTAINS_A_PET);
                                         Log.e("CONTAINS_Ay_PETssCO","-->" + CONTAINS_A_PET);
                                         adapter.clear();
@@ -290,6 +293,7 @@ public class ImageCropFragment extends Fragment {
                                         Bundle b = new Bundle();
                                         b.putInt("CONTAINS_A_PET",CONTAINS_A_PET);
                                         b.putStringArrayList("data_pahs",array_list_cropes);
+                                        b.putStringArrayList("array_aspect",array_aspect);
                                         adapter.clear();
                                         Log.e("CONTAINS_A_xPETssCO","-->" + CONTAINS_A_PET);
                                         listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);

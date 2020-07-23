@@ -465,7 +465,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
     @Override
     public void onImageProfileUpdated(String from) {
         Intent intent = new Intent();
-        intent.putExtra("PET_REQUEST","POST_REQUEST");
+        intent.putExtra(BUNDLES.PET_REQUEST,"POST_REQUEST");
         setResult(RESULT_OK,intent);
         finish();
     }
@@ -486,7 +486,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
     @Override
     public void new_pet() {
         Intent intent = new Intent();
-        intent.putExtra("PET_REQUEST","PET_REQUEST");
+        intent.putExtra(BUNDLES.PET_REQUEST,"PET_REQUEST");
         setResult(RESULT_OK,intent);
         finish();
     }

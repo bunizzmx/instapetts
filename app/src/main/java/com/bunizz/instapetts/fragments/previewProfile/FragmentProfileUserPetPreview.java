@@ -62,10 +62,7 @@ import retrofit2.http.POST;
 public class FragmentProfileUserPetPreview extends Fragment implements  ProfileUserContract.View {
 
     change_instance listener;
-    FeedAdapter feedAdapter;
     changue_fragment_parameters_listener listener_instance;
-
-    ArrayList<Object> data = new ArrayList<>();
 
     @BindView(R.id.list_pets_propietary)
     RecyclerView list_pets_propietary;
@@ -143,12 +140,11 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     @SuppressLint("MissingPermission")
     @OnClick(R.id.open_followers)
     void open_followers() {
-        Log.e("CHANGUE_FOLLOOWS","true");
         Bundle b = new Bundle();
         b.putString(BUNDLES.NAME_USUARIO,USERBEAN.getName_user());
         b.putInt(BUNDLES.ID_USUARIO,USERBEAN.getId());
         b.putString(BUNDLES.UUID,USERBEAN.getUuid());
-        b.putInt("TIPO_DESCARGA",2);
+        b.putInt(BUNDLES.TIPO_DESCARGA,2);
         listener_instance.change_fragment_parameter(FragmentElement.INSTANCE_FOLLOWS_USER,b);
     }
 
@@ -163,12 +159,11 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     @SuppressLint("MissingPermission")
     @OnClick(R.id.open_followiongs)
     void open_followiongs() {
-        Log.e("CHANGUE_FOLLOOWS","true");
         Bundle b = new Bundle();
         b.putString(BUNDLES.NAME_USUARIO,USERBEAN.getName_user());
         b.putInt(BUNDLES.ID_USUARIO,USERBEAN.getId());
         b.putString(BUNDLES.UUID,USERBEAN.getUuid());
-        b.putInt("TIPO_DESCARGA",1);
+        b.putInt(BUNDLES.TIPO_DESCARGA,1);
         listener_instance.change_fragment_parameter(FragmentElement.INSTANCE_FOLLOWS_USER,b);
     }
 
@@ -379,13 +374,10 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         float RATE_PETS=0;
         float ACOMULATIVO_RATE=0;
         for(int i=0;i <PETS.size();i++){
-            Log.e("ACOMULATIVO_RATE","-->:" + PETS.get(i).getRate_pet() );
             ACOMULATIVO_RATE +=PETS.get(i).getRate_pet();
         }
         RATE_PETS = ACOMULATIVO_RATE / PETS.size();
-
         USERBEAN = userBean;
-        Log.e("USER_BEAN","-->TOKEN:" + USERBEAN.getToken() );
         name_property_pet.setText("@" + USERBEAN.getName_tag());
         descripcion_perfil_user.setText(USERBEAN.getDescripcion());
         Glide.with(getContext()).load(USERBEAN.getPhoto_user()).placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
@@ -412,7 +404,6 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
 
     @Override
     public void showPostUser(ArrayList<PostBean> posts) {
-        Log.e("SETDATA","ONMY_PROFILE" + posts.size());
         Fragment frag = adapter_pager.getItem(POSITION_PAGER);
         POSTS.clear();
         POSTS.addAll(posts);

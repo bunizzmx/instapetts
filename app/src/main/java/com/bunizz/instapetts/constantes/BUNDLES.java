@@ -46,4 +46,8 @@ public interface BUNDLES {
 
 
     String DOWNLOADS_INFO ="DOWNLOADS_INFO";
+
+    String TIPO_DESCARGA ="TIPO_DESCARGA";
+
+    String PET_REQUEST ="PET_REQUEST";
 }
