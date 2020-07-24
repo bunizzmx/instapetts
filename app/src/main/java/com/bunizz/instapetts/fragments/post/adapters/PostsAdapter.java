@@ -2,6 +2,7 @@ package com.bunizz.instapetts.fragments.post.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity;
 import com.bunizz.instapetts.beans.AspectBean;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
@@ -48,6 +50,8 @@ import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 
+import org.parceler.Parcels;
+
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
@@ -61,7 +65,6 @@ import static com.bunizz.instapetts.fragments.FragmentElement.INSTANCE_PREVIEW_P
 public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     Context context;
-    ArrayList<String> current_images = new ArrayList<>();
     ArrayList<Object> data = new ArrayList<>();
     changue_fragment_parameters_listener listener;
     postsListener listener_post;
@@ -244,6 +247,15 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 }else{
                     vid_h.save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite));
                 }
+
+                vid_h.card_view_full.setOnClickListener(v -> {
+                    //listener_video.StopVideo();
+                    Intent i = new Intent(context, PlayVideoActivity.class);
+                    i.putExtra("TYPE_PLAYER",1);
+                    i.putExtra("BEAN", Parcels.wrap(mo));
+                    context.startActivity(i);
+                });
+
 
                 if(mo.isLiked()){
                     vid_h.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));

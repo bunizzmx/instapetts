@@ -19,6 +19,7 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity;
+import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity2;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.TipsBean;
 import com.bunizz.instapetts.fragments.FragmentElement;

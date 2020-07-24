@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
 
+import com.bunizz.instapetts.utils.video_player.PreviewTumbh.ExoPlayerMediaSourceBuilder;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -39,8 +40,10 @@ public class VideoPlayer implements Player.EventListener, TimeBar.OnScrubListene
     private OnProgressUpdateListener mUpdateListener;
     private Handler progressHandler;
     private Runnable progressUpdater;
+    Context context;
 
     public VideoPlayer(Context context) {
+        this.context = context;
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelection.Factory videoTrackSelectionFactory =
                 new AdaptiveTrackSelection.Factory(bandwidthMeter);
@@ -61,6 +64,24 @@ public class VideoPlayer implements Player.EventListener, TimeBar.OnScrubListene
 
         player.prepare(videoSource);
         player.addVideoListener(this);
+    }
+
+    public void initMediaSourceWeb(Context context, Uri uri) {
+         ExoPlayerMediaSourceBuilder mediaSourceBuilder;
+          mediaSourceBuilder = new ExoPlayerMediaSourceBuilder(context);
+        TrackSelection.Factory videoTrackSelectionFactory
+                = new AdaptiveTrackSelection.Factory(new DefaultBandwidthMeter());
+        TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+        LoadControl loadControl = new DefaultLoadControl();
+        mediaSourceBuilder.setUri(uri);
+        player = ExoPlayerFactory.newSimpleInstance(
+                context,
+                trackSelector, loadControl);
+        player.addVideoListener(this);
+        player.setPlayWhenReady(true);
+        player.prepare(mediaSourceBuilder.getMediaSource(false));
+
+
     }
 
     public SimpleExoPlayer getPlayer() {

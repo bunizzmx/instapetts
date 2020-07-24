@@ -103,6 +103,9 @@
                     />
 
             </FrameLayout>
+
+
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/card_view_mute"
                 app:contentPadding="5dp"
@@ -123,6 +126,8 @@
                     android:src="@drawable/ic_dismute"
                     />
             </androidx.cardview.widget.CardView>
+
+
         </RelativeLayout>
         <com.bunizz.instapetts.utils.double_tap.DoubleTapLikeView
             android:visibility="gone"
@@ -142,6 +147,13 @@
             android:background="?selectableItemBackgroundBorderless"
             android:layout_width="60dp"
             android:layout_height="60dp" />
+        <com.bunizz.instapetts.utils.smoot.SmoothProgressBar
+            android:layout_alignParentBottom="true"
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            style="@style/GNowProgressBarWhite"
+            android:indeterminate="true"/>
     </RelativeLayout>
     <RelativeLayout
         android:paddingLeft="10dp"
@@ -176,6 +188,24 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"/>
         </RelativeLayout>
+
+        <RelativeLayout
+            android:background="?attr/selectableItemBackground"
+            android:layout_toLeftOf="@+id/l_saved_post"
+            android:id="@+id/card_view_full"
+            android:layout_width="50dp"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="#00FFFFFF"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:tint="@color/black"
+                android:src="@drawable/ic_pantalla_completa"
+                />
+        </RelativeLayout>
+
         <RelativeLayout
             android:layout_alignParentRight="true"
             android:id="@+id/l_saved_post"

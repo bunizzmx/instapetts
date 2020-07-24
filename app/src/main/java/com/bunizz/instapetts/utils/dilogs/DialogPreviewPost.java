@@ -7,11 +7,14 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.beans.AspectBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.db.helpers.LikePostHelper;
 import com.bunizz.instapetts.db.helpers.SavedPostHelper;
@@ -85,6 +88,12 @@ public class DialogPreviewPost extends BaseAlertDialog{
         l_like_post = dialogView.findViewById(R.id.l_like_post);
         l_saved_post = dialogView.findViewById(R.id.l_saved_post);
         icon_like = dialogView.findViewById(R.id.icon_like);
+
+        AspectBean aspect_image = new AspectBean();
+        aspect_image = App.getInstance().getAspect(postBean.getAspect());
+        LinearLayout.LayoutParams tam_img = new LinearLayout.LayoutParams(aspect_image.getWidth(), aspect_image.getHeight());
+        image_preview_dialog.setLayoutParams(tam_img);
+
         if(is_multiple(this.postBean.getUrls_posts())) {
             String splits[]  = this.postBean.getUrls_posts().split(",");
             Glide.with(this.context).load(splits[0]).placeholder(context.getResources().getDrawable(R.drawable.ic_holder)).into(image_preview_dialog);
@@ -96,7 +105,7 @@ public class DialogPreviewPost extends BaseAlertDialog{
            num_likes_posts_dialog.setText(getContext().getResources().getString(R.string.first_like));
         else
             num_likes_posts_dialog.setText("a " + this.postBean.getLikes() + " " + getContext().getResources().getString(R.string.people_like_this));
-        Glide.with(this.context).load(this.postBean.getUrl_photo_pet()).placeholder(context.getResources().getDrawable(R.drawable.ic_holder)).into(image_pet_dialog);
+        Glide.with(this.context).load(this.postBean.getUrl_photo_user()).placeholder(context.getResources().getDrawable(R.drawable.ic_holder)).into(image_pet_dialog);
         if(postBean.getAddress()!=null) {
             if (!postBean.getAddress().equals("INVALID")) {
                 addres_post_dialog.setVisibility(View.VISIBLE);

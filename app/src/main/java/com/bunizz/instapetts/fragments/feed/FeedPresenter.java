@@ -398,6 +398,10 @@ public class FeedPresenter implements FeedContract.Presenter {
         data_post_saved.put("cp",postBean.getCp());
         data_post_saved.put("type_post",postBean.getType_post());
         data_post_saved.put("type_pet",postBean.getType_pet());
+        data_post_saved.put("thumb_video",postBean.getThumb_video());
+        data_post_saved.put("aspect",postBean.getAspect());
+        data_post_saved.put("type_post",postBean.getType_post());
+        data_post_saved.put("duracion",postBean.getDuracion());
         db.collection(FIRESTORE.R_POSTS_SAVED).document(App.read(PREFERENCES.UUID,"INVALID")).collection(FIRESTORE.POSTS)
                 .document(String.valueOf(postBean.getId_post_from_web()))
                 .set(data_post_saved)

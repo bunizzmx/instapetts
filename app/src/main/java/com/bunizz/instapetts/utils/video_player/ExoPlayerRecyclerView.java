@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import com.bumptech.glide.RequestManager;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.utils.smoot.SmoothProgressBar;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
@@ -62,7 +63,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
      */
     private ImageView mediaCoverImage, volumeControl;
     private CardView card_view_mute;
-   // private ProgressBar progressBar;
+    private SmoothProgressBar progressBar;
     private View viewHolderParent;
     private FrameLayout mediaContainer;
     private PlayerView videoSurfaceView;
@@ -171,9 +172,9 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                 switch (playbackState) {
                     case Player.STATE_BUFFERING:
                         Log.e(TAG, "onPlayerStateChanged: Buffering video.");
-                       /* if (progressBar != null) {
+                        if (progressBar != null) {
                             progressBar.setVisibility(VISIBLE);
-                        }*/
+                        }
                         break;
                     case Player.STATE_ENDED:
                         Log.d(TAG, "onPlayerStateChanged: Video ended.");
@@ -183,9 +184,10 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                         break;
                     case Player.STATE_READY:
                         Log.e(TAG, "onPlayerStateChanged: Ready to play.");
-                       /* if (progressBar != null) {
+                       if (progressBar != null) {
                             progressBar.setVisibility(GONE);
-                        }*/
+                           toggleVolume();
+                        }
                         if (!isVideoViewAdded) {
                             addVideoView();
                         }
@@ -243,11 +245,13 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         Log.d(TAG, "playVideo: target position: " + targetPosition);
         // video is already playing so return
         if (targetPosition == playPosition) {
+            Log.d(TAG, "RETORNOOOOOOOOOOO");
             return;
         }
         // set the position of the list-item that is to be played
         playPosition = targetPosition;
         if (videoSurfaceView == null) {
+            Log.d(TAG, "RETORNOOOOOOOOOOO 22");
             return;
         }
         // remove any old surface views from previously playing videos
@@ -258,19 +262,21 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                         getLayoutManager())).findFirstVisibleItemPosition();
         View child = getChildAt(currentPosition);
         if (child == null) {
+            Log.e("REPRODUCER_MOTA","si");
             return;
         }
         if(getChildViewHolder(child) instanceof PlayerViewHolder) {
+            Log.e("REPRODUCER_MOTA","si");
             PlayerViewHolder holder = (PlayerViewHolder) getChildViewHolder(child);
             if (holder == null) {
                 playPosition = -1;
                 return;
             }
             mediaCoverImage = holder.mediaCoverImage;
-            //progressBar = holder.progressBar;
+            progressBar = holder.progressBar;
             volumeControl = holder.volumeControl;
             card_view_mute = holder.card_view_mute;
-            viewHolderParent = holder.itemView;
+            viewHolderParent = holder.mediaContainer;
             requestManager = holder.requestManager;
             mediaContainer = holder.mediaContainer;
             videoSurfaceView.setPlayer(videoPlayer);
@@ -287,6 +293,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                 videoPlayer.setPlayWhenReady(true);
             }
         }else{
+            Log.e("REPRODUCER_MOTA","si");
             videoPlayer.stop();
         }
     }

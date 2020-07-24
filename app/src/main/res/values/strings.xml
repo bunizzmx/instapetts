@@ -42,6 +42,13 @@
         <item>@color/colorPrimaryDark</item>
     </integer-array>
 
+    <integer-array name="gplus_colors_white">
+        <item>@color/primary</item>
+        <item>@color/white</item>
+        <item>@color/primary</item>
+        <item>@color/white</item>
+    </integer-array>
+
     <array name="white_colors">
         <item>@color/white</item>
         <item>E63131</item>

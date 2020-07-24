@@ -132,7 +132,7 @@
             android:rotationAnimation="seamless" />
         <activity android:name=".activitys.reports.ReportActiviy" />
         <activity android:name=".activitys.searchqr.QrSearchActivity" />
-
+<activity android:name=".activitys.PlayVideo.PlayVideoActivity2"></activity>
         <service
             android:name=".services.ImageService"
             android:enabled="true" />

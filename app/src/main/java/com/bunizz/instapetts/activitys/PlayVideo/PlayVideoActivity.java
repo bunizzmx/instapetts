@@ -33,6 +33,7 @@ import com.bunizz.instapetts.utils.AnalogTv.AnalogTvNoise;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.dilogs.DialogOptionsPosts;
 import com.bunizz.instapetts.utils.slidemenu.SlideMenuLayout;
+import com.bunizz.instapetts.utils.videoCrop.player.VideoPlayer;
 import com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerView;
 import com.bunizz.instapetts.utils.video_player.PreviewTimeBar;
 import com.bunizz.instapetts.utils.video_player.PreviewTumbh.ExoPlayerManager;
@@ -62,6 +63,8 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
 
     @BindView(R.id.exoplayer_play_video)
     PlayerView videoSurfaceView;
+
+    private VideoPlayer mVideoPlayer;
 
     @BindView(R.id.title_video_play)
     TextView title_video_play;

@@ -60,7 +60,7 @@
               android:id="@+id/image_preview_dialog"
               android:scaleType="centerCrop"
               android:layout_width="match_parent"
-              android:layout_height="350dp"/>
+              android:layout_height="wrap_content"/>
             <RelativeLayout
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"

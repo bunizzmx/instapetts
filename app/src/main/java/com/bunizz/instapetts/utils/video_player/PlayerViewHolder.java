@@ -14,6 +14,7 @@ import com.bunizz.instapetts.utils.Dots.DotsIndicator;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.double_tap.DoubleTapLikeView;
 import com.bunizz.instapetts.utils.loadings.SpinKitView;
+import com.bunizz.instapetts.utils.smoot.SmoothProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -26,6 +27,7 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
     public ImageView mediaCoverImage, volumeControl;
     public RequestManager requestManager;
     public CardView card_view_mute;
+    public RelativeLayout card_view_full;
     public RelativeLayout root_preview_perfil_click,open_options_posts;
     public TextView description_posts;
     public ImagenCircular image_pet;
@@ -42,6 +44,7 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
     public TextView num_coments;
     public LinearLayout num_comments_layout;
     public RelativeLayout l_icon_like,l_icon_commentar,l_saved_post;
+    SmoothProgressBar progressBar;
     public PlayerViewHolder(@NonNull View itemView) {
         super(itemView);
         parent = itemView;
@@ -69,6 +72,8 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
         icon_commentar = itemView.findViewById(R.id.icon_commentar);
         num_coments = itemView.findViewById(R.id.num_coments);
         num_comments_layout = itemView.findViewById(R.id.num_comments_layout);
+        card_view_full = itemView.findViewById(R.id.card_view_full);
+        progressBar = itemView.findViewById(R.id.progressBar);
     }
 
 

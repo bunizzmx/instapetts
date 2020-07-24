@@ -2,6 +2,7 @@ package com.bunizz.instapetts.fragments.feed;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -45,6 +46,7 @@ import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity;
 import com.bunizz.instapetts.beans.AspectBean;
 import com.bunizz.instapetts.beans.DataEmptyBean;
 import com.bunizz.instapetts.beans.HistoriesBean;
@@ -69,6 +71,8 @@ import com.bunizz.instapetts.utils.video_player.PlayerViewHolder;
 import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAdView;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -342,6 +346,14 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     vid_h.description_posts.setVisibility(View.VISIBLE);
                     vid_h.description_posts.setText(mo.getDescription());
                 }
+
+                vid_h.card_view_full.setOnClickListener(v -> {
+                    //listener_video.StopVideo();
+                    Intent i = new Intent(context, PlayVideoActivity.class);
+                    i.putExtra("TYPE_PLAYER",1);
+                    i.putExtra("BEAN", Parcels.wrap(mo));
+                    context.startActivity(i);
+                });
 
                 Glide.with(context).load(mo.getUrl_photo_pet())
                         .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))

@@ -349,6 +349,10 @@ public class FeedListPresenter implements FeedContract.Presenter {
         data_post_saved.put("id_post_from_web",postBean.getId_post_from_web());
         data_post_saved.put("saved",postBean.isSaved());
         data_post_saved.put("liked",postBean.isLiked());
+        data_post_saved.put("thumb_video",postBean.getThumb_video());
+        data_post_saved.put("aspect",postBean.getAspect());
+        data_post_saved.put("type_post",postBean.getType_post());
+        data_post_saved.put("duracion",postBean.getDuracion());
         db.collection(FIRESTORE.R_POSTS_SAVED).document(App.read(PREFERENCES.UUID,"INVALID")).collection(FIRESTORE.POSTS)
                 .document(String.valueOf(postBean.getId_post_from_web()))
                 .set(data_post_saved)

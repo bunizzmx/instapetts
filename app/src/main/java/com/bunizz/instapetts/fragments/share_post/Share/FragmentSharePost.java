@@ -215,7 +215,8 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         helper = new PetHelper(getContext());
         if(bundle!=null){
             paths.addAll(bundle.getStringArrayList("data_pahs"));
-            aspects.addAll(bundle.getStringArrayList("array_aspect"));
+            if(bundle.getStringArrayList("array_aspect")!=null)
+              aspects.addAll(bundle.getStringArrayList("array_aspect"));
             CONTAINS_A_PET = bundle.getInt("CONTAINS_A_PET");
             is_video = bundle.getInt("is_video");
             DURACION = bundle.getInt(BUNDLES.VIDEO_DURATION,30);

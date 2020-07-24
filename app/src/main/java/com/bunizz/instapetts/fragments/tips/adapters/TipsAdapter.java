@@ -33,6 +33,7 @@ import com.bumptech.glide.request.target.Target;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity;
+import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity2;
 import com.bunizz.instapetts.beans.AspectBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.TipsBean;

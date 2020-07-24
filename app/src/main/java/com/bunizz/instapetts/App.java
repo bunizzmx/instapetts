@@ -514,8 +514,27 @@ public class App extends Application {
         else if(aspect.equals("4_5")){
             width=metrics.widthPixels;
             height = width;
+        }else{
+            width=metrics.widthPixels;
+            height = width;
         }
       return new AspectBean(width,height);
+    }
+
+    public String aspectMobile(){
+        String ascpetc="";
+        int width=0;
+        int height =0;
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getMetrics(metrics);
+        width=metrics.widthPixels;
+        height = metrics.heightPixels;
+
+        int num = height / width ;
+        Log.e("VECES_HEIGT","-->" + num  + "/" + width + "/" + height);
+
+        return ascpetc;
     }
 
 
