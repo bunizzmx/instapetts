@@ -227,7 +227,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginBottom="15dp"
             android:textColor="@color/black"
-            android:text="PET LIST"
+            android:text="@string/pet_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <androidx.recyclerview.widget.RecyclerView

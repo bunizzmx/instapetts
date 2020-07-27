@@ -300,4 +300,8 @@
     <string name="unfollow_user">Dejar de seguir</string>
     <string name="follow_user">Seguir</string>
     <string name="in_progress">En progreso...</string>
+
+    <string name="no_wifi">Revisa tu conexion</string>
+    <string name="refreshed">Actualizado</string>
+    <string name="pet_list">Lista de mascotas</string>
 </resources>

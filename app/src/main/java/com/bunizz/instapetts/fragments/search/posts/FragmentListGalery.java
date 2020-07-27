@@ -163,7 +163,7 @@ public class FragmentListGalery extends Fragment implements  ListGaleryContract.
             }
 
             @Override
-            public void commentPost(int id_post, boolean can_comment) {
+            public void commentPost(int id_post, boolean can_comment,int id_usuario) {
 
             }
         });
@@ -251,9 +251,10 @@ public class FragmentListGalery extends Fragment implements  ListGaleryContract.
 
 
     private void insertAdsInMenuItems(boolean more) {
+        loading = true;
         mNativeAds = App.getInstance().getAds();
         if (mNativeAds.size() <= 0) { return;}
-        int offset = 7;
+        int offset =9;
         int index = 9;
         for (UnifiedNativeAd ad: mNativeAds) {
             if(index< data_posts.size())
@@ -267,9 +268,10 @@ public class FragmentListGalery extends Fragment implements  ListGaleryContract.
     }
 
     private void insertAdsInMenuItemsBelow(boolean more) {
+        loading = true;
         mNativeAds = App.getInstance().getAds();
         if (mNativeAds.size() <= 0) { return;}
-        int offset = 7;
+        int offset = 9;
         int index = 9;
         for (UnifiedNativeAd ad: mNativeAds) {
             if(index< data_posts.size())
@@ -290,7 +292,7 @@ public class FragmentListGalery extends Fragment implements  ListGaleryContract.
             this.data_posts.addAll(posts);
             Log.e("SETIE_DATA_POST", "--> " + this.data_posts.size());
             if (adapter != null) {
-                if (App.getInstance().getAds().size() > 0 && this.data_posts.size() > 3)
+                if (App.getInstance().getAds().size() > 0 && this.data_posts.size() > 0)
                     insertAdsInMenuItemsBelow(true);
                 else
                     adapter.addMorePosts(this.data_posts);

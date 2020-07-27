@@ -1,5 +1,6 @@
 package com.bunizz.instapetts.fragments.login;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -62,6 +64,8 @@ public class MainLogin extends Fragment implements  MainLoginContract.View{
     @OnClick(R.id.login_user_email)
     void login_user_email()
     {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
        listener_login.loginWithEmail(mail_user.getText().toString(),password_email.getText().toString());
     }
     CallbackManager mCallbackManager;

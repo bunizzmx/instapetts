@@ -9,10 +9,11 @@ import com.bunizz.instapetts.utils.snackbar.definations.DrawableRes;
 public enum Type {
 
     DEFAULT(R.drawable.ic_default, R.drawable.bg_default),
-    SUCCESS(R.drawable.ic_success, R.drawable.bg_success),
+    SUCCESS(R.drawable.ic_available_white, R.drawable.bg_success),
     ERROR(R.drawable.ic_error, R.drawable.bg_error),
     WARNING(R.drawable.ic_info, R.drawable.bg_warning),
-    INFO(R.drawable.ic_info, R.drawable.bg_info);
+    INFO(R.drawable.ic_info, R.drawable.bg_info),
+    WIFI(R.drawable.ic_no_wifi_w, R.drawable.bg_no_wifi);
 
     private int iconResId;
     private int backResId;

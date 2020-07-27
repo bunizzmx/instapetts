@@ -307,9 +307,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 vid_h.num_comments_layout.setOnClickListener(v -> {
                     if(mo.getCan_comment()==1)
-                        listener_post.commentPost(mo.getId_post_from_web(),false);
+                        listener_post.commentPost(mo.getId_post_from_web(),false,mo.getId_usuario());
                     else
-                        listener_post.commentPost(mo.getId_post_from_web(),true);
+                        listener_post.commentPost(mo.getId_post_from_web(),true,mo.getId_usuario());
                 });
 
 
@@ -340,12 +340,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 });
                 vid_h.name_pet.setText(mo.getName_pet());
                 vid_h.name_user_posts.setText(mo.getName_user());
-                if(mo.getDescription().isEmpty()){
-                    vid_h.description_posts.setVisibility(View.GONE);
-                }else{
-                    vid_h.description_posts.setVisibility(View.VISIBLE);
-                    vid_h.description_posts.setText(mo.getDescription());
-                }
 
                 vid_h.card_view_full.setOnClickListener(v -> {
                     //listener_video.StopVideo();
@@ -355,6 +349,22 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     context.startActivity(i);
                 });
 
+
+
+                if(mo.getNum_comentarios() > 0){
+                    vid_h.num_comments_layout.setVisibility(View.VISIBLE);
+                    vid_h.num_coments.setText("Ver " + mo.getNum_comentarios() + " comentarios");
+                    vid_h.num_comments_layout.setOnClickListener(v -> {
+                        if(mo.getCan_comment()==1)
+                            listener_post.commentPost(mo.getId_post_from_web(),false,mo.getId_usuario());
+                        else
+                            listener_post.commentPost(mo.getId_post_from_web(),true,mo.getId_usuario());
+                    });
+                }else{
+                    vid_h.num_comments_layout.setVisibility(View.GONE);
+                }
+
+
                 Glide.with(context).load(mo.getUrl_photo_pet())
                         .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
                         .error(context.getResources().getDrawable(R.drawable.ic_holder))
@@ -363,7 +373,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
                         .error(context.getResources().getDrawable(R.drawable.ic_holder))
                         .into(vid_h.mini_user_photo);
-                vid_h.date_post.setText("Hace " + App.getInstance().fecha_lenguaje_humano(mo.getDate_post()));
+                vid_h.date_post.setText( App.getInstance().fecha_lenguaje_humano(mo.getDate_post()));
                 vid_h.l_saved_post.setOnClickListener(view -> {
                     if(mo.isSaved()) {
                         mo.setSaved(false);
@@ -391,9 +401,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 vid_h.l_icon_commentar.setOnClickListener(v -> {
                     if(mo.getCan_comment()==1)
-                        listener_post.commentPost(mo.getId_post_from_web(),false);
+                        listener_post.commentPost(mo.getId_post_from_web(),false,mo.getId_usuario());
                     else
-                        listener_post.commentPost(mo.getId_post_from_web(),true);
+                        listener_post.commentPost(mo.getId_post_from_web(),true,mo.getId_usuario());
                 });
 
                 if(mo.getNum_comentarios() > 0){
@@ -401,6 +411,15 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     vid_h.num_coments.setText("Ver " + mo.getNum_comentarios() + " comentarios");
                 }else{
                     vid_h.num_comments_layout.setVisibility(View.GONE);
+                }
+
+                if(mo.getDescription().trim().isEmpty()){
+                    Log.e("DESCRIPCION_VALID","NO");
+                    vid_h.layout_descripcion.setVisibility(View.GONE);
+                }else{
+                    Log.e("DESCRIPCION_VALID","si");
+                    vid_h.layout_descripcion.setVisibility(View.VISIBLE);
+                    vid_h.description_posts.setText(mo.getDescription());
                 }
 
                 break;
@@ -416,9 +435,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 f.l_icon_commentar.setOnClickListener(v -> {
                     if(data_parsed.getCan_comment()==1)
-                        listener_post.commentPost(data_parsed.getId_post_from_web(),false);
+                        listener_post.commentPost(data_parsed.getId_post_from_web(),false,data_parsed.getId_usuario());
                     else
-                        listener_post.commentPost(data_parsed.getId_post_from_web(),true);
+                        listener_post.commentPost(data_parsed.getId_post_from_web(),true,data_parsed.getId_usuario());
                 });
 
                 if(data_parsed.getNum_comentarios() > 0){
@@ -426,9 +445,9 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     f.num_coments.setText("Ver " + data_parsed.getNum_comentarios() + " comentarios");
                     f.num_comments_layout.setOnClickListener(v -> {
                         if(data_parsed.getCan_comment()==1)
-                            listener_post.commentPost(data_parsed.getId_post_from_web(),false);
+                            listener_post.commentPost(data_parsed.getId_post_from_web(),false,data_parsed.getId_usuario());
                         else
-                            listener_post.commentPost(data_parsed.getId_post_from_web(),true);
+                            listener_post.commentPost(data_parsed.getId_post_from_web(),true,data_parsed.getId_usuario());
                     });
                 }else{
                     f.num_comments_layout.setVisibility(View.GONE);
@@ -528,10 +547,14 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                    f.num_likes_posts.setText( "" +data_parsed.getLikes() + " " + context.getResources().getString(R.string.likes));
                 else
                     f.num_likes_posts.setText(context.getResources().getString(R.string.first_like));
-                if(data_parsed.getDescription().isEmpty()){
-                    f.description_posts.setVisibility(View.GONE);
+
+
+                if(data_parsed.getDescription().trim().isEmpty()){
+                    Log.e("DESCRIPCION_VALID","NO");
+                    f.layout_descripcion.setVisibility(View.GONE);
                 }else{
-                    f.description_posts.setVisibility(View.VISIBLE);
+                    Log.e("DESCRIPCION_VALID","si");
+                    f.layout_descripcion.setVisibility(View.VISIBLE);
                     f.description_posts.setText(data_parsed.getDescription());
                 }
 
@@ -543,7 +566,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
                         .error(context.getResources().getDrawable(R.drawable.ic_holder))
                         .into(f.mini_user_photo);
-                f.date_post.setText( "Hace " + App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()));
+                f.date_post.setText(App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()));
                 f.l_saved_post.setOnClickListener(view -> {
                      if(data_parsed.isSaved()) {
                          data_parsed.setSaved(false);
@@ -609,6 +632,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         TextView num_coments;
         LinearLayout num_comments_layout;
         RelativeLayout l_icon_like,l_icon_commentar,l_saved_post;
+        LinearLayout layout_descripcion;
         public FeedHolder(@NonNull View itemView) {
             super(itemView);
             l_icon_commentar = itemView.findViewById(R.id.l_icon_commentar);
@@ -637,6 +661,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             icon_commentar = itemView.findViewById(R.id.icon_commentar);
             num_coments = itemView.findViewById(R.id.num_coments);
             num_comments_layout = itemView.findViewById(R.id.num_comments_layout);
+            layout_descripcion = itemView.findViewById(R.id.layout_descripcion);
         }
     }
 

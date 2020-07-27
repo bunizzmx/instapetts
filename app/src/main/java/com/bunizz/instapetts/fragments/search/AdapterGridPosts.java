@@ -198,7 +198,7 @@ public class AdapterGridPosts extends RecyclerView.Adapter<RecyclerView.ViewHold
                                     }
 
                                     @Override
-                                    public void commentPost(int id_post, boolean can_comment) {
+                                    public void commentPost(int id_post, boolean can_comment,int id_usuario) {
 
                                     }
                                 });

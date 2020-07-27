@@ -73,7 +73,9 @@ public class LoginPresenter implements LoginContract.Presenter {
                             }
                             @Override
                             public void onError(Throwable e) {
+                                mView.noWifi();
                                 mView.registerError();
+
                             }
                         }));
     }
@@ -110,6 +112,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                                     updateUser(userBean);
                                 }else{
                                     Log.e("NO_INTERNET","-->error" );
+                                    mView.noWifi();
                                     mView.registerError();
                                 }
                             }

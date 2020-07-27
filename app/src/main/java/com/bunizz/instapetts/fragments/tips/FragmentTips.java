@@ -147,14 +147,7 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
         if(tips_list!=null) {
             data.clear();
             data.addAll(tips_list);
-            data.addAll(helps);
-            refresh_tips.setRefreshing(false);
-            root_loading.setVisibility(View.GONE);
-            list_tips.setMediaObjects(data);
-            if(data.size()>3 && App.getInstance().getAds().size()>0)
-                insertAdsInMenuItems(true);
-            else
-               adapter.setData(data);
+            interpolateHelps(helps);
         }
     }
 
@@ -218,6 +211,27 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
     public void stop_player(){
         if(list_tips!=null)
             list_tips.onPausePlayer();
+    }
+
+    private void interpolateHelps(ArrayList<PostBean> helps) {
+        if (helps.size() <= 0) { return;}
+        int offset = helps.size() + 1;
+        int index = 3;
+        for (PostBean ad: helps) {
+            if(index< data.size())
+                data.add(index, ad);
+            if((offset % 2 != 0)) {}
+            else{offset +=1;}
+            index = index + offset;
+        }
+
+        refresh_tips.setRefreshing(false);
+        root_loading.setVisibility(View.GONE);
+        list_tips.setMediaObjects(data);
+        if(data.size()>3 && App.getInstance().getAds().size()>0)
+            insertAdsInMenuItems(true);
+        else
+            adapter.setData(data);
     }
 }
 

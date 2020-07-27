@@ -1,5 +1,7 @@
 package com.bunizz.instapetts.services;
 
+import android.annotation.SuppressLint;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -7,7 +9,9 @@ import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -18,6 +22,9 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.main.Main;
@@ -34,6 +41,8 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 public class ImagePostsService extends Service {
@@ -248,6 +257,7 @@ public class ImagePostsService extends Service {
                 notificationManager.notify(notificationId, mBuilder.build());
                 intent_broadcast.putExtra("COMPLETED", false);
                 intent_broadcast.setAction(Main.POST_SUCCESFULL);
+                make_notification(App.read(PREFERENCES.URI_TEMP_SMOOT,""));
                 sendBroadcast(intent_broadcast);
             }
         }
@@ -265,6 +275,58 @@ public class ImagePostsService extends Service {
         return null;
     }
 
+
+
+    void make_notification(String url){
+        final Bitmap[] bitmap = {null};
+        Glide.with(this)
+                .asBitmap()
+                .load(url)
+                .into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+
+                        bitmap[0] = resource;
+                        mBuilder.setContentTitle(TITLE);
+                        notificationManager.notify(notificationId, mBuilder.build());
+                        // TODO Do some work: pass this bitmap
+                        buildNotification(bitmap[0]);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
+                });
+    }
+
+
+    void buildNotification(Bitmap bitmap){
+
+        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        int notificationId = 1;
+        String channelId = "channel-01";
+        String channelName = "Channel Name";
+        int importance = NotificationManager.IMPORTANCE_HIGH;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel mChannel = new NotificationChannel(
+                    channelId, channelName, importance);
+            notificationManager.createNotificationChannel(mChannel);
+        }
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        @SuppressLint("WrongConstant")
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(R.drawable.ic_stat_name)
+                .setBadgeIconType(R.drawable.ic_stat_name)
+                .setLargeIcon(bitmap)
+                .setContentTitle(TITLE)
+                .setContentText("Video subido correctamente")
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setVibrate(new long[] { 1000, 1000});
+        mBuilder.setDefaults( Notification.DEFAULT_VIBRATE);
+        notificationManager.notify(notificationId, mBuilder.build());
+    }
 
 
 

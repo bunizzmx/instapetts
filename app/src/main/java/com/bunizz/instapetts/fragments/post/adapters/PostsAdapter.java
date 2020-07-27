@@ -210,20 +210,28 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         vid_h.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
                     }
                 });
+
+                if(mo.getLikes()>0)
+                    vid_h.num_likes_posts.setText(" " + mo.getLikes() + " " + context.getResources().getString(R.string.likes));
+                else
+                    vid_h.num_likes_posts.setText(context.getResources().getString(R.string.first_like));
+
+
+
                 vid_h.root_preview_perfil_click.setOnClickListener(view ->{
                     Bundle b = new Bundle();
                     b.putString(BUNDLES.UUID,mo.getUuid());
-                    Log.e("ID_USUARIO_POST","-->" + mo.getId_usuario());
                     b.putInt(BUNDLES.ID_USUARIO,mo.getId_usuario());
                     listener.change_fragment_parameter(INSTANCE_PREVIEW_PROFILE,b);
                 });
                 vid_h.name_pet.setText(mo.getName_pet());
                 vid_h.name_user_posts.setText(mo.getName_user());
-                vid_h.num_likes_posts.setText("" + mo.getLikes() );
-                if(mo.getDescription().isEmpty()){
-                    vid_h.description_posts.setVisibility(View.GONE);
+                if(mo.getDescription().trim().isEmpty()){
+                    Log.e("DESCRIPCION_VALID","NO");
+                    vid_h.layout_descripcion.setVisibility(View.GONE);
                 }else{
-                    vid_h.description_posts.setVisibility(View.VISIBLE);
+                    Log.e("DESCRIPCION_VALID","si");
+                    vid_h.layout_descripcion.setVisibility(View.VISIBLE);
                     vid_h.description_posts.setText(mo.getDescription());
                 }
 
@@ -257,6 +265,21 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 });
 
 
+                if(mo.getNum_comentarios() > 0){
+                    vid_h.num_comments_layout.setVisibility(View.VISIBLE);
+                    vid_h.num_coments.setText("Ver " + mo.getNum_comentarios() + " comentarios");
+                    vid_h.num_comments_layout.setOnClickListener(v -> {
+                        if(mo.getCan_comment()==1)
+                            listener_post.commentPost(mo.getId_post_from_web(),false,mo.getId_usuario());
+                        else
+                            listener_post.commentPost(mo.getId_post_from_web(),true,mo.getId_usuario());
+                    });
+                }else{
+                    vid_h.num_comments_layout.setVisibility(View.GONE);
+                }
+
+
+
                 if(mo.isLiked()){
                     vid_h.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
                 }else{
@@ -266,9 +289,9 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                 vid_h.icon_commentar.setOnClickListener(v -> {
                     if(mo.getCan_comment()==1)
-                        listener_post.commentPost(mo.getId_post_from_web(),false);
+                        listener_post.commentPost(mo.getId_post_from_web(),false,mo.getId_usuario());
                     else
-                        listener_post.commentPost(mo.getId_post_from_web(),true);
+                        listener_post.commentPost(mo.getId_post_from_web(),true,mo.getId_usuario());
                 });
 
                 break;
@@ -284,9 +307,9 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                 f.icon_commentar.setOnClickListener(v -> {
                     if(data_parsed.getCan_comment()==1)
-                        listener_post.commentPost(data_parsed.getId_post_from_web(),false);
+                        listener_post.commentPost(data_parsed.getId_post_from_web(),false,data_parsed.getId_usuario());
                     else
-                        listener_post.commentPost(data_parsed.getId_post_from_web(),true);
+                        listener_post.commentPost(data_parsed.getId_post_from_web(),true,data_parsed.getId_usuario());
                 });
 
                 if(data_parsed.getNum_comentarios() > 0){
@@ -294,9 +317,9 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     f.num_coments.setText("Ver " + data_parsed.getNum_comentarios() + " comentarios");
                     f.num_comments_layout.setOnClickListener(v -> {
                         if(data_parsed.getCan_comment()==1)
-                            listener_post.commentPost(data_parsed.getId_post_from_web(),false);
+                            listener_post.commentPost(data_parsed.getId_post_from_web(),false,data_parsed.getId_usuario());
                         else
-                            listener_post.commentPost(data_parsed.getId_post_from_web(),true);
+                            listener_post.commentPost(data_parsed.getId_post_from_web(),true,data_parsed.getId_usuario());
                     });
                 }else{
                     f.num_comments_layout.setVisibility(View.GONE);

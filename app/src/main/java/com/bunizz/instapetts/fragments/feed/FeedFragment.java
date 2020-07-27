@@ -36,6 +36,7 @@ import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.listeners.actions_dialog_profile;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.conexion_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.postsListener;
 import com.bunizz.instapetts.utils.SingleScrollDirectionEnforcer;
@@ -85,6 +86,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     SwipeRefreshLayout refresh_feed;
 
     open_camera_histories_listener listener_open_camera_h;
+     conexion_listener listener_wifi;
      IdsUsersHelper followsHelper;
     ArrayList<Object> data_feed = new ArrayList<>();
     private List<UnifiedNativeAd> mNativeAds = new ArrayList<>();
@@ -194,10 +196,11 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
             }
 
             @Override
-            public void commentPost(int id_post,boolean can_comment) {
+            public void commentPost(int id_post,boolean can_comment,int id_usuario) {
                 Bundle b = new Bundle();
                 b.putInt(BUNDLES.ID_POST,id_post);
                 b.putBoolean(BUNDLES.CAN_COMMENT,can_comment);
+                b.putInt(BUNDLES.ID_USUARIO,id_usuario);
                 listener.change_fragment_parameter(FragmentElement.INSTANCE_COMENTARIOS,b);
             }
         });
@@ -255,6 +258,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         super.onAttach(context);
         listener= (changue_fragment_parameters_listener) context;
         listener_open_camera_h =(open_camera_histories_listener)context;
+        listener_wifi =(conexion_listener) context;
     }
 
     @Override
@@ -345,12 +349,13 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         refresh_feed.setRefreshing(false);
         spin_kit.setVisibility(View.GONE);
         root_no_internet.setVisibility(View.VISIBLE);
+        listener_wifi.noWifiRequest();
     }
 
     @Override
     public void showBadge(boolean show) {
         if(show)
-           badge_notification.setVisibility(View.VISIBLE);
+            badge_notification.setVisibility(View.VISIBLE);
         else
             badge_notification.setVisibility(View.GONE);
     }
@@ -392,5 +397,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         feedAdapter.addData(data_feed);
         refresh_feed.setRefreshing(false);
     }
+
+
 }
 

@@ -92,6 +92,11 @@ public class SnackBar {
     }
 
     @NonNull
+    public static Snackbar wifi(@NonNull View view, @StringRes int resId, @Duration int length) {
+        return defaultRes(view, resId, length, Type.WIFI, withIcon);
+    }
+
+    @NonNull
     public static Snackbar warning(@NonNull View view, CharSequence text, @Duration int length, boolean withIcon) {
         return defaultChar(view, text, length, Type.WARNING, withIcon);
     }

@@ -172,19 +172,6 @@ public class NotificationsManagers extends FirebaseMessagingService {
         notificationManager.notify(notificationId, mBuilder.build());
     }
 
-    public void crateec(){
-        Log.e("CREATE_NOTI","xxx");
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "xx")
-                .setSmallIcon(R.drawable.n_ws)
-                .setContentTitle("My notification")
-                .setContentText("Much longer text that cannot fit one line...")
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("Much longer text that cannot fit one line..."))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        // notificationId is a unique int for each notification that you must define
-        notificationManager.notify(1, builder.build());
 
-    }
 
 }

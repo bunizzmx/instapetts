@@ -131,11 +131,12 @@ public class FragmentListOfPosts extends Fragment implements FeedContract.View {
             }
 
             @Override
-            public void commentPost(int id_post,boolean can_comment) {
+            public void commentPost(int id_post,boolean can_comment,int id_usuario) {
                 Bundle b = new Bundle();
                 b.putInt(BUNDLES.ID_POST,id_post);
                 b.putBoolean(BUNDLES.CAN_COMMENT,can_comment);
                 b.putInt(BUNDLES.TYPE_PET,0);
+                b.putInt(BUNDLES.ID_USUARIO,id_usuario);
                 listener.change_fragment_parameter(FragmentElement.INSTANCE_COMENTARIOS,b);
             }
         });

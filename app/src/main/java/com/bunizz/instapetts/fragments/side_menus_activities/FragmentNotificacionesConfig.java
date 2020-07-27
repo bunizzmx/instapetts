@@ -1,5 +1,6 @@
 package com.bunizz.instapetts.fragments.side_menus_activities;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +12,14 @@ import android.widget.TextView;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.fragments.FragmentElement;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class FragmentNotificacionesConfig extends Fragment {
 
@@ -32,6 +35,11 @@ public class FragmentNotificacionesConfig extends Fragment {
     @BindView(R.id.switch_contenido_seguidos)
     Switch switch_contenido_seguidos;
 
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.back_to_main)
+    void back_to_main() {
+        getActivity().onBackPressed();
+    }
 
 
     public static FragmentNotificacionesConfig newInstance() {

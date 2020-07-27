@@ -7,5 +7,5 @@ public interface postsListener {
     void onFavorite(int id_post, PostBean postBean);
     void onDisfavorite(int id_post);
     void openMenuOptions(int id_post,int id_usuario,String uuid);
-    void commentPost(int id_post,boolean can_comment);
+    void commentPost(int id_post,boolean can_comment,int id_usuario);
 }

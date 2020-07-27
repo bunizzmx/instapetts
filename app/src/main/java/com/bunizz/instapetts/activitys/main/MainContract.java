@@ -31,5 +31,6 @@ public interface MainContract {
        void saveMyPets(ArrayList<PetBean> pets);
        void onError(int error);
        void havePetsResult(boolean result);
+       void noWifi();
     }
 }

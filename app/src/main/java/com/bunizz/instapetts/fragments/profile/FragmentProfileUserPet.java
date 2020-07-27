@@ -47,6 +47,7 @@ import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.conexion_listener;
 import com.bunizz.instapetts.listeners.folowFavoriteListener;
 import com.bunizz.instapetts.listeners.open_sheet_listener;
 import com.bunizz.instapetts.listeners.open_side_menu;
@@ -73,6 +74,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
 
     change_instance listener;
     changue_fragment_parameters_listener listener_instance;
+   conexion_listener  listener_conexion;
 
     @BindView(R.id.list_pets_propietary)
     RecyclerView list_pets_propietary;
@@ -147,6 +149,8 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     Style style = Style.values()[12];
     Sprite drawable = SpriteFactory.create(style);
 
+    boolean IS_REFRESHING_REQUEST = false;
+
     @SuppressLint("MissingPermission")
     @OnClick(R.id.open_side_menu)
     void open_side_menu() {
@@ -184,6 +188,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         Animation rotation = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_refresh);
         rotation.setRepeatCount(Animation.INFINITE);
         rotate_refresh.startAnimation(rotation);
+        IS_REFRESHING_REQUEST = true;
     }
 
 
@@ -345,6 +350,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         listener= (change_instance) context;
         listener_follow =(folowFavoriteListener)context;
         listener_open_side =(open_side_menu)context;
+        listener_conexion =(conexion_listener)context;
     }
 
 
@@ -447,6 +453,10 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         if (frag instanceof FragmentPostGalery) {
             ((FragmentPostGalery) frag).setData_posts(results);
         }
+       if( IS_REFRESHING_REQUEST){
+           listener_conexion.refreshedComplete();
+           IS_REFRESHING_REQUEST = false;
+       }
     }
 
     @Override

@@ -333,21 +333,19 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
                     uri_tuhmbh = String.valueOf(newfile.getPath());
                     post.setThumb_video(App.getInstance().make_uri_bucket_thumbh_video(uri_tuhmbh));
                 } catch (IOException e) {
-                    Log.e("SAVE_IMAGE","ERROR : " + e.getMessage());
                     e.printStackTrace();
                 }
             }
-            Log.e("EXTRA_THUMBH " ,"-->"+uri_tuhmbh);
             intent.putExtra(BUNDLES.PHOTO_TUMBH,uri_tuhmbh);
             intent.putExtra(BUNDLES.POST_TYPE, 1);
             send_post();
         }
         else {
-            if(filePaths.size() == 1){
+            if(filePaths.size() == 1)
                 App.write(PREFERENCES.URI_TEMP_SMOOT,filePaths.get(0));
-            }else{
+            else
                 App.write(PREFERENCES.URI_TEMP_SMOOT,filePaths.get(filePaths.size()-1));
-            }
+
             intent.putExtra(BUNDLES.POST_TYPE, 0);
             send_post();
         }

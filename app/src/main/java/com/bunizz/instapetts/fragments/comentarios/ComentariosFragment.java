@@ -103,6 +103,8 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
     boolean CAN_COMMENT =true;
     int TYPE_PET = 0;
 
+    int IDUSER_POST =0;
+
     private boolean loading =true;
     private boolean IS_ALL = false;
     @SuppressLint("MissingPermission")
@@ -164,6 +166,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
            ID_POST = bundle.getInt(BUNDLES.ID_POST);
            CAN_COMMENT = bundle.getBoolean(BUNDLES.CAN_COMMENT);
            TYPE_PET  = bundle.getInt(BUNDLES.TYPE_PET);
+            IDUSER_POST = bundle.getInt(BUNDLES.ID_USUARIO);
         }
     }
 
@@ -175,6 +178,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                 ID_POST = bundle.getInt(BUNDLES.ID_POST);
                 CAN_COMMENT = bundle.getBoolean(BUNDLES.CAN_COMMENT);
                 TYPE_PET  = bundle.getInt(BUNDLES.TYPE_PET);
+                IDUSER_POST = bundle.getInt(BUNDLES.ID_USUARIO);
             }
             adapter.clear();
             presenter.getComentarios(ID_POST);
@@ -383,7 +387,8 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                 h.icon_like_comment.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_like_comment_off));
                 h.item_comentarios_name.setText(data.get(position).getName_user());
 
-                    if(data.get(position).getId_user() == App.read(PREFERENCES.ID_USER_FROM_WEB,0))
+                Log.e("ID_DE_COMENTARIOD","-->" + IDUSER_POST+ "/" +  data.get(position).getId_user());
+                    if(IDUSER_POST == data.get(position).getId_user())
                         h.item_comentarios_autor.setVisibility(View.VISIBLE);
                     else
                         h.item_comentarios_autor.setVisibility(View.GONE);

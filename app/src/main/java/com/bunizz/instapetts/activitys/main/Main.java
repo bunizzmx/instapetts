@@ -68,6 +68,7 @@ import com.bunizz.instapetts.fragments.tips.detail.FragmentTipDetail;
 import com.bunizz.instapetts.fragments.tips.FragmentTips;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.conexion_listener;
 import com.bunizz.instapetts.listeners.folowFavoriteListener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.open_side_menu;
@@ -79,6 +80,7 @@ import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
 import com.bunizz.instapetts.utils.dilogs.DialogLogout;
 import com.bunizz.instapetts.utils.slidemenu.SlideMenuLayout;
 import com.bunizz.instapetts.utils.smoot.SmoothProgressBar;
+import com.bunizz.instapetts.utils.snackbar.SnackBar;
 import com.bunizz.instapetts.utils.target.TapTarget;
 import com.bunizz.instapetts.utils.target.TapTargetView;
 import com.bunizz.instapetts.web.CONST;
@@ -107,6 +109,7 @@ public class Main extends AppCompatActivity implements change_instance,
         changue_fragment_parameters_listener,
         uploads,MainContract.View ,
         open_camera_histories_listener,
+        conexion_listener,
         folowFavoriteListener, open_side_menu {
 
     public static final String POST_SUCCESFULL = "com.bunizz.instapetts.activitys.main.Main.POST_SUCCESFULL";
@@ -1276,6 +1279,18 @@ public class Main extends AppCompatActivity implements change_instance,
         startService(intent);
     }
 
+    @Override
+    public void noWifiRequest() {
+        View v = findViewById(R.id.root_main);
+        SnackBar.wifi(v, R.string.no_wifi, SnackBar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void refreshedComplete() {
+        View v = findViewById(R.id.root_main);
+        SnackBar.success(v, R.string.refreshed, SnackBar.LENGTH_LONG).show();
+    }
+
     class AddressResultReceiver extends ResultReceiver {
         public AddressResultReceiver(Handler handler) {
             super(handler);
@@ -1388,10 +1403,9 @@ public class Main extends AppCompatActivity implements change_instance,
     };
 
 
-
-
-
-
-
-
+    @Override
+    public void noWifi() {
+        View v = findViewById(R.id.root_main);
+        SnackBar.wifi(v, R.string.no_wifi, SnackBar.LENGTH_LONG).show();
+    }
 }

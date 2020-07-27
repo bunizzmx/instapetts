@@ -232,6 +232,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <LinearLayout
+        android:id="@+id/layout_descripcion"
     android:layout_marginTop="5dp"
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp"

@@ -21,6 +21,7 @@ public interface LoginContract {
         void isFirstUser(int id_from_web);
         void UpdateFirsUserCompleted();
         void fileBackupDownloaded();
+        void noWifi();
 
     }
 }

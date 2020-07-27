@@ -186,7 +186,6 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                         Log.e(TAG, "onPlayerStateChanged: Ready to play.");
                        if (progressBar != null) {
                             progressBar.setVisibility(GONE);
-                           toggleVolume();
                         }
                         if (!isVideoViewAdded) {
                             addVideoView();

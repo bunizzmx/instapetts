@@ -208,6 +208,7 @@
         android:layout_marginTop="5dp"
         android:textSize="12dp" />
     <LinearLayout
+        android:id="@+id/layout_descripcion"
         android:layout_marginTop="3dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"

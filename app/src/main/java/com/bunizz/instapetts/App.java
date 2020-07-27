@@ -543,7 +543,7 @@ public class App extends Application {
         AdLoader.Builder builder = new AdLoader.Builder(this,AD_UNIT_ID );
         adLoader = builder.forUnifiedNativeAd(
                 unifiedNativeAd -> {
-                    if(ads.size() > 5)
+                    if(ads.size() > 10)
                         ads.clear();
                     ads.add(unifiedNativeAd);
                     if (!adLoader.isLoading()) {}
@@ -554,14 +554,12 @@ public class App extends Application {
                         if (!adLoader.isLoading()) {}
                     }
                 }).build();
-        adLoader.loadAds(new AdRequest.Builder().build(), 1);
+        adLoader.loadAds(new AdRequest.Builder().build(), 3);
     }
 
     public ArrayList<UnifiedNativeAd> getAds() {
-        Log.e("ADS_AVIAVILITY","SI HAY YA:" + ads.size());
-        if(ads.size()>1)
             generateItemsForAds();
-        return ads;
+            return ads;
     }
 
     public void setAds(ArrayList<UnifiedNativeAd> ads) {

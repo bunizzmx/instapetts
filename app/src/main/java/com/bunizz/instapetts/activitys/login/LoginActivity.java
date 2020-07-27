@@ -461,50 +461,46 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        Log.e("ERROR_LOGIN","-->TODO MAL AL V"  + credential.getProvider());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         App.write(PREFERENCES.UUID,user.getUid());
                         App.write(PREFERENCES.NAME_USER,user.getDisplayName());
-                        Log.e("ERROR_LOGIN","-->TODO BIEN" +user.getUid());
                         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
                             String token = instanceIdResult.getToken();
                             App.write(PREFERENCES.TOKEN,token);
-                            Log.e("ERROR_LOGIN","-->TODO BIEN" +token);
                             generate_user_bean();
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Log.e("ERROR_LOGIN","-->fail token " + e.getMessage());
+                                View v = findViewById(R.id.root_login);
+                                SnackBar.warning(v, "Error desconocido", SnackBar.LENGTH_LONG).show();
                             }
                         });
                     } else {
-                        Log.e("ERROR_LOGIN","-->errororororo");
-                        Toast.makeText(LoginActivity.this, "Intente de nuevo", Toast.LENGTH_LONG).show();
-
+                        View v = findViewById(R.id.root_login);
+                        SnackBar.warning(v, "Error desconocido", SnackBar.LENGTH_LONG).show();
                     }
                 }
                 )
-        .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                if (e.getMessage().contains("network error")){
-                    Toast.makeText(LoginActivity.this, "Sin internet", Toast.LENGTH_LONG).show();
-                }
-                    Log.e("ERROR_LOGIN", "-->TODO BIEN" + e.getMessage());
+        .addOnFailureListener(e -> {
+            if (e.getMessage().contains("network error")){
+                View v = findViewById(R.id.root_login);
+                SnackBar.wifi(v, R.string.no_wifi, SnackBar.LENGTH_LONG).show();
             }
         }).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
-                Log.e("ERROR_LOGIN","-->TODO aaaaaaaa" );
+                View v = findViewById(R.id.root_login);
+                SnackBar.success(v, "Completado", SnackBar.LENGTH_LONG).show();
             }
         })
         .addOnCanceledListener(new OnCanceledListener() {
             @Override
             public void onCanceled() {
-                Log.e("ERROR_LOGIN","-->TODO cancelado" );
+                View v = findViewById(R.id.root_login);
+                SnackBar.info(v, "Cancelaste esta accion", SnackBar.LENGTH_LONG).show();
             }
         });
     }
@@ -701,5 +697,9 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                 });
     }
 
-
+    @Override
+    public void noWifi() {
+        View v = findViewById(R.id.root_login);
+        SnackBar.wifi(v, R.string.no_wifi, SnackBar.LENGTH_LONG).show();
+    }
 }

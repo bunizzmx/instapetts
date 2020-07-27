@@ -167,7 +167,7 @@ public class NotificationHelper extends GenericHelper {
         final Cursor cursor = getReadableDatabase().query(
                 TABLE_NAME,
                 new String[] { NOTIFICATION_VIEW},
-                NOTIFICATION_VIEW + "=1",
+                NOTIFICATION_VIEW + "=0",
                 null, null, null, null, null);
        if(cursor.moveToFirst())
            return  true;

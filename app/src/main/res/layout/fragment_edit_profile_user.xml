@@ -89,7 +89,8 @@
             <TextView
                 android:textSize="12dp"
                 android:id="@+id/num_caracteres_description"
-                style="@style/FontNormalTitleSecondary"
+                android:textStyle="bold"
+                android:textColor="@color/black"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="20dp"
                 android:text="0/0"
@@ -97,6 +98,7 @@
                 android:layout_height="wrap_content"/>
             <EditText
                 android:maxLines="8"
+                android:maxLength="255"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
                 android:inputType="textMultiLine"

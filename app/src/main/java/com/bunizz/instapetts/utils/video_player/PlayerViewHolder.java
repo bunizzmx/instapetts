@@ -44,7 +44,8 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
     public TextView num_coments;
     public LinearLayout num_comments_layout;
     public RelativeLayout l_icon_like,l_icon_commentar,l_saved_post;
-    SmoothProgressBar progressBar;
+    public SmoothProgressBar progressBar;
+    public LinearLayout layout_descripcion;
     public PlayerViewHolder(@NonNull View itemView) {
         super(itemView);
         parent = itemView;
@@ -74,6 +75,7 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
         num_comments_layout = itemView.findViewById(R.id.num_comments_layout);
         card_view_full = itemView.findViewById(R.id.card_view_full);
         progressBar = itemView.findViewById(R.id.progressBar);
+        layout_descripcion = itemView.findViewById(R.id.layout_descripcion);
     }
 
 

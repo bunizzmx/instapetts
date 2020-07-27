@@ -254,6 +254,7 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         b.putInt(BUNDLES.ID_POST,data_parsed_help.getId_post_from_web());
                         b.putBoolean(BUNDLES.CAN_COMMENT,true);
                         b.putInt(BUNDLES.TYPE_PET,-999);
+                        b.putInt(BUNDLES.ID_USUARIO,data_parsed_help.getId_usuario());
                         listener.change_fragment_parameter(FragmentElement.INSTANCE_COMENTARIOS,b);
                     });
 
@@ -265,6 +266,7 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             b.putInt(BUNDLES.ID_POST,data_parsed_help.getId_post_from_web());
                             b.putBoolean(BUNDLES.CAN_COMMENT,true);
                             b.putInt(BUNDLES.TYPE_PET,-999);
+                            b.putInt(BUNDLES.ID_USUARIO,data_parsed_help.getId_usuario());
                             listener.change_fragment_parameter(FragmentElement.INSTANCE_COMENTARIOS,b);
 
                         });

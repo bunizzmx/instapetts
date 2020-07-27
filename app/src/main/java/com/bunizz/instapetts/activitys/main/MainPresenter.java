@@ -95,6 +95,7 @@ public class MainPresenter implements MainContract.Presenter {
                             }
                             @Override
                             public void onError(Throwable e) {
+                                mView.noWifi();
                                 Log.e("ERROR","UPDATED PROFILE");
                             }
                         }));
@@ -152,6 +153,7 @@ public class MainPresenter implements MainContract.Presenter {
                             }
                             @Override
                             public void onError(Throwable e) {
+                                mView.noWifi();
                                 Log.e("ERROR","UPDATED PROFILE");
                             }
                         }));
@@ -303,6 +305,7 @@ public class MainPresenter implements MainContract.Presenter {
                                     RETRY_PETS ++;
                                     mView.onError(1);
                                 }else{
+                                    mView.noWifi();
                                     RETRY_PETS =0;
                                 }
                             }
