@@ -14,6 +14,7 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity;
 import com.bunizz.instapetts.activitys.reports.ReportActiviy;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
@@ -138,6 +139,37 @@ public class FragmentListOfPosts extends Fragment implements FeedContract.View {
                 b.putInt(BUNDLES.TYPE_PET,0);
                 b.putInt(BUNDLES.ID_USUARIO,id_usuario);
                 listener.change_fragment_parameter(FragmentElement.INSTANCE_COMENTARIOS,b);
+            }
+
+            @Override
+            public void reproduceVideoActivity(PostBean postBean) {
+                Intent i = new Intent(getContext(), PlayVideoActivity.class);
+                i.putExtra("TYPE_PLAYER", 1);
+                i.putExtra(BUNDLES.POST_NAME,postBean.getName_user());
+                i.putExtra(BUNDLES.POST_ASPECT,postBean.getAspect());
+                i.putExtra(BUNDLES.POST_DESCRIPCION,postBean.getDescription());
+                i.putExtra(BUNDLES.POST_FOTO_USER,postBean.getUrl_photo_user());
+                i.putExtra(BUNDLES.POST_ID_POST,postBean.getId_post_from_web());
+                i.putExtra(BUNDLES.POST_ID_USUARIO,postBean.getId_usuario());
+                i.putExtra(BUNDLES.POST_IS_CENSORED,postBean.getCensored());
+                i.putExtra(BUNDLES.POST_IS_LIKED,postBean.isLiked());
+                i.putExtra(BUNDLES.POST_IS_SAVED,postBean.isSaved());
+                i.putExtra(BUNDLES.POST_LIKES,postBean.getLikes());
+                i.putExtra(BUNDLES.POST_THUMBH_VIDEO,postBean.getThumb_video());
+                i.putExtra(BUNDLES.POST_TYPE,postBean.getType_post());
+                i.putExtra(BUNDLES.POST_ASPECT,postBean.getAspect());
+                Log.e("CLICK_PARSED","-->no esxxx post" +postBean.getUrls_posts());
+                i.putExtra(BUNDLES.POST_URLS,postBean.getUrls_posts());
+                i.putExtra(BUNDLES.POST_UUID,postBean.getUuid());
+                //i.putExtra("BEAN", Parcels.wrap(postBean));
+                if (postBean instanceof PostBean) {
+                    Log.e("CLICK_PARSED", "-->2xxxxx");
+                } else {
+                    Log.e("CLICK_PARSED", "-->2yyyyy");
+                }
+                Log.e("CLICK_PARSED", "-->2");
+                getContext().startActivity(i);
+
             }
         });
 

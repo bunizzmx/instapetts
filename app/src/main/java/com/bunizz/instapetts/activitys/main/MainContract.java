@@ -24,6 +24,7 @@ public interface MainContract {
         void sendFileBackup();
         void getFileBackup();
         void delete_data();
+        void isAdsActive();
     }
 
     interface View{
@@ -32,5 +33,6 @@ public interface MainContract {
        void onError(int error);
        void havePetsResult(boolean result);
        void noWifi();
+       void setActivateAds(boolean activated);
     }
 }

@@ -6,29 +6,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.bunizz.instapetts.App;
-import com.bunizz.instapetts.BuildConfig;
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.TipsBean;
-import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
-import com.bunizz.instapetts.fragments.post.adapters.GaleryAdapter;
 import com.bunizz.instapetts.fragments.tips.adapters.TipsAdapter;
 import com.bunizz.instapetts.listeners.PlayStopVideoListener;
 import com.bunizz.instapetts.listeners.change_instance;
@@ -37,11 +30,7 @@ import com.bunizz.instapetts.utils.loadings.SpinKitView;
 import com.bunizz.instapetts.utils.loadings.SpriteFactory;
 import com.bunizz.instapetts.utils.loadings.Style;
 import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
-import com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerView;
 import com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerViewTips;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdLoader;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 
 import java.util.ArrayList;
@@ -185,7 +174,8 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
 
 
     private void insertAdsInMenuItems(boolean more) {
-        mNativeAds = App.getInstance().getAds();
+        mNativeAds.clear();
+        mNativeAds.addAll(App.getInstance().getMoreAds());
         if (mNativeAds.size() <= 0) { return;}
         int offset = mNativeAds.size() + 1;
         int index = 3;
@@ -228,7 +218,7 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
         refresh_tips.setRefreshing(false);
         root_loading.setVisibility(View.GONE);
         list_tips.setMediaObjects(data);
-        if(data.size()>3 && App.getInstance().getAds().size()>0)
+        if(data.size()>3 && App.getInstance().getMoreAds().size()>0)
             insertAdsInMenuItems(true);
         else
             adapter.setData(data);

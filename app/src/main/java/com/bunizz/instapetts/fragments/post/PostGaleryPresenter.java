@@ -58,10 +58,10 @@ public class PostGaleryPresenter implements  PostGaleryContract.Presenter{
     }
 
     @Override
-    public void getMorePost(int type_Search, int paginador) {
+    public void getMorePost(int type_Search, int paginador,int id_usuario) {
         PostFriendsBean postFriendsBean = new PostFriendsBean();
         postFriendsBean.setPaginador(paginador);
-        postFriendsBean.setId_one(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        postFriendsBean.setId_one(id_usuario);
         switch (type_Search){
             case 0:
                 postFriendsBean.setTarget(WEBCONSTANTS.DISCOVER);

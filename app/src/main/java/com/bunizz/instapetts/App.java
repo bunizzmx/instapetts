@@ -93,14 +93,14 @@ public class App extends Application {
         write(PREFERENCES.ANDROID_ID, Utilities.Md5Hash(new AndroidIdentifier(this).generateCombinationID()));
         jobsServices = new JobsServices(this);
         jobsServices.startNotificationsRequest();
-        new Handler().postDelayed(() ->App.getInstance().inicializar_ads(), 4000);
+         new Handler().postDelayed(() ->App.getInstance().inicializar_ads(), 2000);
     }
 
     public void inicializar_ads(){
-        Log.e("INCIALIZO_ONE","SI");
-        MobileAds.initialize(this, initializationStatus -> {
+        Log.e("INICIO_ADS","six");
+
             generateItemsForAds();
-        });
+
     }
 
    public  void clear_preferences(){
@@ -557,9 +557,8 @@ public class App extends Application {
         adLoader.loadAds(new AdRequest.Builder().build(), 3);
     }
 
-    public ArrayList<UnifiedNativeAd> getAds() {
-            generateItemsForAds();
-            return ads;
+    public ArrayList<UnifiedNativeAd> getMoreAds() {
+        return ads;
     }
 
     public void setAds(ArrayList<UnifiedNativeAd> ads) {

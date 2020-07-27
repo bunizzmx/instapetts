@@ -84,6 +84,13 @@ import com.bunizz.instapetts.utils.snackbar.SnackBar;
 import com.bunizz.instapetts.utils.target.TapTarget;
 import com.bunizz.instapetts.utils.target.TapTargetView;
 import com.bunizz.instapetts.web.CONST;
+import com.google.android.exoplayer2.source.ads.AdsLoader;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -175,6 +182,11 @@ public class Main extends AppCompatActivity implements change_instance,
 
     @BindView(R.id.close_smoot)
     RelativeLayout close_smoot;
+
+    @BindView(R.id.adView)
+    AdView adView;
+
+
 
     @BindView(R.id.root_bottom_nav)
     RelativeLayout root_bottom_nav;
@@ -280,7 +292,10 @@ public class Main extends AppCompatActivity implements change_instance,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ButterKnife.bind(this);
+
+        try{
         presenter = new MainPresenter(this, this);
+        presenter.isAdsActive();
         i = new Intent(Main.this, SideMenusActivities.class);
         changeStatusBarColor(R.color.white);
         Intent iin = getIntent();
@@ -379,6 +394,50 @@ public class Main extends AppCompatActivity implements change_instance,
                 .skipMemoryCache(true)
                 .placeholder(getResources().getDrawable(R.drawable.ic_holder)).into(icon_profile_pet);
         presenter.getIdentificadoresHistories();
+    }catch (Exception e){
+                Log.e("EXCEPCION_MAIN","MAIN" + e.getMessage());
+        }
+
+        if(App.read(PREFERENCES.ADS_ACTIVADOS,false)) {
+            MobileAds.initialize(this, initializationStatus -> {
+            });
+            adView = findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            adView.loadAd(adRequest);
+            adView.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                    adView.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAdFailedToLoad(int errorCode) {
+                    adView.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAdOpened() {
+                    // Code to be executed when an ad opens an overlay that
+                    // covers the screen.
+                }
+
+                @Override
+                public void onAdClicked() {
+                    // Code to be executed when the user clicks on an ad.
+                }
+
+                @Override
+                public void onAdLeftApplication() {
+                    // Code to be executed when the user has left the app.
+                }
+
+                @Override
+                public void onAdClosed() {
+                    // Code to be executed when the user is about to return
+                    // to the app after tapping on an ad.
+                }
+            });
+        }
     }
 
     @Override
@@ -1407,5 +1466,11 @@ public class Main extends AppCompatActivity implements change_instance,
     public void noWifi() {
         View v = findViewById(R.id.root_main);
         SnackBar.wifi(v, R.string.no_wifi, SnackBar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void setActivateAds(boolean activated) {
+        Log.e("ESTATUS_ANUNCIOS","-->" + activated);
+        App.write(PREFERENCES.ADS_ACTIVADOS,activated);
     }
 }

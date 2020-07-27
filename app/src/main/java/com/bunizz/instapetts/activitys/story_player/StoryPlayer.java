@@ -20,18 +20,25 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
+
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.IdentificadoresHistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.fragments.story.FragmentStoriView;
+import com.bunizz.instapetts.fragments.story.FragmentStoriViewAdd;
 import com.bunizz.instapetts.listeners.story_finished_listener;
 import com.bunizz.instapetts.utils.ViewPagerHistory.DepthPageTransformer;
 import com.bunizz.instapetts.utils.tabs.SlidingFragmentPagerAdapter;
 
 import org.parceler.Parcels;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,6 +82,18 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
             Fragment f = new FragmentStoriView();
             f.setArguments(bundle);
             adapter.addFragment(f);
+        }
+        if(App.getInstance().getMoreAds().size()>0) {
+            Fragment fx = new FragmentStoriViewAdd();
+            Bundle bbx = new Bundle();
+            try {
+                Log.e("CONVIERTO_ABUTES","-->");
+                bbx.putByteArray("ADS", convertToBytes(App.getInstance().getMoreAds().get(0)));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            fx.setArguments(bbx);
+            adapter.addFragment(fx);
         }
         CURRENT_ITEM = SELECTED_POSITION;
         view_pager_stories.setAdapter(adapter);
@@ -128,6 +147,16 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    private byte[] convertToBytes(Object object) throws IOException {
+
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+             ObjectOutput out = new ObjectOutputStream(bos)) {
+            out.writeObject(object);
+            Log.e("CONVIERTO_ABUTES","-->");
+            return bos.toByteArray();
+        }
     }
 
     @Override

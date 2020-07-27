@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -23,7 +22,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.bunizz.instapetts.App;
-import com.bunizz.instapetts.BuildConfig;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.reports.ReportActiviy;
 import com.bunizz.instapetts.beans.HistoriesBean;
@@ -39,7 +37,6 @@ import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.conexion_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.postsListener;
-import com.bunizz.instapetts.utils.SingleScrollDirectionEnforcer;
 import com.bunizz.instapetts.utils.dilogs.DialogOptionsPosts;
 import com.bunizz.instapetts.utils.loadings.SpinKitView;
 import com.bunizz.instapetts.utils.loadings.SpriteFactory;
@@ -47,10 +44,6 @@ import com.bunizz.instapetts.utils.loadings.Style;
 import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
 import com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerView;
 import com.bunizz.instapetts.web.parameters.PostActions;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdLoader;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 
 import java.util.ArrayList;
@@ -203,6 +196,11 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
                 b.putInt(BUNDLES.ID_USUARIO,id_usuario);
                 listener.change_fragment_parameter(FragmentElement.INSTANCE_COMENTARIOS,b);
             }
+
+            @Override
+            public void reproduceVideoActivity(PostBean postBean) {
+
+            }
         });
 
     }
@@ -280,7 +278,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         data_feed.addAll(data);
         mRecyclerView.setMediaObjects(data_feed);
         feedAdapter.setHistoriesBeans(historiesBeans);
-        if(App.getInstance().getAds().size()>0)
+        if(App.getInstance().getMoreAds().size()>0)
             insertAdsInMenuItems(true);
         else
             feedAdapter.addData(data_feed);
@@ -383,7 +381,8 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
 
 
     private void insertAdsInMenuItems(boolean more) {
-        mNativeAds = App.getInstance().getAds();
+        mNativeAds.clear();
+        mNativeAds.addAll(App.getInstance().getMoreAds());
         if (mNativeAds.size() <= 0) { return;}
         int offset = mNativeAds.size() + 1;
         int index = 3;

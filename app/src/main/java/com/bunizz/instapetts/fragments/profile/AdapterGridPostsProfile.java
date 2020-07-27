@@ -3,6 +3,7 @@ package com.bunizz.instapetts.fragments.profile;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity2;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.listener_change_posts;
 import com.bunizz.instapetts.listeners.postsListener;
 import com.bunizz.instapetts.utils.dilogs.DialogPreviewPost;
 
@@ -40,6 +42,7 @@ public class AdapterGridPostsProfile extends RecyclerView.Adapter<RecyclerView.V
     changue_fragment_parameters_listener listener;
 
     postsListener listener_post;
+    listener_change_posts listener_posts;
 
     public postsListener getListener_post() {
         return listener_post;
@@ -48,6 +51,7 @@ public class AdapterGridPostsProfile extends RecyclerView.Adapter<RecyclerView.V
     public void setListener_post(postsListener listener_post) {
         this.listener_post = listener_post;
     }
+
 
 
     public changue_fragment_parameters_listener getListener() {
@@ -142,22 +146,15 @@ public class AdapterGridPostsProfile extends RecyclerView.Adapter<RecyclerView.V
             }
 
         }
-        h.root_posts_search_item.setOnClickListener(view -> {
-        });
         h.root_posts_search_item.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 if(data_parsed.getType_post()==1){
-                    Intent i = new Intent(context, PlayVideoActivity.class);
-                    i.putExtra("TYPE_PLAYER",1);
-                    i.putExtra("BEAN", Parcels.wrap(data_parsed));
-                    if(data_parsed instanceof  PostBean){
-                        Log.e("CLICK_PARSED","-->2xxxxx");
-                    }else{
-                        Log.e("CLICK_PARSED","-->2yyyyy");
+                    try {
+                        listener_post.reproduceVideoActivity(data_parsed);
+                    }catch (Exception e){
+                        Log.e("TRONO_POR_ADS","SI" +e.getMessage());
                     }
-                    Log.e("CLICK_PARSED","-->2");
-                    context.startActivity(i);
                 }else{
                     DialogPreviewPost dialogPreviewPost = new DialogPreviewPost(context,data_parsed);
                     dialogPreviewPost.setListener_post(new postsListener() {
@@ -185,11 +182,16 @@ public class AdapterGridPostsProfile extends RecyclerView.Adapter<RecyclerView.V
                         public void commentPost(int id_post, boolean can_comment,int id_usuario) {
 
                         }
+
+                        @Override
+                        public void reproduceVideoActivity(PostBean postBean) {
+
+                        }
                     });
                     dialogPreviewPost.show();
                 }
 
-                return false;
+                return true;
             }
         });
         h.root_posts_search_item.setOnClickListener(new View.OnClickListener() {

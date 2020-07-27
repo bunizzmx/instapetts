@@ -257,11 +257,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 }
 
                 vid_h.card_view_full.setOnClickListener(v -> {
-                    //listener_video.StopVideo();
-                    Intent i = new Intent(context, PlayVideoActivity.class);
-                    i.putExtra("TYPE_PLAYER",1);
-                    i.putExtra("BEAN", Parcels.wrap(mo));
-                    context.startActivity(i);
+                    listener_post.reproduceVideoActivity(mo);
                 });
 
 

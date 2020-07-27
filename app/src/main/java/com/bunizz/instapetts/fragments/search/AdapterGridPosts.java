@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+import dagger.multibindings.ElementsIntoSet;
 import retrofit2.http.POST;
 
 public class AdapterGridPosts extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
@@ -201,14 +202,15 @@ public class AdapterGridPosts extends RecyclerView.Adapter<RecyclerView.ViewHold
                                     public void commentPost(int id_post, boolean can_comment,int id_usuario) {
 
                                     }
+
+                                    @Override
+                                    public void reproduceVideoActivity(PostBean postBean) {
+
+                                    }
                                 });
                                 dialogPreviewPost.show();
                             }else{
-                                Intent i = new Intent(context, PlayVideoActivity.class);
-                                i.putExtra("TYPE_PLAYER",1);
-                                Log.e("CLICK_PARSED","-->");
-                                i.putExtra("BEAN", Parcels.wrap(data_parsed));
-                                context.startActivity(i);
+                               listener_post.reproduceVideoActivity(data_parsed);
                             }
                             return false;
                         }

@@ -25,6 +25,7 @@ import com.bunizz.instapetts.activitys.reports.ReportActiviy;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.TipsBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.fragments.FragmentElement;
@@ -219,60 +220,79 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
                 }else{
                     Log.e("CLICK_PARSED","-->no es post");
                 }
-                POST_BEAN = Parcels.unwrap(getIntent().getParcelableExtra("BEAN"));
+
+                if(getIntent().getParcelableExtra("BEAN")==null) {
+                    POST_BEAN = new PostBean();
+                    POST_BEAN.setName_user(getIntent().getStringExtra(BUNDLES.POST_NAME));
+                    POST_BEAN.setDescription(getIntent().getStringExtra(BUNDLES.POST_DESCRIPCION));
+                    POST_BEAN.setUrl_photo_user(getIntent().getStringExtra(BUNDLES.POST_FOTO_USER));
+                    POST_BEAN.setId_post_from_web(getIntent().getIntExtra(BUNDLES.POST_ID_POST, 0));
+                    POST_BEAN.setId_usuario(getIntent().getIntExtra(BUNDLES.POST_ID_USUARIO, 0));
+                    POST_BEAN.setCensored(getIntent().getIntExtra(BUNDLES.POST_IS_CENSORED, 0));
+                    POST_BEAN.setLiked(getIntent().getBooleanExtra(BUNDLES.POST_IS_LIKED, false));
+                    POST_BEAN.setLikes(getIntent().getIntExtra(BUNDLES.POST_LIKES, 0));
+                    POST_BEAN.setThumb_video(getIntent().getStringExtra(BUNDLES.POST_THUMBH_VIDEO));
+                    POST_BEAN.setType_post(getIntent().getIntExtra(BUNDLES.POST_TYPE, 0));
+                    POST_BEAN.setUrls_posts(getIntent().getStringExtra(BUNDLES.POST_URLS));
+                    POST_BEAN.setUuid(getIntent().getStringExtra(BUNDLES.POST_UUID));
+                    POST_BEAN.setAspect(getIntent().getStringExtra(BUNDLES.POST_ASPECT));
+                }else{
+                      POST_BEAN = Parcels.unwrap(getIntent().getParcelableExtra("BEAN"));
+                }
+
+
             }
 
         }
 
 
 
-        if(TYPE_PLAYER == 1) {
-            if (presenter.isLiked(POST_BEAN.getId_post_from_web()))
-                POST_BEAN.setLiked(true);
-            else
-                POST_BEAN.setLiked(false);
+    if (TYPE_PLAYER == 1) {
+        if (presenter.isLiked(POST_BEAN.getId_post_from_web()))
+            POST_BEAN.setLiked(true);
+        else
+            POST_BEAN.setLiked(false);
 
 
-            if (presenter.isSaved(POST_BEAN.getId_post_from_web()))
-                icon_save_on_favorites.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_fill));
-            else
-                icon_save_on_favorites.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_w));
+        if (presenter.isSaved(POST_BEAN.getId_post_from_web()))
+            icon_save_on_favorites.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_fill));
+        else
+            icon_save_on_favorites.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_w));
 
 
-            if (POST_BEAN.isLiked())
-                icon_like_video.setImageDrawable(getResources().getDrawable(R.drawable.ic_corazon_black));
-            else
-                icon_like_video.setImageDrawable(getResources().getDrawable(R.drawable.ic_corazon_w));
-        }else{
-            icon_save_on_favorites.setVisibility(View.GONE);
-            open_dialog_options.setVisibility(View.GONE);
-        }
+        if (POST_BEAN.isLiked())
+            icon_like_video.setImageDrawable(getResources().getDrawable(R.drawable.ic_corazon_black));
+        else
+            icon_like_video.setImageDrawable(getResources().getDrawable(R.drawable.ic_corazon_w));
+    } else {
+        icon_save_on_favorites.setVisibility(View.GONE);
+        open_dialog_options.setVisibility(View.GONE);
+    }
 
-        changeStatusBarColor(R.color.background_video_color);
-        if(TYPE_PLAYER ==0) {
-            title_video_play.setText(TIPS_BEAN.getTitle_tip());
-            likes_video.setText("" + TIPS_BEAN.getLikes_tip());
-            views_video.setText("" + TIPS_BEAN.getViews_tip());
+    changeStatusBarColor(R.color.background_video_color);
+    if (TYPE_PLAYER == 0) {
+        title_video_play.setText(TIPS_BEAN.getTitle_tip());
+        likes_video.setText("" + TIPS_BEAN.getLikes_tip());
+        views_video.setText("" + TIPS_BEAN.getViews_tip());
+        init_timeline();
+    } else {
+        title_video_play.setText(POST_BEAN.getDescription());
+        likes_video.setText("" + POST_BEAN.getLikes());
+        if (POST_BEAN.getCensored() == 0)
             init_timeline();
-        }else{
-            title_video_play.setText(POST_BEAN.getDescription());
-            likes_video.setText("" + POST_BEAN.getLikes());
-            if(POST_BEAN.getCensored() == 0)
-                init_timeline();
-            else {
-                layout_censored.setVisibility(View.VISIBLE);
-                touch_view_more_controls.setVisibility(View.GONE);
-            }
+        else {
+            layout_censored.setVisibility(View.VISIBLE);
+            touch_view_more_controls.setVisibility(View.GONE);
         }
+    }
 
-             if(TYPE_PLAYER == 0) {
-                 name_user_player.setText("" + getString(R.string.instapetts_tips));
-                 Glide.with(PlayVideoActivity.this).load(TIPS_BEAN.getPhoto_tumbh_tip()).into(image_video_tumbh);
-             }
-             else {
-                 name_user_player.setText(POST_BEAN.getName_user());
-                 Glide.with(PlayVideoActivity.this).load(POST_BEAN.getUrl_photo_user()).into(image_video_tumbh);
-             }
+    if (TYPE_PLAYER == 0) {
+        name_user_player.setText("" + getString(R.string.instapetts_tips));
+        Glide.with(PlayVideoActivity.this).load(TIPS_BEAN.getPhoto_tumbh_tip()).into(image_video_tumbh);
+    } else {
+        name_user_player.setText(POST_BEAN.getName_user());
+        Glide.with(PlayVideoActivity.this).load(POST_BEAN.getUrl_photo_user()).into(image_video_tumbh);
+    }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -291,6 +311,7 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
             Glide.with(PlayVideoActivity.this).load(POST_BEAN.getUrl_photo_user()).into(image_video_tumbh);
             exoPlayerManager = new ExoPlayerManager(this,videoSurfaceView, previewTimeBar,
                     (ImageView) findViewById(R.id.imageView), POST_BEAN.getThumb_video(),noise);
+            Log.e("CLICK_PARSED","-->no es post" +POST_BEAN.getUrls_posts());
             exoPlayerManager.play(Uri.parse(POST_BEAN.getUrls_posts()));
             if(POST_BEAN.getAspect().equals("16_9") || POST_BEAN.getAspect().equals("4_3"))
                 videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);

@@ -36,4 +36,6 @@ public interface PREFERENCES {
 
     String FECHA_BACKUP_FILE="FECHA_BACKUP_FILE";
 
+    String ADS_ACTIVADOS ="ADS_ACTIVADOS";
+
 }

@@ -38,7 +38,6 @@ import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
 import com.bunizz.instapetts.fragments.profile.PetsPropietaryAdapter;
 import com.bunizz.instapetts.fragments.profile.ProfileUserContract;
-import com.bunizz.instapetts.fragments.search.posts.FragmentListGalery;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.folowFavoriteListener;
@@ -305,6 +304,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
             if (bundle != null) {
                 ID_USER_PARAMETER = bundle.getInt(BUNDLES.ID_USUARIO);
             }
+            POSITION_PAGER =0;
             IS_MY_FIRNED = presenter.is_user_followed(ID_USER_PARAMETER);
             if (ID_USER_PARAMETER == App.read(PREFERENCES.ID_USER_FROM_WEB, 0) && ID_USER_PARAMETER != 0) {
                 IS_MISMO_USER = true;
@@ -410,6 +410,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         ArrayList<Object> results = new ArrayList<>();
         results.addAll(POSTS);
         if (frag instanceof FragmentPostGalery) {
+            ((FragmentPostGalery) frag).setIdUser(ID_USER_PARAMETER);
             ((FragmentPostGalery) frag).setData_posts(results);
         }
     }

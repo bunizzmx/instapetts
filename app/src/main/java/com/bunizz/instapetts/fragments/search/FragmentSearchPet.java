@@ -183,15 +183,17 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
         searching_world.setVisibility(View.GONE);
         Fragment frag = adapter_pager.getItem(1);
         ArrayList<Object> PETS = new ArrayList<>();
-        if (frag instanceof FragmentPetList) {
-            PETS.clear();
-            Log.e("SHOW_RESULT_USER","PEST");
-            for (int i =0 ;i<pets.size();i++){
-                if(pets.get(i).getId_user()!= App.read(PREFERENCES.ID_USER_FROM_WEB,0)){
-                    PETS.add(pets.get(i));
+        if(pets!=null) {
+            if (frag instanceof FragmentPetList) {
+                PETS.clear();
+                Log.e("SHOW_RESULT_USER", "PEST");
+                for (int i = 0; i < pets.size(); i++) {
+                    if (pets.get(i).getId_user() != App.read(PREFERENCES.ID_USER_FROM_WEB, 0)) {
+                        PETS.add(pets.get(i));
+                    }
                 }
+                ((FragmentPetList) frag).setData(PETS);
             }
-            ((FragmentPetList) frag).setData(PETS);
         }
     }
 

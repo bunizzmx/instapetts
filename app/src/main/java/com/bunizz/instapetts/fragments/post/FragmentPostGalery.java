@@ -1,6 +1,7 @@
 package com.bunizz.instapetts.fragments.post;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.profile.AdapterGridPostsProfile;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
@@ -55,11 +58,13 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
     private boolean IS_ALL = false;
 
     int PAGINADOR = -999;
+    int ID_USER = -999;
 
 
     public void setData_posts(ArrayList<Object> data_posts) {
         IS_ALL = false;
-
+        PAGINADOR = 0;
+        loading = true;
         if(data_posts.size()>0) {
             PostBean ID_POST = (PostBean)data_posts.get(data_posts.size() - 1);
             PAGINADOR = ID_POST.getId_post_from_web();
@@ -86,6 +91,10 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
                root_no_data.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    public void setIdUser(int id){
+        ID_USER = id;
     }
 
 
@@ -122,18 +131,19 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
         Log.e("ONVIEW_CREATED","galeryxxxxxxx");
         list_galery.setLayoutManager(new GridLayoutManager(getContext(),3));
         list_galery.setAdapter(feedAdapter);
-        feedAdapter.setListener(new changue_fragment_parameters_listener() {
-            @Override
-            public void change_fragment_parameter(int type_fragment, Bundle data) {
-                ArrayList<Object> object_currents = new ArrayList<>();
-                int position = data.getInt("POSITION");
-                for (int i = position;i<data_posts.size();i++){
-                    object_currents.add(data_posts.get(i));
-                }
-                Bundle b = new Bundle();
-                b.putParcelable("POSTS", Parcels.wrap(object_currents));
-                listener.change_fragment_parameter(type_fragment,b);
+        feedAdapter.setListener((type_fragment, data) -> {
+            ArrayList<Object> object_currents = new ArrayList<>();
+            int position = data.getInt("POSITION");
+            Log.e("POSITION_SIZE","-->" + position + "/" + data_posts.size());
+            Bundle b = new Bundle();
+            for (int i =0;i < data_posts.size();i++){
+                if(data_posts.get(i) instanceof  PostBean)
+                  Log.e("CLICK_PARSED",".---");
+                else
+                    Log.e("CLICK_PARSED","NO ES UN POST");
             }
+            b.putParcelable("POSTS", Parcels.wrap(data_posts));
+            listener.change_fragment_parameter(type_fragment,b);
         });
         feedAdapter.setListener_post(new postsListener() {
             @Override
@@ -175,6 +185,36 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
             public void commentPost(int id_post, boolean can_comment,int id_usuario) {
 
             }
+
+            @Override
+            public void reproduceVideoActivity(PostBean postBean) {
+                Intent i = new Intent(getContext(), PlayVideoActivity.class);
+                i.putExtra("TYPE_PLAYER", 1);
+                i.putExtra(BUNDLES.POST_NAME,postBean.getName_user());
+                i.putExtra(BUNDLES.POST_ASPECT,postBean.getAspect());
+                i.putExtra(BUNDLES.POST_DESCRIPCION,postBean.getDescription());
+                i.putExtra(BUNDLES.POST_FOTO_USER,postBean.getUrl_photo_user());
+                i.putExtra(BUNDLES.POST_ID_POST,postBean.getId_post_from_web());
+                i.putExtra(BUNDLES.POST_ID_USUARIO,postBean.getId_usuario());
+                i.putExtra(BUNDLES.POST_IS_CENSORED,postBean.getCensored());
+                i.putExtra(BUNDLES.POST_IS_LIKED,postBean.isLiked());
+                i.putExtra(BUNDLES.POST_IS_SAVED,postBean.isSaved());
+                i.putExtra(BUNDLES.POST_LIKES,postBean.getLikes());
+                i.putExtra(BUNDLES.POST_THUMBH_VIDEO,postBean.getThumb_video());
+                i.putExtra(BUNDLES.POST_TYPE,postBean.getType_post());
+                i.putExtra(BUNDLES.POST_ASPECT,postBean.getAspect());
+                Log.e("CLICK_PARSED","-->no esxxx post" +postBean.getUrls_posts());
+                i.putExtra(BUNDLES.POST_URLS,postBean.getUrls_posts());
+                i.putExtra(BUNDLES.POST_UUID,postBean.getUuid());
+                //i.putExtra("BEAN", Parcels.wrap(postBean));
+                if (postBean instanceof PostBean) {
+                    Log.e("CLICK_PARSED", "-->2xxxxx");
+                } else {
+                    Log.e("CLICK_PARSED", "-->2yyyyy");
+                }
+                Log.e("CLICK_PARSED", "-->2");
+                getContext().startActivity(i);
+            }
         });
         title_no_data.setText("No hay publicaciones");
         body_no_data.setText("Demuestrale al mundo la mascota linda que tienes escondida, todos queremos verla¡¡.");
@@ -196,7 +236,7 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
                             loading = false;
                             if(IS_ALL == false) {
                                 Log.e("DONWLOAD_MORE_COMMENTS","SI");
-                                presenter.getMorePost(3,PAGINADOR);
+                                presenter.getMorePost(3,PAGINADOR,ID_USER);
                             }else {
                                 Log.e("DONWLOAD_MORE_COMMENTS","NO");
                             }
@@ -218,6 +258,8 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
 
     @Override
     public void showMorePost(ArrayList<PostBean> posts) {
+        ArrayList<Object> data = new ArrayList<>();
+        data.addAll(posts);
         if(posts.size()>0) {
             PAGINADOR = posts.get(posts.size() - 1).getId_post_from_web();
             if(posts.size() < 10 )
@@ -229,10 +271,9 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
         loading = true;
         if(data_posts !=null){
             if(data_posts.size()>0){
-                data_posts.clear();
                 data_posts.addAll(posts);
                 if(feedAdapter!=null)
-                    feedAdapter.setPostsPaginate(this.data_posts);
+                    feedAdapter.setPostsPaginate(data);
                 if(root_no_data!=null)
                     root_no_data.setVisibility(View.GONE);
             }

@@ -74,3 +74,6 @@
 -keep interface org.parceler.Parcel
 -keep @org.parceler.Parcel class * { *; }
 -keep class **$$Parcelable { *; }
+
+-keep class com.google.ads.** # Don't proguard AdMob classes
+-dontwarn com.google.ads.** # Temporary workaround for v6.2.1. It gives a warning that you can ignore
