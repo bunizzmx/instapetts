@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +14,14 @@ import android.widget.TextView;
 
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity;
 import com.bunizz.instapetts.activitys.searchqr.QrSearchActivity;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.search.AdapterGridPosts;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.postsListener;
 import com.bunizz.instapetts.utils.loadings.SpinKitView;
 import com.bunizz.instapetts.utils.loadings.SpriteFactory;
 import com.bunizz.instapetts.utils.loadings.Style;
@@ -100,6 +104,57 @@ public class FragmentPostPublicsSaved extends Fragment implements  PostPublicsSa
                Bundle b = new Bundle();
                b.putParcelable("POSTS", Parcels.wrap(object_currents));
                listener.change_fragment_parameter(type_fragment,b);
+            }
+        });
+
+        adapter.setListener_post(new postsListener() {
+            @Override
+            public void onLike(int id_post, boolean type_like, int id_usuario, String url_image) {
+
+            }
+
+            @Override
+            public void onFavorite(int id_post, PostBean postBean) {
+
+            }
+
+            @Override
+            public void onDisfavorite(int id_post) {
+
+            }
+
+            @Override
+            public void openMenuOptions(int id_post, int id_usuario, String uuid) {
+
+            }
+
+            @Override
+            public void commentPost(int id_post, boolean can_comment, int id_usuario) {
+
+            }
+
+            @Override
+            public void reproduceVideoActivity(PostBean postBean) {
+                Intent i = new Intent(getContext(), PlayVideoActivity.class);
+                i.putExtra("TYPE_PLAYER", 1);
+                i.putExtra(BUNDLES.POST_NAME,postBean.getName_user());
+                i.putExtra(BUNDLES.POST_ASPECT,postBean.getAspect());
+                i.putExtra(BUNDLES.POST_DESCRIPCION,postBean.getDescription());
+                i.putExtra(BUNDLES.POST_FOTO_USER,postBean.getUrl_photo_user());
+                i.putExtra(BUNDLES.POST_ID_POST,postBean.getId_post_from_web());
+                i.putExtra(BUNDLES.POST_ID_USUARIO,postBean.getId_usuario());
+                i.putExtra(BUNDLES.POST_IS_CENSORED,postBean.getCensored());
+                i.putExtra(BUNDLES.POST_IS_LIKED,postBean.isLiked());
+                i.putExtra(BUNDLES.POST_IS_SAVED,postBean.isSaved());
+                i.putExtra(BUNDLES.POST_LIKES,postBean.getLikes());
+                i.putExtra(BUNDLES.POST_THUMBH_VIDEO,postBean.getThumb_video());
+                i.putExtra(BUNDLES.POST_TYPE,postBean.getType_post());
+                i.putExtra(BUNDLES.POST_ASPECT,postBean.getAspect());
+                Log.e("CLICK_PARSED","-->no esxxx post" +postBean.getUrls_posts());
+                i.putExtra(BUNDLES.POST_URLS,postBean.getUrls_posts());
+                i.putExtra(BUNDLES.POST_UUID,postBean.getUuid());
+                //i.putExtra("BEAN", Parcels.wrap(postBean));
+                getContext().startActivity(i);
             }
         });
     }

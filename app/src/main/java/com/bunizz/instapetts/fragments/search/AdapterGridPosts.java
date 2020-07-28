@@ -56,9 +56,6 @@ public class AdapterGridPosts extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         postsListener listener_post;
 
-    public postsListener getListener_post() {
-        return listener_post;
-    }
 
     public void setListener_post(postsListener listener_post) {
         this.listener_post = listener_post;
@@ -130,9 +127,6 @@ public class AdapterGridPosts extends RecyclerView.Adapter<RecyclerView.ViewHold
             case TYPE_POST:
                 view = getInflatedView(parent, R.layout.item_feed_posts_simple);
                 return new postsPublicsHolder(view);
-            case TYPE_ADD:
-                view = getInflatedView(parent, R.layout.ad_unified);
-                return new UnifiedAddHolder(view);
             default:
                 view = getInflatedView(parent, R.layout.ad_unified);
                 return new UnifiedAddHolder(view);
