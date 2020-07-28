@@ -83,7 +83,7 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
             f.setArguments(bundle);
             adapter.addFragment(f);
         }
-        if(App.getInstance().getMoreAds().size()>0) {
+       /* if(App.getInstance().getMoreAds().size()>0) {
             Fragment fx = new FragmentStoriViewAdd();
             Bundle bbx = new Bundle();
             try {
@@ -94,7 +94,7 @@ public class StoryPlayer extends AppCompatActivity implements story_finished_lis
             }
             fx.setArguments(bbx);
             adapter.addFragment(fx);
-        }
+        }*/
         CURRENT_ITEM = SELECTED_POSITION;
         view_pager_stories.setAdapter(adapter);
         view_pager_stories.setOffscreenPageLimit(0);

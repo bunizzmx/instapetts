@@ -117,8 +117,9 @@ public class AdapterGridPosts extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
     public void addMorePosts(ArrayList<Object> posts) {
+        int index = this.posts.size() ;
         this.posts.addAll(posts);
-        notifyDataSetChanged();
+        notifyItemInserted(index);
     }
 
     @NonNull

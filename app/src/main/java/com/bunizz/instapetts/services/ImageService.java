@@ -79,9 +79,10 @@ public class ImageService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        TYPE_NOTIFICATION = intent.getIntExtra("NOTIFICATION_TIPE",0);
+        if (intent.getExtras() != null){
+            TYPE_NOTIFICATION = intent.getIntExtra("NOTIFICATION_TIPE", 0);
         TITLE = this.getString(R.string.completed);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         String channelId = "channel-01";
         String channelName = "Channel Name";
@@ -99,7 +100,7 @@ public class ImageService extends Service {
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)
                     .setContentIntent(pendingIntent);
-        }else {
+        } else {
             mBuilder.setSmallIcon(R.drawable.logoapp)
                     .setContentTitle(TITLE)
                     .setAutoCancel(true)
@@ -117,32 +118,32 @@ public class ImageService extends Service {
         mBuilder.setContentIntent(resultPendingIntent);
         final ArrayList<String> key = intent.getStringArrayListExtra(INTENT_KEY_NAME);
         SIZE_OF_FILES = key.size();
-        for(int i =0;i<key.size();i++){
-            if(TYPE_NOTIFICATION == 2 || TYPE_NOTIFICATION == 3 || TYPE_NOTIFICATION == 1){
-                Log.e("COMPRESION_IMAGEN","HISTORIA :" + key.get(i));
+        for (int i = 0; i < key.size(); i++) {
+            if (TYPE_NOTIFICATION == 2 || TYPE_NOTIFICATION == 3 || TYPE_NOTIFICATION == 1) {
+                Log.e("COMPRESION_IMAGEN", "HISTORIA :" + key.get(i));
                 file = new Compressor(this).compressToFile(new File(key.get(i)));
-            }else{
+            } else {
                 file = new File(key.get(i));
             }
 
             String splits[] = key.get(i).split("/");
-            int index  = splits.length;
+            int index = splits.length;
             String filename = "";
-            if(TYPE_NOTIFICATION == 1){
-                filename =App.read(PREFERENCES.UUID,"INVALID") +"/" +  CONST.FOLDER_PROFILE  + "/" + App.read(PREFERENCES.UUID,"INVALID") + ".jpg";
-            }else if(TYPE_NOTIFICATION == 0){
-                filename = App.read(PREFERENCES.UUID,"INVALID") + "/" +  CONST.FOLDER_POSTS + "/" +  splits[index - 1];
-            }else if (TYPE_NOTIFICATION == 3){
+            if (TYPE_NOTIFICATION == 1) {
+                filename = App.read(PREFERENCES.UUID, "INVALID") + "/" + CONST.FOLDER_PROFILE + "/" + App.read(PREFERENCES.UUID, "INVALID") + ".jpg";
+            } else if (TYPE_NOTIFICATION == 0) {
+                filename = App.read(PREFERENCES.UUID, "INVALID") + "/" + CONST.FOLDER_POSTS + "/" + splits[index - 1];
+            } else if (TYPE_NOTIFICATION == 3) {
                 NAME_PET = intent.getStringExtra(BUNDLES.NAME_PET);
-                filename = App.read(PREFERENCES.UUID,"INVALID") + "/" +  CONST.FOLDER_PETS + "/" +  NAME_PET + ".jpg" ;
-            }else{
-                filename =  App.read(PREFERENCES.UUID,"INVALID") + "/" +  CONST.FOLDER_STORIES + "/" +  splits[index - 1];
+                filename = App.read(PREFERENCES.UUID, "INVALID") + "/" + CONST.FOLDER_PETS + "/" + NAME_PET + ".jpg";
+            } else {
+                filename = App.read(PREFERENCES.UUID, "INVALID") + "/" + CONST.FOLDER_STORIES + "/" + splits[index - 1];
             }
 
             upload_image(filename);
         }
 
-
+    }
         return START_STICKY;
     }
 

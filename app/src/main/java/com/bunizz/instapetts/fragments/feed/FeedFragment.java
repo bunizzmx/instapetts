@@ -1,5 +1,6 @@
 package com.bunizz.instapetts.fragments.feed;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -37,6 +39,7 @@ import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.conexion_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.postsListener;
+import com.bunizz.instapetts.utils.ProgressCircle;
 import com.bunizz.instapetts.utils.dilogs.DialogOptionsPosts;
 import com.bunizz.instapetts.utils.loadings.SpinKitView;
 import com.bunizz.instapetts.utils.loadings.SpriteFactory;
@@ -63,8 +66,8 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     @BindView(R.id.exoPlayerRecyclerView)
     ExoPlayerRecyclerView mRecyclerView;
 
-    @BindView(R.id.spin_kit)
-    SpinKitView spin_kit;
+    @BindView(R.id.cirlce_progress)
+    ProgressCircle cirlce_progress;
 
     @BindView(R.id.root_no_internet)
     RelativeLayout root_no_internet;
@@ -84,7 +87,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     ArrayList<Object> data_feed = new ArrayList<>();
     private List<UnifiedNativeAd> mNativeAds = new ArrayList<>();
     boolean HAS_FRIENDS =false;
-
+    final ValueAnimator valueAnimator = ValueAnimator.ofInt(1,360);
     public static FeedFragment newInstance() {
         return new FeedFragment();
     }
@@ -215,12 +218,17 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-
-
+        valueAnimator.setInterpolator(new LinearInterpolator());
+        valueAnimator.setDuration(2000);
+        valueAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        valueAnimator.addUpdateListener(animation -> {
+            cirlce_progress.setValue((Integer) animation.getAnimatedValue());
+        });
+        valueAnimator.start();
         feedAdapter.setRequestManager(initGlide());
-
-
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setItemViewCacheSize(20);
         mRecyclerView.setAdapter(feedAdapter);
         refresh_feed.setOnRefreshListener(() ->{
             root_no_internet.setVisibility(View.GONE);
@@ -237,8 +245,6 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         });
         Style style = Style.values()[12];
         Sprite drawable = SpriteFactory.create(style);
-        spin_kit.setIndeterminateDrawable(drawable);
-        spin_kit.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         if(HAS_FRIENDS)
             mPresenter.get_feed(false, App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         else
@@ -273,7 +279,8 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
             historiesBeans.add(new HistoriesBean());
         }
         historiesBeans.addAll(data_stories);
-        spin_kit.setVisibility(View.GONE);
+        cirlce_progress.setVisibility(View.GONE);
+        valueAnimator.cancel();
         data_feed.add(new HistoriesBean());
         data_feed.addAll(data);
         mRecyclerView.setMediaObjects(data_feed);
@@ -293,7 +300,8 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     @Override
     public void show_feed_recomended(ArrayList<PostBean> data, ArrayList<UserBean> users) {
         refresh_feed.setRefreshing(false);
-        spin_kit.setVisibility(View.GONE);
+        cirlce_progress.setVisibility(View.GONE);
+        valueAnimator.cancel();
         ArrayList<HistoriesBean> historiesBeans = new ArrayList<>();
         if(!mPresenter.getMyStories().getHistorias().isEmpty()){
             historiesBeans.add(mPresenter.getMyStories());
@@ -345,7 +353,8 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     @Override
     public void noInternet() {
         refresh_feed.setRefreshing(false);
-        spin_kit.setVisibility(View.GONE);
+        cirlce_progress.setVisibility(View.GONE);
+        valueAnimator.cancel();
         root_no_internet.setVisibility(View.VISIBLE);
         listener_wifi.noWifiRequest();
     }

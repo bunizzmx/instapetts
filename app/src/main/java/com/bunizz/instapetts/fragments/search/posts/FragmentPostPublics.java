@@ -192,7 +192,7 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
 
     @Override
     public void noInternet() {
-        // root_no_internet.setVisibility(View.VISIBLE);
+      refresh_search.setRefreshing(false);
     }
 
 

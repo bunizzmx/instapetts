@@ -50,22 +50,7 @@
         tools:listitem="@layout/item_code_country"
         />
 
-    <com.bunizz.instapetts.utils.fastScroll.FastScrollerView
-        android:layout_below="@+id/root_folloes_toolbar"
-        android:layout_alignParentRight="true"
-        android:id="@+id/sample_basic_fastscroller"
-        android:layout_width="32dp"
-        android:layout_height="match_parent"
-        />
 
-    <com.bunizz.instapetts.utils.fastScroll.FastScrollerThumbView
-        android:layout_below="@+id/root_folloes_toolbar"
-        android:layout_toLeftOf="@+id/sample_basic_fastscroller"
-        android:id="@+id/sample_basic_fastscroller_thumb"
-        android:layout_width="40dp"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="16dp"
-        />
 
     <include layout="@layout/no_internet"></include>
     <com.bunizz.instapetts.utils.loadings.SpinKitView

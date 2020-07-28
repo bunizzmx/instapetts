@@ -3,17 +3,23 @@
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_above="@+id/progressBar"
         android:id="@+id/list_posts_publics"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
     <include layout="@layout/no_internet"/>
-    <com.bunizz.instapetts.utils.loadings.SpinKitView
-        android:id="@+id/spin_kit"
-        style="@style/SpinKitView"
-        android:background="?selectableItemBackgroundBorderless"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+    <com.bunizz.instapetts.utils.ProgressCircle
+        android:id="@+id/cirlce_progress"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:padding="10dp" />
+        android:layout_width="80dp"
+        android:layout_height="80dp"/>
+    <com.bunizz.instapetts.utils.smoot.SmoothProgressBar
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        style="@style/GNowProgressBarWhite"
+        android:indeterminate="true"/>
 </RelativeLayout>

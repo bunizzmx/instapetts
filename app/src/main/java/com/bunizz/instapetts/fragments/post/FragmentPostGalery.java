@@ -130,6 +130,8 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
         ButterKnife.bind(this, view);
         Log.e("ONVIEW_CREATED","galeryxxxxxxx");
         list_galery.setLayoutManager(new GridLayoutManager(getContext(),3));
+        list_galery.setHasFixedSize(true);
+        list_galery.setItemViewCacheSize(20);
         list_galery.setAdapter(feedAdapter);
         feedAdapter.setListener((type_fragment, data) -> {
             ArrayList<Object> object_currents = new ArrayList<>();

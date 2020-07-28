@@ -1,5 +1,6 @@
 package com.bunizz.instapetts.fragments.search.posts;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,10 +23,12 @@ import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.search.AdapterGridPosts;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.postsListener;
+import com.bunizz.instapetts.utils.ProgressCircle;
 import com.bunizz.instapetts.utils.loadings.SpinKitView;
 import com.bunizz.instapetts.utils.loadings.SpriteFactory;
 import com.bunizz.instapetts.utils.loadings.Style;
 import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
+import com.bunizz.instapetts.utils.smoot.SmoothProgressBar;
 import com.bunizz.instapetts.web.parameters.PostActions;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 
@@ -58,9 +62,15 @@ public class FragmentListGalery extends Fragment implements  ListGaleryContract.
     @BindView(R.id.icon_no_internet)
     ImageView icon_no_internet;
 
+    @BindView(R.id.progressBar)
+    SmoothProgressBar progressBar;
 
-    @BindView(R.id.spin_kit)
-    SpinKitView spin_kit;
+    @BindView(R.id.cirlce_progress)
+    ProgressCircle cirlce_progress;
+
+    final ValueAnimator valueAnimator = ValueAnimator.ofInt(1,360);
+
+
 
     Style style = Style.values()[12];
     Sprite drawable = SpriteFactory.create(style);
@@ -82,14 +92,15 @@ public class FragmentListGalery extends Fragment implements  ListGaleryContract.
         Log.e("POSTSTSTSD","--->" + data_posts.size());
         this.TYPO_FRAGMENT = TYPO_FRAGMENT;
         if(data_posts !=null){
-            spin_kit.setVisibility(View.GONE);
             if(data_posts.size()>0){
                 root_no_internet.setVisibility(View.GONE);
                 this.data_posts.clear();
                 this.data_posts.addAll(data_posts);
                 Log.e("SETIE_DATA_POST","--> " + data_posts.size());
                 if(adapter!=null) {
-                        adapter.setPosts(this.data_posts);
+                    cirlce_progress.setVisibility(View.GONE);
+                    valueAnimator.end();
+                    adapter.setPosts(this.data_posts);
                 }
             }else{
                 icon_no_internet.setVisibility(View.GONE);
@@ -205,10 +216,17 @@ public class FragmentListGalery extends Fragment implements  ListGaleryContract.
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        spin_kit.setIndeterminateDrawable(drawable);
-        spin_kit.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
+        valueAnimator.setInterpolator(new LinearInterpolator());
+        valueAnimator.setDuration(2000);
+        valueAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        valueAnimator.addUpdateListener(animation -> {
+            cirlce_progress.setValue((Integer) animation.getAnimatedValue());
+        });
+        valueAnimator.start();
         layoutManager = new GridLayoutManager(getContext(),3);
         list_posts_publics.setLayoutManager(layoutManager);
+        list_posts_publics.setHasFixedSize(true);
+        list_posts_publics.setItemViewCacheSize(20);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
@@ -252,6 +270,7 @@ public class FragmentListGalery extends Fragment implements  ListGaleryContract.
                         if(loading){
                             loading = false;
                             if(IS_ALL == false) {
+                                progressBar.setVisibility(View.VISIBLE);
                                 Log.e("DONWLOAD_MORE_COMMENTS","SI");
                                 presenter.getMorePost(TYPO_FRAGMENT,adapter.get_ultimo_id());
                             }else {
@@ -318,6 +337,7 @@ public class FragmentListGalery extends Fragment implements  ListGaleryContract.
 
     @Override
     public void showMorePost(ArrayList<PostBean> posts) {
+        progressBar.setVisibility(View.GONE);
         if(posts.size()>0) {
             this.data_posts.addAll(posts);
             Log.e("SETIE_DATA_POST", "--> " + posts.size());

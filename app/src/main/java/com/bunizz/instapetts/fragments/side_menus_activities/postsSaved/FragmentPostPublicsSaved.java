@@ -116,6 +116,8 @@ public class FragmentPostPublicsSaved extends Fragment implements  PostPublicsSa
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         list_posts_publics.setLayoutManager(new GridLayoutManager(getContext(),3));
+        list_posts_publics.setHasFixedSize(true);
+        list_posts_publics.setItemViewCacheSize(20);
         list_posts_publics.setAdapter(adapter);
         presenter.getPostPublics();
         Style style = Style.values()[12];

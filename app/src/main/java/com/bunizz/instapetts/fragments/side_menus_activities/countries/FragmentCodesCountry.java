@@ -12,9 +12,6 @@ import android.widget.TextView;
 
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.CodesCountryBean;
-import com.bunizz.instapetts.utils.fastScroll.FastScrollItemIndicator;
-import com.bunizz.instapetts.utils.fastScroll.FastScrollerThumbView;
-import com.bunizz.instapetts.utils.fastScroll.FastScrollerView;
 import com.bunizz.instapetts.utils.loadings.SpinKitView;
 import com.bunizz.instapetts.utils.loadings.SpriteFactory;
 import com.bunizz.instapetts.utils.loadings.Style;
@@ -51,11 +48,6 @@ public class FragmentCodesCountry extends Fragment implements  CodesCountryContr
     RelativeLayout root_no_internet;
 
 
-    @BindView(R.id.sample_basic_fastscroller)
-    FastScrollerView sample_basic_fastscroller;
-
-    @BindView(R.id.sample_basic_fastscroller_thumb)
-    FastScrollerThumbView sample_basic_fastscroller_thumb;
 
     @BindView(R.id.list_codes)
     RecyclerView list_codes;
@@ -89,51 +81,12 @@ public class FragmentCodesCountry extends Fragment implements  CodesCountryContr
         list_codes.setLayoutManager(new LinearLayoutManager(getContext()));
         list_codes.setAdapter(adapter);
 
-        sample_basic_fastscroller.setUseDefaultScroller(false);
-        sample_basic_fastscroller.getItemIndicatorSelectedCallbacks().add(
-                new FastScrollerView.ItemIndicatorSelectedCallback() {
-                    @Override
-                    public void onItemIndicatorSelected(
-                            FastScrollItemIndicator indicator,
-                            int indicatorCenterY,
-                            int itemPosition
-                    ) {
-                        // Handle scrolling
-                    }
-                }
-        );
-        Style style = Style.values()[12];
-        Sprite drawable = SpriteFactory.create(style);
-        spin_kit.setIndeterminateDrawable(drawable);
-        spin_kit.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
-        spin_kit.setVisibility(View.VISIBLE);
-
-        sample_basic_fastscroller_thumb.setupWithFastScroller(sample_basic_fastscroller);
         presenter.getCodesCountry();
 
     }
 
     @Override
     public void showCodesCountry(ArrayList<CodesCountryBean> countryBeans) {
-        if(countryBeans.size()>0){
-            Log.e("CODES_EXISTENTES","-->" + countryBeans.size());
-            spin_kit.setVisibility(View.GONE);
-            root_no_internet.setVisibility(View.GONE);
-            adapter.setData(countryBeans);
-                sample_basic_fastscroller.setupWithRecyclerView(list_codes,  (position) -> {
-                    CodesCountryBean item = countryBeans.get(position);
-                    return new FastScrollItemIndicator.Text(
-                            item.getName().substring(0, 1).toUpperCase()
-                    );
-                });
-        }else{
-            Log.e("CODES_EXISTENTES","--> SHOW NO DATA");
-            body_no_data.setText("Cuando sigas 1 o mas cuentas apareceran aqui");
-            title_no_internet.setText(getString(R.string.no_sigues));
-            icon_no_internet.setVisibility(View.GONE);
-            spin_kit.setVisibility(View.GONE);
-            root_no_internet.setVisibility(View.VISIBLE);
-        }
 
 
     }
