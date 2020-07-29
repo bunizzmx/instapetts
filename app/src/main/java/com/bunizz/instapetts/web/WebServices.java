@@ -57,6 +57,9 @@ public interface WebServices {
     @POST("test/newusers")
     Single<SimpleResponse> update_token(@Body UserBean user);
 
+    @POST("test/newusers")
+    Single<SimpleResponse> updateConexion(@Body UserBean user);
+
     @POST("test/getinfouser")
     Single<ResponseProfileUser> getInfoUser(@Body UserBean user);
 

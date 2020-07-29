@@ -509,4 +509,31 @@ public class MainPresenter implements MainContract.Presenter {
             }
         });
     }
+
+    @Override
+    public void updateConexion() {
+        Log.e("CONEXION_UPDATED","request ");
+        UserBean userBean = new UserBean();
+        userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        userBean.setTarget("ULTIMA_CONEXION");
+        disposable.add(
+                apiService.updateConexion(userBean)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                            @Override
+                            public void onSuccess(SimpleResponse responsePost) {
+                                if(responsePost!=null) {
+                                    if(responsePost.getCode_response()==200){
+                                        Log.e("CONEXION_UPDATED","CORRECTO ");
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.e("CONEXION_UPDATED","-->EROR : " + e.getMessage());
+                            }
+                        })
+        );
+    }
 }

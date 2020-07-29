@@ -25,6 +25,7 @@ public interface MainContract {
         void getFileBackup();
         void delete_data();
         void isAdsActive();
+        void updateConexion();
     }
 
     interface View{

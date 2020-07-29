@@ -292,7 +292,6 @@ public class Main extends AppCompatActivity implements change_instance,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ButterKnife.bind(this);
-
         try{
         presenter = new MainPresenter(this, this);
         presenter.isAdsActive();
@@ -438,6 +437,8 @@ public class Main extends AppCompatActivity implements change_instance,
                 }
             });
         }
+
+        presenter.updateConexion();
     }
 
     @Override
