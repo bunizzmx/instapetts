@@ -27,14 +27,7 @@ import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.uploads;
 
 import com.bunizz.instapetts.utils.crop2.view.ImageCropView;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.ml.vision.FirebaseVision;
-import com.google.firebase.ml.vision.common.FirebaseVisionImage;
-import com.google.firebase.ml.vision.label.FirebaseVisionImageLabel;
-import com.google.firebase.ml.vision.label.FirebaseVisionImageLabeler;
 
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -216,109 +209,79 @@ public class ImageCropFragment extends Fragment {
 
 
     public  void saveImage(Bitmap bitmap, String folderName, String filename, Bitmap.CompressFormat compressFormat) {
-        FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);
-        FirebaseVisionImageLabeler labeler = FirebaseVision.getInstance()
-                .getOnDeviceImageLabeler();
         if(is_from_profile == 1){
             fileex = filename + App.read(PREFERENCES.UUID,"INVALID");
         }else{
             fileex = filename + UUID.randomUUID();
         }
-        labeler.processImage(image)
-                .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionImageLabel>>() {
-                    @Override
-                    public void onSuccess(List<FirebaseVisionImageLabel> labels) {
-                        for(int i =0;i< labels.size();i++){
-                            Log.e("LABELS","-->" + labels.get(i).getText());
-                           if(determinatePet(labels.get(i).getText())){
-                               CONTAINS_A_PET = 1;
-                               break;
-                           }else{
-                               CONTAINS_A_PET = 0;
-                           }
-                        }
-                        if(CONTAINS_A_PET == 1){
-                            Log.e("ANALSISI_IMAGEN","--> SI TIENE UN PET");
-                        }else{
-                            Log.e("ANALSISI_IMAGEN","--> NO TIENE MASCOTA");
-                        }
-                        if(is_from_profile == 1){
-                            fileex = fileex + App.read(PREFERENCES.UUID,"INVALID");
-                        }else{
-                            fileex = fileex + UUID.randomUUID();
-                        }
+        if(is_from_profile == 1){
+            fileex = fileex + App.read(PREFERENCES.UUID,"INVALID");
+        }else{
+            fileex = fileex + UUID.randomUUID();
+        }
 
-                        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + folderName);
-                        if (!file.exists()) {
-                            file.mkdir();
-                        }
-                        file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + folderName + File.separator + fileex + ".jpg");
-                        try {
-                            FileOutputStream out = new FileOutputStream(file);
-                            bitmap.compress(compressFormat, 90, out);
-                            out.flush();
-                            out.close();
-                            PATH_TEMP = file.getPath();
-                            Log.e("PATH_CROPED","-->" + PATH_TEMP);
-                            array_list_cropes.add(PATH_TEMP);
-                            array_aspect.add(ASPECT);
-                            try {
-                                Intent mediaScannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                                Uri fileContentUri = Uri.fromFile(file);
-                                mediaScannerIntent.setData(fileContentUri);
-                                getContext().sendBroadcast(mediaScannerIntent);
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + folderName);
+        if (!file.exists()) {
+            file.mkdir();
+        }
+        file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + folderName + File.separator + fileex + ".jpg");
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            bitmap.compress(compressFormat, 90, out);
+            out.flush();
+            out.close();
+            PATH_TEMP = file.getPath();
+            Log.e("PATH_CROPED","-->" + PATH_TEMP);
+            array_list_cropes.add(PATH_TEMP);
+            array_aspect.add(ASPECT);
+            try {
+                Intent mediaScannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                Uri fileContentUri = Uri.fromFile(file);
+                mediaScannerIntent.setData(fileContentUri);
+                getContext().sendBroadcast(mediaScannerIntent);
 
-                                if(CURRENT_INDEX < paths.size()-1){
-                                    if(CURRENT_INDEX==paths.size()-1){
-                                        Bundle b = new Bundle();
-                                        b.putStringArrayList("data_pahs",array_list_cropes);
-                                        b.putStringArrayList("array_aspect",array_aspect);
-                                        b.putInt("CONTAINS_A_PET",CONTAINS_A_PET);
-                                        Log.e("CONTAINS_Ay_PETssCO","-->" + CONTAINS_A_PET);
-                                        adapter.clear();
-                                        listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
-                                    }else{
-                                        CURRENT_INDEX ++;
-                                        if(CURRENT_INDEX == paths.size()-1)
-                                            crop_now_selected.setText("Finalizar");
-                                        cropLayout.setImageFilePath(paths.get(CURRENT_INDEX));
-                                    }
-
-                                }else{
-                                    if (App.read(PREFERENCES.FROM_PICKER, "PROFILE").equals("PROFILE")) {
-                                        Log.e("lkjhdfjkdsh","PROFILE");
-                                        listener_uploads.setResultForOtherChanges(array_list_cropes.get(0));
-                                    }else{
-                                        Log.e("lkjhdfjkdsh","POST");
-                                        Bundle b = new Bundle();
-                                        b.putInt("CONTAINS_A_PET",CONTAINS_A_PET);
-                                        b.putStringArrayList("data_pahs",array_list_cropes);
-                                        b.putStringArrayList("array_aspect",array_aspect);
-                                        adapter.clear();
-                                        Log.e("CONTAINS_A_xPETssCO","-->" + CONTAINS_A_PET);
-                                        listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
-                                        CURRENT_INDEX =0;
-                                    }
-                                }
-
-
-                            }catch (Exception e){
-                                Log.e("ERROR_BROADCAST",":)");
-                            }
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                            Log.e("ImageViewZoom", exception.getMessage());
-
-                        }
+                if(CURRENT_INDEX < paths.size()-1){
+                    if(CURRENT_INDEX==paths.size()-1){
+                        Bundle b = new Bundle();
+                        b.putStringArrayList("data_pahs",array_list_cropes);
+                        b.putStringArrayList("array_aspect",array_aspect);
+                        b.putInt("CONTAINS_A_PET",CONTAINS_A_PET);
+                        Log.e("CONTAINS_Ay_PETssCO","-->" + CONTAINS_A_PET);
+                        adapter.clear();
+                        listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
+                    }else{
+                        CURRENT_INDEX ++;
+                        if(CURRENT_INDEX == paths.size()-1)
+                            crop_now_selected.setText("Finalizar");
+                        cropLayout.setImageFilePath(paths.get(CURRENT_INDEX));
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Task failed with an exception
-                        // ...
+
+                }else{
+                    if (App.read(PREFERENCES.FROM_PICKER, "PROFILE").equals("PROFILE")) {
+                        Log.e("lkjhdfjkdsh","PROFILE");
+                        listener_uploads.setResultForOtherChanges(array_list_cropes.get(0));
+                    }else{
+                        Log.e("lkjhdfjkdsh","POST");
+                        Bundle b = new Bundle();
+                        b.putInt("CONTAINS_A_PET",CONTAINS_A_PET);
+                        b.putStringArrayList("data_pahs",array_list_cropes);
+                        b.putStringArrayList("array_aspect",array_aspect);
+                        adapter.clear();
+                        Log.e("CONTAINS_A_xPETssCO","-->" + CONTAINS_A_PET);
+                        listener.change_fragment_parameter(FragmentElement.INSTANCE_SHARE,b);
+                        CURRENT_INDEX =0;
                     }
-                });
+                }
+
+
+            }catch (Exception e){
+                Log.e("ERROR_BROADCAST",":)");
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            Log.e("ImageViewZoom", exception.getMessage());
+
+        }
 
     }
 

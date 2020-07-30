@@ -79,7 +79,7 @@ public class ImageService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.getExtras() != null){
+        if (intent != null){
             TYPE_NOTIFICATION = intent.getIntExtra("NOTIFICATION_TIPE", 0);
         TITLE = this.getString(R.string.completed);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,13 +41,22 @@ import com.bunizz.instapetts.utils.tabs.SlidingFragmentPagerAdapter;
 import com.bunizz.instapetts.utils.tabs.SlidingTabLayout;
 import com.bunizz.instapetts.utils.tabs.TabType;
 import com.bunizz.instapetts.utils.tabs2.SmartTabLayout;
+import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -109,36 +119,35 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
         ButterKnife.bind(this, view);
         viewpager_search.setAdapter(adapter_pager);
         tabs_search.setViewPager(viewpager_search);
-        search_input.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                searching_world.setVisibility(View.VISIBLE);
-                if(s.length()> 3){
-                    handler.removeCallbacks(workRunnable);
-                    workRunnable = () ->{
-                        if(POSITION_PAGER == 0)
-                           presenter.searchusers(search_input.getText().toString());
-                        else
-                            presenter.searchPets(search_input.getText().toString());
-                    };
-                    handler.postDelayed(workRunnable, 1000 /*delay*/);
-                }else if(s.toString().length() == 0 ){
-                    Log.e("SHOW_RECENT","SI");
-                    Fragment frag = adapter_pager.getItem(POSITION_PAGER);
-                    if(frag instanceof FragmentPetList ){
-                        ((FragmentPetList) frag).showRecent();
-                    }else{
-                        ((FragmentPopietaryList) frag).showRecent();
+        RxTextView.textChanges(search_input)
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(charSequence -> {
+                   Log.e("CHAR_SEARCH",charSequence.toString());
+                    searching_world.setVisibility(View.VISIBLE);
+                    if(charSequence.toString().length()> 3){
+                        handler.removeCallbacks(workRunnable);
+                        workRunnable = () ->{
+                            if(POSITION_PAGER == 0)
+                                presenter.searchusers(search_input.getText().toString());
+                            else
+                                presenter.searchPets(search_input.getText().toString());
+                        };
+                        handler.postDelayed(workRunnable, 1000);
+                    }else if(charSequence.toString().length() == 0 ){
+                        Log.e("SHOW_RECENT","SI");
+                        Fragment frag = adapter_pager.getItem(POSITION_PAGER);
+                        if(frag instanceof FragmentPetList ){
+                            ((FragmentPetList) frag).showRecent();
+                        }else{
+                            ((FragmentPopietaryList) frag).showRecent();
+                        }
+                        searching_world.setVisibility(View.GONE);
                     }
-                    searching_world.setVisibility(View.GONE);
-                }
-            }
-        });
+                });
+
+
 
         viewpager_search.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

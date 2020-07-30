@@ -84,103 +84,100 @@ public class ImagePostsService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        TYPE_NOTIFICATION = intent.getIntExtra("NOTIFICATION_TIPE",0);
-        if(TYPE_NOTIFICATION == 0) {
-            TITLE = "SUBIENDO POST";
-            TITLE_SUCCESS = "COMPLETADO";
-        }
-        else if(TYPE_NOTIFICATION == 1) {
-            TITLE_SUCCESS ="PERFIL ACTUALIZADO";
-            TITLE = "ACTUALIZANDO PERFIL";
-        }
-        else if(TYPE_NOTIFICATION == 2) {
-            TITLE_SUCCESS ="HISTORIA SUBIDA";
-            TITLE = "SUBIENDO HISTORIAS";
-        }
-        else if(TYPE_NOTIFICATION == 3) {
-            TITLE_SUCCESS ="MASCOTA CREADA";
-            TITLE = "CONFIGURANDO TU MASCOTA";
-            NAME_PET = intent.getStringExtra(BUNDLES.NAME_PET);
-        }
+        if(intent!=null) {
+            TYPE_NOTIFICATION = intent.getIntExtra("NOTIFICATION_TIPE", 0);
+            if (TYPE_NOTIFICATION == 0) {
+                TITLE = "SUBIENDO POST";
+                TITLE_SUCCESS = "COMPLETADO";
+            } else if (TYPE_NOTIFICATION == 1) {
+                TITLE_SUCCESS = "PERFIL ACTUALIZADO";
+                TITLE = "ACTUALIZANDO PERFIL";
+            } else if (TYPE_NOTIFICATION == 2) {
+                TITLE_SUCCESS = "HISTORIA SUBIDA";
+                TITLE = "SUBIENDO HISTORIAS";
+            } else if (TYPE_NOTIFICATION == 3) {
+                TITLE_SUCCESS = "MASCOTA CREADA";
+                TITLE = "CONFIGURANDO TU MASCOTA";
+                NAME_PET = intent.getStringExtra(BUNDLES.NAME_PET);
+            }
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_ONE_SHOT);
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        String channelId = "channel-01";
-        String channelName = "Channel Name";
-        int importance = NotificationManager.IMPORTANCE_HIGH;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel mChannel = new NotificationChannel(
-                    channelId, channelName, importance);
-            notificationManager.createNotificationChannel(mChannel);
-        }
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+            notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            String channelId = "channel-01";
+            String channelName = "Channel Name";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel mChannel = new NotificationChannel(
+                        channelId, channelName, importance);
+                notificationManager.createNotificationChannel(mChannel);
+            }
 
-        mBuilder = new NotificationCompat.Builder(getApplicationContext(), channelId);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mBuilder.setSmallIcon(R.mipmap.ic_splash_foreground)
-                    .setContentTitle(TITLE)
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent);
-        }else {
-            mBuilder.setSmallIcon(R.mipmap.ic_splash_foreground)
-                    .setContentTitle(TITLE)
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent);
-        }
+            mBuilder = new NotificationCompat.Builder(getApplicationContext(), channelId);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                mBuilder.setSmallIcon(R.mipmap.ic_splash_foreground)
+                        .setContentTitle(TITLE)
+                        .setAutoCancel(true)
+                        .setContentIntent(pendingIntent);
+            } else {
+                mBuilder.setSmallIcon(R.mipmap.ic_splash_foreground)
+                        .setContentTitle(TITLE)
+                        .setAutoCancel(true)
+                        .setContentIntent(pendingIntent);
+            }
 
-        mBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_splash_foreground));
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
-        stackBuilder.addNextIntent(intent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(
-                0,
-                PendingIntent.FLAG_UPDATE_CURRENT
-        );
-        mBuilder.setContentIntent(resultPendingIntent);
-        final ArrayList<String> key = intent.getStringArrayListExtra(INTENT_KEY_NAME);
-        TransferObserver transferObserver;
-        SIZE_OF_FILES = key.size();
-        for(int i =0;i<key.size();i++){
-            if(TYPE_NOTIFICATION ==  2){
-                file = new Compressor(this).compressToFile(new File(key.get(i)));
-            }else{
-
-                if(intent.getIntExtra(BUNDLES.POST_TYPE,0) ==1){
-                    file = new File(key.get(i));
-                    file_thumbh = new File(intent.getStringExtra(BUNDLES.PHOTO_TUMBH));
-                    String splits[] =intent.getStringExtra(BUNDLES.PHOTO_TUMBH).split("/");
-                    Log.e("NAME_DEL_TUMBH","--> 1" + intent.getStringExtra(BUNDLES.PHOTO_TUMBH).split("/"));
-                    name_file_thumbh = splits[splits.length-1];
-                    Log.e("NAME_DEL_TUMBH","--> 2" + name_file_thumbh);
-                }else{
-                    Log.e("COMPRIMO_POST","-->");
+            mBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_splash_foreground));
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+            stackBuilder.addNextIntent(intent);
+            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(
+                    0,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+            );
+            mBuilder.setContentIntent(resultPendingIntent);
+            final ArrayList<String> key = intent.getStringArrayListExtra(INTENT_KEY_NAME);
+            TransferObserver transferObserver;
+            SIZE_OF_FILES = key.size();
+            for (int i = 0; i < key.size(); i++) {
+                if (TYPE_NOTIFICATION == 2) {
                     file = new Compressor(this).compressToFile(new File(key.get(i)));
+                } else {
+
+                    if (intent.getIntExtra(BUNDLES.POST_TYPE, 0) == 1) {
+                        file = new File(key.get(i));
+                        file_thumbh = new File(intent.getStringExtra(BUNDLES.PHOTO_TUMBH));
+                        String splits[] = intent.getStringExtra(BUNDLES.PHOTO_TUMBH).split("/");
+                        Log.e("NAME_DEL_TUMBH", "--> 1" + intent.getStringExtra(BUNDLES.PHOTO_TUMBH).split("/"));
+                        name_file_thumbh = splits[splits.length - 1];
+                        Log.e("NAME_DEL_TUMBH", "--> 2" + name_file_thumbh);
+                    } else {
+                        Log.e("COMPRIMO_POST", "-->");
+                        file = new Compressor(this).compressToFile(new File(key.get(i)));
+                    }
                 }
+
+                String splits[] = key.get(i).split("/");
+                int index = splits.length;
+                String filename = "";
+                if (TYPE_NOTIFICATION == 1) {
+                    filename = App.read(PREFERENCES.UUID, "INVALID") + "/" + CONST.FOLDER_PROFILE + "/" + App.read(PREFERENCES.UUID, "INVALID") + ".jpg";
+                } else if (TYPE_NOTIFICATION == 0) {
+                    if (intent.getIntExtra(BUNDLES.POST_TYPE, 0) == 1) {
+                        filename = App.read(PREFERENCES.UUID, "INVALID") + "/" + CONST.FOLDER_POSTS + "/" + intent.getStringExtra(BUNDLES.VIDEO_ASPECT) + "/" + splits[index - 1];
+                    } else {
+                        filename = App.read(PREFERENCES.UUID, "INVALID") + "/" + CONST.FOLDER_POSTS + "/" + splits[index - 1];
+                    }
+                } else if (TYPE_NOTIFICATION == 3) {
+                    filename = App.read(PREFERENCES.UUID, "INVALID") + "/" + CONST.FOLDER_PETS + "/" + App.read(PREFERENCES.UUID, "INVALID") + NAME_PET + ".jpg";
+                } else {
+                    filename = App.read(PREFERENCES.UUID, "INVALID") + "/" + CONST.FOLDER_STORIES + "/" + splits[index - 1];
+                }
+                if (intent.getIntExtra(BUNDLES.POST_TYPE, 0) == 1) {
+                    upload_video(filename);
+                    upload_video_image_thumbh(name_file_thumbh);
+                } else
+                    upload_image(filename);
             }
 
-            String splits[] = key.get(i).split("/");
-            int index  = splits.length;
-            String filename = "";
-            if(TYPE_NOTIFICATION == 1){
-                filename =App.read(PREFERENCES.UUID,"INVALID") +"/" +  CONST.FOLDER_PROFILE  + "/" + App.read(PREFERENCES.UUID,"INVALID") + ".jpg";
-            }else if(TYPE_NOTIFICATION == 0){
-                if(intent.getIntExtra(BUNDLES.POST_TYPE,0) ==1){
-                    filename = App.read(PREFERENCES.UUID, "INVALID") + "/" + CONST.FOLDER_POSTS + "/" + intent.getStringExtra(BUNDLES.VIDEO_ASPECT) + "/" + splits[index - 1];
-                }else{
-                    filename = App.read(PREFERENCES.UUID, "INVALID") + "/" + CONST.FOLDER_POSTS +"/" + splits[index - 1];
-                }
-            }else if (TYPE_NOTIFICATION == 3){
-                filename = App.read(PREFERENCES.UUID,"INVALID") + "/" +  CONST.FOLDER_PETS + "/" + App.read(PREFERENCES.UUID,"INVALID")  +  NAME_PET + ".jpg" ;
-            }else{
-                filename =  App.read(PREFERENCES.UUID,"INVALID") + "/" +  CONST.FOLDER_STORIES + "/" +  splits[index - 1];
-            }
-            if( intent.getIntExtra(BUNDLES.POST_TYPE,0) ==1) {
-                upload_video(filename);
-                upload_video_image_thumbh(name_file_thumbh);
-            }
-            else
-            upload_image(filename);
         }
-
-
         return START_STICKY;
     }
 

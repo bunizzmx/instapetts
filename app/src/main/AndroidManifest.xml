@@ -140,9 +140,6 @@
             android:name=".services.ImagePostsService"
             android:enabled="true" />
         <service
-            android:name=".services.NotificationsService"
-            android:enabled="true" />
-        <service
             android:name=".notifications.NotificationsManagers"
             android:enabled="true">
             <intent-filter>

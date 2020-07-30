@@ -20,9 +20,14 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.login.login.FragmentLogin;
+import com.bunizz.instapetts.fragments.search.tabs.pets.FragmentPetList;
+import com.bunizz.instapetts.fragments.search.tabs.users.FragmentPopietaryList;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.web.CONST;
+import com.jakewharton.rxbinding2.widget.RxTextView;
+
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +35,7 @@ import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class FragmentFirstUser extends Fragment implements  FirstUserContract.View{
 
@@ -122,6 +128,7 @@ public class FragmentFirstUser extends Fragment implements  FirstUserContract.Vi
         return inflater.inflate(R.layout.fragment_first_user, container, false);
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -130,6 +137,23 @@ public class FragmentFirstUser extends Fragment implements  FirstUserContract.Vi
         }else{
             configure_name.setText(App.read(PREFERENCES.NAME_USER,"-"));
         }
+
+        RxTextView.textChanges(user_instapetts)
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(charSequence -> {
+                    Log.e("CHAR_SEARCH",charSequence.toString());
+                    if(charSequence.toString().trim().length() > 3) {
+                        status_icon_name_tag.setVisibility(View.GONE);
+                        label_tag_instapets.setVisibility(View.GONE);
+                        firstUserPresenter.getNameAvailable(charSequence.toString().trim());
+                    }
+                    else {
+                        label_tag_instapets.setVisibility(View.VISIBLE);
+                        label_tag_instapets.setText("Debe tener mas de 3 caracteres");
+                    }
+                });
+
 
         user_instapetts.addTextChangedListener(new TextWatcher() {
             @Override
@@ -144,15 +168,7 @@ public class FragmentFirstUser extends Fragment implements  FirstUserContract.Vi
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(user_instapetts.getText().toString().trim().length() > 3) {
-                    status_icon_name_tag.setVisibility(View.GONE);
-                    label_tag_instapets.setVisibility(View.GONE);
-                    firstUserPresenter.getNameAvailable(user_instapetts.getText().toString().trim());
-                }
-                else {
-                    label_tag_instapets.setVisibility(View.VISIBLE);
-                    label_tag_instapets.setText("Debe tener mas de 3 caracteres");
-                }
+
             }
         });
     }
