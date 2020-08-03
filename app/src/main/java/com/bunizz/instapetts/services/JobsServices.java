@@ -1,6 +1,8 @@
 package com.bunizz.instapetts.services;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -11,6 +13,9 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
@@ -30,6 +35,7 @@ import com.bunizz.instapetts.db.helpers.MyStoryHelper;
 import com.bunizz.instapetts.db.helpers.NotificationHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.web.CONST;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,6 +47,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,7 +68,7 @@ public class JobsServices {
     private ScheduledExecutorService scheduler;
     private ScheduledExecutorService scheduler_file_backup;
     private static final String TAG = "JobsServices";
-    Context context;
+    Activity context;
     FirebaseFirestore db;
     NotificationHelper notificationHelper;
     IdsUsersHelper idsUsersHelper;
@@ -72,8 +79,15 @@ public class JobsServices {
     private StorageReference storageReference;
     ArrayList<Integer> list_ids = new ArrayList<>();
     ArrayList<IndividualDataPetHistoryBean> histories= new ArrayList<>();
-    public JobsServices(Context context) {
+    RxPermissions rxPermissions ;
+    private AddressResultReceiver resultReceiver;
+    String addressOutput="";
+
+
+    public JobsServices(Activity context) {
         this.context = context;
+        rxPermissions = new RxPermissions(this.context);
+        resultReceiver = new AddressResultReceiver(new Handler());
         this.db = App.getIntanceFirestore();
         notificationHelper = new NotificationHelper(this.context);
         myStoryHelper = new MyStoryHelper(this.context);
@@ -130,6 +144,13 @@ public class JobsServices {
 
         scheduler_file_backup = Executors.newScheduledThreadPool(1);
         scheduler_file_backup.scheduleWithFixedDelay(() -> {
+
+            if(App.read(PREFERENCES.ADDRESS_USER,"INVALID").equals("INVALID") || App.read(PREFERENCES.LAT,0.0f) == 0.0f )
+                obtener_localizacion();
+            else
+                Log.e("YA_TENGO_DOMICILIO","si");
+
+
             try {
                 list_ids = idsUsersHelper.getMyFriendsForPost();
                 Log.e("CURRENT_FRIEND","-->:" + list_ids.size() + "/" + App.read(PREFERENCES.CURRENTS_FRIENDS,0));
@@ -374,4 +395,101 @@ public class JobsServices {
             }
         });
     }
+
+
+    @SuppressLint("CheckResult")
+    public void obtener_localizacion(){
+        rxPermissions
+                .request(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                .subscribe(granted -> {
+                    if (granted) {
+                        Log.e("LOCALIZACION","permitido");
+                        LocationServices.getFusedLocationProviderClient(context).getLastLocation().addOnSuccessListener(location -> {
+                            if(location!=null){
+                                Log.e("LOCALIZACION","-->" + location.getLatitude()  + "/" + location.getLongitude());
+                                App.write(PREFERENCES.LAT,(float)location.getLatitude());
+                                App.write(PREFERENCES.LON,(float)location.getLongitude());
+                                startIntentService();
+                            }else{
+                                Log.e("LOCALIZACION","ES NULA" );
+                            }
+                        })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.e("LOCALIZACION","fallo : " + e.getMessage());
+                                    }
+                                });
+                    }else{
+                        Log.e("LOCALIZACION","rechazado");
+                    }
+                });
+    }
+
+    protected void startIntentService() {
+        Intent intent = new Intent(context, FetchAddressIntentService.class);
+        intent.putExtra(CONST.RECEIVER, resultReceiver);
+        intent.putExtra(CONST.LOCATION_DATA_EXTRA_LON, App.read(PREFERENCES.LON,0f));
+        intent.putExtra(CONST.LOCATION_DATA_EXTRA_LAT, App.read(PREFERENCES.LAT,0f));
+        context.startService(intent);
+    }
+
+    class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+            String DOM_CUT="";
+            if (resultData == null) {
+                return;
+            }
+
+            // Display the address string
+            // or an error message sent from the intent service.
+            addressOutput = resultData.getString(CONST.RESULT_DATA_KEY);
+            if (addressOutput == null) {
+                addressOutput = "";
+            }
+            String splits_addres[];
+            splits_addres = addressOutput.split(",");
+            if(splits_addres.length >=3){
+                int CP=0;
+                String splits_cp[] = splits_addres[splits_addres.length-3].split(" ");
+                if(splits_cp.length >1){
+                    try {
+                        CP = Integer.parseInt(splits_cp[0]);
+                    } catch (NumberFormatException nfe){
+                        try {
+                            CP = Integer.parseInt(splits_cp[1]);
+                        }catch (NumberFormatException ex){
+                            CP = 0;
+                        }
+                    }
+                }else{
+                    CP =0 ;
+                }
+                App.write(PREFERENCES.CP,CP);
+                DOM_CUT = splits_addres [splits_addres.length-3] + " " + splits_addres[splits_addres.length-2] + " " + splits_addres[splits_addres.length-1] ;
+            }else if(splits_addres.length == 2){
+                DOM_CUT = splits_addres[splits_addres.length-2] + " " + splits_addres[splits_addres.length-1] ;
+            }
+            else if(splits_addres.length == 1){
+                DOM_CUT = splits_addres[splits_addres.length-1] ;
+            }
+            Log.e("ADDRES","OUTPUT: " + addressOutput);
+            Log.e("ADDRES","CUT: " + DOM_CUT);
+            if(!DOM_CUT.equals(R.string.no_address_found))
+                App.write(PREFERENCES.ADDRESS_USER,DOM_CUT);
+            // Show a toast message if an address was found.
+            if (resultCode == CONST.SUCCESS_RESULT) {
+                Log.e("ADDRES","ENCONTRADO");
+            }
+
+        }
+    }
+
+
 }

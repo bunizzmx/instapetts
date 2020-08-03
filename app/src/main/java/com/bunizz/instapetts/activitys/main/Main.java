@@ -75,6 +75,7 @@ import com.bunizz.instapetts.listeners.open_side_menu;
 import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.services.FetchAddressIntentService;
 import com.bunizz.instapetts.services.ImageService;
+import com.bunizz.instapetts.services.JobsServices;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
 import com.bunizz.instapetts.utils.dilogs.DialogLogout;
@@ -210,7 +211,7 @@ public class Main extends AppCompatActivity implements change_instance,
     int TYPE_FRAGMENT_PUSH = 999;
     int FROM_PUSH =0;
     Bundle b_from_push = new Bundle();
-
+    JobsServices jobsServices;
     private AddressResultReceiver resultReceiver;
 
 
@@ -292,6 +293,8 @@ public class Main extends AppCompatActivity implements change_instance,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ButterKnife.bind(this);
+        jobsServices = new JobsServices(this);
+        jobsServices.startNotificationsRequest();
         try{
         presenter = new MainPresenter(this, this);
         presenter.isAdsActive();

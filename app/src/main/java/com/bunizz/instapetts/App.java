@@ -74,7 +74,7 @@ public class App extends Application {
     private AdLoader adLoader;
     ArrayList<UnifiedNativeAd> ads = new ArrayList<>();
     private static final String AD_UNIT_ID = BuildConfig.ADS_NATIVO;
-    JobsServices jobsServices;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -91,8 +91,7 @@ public class App extends Application {
         Log.e("IDIOMA","-->" + idioma);
         write("IDIOMA",idioma);
         write(PREFERENCES.ANDROID_ID, Utilities.Md5Hash(new AndroidIdentifier(this).generateCombinationID()));
-        jobsServices = new JobsServices(this);
-        jobsServices.startNotificationsRequest();
+
          new Handler().postDelayed(() ->App.getInstance().inicializar_ads(), 2000);
     }
 

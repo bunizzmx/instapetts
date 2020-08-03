@@ -15,21 +15,21 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
-    signingConfigs {
+    /*signingConfigs {
         release {
             storeFile file("C:\\Users\\Adolfo Ponce\\Desktop\\instapetts\\instapettskeystore.jks")
             storePassword "instapetts1,.1"
             keyAlias "instapetts"
             keyPassword "instapetts1,.1"
         }
-    }
+    }*/
     buildTypes {
         release {
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable false
-            signingConfig signingConfigs.release
+          //  signingConfig signingConfigs.release
 
 
         }
@@ -37,7 +37,7 @@ android {
             shrinkResources false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-           signingConfig signingConfigs.release
+          // signingConfig signingConfigs.release
         }
     }
 
@@ -50,7 +50,7 @@ android {
             dimension "instance"
             buildConfigField 'String', 'ADS_NATIVO', '"ca-app-pub-9180706110192425/3901685678"'
             buildConfigField 'Boolean', 'DEVELOPMENT', 'false'
-            signingConfig signingConfigs.release
+            //signingConfig signingConfigs.release
         }
         development {
             versionName "1.0.0(DEBUG)"
@@ -59,7 +59,7 @@ android {
             buildConfigField 'String', 'ADS_NATIVO', '"ca-app-pub-3940256099942544/2247696110"'
             buildConfigField 'String', 'ADS_BANNERS', '"ca-app-pub-3940256099942544/6300978111"'
             buildConfigField 'Boolean', 'DEVELOPMENT', 'true'
-            signingConfig signingConfigs.release
+           // signingConfig signingConfigs.release
         }
 
     }
