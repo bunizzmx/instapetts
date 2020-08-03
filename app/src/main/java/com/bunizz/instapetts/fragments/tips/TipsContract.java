@@ -7,13 +7,13 @@ import java.util.ArrayList;
 
 public interface TipsContract {
     interface Presenter {
-
-        public void getTips();
-
+        void getTips();
+        void getMoreTips(int paginador);
     }
 
     interface View{
         void showTips(ArrayList<TipsBean> tips_list,ArrayList<PostBean> helps);
+        void showMoreTips(ArrayList<TipsBean> tips_list);
         void noInternet();
         void peticionError();
     }

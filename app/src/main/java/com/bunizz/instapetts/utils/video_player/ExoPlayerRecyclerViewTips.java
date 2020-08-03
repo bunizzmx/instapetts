@@ -145,12 +145,8 @@ public class ExoPlayerRecyclerViewTips extends RecyclerView {
             }
             @Override
             public void onChildViewDetachedFromWindow(@NonNull View view) {
-                Log.e("VIDEO_ATTACH","detached");
                 if (viewHolderParent != null && viewHolderParent.equals(view)) {
-                    Log.e("VIDEO_ATTACH","DETACH pPLAY   SI");
                     resetVideoView();
-                }else{
-                    Log.e("VIDEO_ATTACH","DETACHH pPLAY   no");
                 }
             }
         });

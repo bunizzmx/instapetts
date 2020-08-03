@@ -8,6 +8,7 @@ public class AutenticateBean {
     String name_user;
     String token;
     String target;
+    int paginador;
 
     public AutenticateBean() {
     }
@@ -45,5 +46,13 @@ public class AutenticateBean {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public int getPaginador() {
+        return paginador;
+    }
+
+    public void setPaginador(int paginador) {
+        this.paginador = paginador;
     }
 }

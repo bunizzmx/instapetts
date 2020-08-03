@@ -98,6 +98,7 @@ public class FeedPresenter implements FeedContract.Presenter {
             postFriendsBean.setIds(idsUsersHelper.getMyFriendsForPost());
             postFriendsBean.setIds_h(idsUsersHelper.getMyFriendsForPost());
         }
+        postFriendsBean.setPaginador(-999);
         disposable.add(
                 apiService.getPosts(postFriendsBean)
                         .subscribeOn(Schedulers.io())
@@ -162,7 +163,7 @@ public class FeedPresenter implements FeedContract.Presenter {
     }
 
     @Override
-    public void get_next_feed(boolean one_user, int id_one, int dias_pasados) {
+    public void get_next_feed(boolean one_user, int id_one, int paginador) {
         PostFriendsBean postFriendsBean = new PostFriendsBean();
         postFriendsBean.setPaginador(-1);
         if(one_user){
@@ -173,6 +174,7 @@ public class FeedPresenter implements FeedContract.Presenter {
             postFriendsBean.setIds(idsUsersHelper.getMyFriendsForPost());
             postFriendsBean.setIds_h(idsUsersHelper.getMyFriendsForPost());
         }
+        postFriendsBean.setPaginador(paginador);
         disposable.add(
                 apiService.getPosts(postFriendsBean)
                         .subscribeOn(Schedulers.io())
@@ -201,38 +203,19 @@ public class FeedPresenter implements FeedContract.Presenter {
                                             post.get(i).setLiked(false);
                                     }
 
-
                                     if(responsePost.getCode_response()==200) {
-                                        if(post.size()>0)
-                                            mView.show_feed(post, responsePost.getList_stories());
-                                        else {
-                                            Log.e("GET_FEED","RECOMENDED");
-                                            geet_feed_recomended(false, App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
-                                        }
-
+                                            mView.show_next_feed(post);
                                     }else{
                                         Log.e("NO_INTERNET","--> SUS AMIGOS AUN NO PUBLICAN" );
-                                        mView.show_feed_recomended(post,null);
+                                        mView.show_next_feed(post);
                                     }
-                                }  else{
-                                    RETRY ++;
-                                    if(RETRY < 3) {
-                                        mView.peticion_error();
-                                    }else{
-                                        Log.e("NO_INTERNET","--> tries alcanzados" );
-                                        mView.noInternet();
-                                    }
+                                }else{
+
                                 }
                             }
                             @Override
                             public void onError(Throwable e) {
-                                RETRY ++;
-                                if(RETRY < 3) {
-                                    mView.peticion_error();
-                                }else{
-                                    Log.e("NO_INTERNET","-->error" );
-                                    mView.noInternet();
-                                }
+
                             }
                         })
         );

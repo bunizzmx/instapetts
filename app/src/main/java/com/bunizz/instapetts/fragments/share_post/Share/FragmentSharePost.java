@@ -67,11 +67,6 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     @BindView(R.id.location_user)
     TextView location_user;
 
-    @BindView(R.id.label_contains_pet)
-    TextView label_contains_pet;
-
-
-
     @BindView(R.id.caracteres_share_post)
     TextView caracteres_share_post;
 
@@ -92,7 +87,6 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     PostBean post ;
     int DURACION =0;
     String ASPECT="";
-    int CONTAINS_A_PET =0;
     ArrayList<String> paths = new ArrayList<>();
     ArrayList<String> aspects = new ArrayList<>();
 
@@ -217,7 +211,6 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             paths.addAll(bundle.getStringArrayList("data_pahs"));
             if(bundle.getStringArrayList("array_aspect")!=null)
               aspects.addAll(bundle.getStringArrayList("array_aspect"));
-            CONTAINS_A_PET = bundle.getInt("CONTAINS_A_PET");
             is_video = bundle.getInt("is_video");
             DURACION = bundle.getInt(BUNDLES.VIDEO_DURATION,30);
             ASPECT =   bundle.getString(BUNDLES.VIDEO_ASPECT);
@@ -268,13 +261,6 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         });
 
         presenter.getLocation();
-        if(CONTAINS_A_PET == 0){
-            label_contains_pet.setVisibility(View.VISIBLE);
-            label_contains_pet.setTextColor(getContext().getResources().getColor(R.color.primary));
-            label_contains_pet.setText("TUS FOTOS NO CONTIENEN MASCOTAS POR LO QUE SRAN MENOS VISIBLES");
-        }else{
-            label_contains_pet.setVisibility(View.GONE);
-        }
     }
 
     public void refresh_list(){
@@ -283,15 +269,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             Bundle bundle=getArguments();
             paths.addAll(bundle.getStringArrayList("data_pahs"));
             aspects.addAll(bundle.getStringArrayList("array_aspect"));
-            CONTAINS_A_PET = bundle.getInt("CONTAINS_A_PET");
             adapter.setData(paths);
-            if(CONTAINS_A_PET == 0){
-                label_contains_pet.setVisibility(View.VISIBLE);
-                label_contains_pet.setTextColor(getContext().getResources().getColor(R.color.primary));
-                label_contains_pet.setText("TUS FOTOS NO CONTIENEN MASCOTAS POR LO QUE SRAN MENOS VISIBLES");
-            }else{
-                label_contains_pet.setVisibility(View.GONE);
-            }
         }
     }
 
@@ -310,7 +288,9 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     @Override
     public void showLocation(String address) {
         if(!address.equals("INVALID"))
-        location_user.setText(address);
+          location_user.setText(address);
+        else
+            location_user.setText("NO DISPONIBLE");
     }
 
     private void beginUploadInBackground(ArrayList<String> filePaths,boolean is_video) {

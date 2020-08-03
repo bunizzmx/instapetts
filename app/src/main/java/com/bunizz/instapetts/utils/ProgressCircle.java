@@ -30,11 +30,11 @@ public class ProgressCircle extends View {
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(strokeWidth);
-        paint.setColor(Color.parseColor("#C4C3C3"));
+        paint.setColor(Color.parseColor("#FFFFFF"));
         RectF rectF = new RectF();
         rectF.set(strokeWidth,strokeWidth,getWidth() - strokeWidth  ,getWidth() - strokeWidth);
         canvas.drawArc(rectF,0,360,false,paint);
-        paint.setColor(Color.parseColor("#e44652"));
+        paint.setColor(Color.parseColor("#E5E6E6"));
         canvas.drawArc(rectF,animValue,120,false,paint);
     }
     public void setValue(int animatedValue) {

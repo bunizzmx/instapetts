@@ -89,30 +89,31 @@ public class FragmentListGalery extends Fragment implements  ListGaleryContract.
     AdapterGridPosts adapter;
     private List<UnifiedNativeAd> mNativeAds = new ArrayList<>();
     public void setData_posts(ArrayList<Object> data_posts,int TYPO_FRAGMENT) {
-        Log.e("POSTSTSTSD","--->" + data_posts.size());
         this.TYPO_FRAGMENT = TYPO_FRAGMENT;
         if(data_posts !=null){
             if(data_posts.size()>0){
                 root_no_internet.setVisibility(View.GONE);
                 this.data_posts.clear();
                 this.data_posts.addAll(data_posts);
-                Log.e("SETIE_DATA_POST","--> " + data_posts.size());
                 if(adapter!=null) {
                     cirlce_progress.setVisibility(View.GONE);
                     valueAnimator.end();
                     adapter.setPosts(this.data_posts);
                 }
             }else{
+                cirlce_progress.setVisibility(View.GONE);
                 icon_no_internet.setVisibility(View.GONE);
-                title_no_internet.setText("No hay Publicaciones");
-                body_no_data.setText("Aun no hay publicaciones con esta opcion,quiza mas tarde.");
+                title_no_internet.setText(getContext().getString(R.string.no_post_title));
+                body_no_data.setText(getContext().getString(R.string.no_post_body));
                 root_no_internet.setVisibility(View.VISIBLE);
             }
         }else{
+            cirlce_progress.setVisibility(View.GONE);
             icon_no_internet.setVisibility(View.GONE);
-            title_no_internet.setText("No hay Publicaciones");
-            body_no_data.setText("Aun no hay publicaciones con esta opcion,quiza mas tarde.");
+            title_no_internet.setText(getContext().getString(R.string.no_post_title));
+            body_no_data.setText(getContext().getString(R.string.no_post_body));
             root_no_internet.setVisibility(View.VISIBLE);
+
         }
 
     }

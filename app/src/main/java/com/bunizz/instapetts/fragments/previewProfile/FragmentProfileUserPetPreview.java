@@ -410,7 +410,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         ArrayList<Object> results = new ArrayList<>();
         results.addAll(POSTS);
         if (frag instanceof FragmentPostGalery) {
-            ((FragmentPostGalery) frag).setIdUser(ID_USER_PARAMETER);
+            ((FragmentPostGalery) frag).setIdUser(ID_USER_PARAMETER,0);
             ((FragmentPostGalery) frag).setData_posts(results);
         }
     }

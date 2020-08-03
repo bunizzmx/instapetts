@@ -510,6 +510,13 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         }
 
         public void addFragment(Fragment fragment, String title) {
+            if(mFragmentList.size()==1)
+              ((FragmentPostGalery) fragment).setIdUser(App.read(PREFERENCES.ID_USER_FROM_WEB,0),1);
+            else if((mFragmentList.size()==2))
+                ((FragmentPostGalery) fragment).setIdUser(App.read(PREFERENCES.ID_USER_FROM_WEB,0),2);
+            else
+                ((FragmentPostGalery) fragment).setIdUser(App.read(PREFERENCES.ID_USER_FROM_WEB,0),0);
+
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }

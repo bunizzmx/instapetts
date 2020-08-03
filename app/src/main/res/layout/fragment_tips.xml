@@ -5,6 +5,7 @@
     android:layout_height="match_parent">
   <include layout="@layout/tollbar"/>
   <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+      android:layout_above="@+id/smoot_progress"
       android:layout_below="@+id/root_toolbar"
       android:id="@+id/refresh_tips"
       android:layout_width="match_parent"
@@ -14,6 +15,14 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"/>
   </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+  <com.bunizz.instapetts.utils.smoot.SmoothProgressBar
+      android:visibility="gone"
+      android:layout_alignParentBottom="true"
+      android:id="@+id/smoot_progress"
+      android:layout_width="match_parent"
+      android:layout_height="10dp"
+      style="@style/GNowProgressBar"
+      android:indeterminate="true"/>
   <include layout="@layout/no_internet"></include>
   <RelativeLayout
       android:id="@+id/root_loading"

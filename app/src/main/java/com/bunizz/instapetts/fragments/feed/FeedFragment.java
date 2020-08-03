@@ -45,6 +45,7 @@ import com.bunizz.instapetts.utils.loadings.SpinKitView;
 import com.bunizz.instapetts.utils.loadings.SpriteFactory;
 import com.bunizz.instapetts.utils.loadings.Style;
 import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
+import com.bunizz.instapetts.utils.smoot.SmoothProgressBar;
 import com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerView;
 import com.bunizz.instapetts.web.parameters.PostActions;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
@@ -81,6 +82,10 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     @BindView(R.id.refresh_feed)
     SwipeRefreshLayout refresh_feed;
 
+
+    @BindView(R.id.smoot_progress)
+    SmoothProgressBar smoot_progress;
+
     open_camera_histories_listener listener_open_camera_h;
      conexion_listener listener_wifi;
      IdsUsersHelper followsHelper;
@@ -92,7 +97,9 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         return new FeedFragment();
     }
     FeedPresenter mPresenter;
-
+    private boolean loading =true;
+    private boolean IS_ALL = false;
+    int PAGINADOR = -999;
 
     @OnClick(R.id.open_notifications)
     void open_notifications()
@@ -250,6 +257,36 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         else
             mPresenter.geet_feed_recomended(false, App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         mPresenter.haveNotificatiosn();
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleItemCount = recyclerView.getLayoutManager().getChildCount();
+                int totalItemCount = recyclerView.getLayoutManager().getItemCount();
+                int pastVisiblesItems = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                if (dy > 0) {
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                        if(loading){
+                            loading = false;
+                            if(IS_ALL == false) {
+                                Log.e("GENT_MORE_FEED","SI");
+                                smoot_progress.setVisibility(View.VISIBLE);
+                                mPresenter.get_next_feed(false,0,PAGINADOR);
+                            }else {
+                                smoot_progress.setVisibility(View.GONE);
+                                Log.e("GENT_MORE_FEED","NO");
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
     private RequestManager initGlide() {
         RequestOptions options = new RequestOptions();
@@ -268,9 +305,12 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     @Override
     public void show_feed(ArrayList<PostBean> data,ArrayList<HistoriesBean> data_stories) {
         Log.e("SHOW_FEED","SI");
+        loading = true;
         refresh_feed.setRefreshing(false);
-        if(data.size()>0)
+        if(data.size()>0) {
+            PAGINADOR = data.get(data.size()-1).getId_post_from_web();
             data_feed.clear();
+        }
 
         ArrayList<HistoriesBean> historiesBeans = new ArrayList<>();
         if(!mPresenter.getMyStories().getHistorias().isEmpty()){
@@ -286,7 +326,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         mRecyclerView.setMediaObjects(data_feed);
         feedAdapter.setHistoriesBeans(historiesBeans);
         if(App.getInstance().getMoreAds().size()>0)
-            insertAdsInMenuItems(true);
+            insertAdsInMenuItems(data_feed,false);
         else
             feedAdapter.addData(data_feed);
 
@@ -294,7 +334,18 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
 
     @Override
     public void show_next_feed(ArrayList<PostBean> data) {
-
+        loading =true;
+        smoot_progress.setVisibility(View.GONE);
+        if(data.size()>0) {
+            PAGINADOR = data.get(data.size()-1).getId_post_from_web();
+        }
+        ArrayList<Object> more_post = new ArrayList<>();
+        more_post.addAll(data);
+        mRecyclerView.addMoreMediaObjects(more_post);
+        if(App.getInstance().getMoreAds().size()>0)
+            insertAdsInMenuItems(more_post,true);
+        else
+            feedAdapter.addMoreFeed(more_post);
     }
 
     @Override
@@ -389,20 +440,25 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     }
 
 
-    private void insertAdsInMenuItems(boolean more) {
+    private void insertAdsInMenuItems(ArrayList<Object>  data,boolean more) {
+        ArrayList<Object> current_data = new ArrayList<>();
+        current_data.addAll(data);
         mNativeAds.clear();
         mNativeAds.addAll(App.getInstance().getMoreAds());
         if (mNativeAds.size() <= 0) { return;}
         int offset = mNativeAds.size() + 1;
         int index = 3;
         for (UnifiedNativeAd ad: mNativeAds) {
-            if(index< data_feed.size())
-                data_feed.add(index, ad);
+            if(index< current_data.size())
+                current_data.add(index, ad);
             if((offset % 2 != 0)) {}
             else{offset +=1;}
             index = index + offset;
         }
-        feedAdapter.addData(data_feed);
+        if(more)
+            feedAdapter.addMoreFeed(current_data);
+        else
+           feedAdapter.addData(current_data);
         refresh_feed.setRefreshing(false);
     }
 

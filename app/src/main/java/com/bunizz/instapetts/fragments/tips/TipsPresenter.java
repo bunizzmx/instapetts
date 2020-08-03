@@ -9,6 +9,7 @@ import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
 import com.bunizz.instapetts.web.responses.ResponsePost;
 import com.bunizz.instapetts.web.responses.ResponseTips;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -34,6 +35,7 @@ public class TipsPresenter implements TipsContract.Presenter {
         AutenticateBean autenticateBean = new AutenticateBean();
         autenticateBean.setName_user("DEMO");
         autenticateBean.setToken("xxxx");
+        autenticateBean.setPaginador(-999);
         disposable.add(
                 apiService.getTips(autenticateBean)
                         .subscribeOn(Schedulers.io())
@@ -63,6 +65,32 @@ public class TipsPresenter implements TipsContract.Presenter {
                                     mView.noInternet();
                                 }
                             }
+                        })
+        );
+    }
+
+    @Override
+    public void getMoreTips(int paginador) {
+        AutenticateBean autenticateBean = new AutenticateBean();
+        autenticateBean.setName_user("DEMO");
+        autenticateBean.setToken("xxxx");
+        autenticateBean.setPaginador(paginador);
+        disposable.add(
+                apiService.getTips(autenticateBean)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<ResponseTips>() {
+                            @Override
+                            public void onSuccess(ResponseTips responsePost) {
+                                if(responsePost.getCode_response()==200) {
+                                    mView.showMoreTips(responsePost.getList_tips());
+                                }else{
+                                    mView.showMoreTips(responsePost.getList_tips());
+                                }
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                             }
                         })
         );
     }

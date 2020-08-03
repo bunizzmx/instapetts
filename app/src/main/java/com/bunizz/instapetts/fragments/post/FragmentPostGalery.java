@@ -59,7 +59,7 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
 
     int PAGINADOR = -999;
     int ID_USER = -999;
-
+    int FILTER = 0;
 
     public void setData_posts(ArrayList<Object> data_posts) {
         IS_ALL = false;
@@ -93,8 +93,9 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
 
     }
 
-    public void setIdUser(int id){
+    public void setIdUser(int id,int filter){
         ID_USER = id;
+        FILTER= filter;
     }
 
 
@@ -237,8 +238,8 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
                         if(loading){
                             loading = false;
                             if(IS_ALL == false) {
-                                Log.e("DONWLOAD_MORE_COMMENTS","SI");
-                                presenter.getMorePost(3,PAGINADOR,ID_USER);
+                                Log.e("DONWLOAD_MORE_COMMENTS","SI : " + FILTER);
+                                presenter.getMorePost(3,PAGINADOR,ID_USER,FILTER);
                             }else {
                                 Log.e("DONWLOAD_MORE_COMMENTS","NO");
                             }

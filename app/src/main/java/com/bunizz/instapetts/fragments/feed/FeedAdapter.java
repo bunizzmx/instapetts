@@ -181,6 +181,12 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         notifyDataSetChanged();
     }
 
+    public void addMoreFeed(ArrayList<Object> data){
+        int index = this.data.size();
+        this.data.addAll(data);
+        notifyItemInserted(index);
+    }
+
     @Override
     public int getItemViewType(int position) {
         Object recyclerViewItem = data.get(position);

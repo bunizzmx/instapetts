@@ -106,6 +106,12 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         notifyDataSetChanged();
     }
 
+    public void setMoreTips(ArrayList<Object> data){
+        int index = this.data.size() ;
+        this.data.addAll(data);
+        notifyItemInserted(index);
+    }
+
     public TipsAdapter(Context context) {
         this.context = context;
     }

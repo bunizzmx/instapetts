@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public interface PostGaleryContract {
 
     interface Presenter {
-        void getMorePost(int type_Search,int paginador,int id_usuario);
+        void getMorePost(int type_Search,int paginador,int id_usuario,int filter);
         void likePost(PostActions postActions);
         void saveFavorite(PostActions postActions, PostBean postBean);
     }

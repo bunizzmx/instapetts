@@ -304,4 +304,6 @@
     <string name="no_wifi">Revisa tu conexion</string>
     <string name="refreshed">Actualizado</string>
     <string name="pet_list">Lista de mascotas</string>
+    <string name="no_post_title">No hay Publicaciones</string>
+    <string name="no_post_body">"Aun no hay publicaciones con esta opcion,quiza mas tarde.</string>
 </resources>

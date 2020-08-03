@@ -147,11 +147,8 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             }
             @Override
             public void onChildViewDetachedFromWindow(@NonNull View view) {
-                Log.e("VIDEO_ATTACH","detached");
                 if (viewHolderParent != null && viewHolderParent.equals(view)) {
                     resetVideoView();
-                }else{
-
                 }
             }
         });
@@ -403,6 +400,9 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     }
     public void setMediaObjects(ArrayList<Object> mediaObjects) {
         this.mediaObjects = mediaObjects;
+    }
+    public void addMoreMediaObjects(ArrayList<Object> mediaObjects) {
+        this.mediaObjects.addAll(mediaObjects);
     }
     /**
      * Volume ENUM
