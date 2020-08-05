@@ -62,13 +62,16 @@ public class ProfileUserPresenter implements   ProfileUserContract.Presenter {
                                         if(RETRY < 3){
                                             RETRY ++;
                                             mView.Error();
-                                        }
+                                        }else
+                                            mView.ErrorPostUsers();
                                     }
                                 }else{
                                     if(RETRY < 3){
                                         RETRY ++;
                                         mView.Error();
-                                    }
+                                    }else
+                                        mView.ErrorPostUsers();
+
                                 }
                             }
                             @Override
@@ -77,6 +80,8 @@ public class ProfileUserPresenter implements   ProfileUserContract.Presenter {
                                     RETRY ++;
                                     mView.Error();
                                 }
+                                else
+                                    mView.ErrorPostUsers();
                                 //mView.showInfoUser(info.getData_user(),info.getPetsUser(),info.getPostsUser());
                             }
                         }));

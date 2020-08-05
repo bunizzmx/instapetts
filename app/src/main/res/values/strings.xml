@@ -181,7 +181,7 @@
     <string name="mail">Correo</string>
     <string name="login">Entrar</string>
     <string name="register_account">Crear tu cuenta</string>
-    <string name="login_or">Entrar o registrarce con</string>
+    <string name="login_or"> o entrar con</string>
     <string name="register">Registrarte</string>
 
 <string name="tip_import">Tip Reelevante</string>

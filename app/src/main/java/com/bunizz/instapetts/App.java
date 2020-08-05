@@ -390,7 +390,6 @@ public class App extends Application {
 
 
     public static Date StringToDate(String fecha, String caracter, int op){
-        Log.e("FORMAT_DATE_CONVERTIR","--->ccc" +fecha);
         String formatoHora=" HH:mm:ss";
         String formato="yyyy"+caracter+"MM"+caracter+"dd"+formatoHora;
         if(op==1)

@@ -246,7 +246,7 @@ public class FeedPresenter implements FeedContract.Presenter {
     public void geet_feed_recomended(boolean one_user, int id_one) {
         PostFriendsBean postFriendsBean = new PostFriendsBean();
         postFriendsBean.setId_one(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
-         postFriendsBean.setTarget(WEBCONSTANTS.DISCOVER);
+         postFriendsBean.setTarget(WEBCONSTANTS.DISCOVER_RECOMENDED);
         disposable.add(
                 apiService.getPostsRecomended(postFriendsBean)
                         .subscribeOn(Schedulers.io())
@@ -255,8 +255,6 @@ public class FeedPresenter implements FeedContract.Presenter {
                             @Override
                             public void onSuccess(ResponsePostRecomended responsePost) {
                                 if(responsePost.getList_posts()!=null) {
-                                    if(responsePost.getList_posts()!=null)
-                                        Log.e("NUMBER_POSTS_RECOMENDED", "-->" + responsePost.getList_users().size());
                                     ArrayList<PostBean> post = new ArrayList<>();
                                     ArrayList<UserBean>users = new ArrayList<>();
                                     for (int i =0;i<responsePost.getList_posts().size();i++){
@@ -270,22 +268,11 @@ public class FeedPresenter implements FeedContract.Presenter {
                                     }
 
                                     mView.show_feed_recomended(post,users);
-                                }  else{
-                                    RETRY ++;
-                                    if(RETRY < 3) {
-                                        mView.peticion_error();
-                                    }
                                 }
                             }
                             @Override
                             public void onError(Throwable e) {
-                                RETRY ++;
-                                if(RETRY < 3) {
-                                    mView.peticion_error();
-                                }else{
-                                    Log.e("NUMBER_POSTS","-->EROR : " + e.getMessage());
-                                }
-
+                                mView.noInternet();
                             }
                         })
         );

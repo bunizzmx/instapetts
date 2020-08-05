@@ -1,20 +1,23 @@
 package com.bunizz.instapetts.beans;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import org.parceler.Parcel;
 
 @Parcel
 public class CommentariosBean {
 
-    String commentario;
-    String fecha_comentario;
-    String name_user;
-    String foto_user;
-    int id_user;
-    int id_post;
-    boolean is_liked;
-    int likes;
-    String id_document;
-    int helps_post;
+    public  String commentario;
+    public String fecha_comentario;
+    public String name_user;
+    public String foto_user;
+    public int id_user;
+    public int id_post;
+    public boolean is_liked;
+    public int likes;
+    public String id_document;
+    public int helps_post;
 
     public CommentariosBean() {
     }

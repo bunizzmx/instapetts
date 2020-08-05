@@ -147,8 +147,6 @@ public class JobsServices {
 
             if(App.read(PREFERENCES.ADDRESS_USER,"INVALID").equals("INVALID") || App.read(PREFERENCES.LAT,0.0f) == 0.0f )
                 obtener_localizacion();
-            else
-                Log.e("YA_TENGO_DOMICILIO","si");
 
 
             try {

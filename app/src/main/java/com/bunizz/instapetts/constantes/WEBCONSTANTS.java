@@ -2,6 +2,7 @@ package com.bunizz.instapetts.constantes;
 
 public interface WEBCONSTANTS {
     String DISCOVER = "DISCOVER";
+    String DISCOVER_RECOMENDED = "DISCOVER_RECOMENDED";
     String MORE_VIEWS ="MORE_VIEWS";
     String RECENT ="RECENT";
     String UPDATE ="UPDATE";

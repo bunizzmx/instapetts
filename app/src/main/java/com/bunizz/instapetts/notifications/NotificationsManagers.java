@@ -65,17 +65,18 @@ public class NotificationsManagers extends FirebaseMessagingService {
         notificationBean.setUrl_resource(url_resource);
         notificationBean.setUrl_image_extra(url_extra);
         notificationHelper.saveNotification(notificationBean);
+        if(notificationBean.getId_usuario()!=App.read(PREFERENCES.ID_USER_FROM_WEB,0)) {
 
-        switch (notificationBean.getType_notification()){
-            case 0:
-                if(App.read(PREFERENCES.PUSH_ME_GUSTAS,true))
-                    buil_notification_image(title,body,notificationBean);
-                else
-                    buil_notification_image(title,body,notificationBean);
-                break;
+            switch (notificationBean.getType_notification()) {
+                case 0:
+                    if (App.read(PREFERENCES.PUSH_ME_GUSTAS, true))
+                        buil_notification_image(title, body, notificationBean);
+                    else
+                        buil_notification_image(title, body, notificationBean);
+                    break;
+            }
+            buil_notification_image(title, body, notificationBean);
         }
-        buil_notification_image(title,body,notificationBean);
-      //  crateec();
     }
 
     @Override

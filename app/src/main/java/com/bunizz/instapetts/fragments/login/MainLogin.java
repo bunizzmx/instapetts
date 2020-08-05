@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +55,12 @@ public class MainLogin extends Fragment implements  MainLoginContract.View{
 
     @BindView(R.id.login_with_facebook)
     LoginButton login_with_facebook;
+
+    @BindView(R.id.see_password)
+    ImageView see_password;
+
+
+    boolean SHOW_PASS =true;
 
 
     @OnClick(R.id.login_with_gmail)
@@ -115,10 +123,26 @@ public class MainLogin extends Fragment implements  MainLoginContract.View{
                 Log.e("ACCES_TOKENN","-->ERROR:"+ exception.getMessage());
             }
         });
+
+        see_password.setOnClickListener(v -> {
+            if(SHOW_PASS){
+                SHOW_PASS = false;
+            }else{
+                SHOW_PASS = true;
+            }
+            if(SHOW_PASS){
+                password_email.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                see_password.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_invisible));
+            }else{
+                see_password.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_visible));
+                password_email.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            }
+            password_email.setSelection(password_email.getText().length());
+        });
+
     }
 
     public void setData(int requestCode, int resultCode, Intent data){
-        Log.e("ACTIVITY_RESULT","SET DATA LOGIN 2");
         mCallbackManager.onActivityResult(requestCode,resultCode,data);
     }
 

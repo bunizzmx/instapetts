@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <string name="app_admob">ca-app-pub-9180706110192425~6738219117</string>
+        <string name="facebook_app_id">3028016427294198</string>
+        <string name="fb_login_protocol_scheme">fb3028016427294198</string>
+
+
+        <string name="app_name">Instapetts</string>
+        <string name="config">Configurar</string>
+        <string name="next">Next</string>
+        <string name="exit">Exit</string>
+        <string name="acept_next">Accept</string>
+
+        <string name="counter_label_text_constructor" formatted="false">%s%s%s%s</string>
+        <string name="text_imagepicker_album_all_key">all</string>
+
+        <string name="permision_storage">Required Storage Permits</string>
+        <string name="permision_storage_body">To improve the experience in Instapetts we need your permission to access your storage.</string>
+        <string name="text_imagepicker_permission_denied_external_storage">Please grant the permission to show media.</string>
+
+
+        <string name="pet_type_dog">Dog</string>
+        <string name="pet_type_cat">Cat</string>
+        <string name="pet_type_ave">Bird</string>
+        <string name="pet_type_conejo">Rabbit</string>
+        <string name="pet_type_hamster">Hamster</string>
+        <string name="reptil">Reptile</string>
+        <string name="pet_type_otro">Other</string>
+
+        <string name="edit_profile">Edit profile</string>
+
+        <array name="funny_colors">
+            <item>#E63131</item>
+            <item>#FDFDFD</item>
+            <item>#E91E63</item>
+            <item>#FBFAFA</item>
+        </array>
+
+        <integer-array name="gplus_colors">
+            <item>@color/primary</item>
+            <item>@color/colorPrimaryDark</item>
+            <item>@color/primary</item>
+            <item>@color/colorPrimaryDark</item>
+        </integer-array>
+
+        <integer-array name="gplus_colors_white">
+            <item>@color/primary</item>
+            <item>@color/white</item>
+            <item>@color/primary</item>
+            <item>@color/white</item>
+        </integer-array>
+
+        <array name="white_colors">
+            <item>@color/white</item>
+            <item>E63131</item>
+            <item>@color/white</item>
+            <item>@color/white</item>
+        </array>
+
+
+        <string name="capture_button_alt">Capture</string>
+        <string name="switch_camera_button_alt">Switch camera</string>
+        <string name="gallery_button_alt">Gallery</string>
+        <string name="back_button_alt">Back</string>
+        <string name="share_button_alt">Share</string>
+        <string name="share_hint">Share using</string>
+        <string name="capture_mode_camera">Camera</string>
+        <string name="capture_mode_hdr">HDR</string>
+        <string name="capture_mode_night">Night</string>
+        <string name="delete_button_alt">Eliminar</string>
+        <string name="delete_dialog">Delete current photo?</string>
+        <string name="delete_title">Confirm</string>
+
+
+
+        <string name="title_activity_scan_qr_code">Scan</string>
+        <string name="qc_code_close">Close</string>
+        <string name="qr_code_select_picture">Picture</string>
+        <string name="qr_code_open_flash_light">Open flash light</string>
+        <string name="qr_code_close_flash_light">Close Flash Light</string>
+        <string name="qr_code_auto_scan_notification">Position QR Code</string>
+        <string name="qr_code_notification">Notification</string>
+        <string name="qr_code_camera_not_open">Could not open your camera</string>
+        <string name="qr_code_positive_button_know">OK</string>
+        <string name="qr_code_positive_button_confirm">Confirm</string>
+        <string name="qr_code_could_not_read_qr_code_from_picture">Could not read your image.Try another image~</string>
+        <string name="qr_code_could_not_read_qr_code_from_scanner">Sorry, could not open scan content</string>
+        <string name="qr_code_camera_not_found">Could not detect camera</string>
+
+
+
+        <string name="cancel">Cancel</string>
+        <string name="save">Save</string>
+        <string name="Ok">Ok</string>
+        <string name="short_seconds">sec</string>
+        <string name="megabyte">MB</string>
+        <string name="kilobyte">KB</string>
+
+
+        <string name="label_select_video">Select Video</string>
+        <string name="permission_title_rationale">Permission needed</string>
+        <string name="permission_read_storage_rationale">Storage read permission is needed to pick files.</string>
+        <string name="toast_cannot_retrieve_selected_video">Cannot retrieve selected video</string>
+        <string name="video_saved_at">Video saves at : $%1s</string>
+        <string name="title_description">A library with UI and mechanisms to trim local videos on Android applications</string>
+        <string name="description_app">
+            # Provide UI to preview and select start/end of the video to trim
+        \n\n# Thumbnails with frame by frame overview of the video
+        \n\n# Works with gallery and recorded videos
+    </string>
+        <string name="pick_a_video">Select or record a a video below to try it out:</string>
+        <string name="trimming_progress">Trimming your video...</string>
+        <string name="video_shoot_tip">Drag to select the segment within %d second that you want to post！</string>
+
+
+
+
+        <string name="users">Users</string>
+        <string name="pets">Pets</string>
+        <string name="search">Search...</string>
+
+        <string name="nav_home">Home</string>
+        <string name="nav_tips">Tips</string>
+        <string name="nav_search">Search</string>
+        <string name="nav_perfil">Profile</string>
+
+
+        <string name="intro_title_1">Son especiales y lo sabemos</string>
+        <string name="intro_body_1">Por eso desarrollamos Instapetts para ustedes, aquellos que aman a sus mascotas</string>
+
+        <string name="intro_title_2">Recordar es vivir</string>
+        <string name="intro_body_2">Ellos solo estarán un momento en nuestras vidas, demuestra lo feliz que las puedes hacer estando contigo.</string>
+
+        <string name="intro_title_3">Siempre para ti</string>
+        <string name="intro_body_3">Instapetts siempre estará para ustedes, inmortaliza los momentos, vive instantes únicos y muéstranos las mejores risas con tus mascotas.</string>
+
+        <string name="chose_photo">Choose a photo</string>
+        <string name="write_name">Write your name...</string>
+        <string name="write_description">write something about you...</string>
+
+        <string name="label_config_user">Set up your username</string>
+
+        <string name="no_geocoder_available">No geocoder disponible</string>
+        <string name="no_address_found">Algun lugar del mundo</string>
+        <string name="address_found">Adrees</string>
+        <string name="service_not_available">Servicio no disponible</string>
+        <string name="invalid_lat_long_used">Invalid LAT LON</string>
+
+
+
+        <string name="ucrop_label_original">Original</string>
+        <string name="ucrop_label_edit_photo">Edit Photo</string>
+
+        <string name="ucrop_menu_crop">Crop</string>
+
+        <string name="ucrop_error_input_data_is_absent" translatable="false">Both input and output Uri must be specified</string>
+        <string name="ucrop_mutate_exception_hint" translatable="false">Therefore, override color resource (ucrop_color_toolbar_widget) in your app to make it work on pre-L devices</string>
+        <string name="ucrop_rotate">Rotate</string>
+        <string name="ucrop_scale">Scale</string>
+        <string name="ucrop_crop">Crop</string>
+
+        <string name="default_time">00:00</string>
+        <string name="custom">Custom</string>
+        <string name="square">Square</string>
+        <string name="portrait">Portrait</string>
+        <string name="landscape">Landscape</string>
+        <string name="_4_3">4:3</string>
+        <string name="_16_9">16:9</string>
+
+
+
+
+        <string name="pager_discover">Discover</string>
+        <string name="pager_more_views">Lo más visto</string>
+        <string name="pager_adorable">Adorables</string>
+        <string name="pager_recent">The most recent</string>
+
+
+        <string name="password">Password</string>
+        <string name="confirm_password">Confirm Password</string>
+        <string name="no_account">You do not have an account?</string>
+        <string name="mail">Email</string>
+        <string name="login">Get in</string>
+        <string name="register_account">Create your account</string>
+        <string name="login_or"> or enter with</string>
+        <string name="register">Sign up</string>
+
+        <string name="tip_import">Relevant Tip</string>
+        <string name="tips_notice">Tips and News</string>
+        <string name="cosas_interesantes">Interesting stuff</string>
+
+        <string name="month">months</string>
+        <string name="months">month</string>
+        <string name="day">days</string>
+        <string name="days">day</string>
+        <string name="year">years</string>
+        <string name="years">year</string>
+        <string name="week">weeks</string>
+        <string name="weeks">week</string>
+        <string name="hour">hour</string>
+        <string name="hours">hours</string>
+        <string name="now">Just now</string>
+        <string name="minute"> minute</string>
+        <string name="minutes"> minutes</string>
+        <string name="hace">Hace</string>
+        <string name="first_like">Be the first to like it</string>
+        <string name="first_comment">"Be the first to comment on this post."</string>
+        <string name="no_commnets">No comments yet.</string>
+        <string name="notifications">Notifications</string>
+        <string name="you_history">Your history</string>
+
+
+        <!-- STEPPS /////////////////////////////////////////-->
+        <string name="add_pet">Add a pet</string>
+        <string name="config_pet_step">Set up your first pet to start sharing content.</string>
+
+        <string name="add_first_photo">Let\'s go for your first photo!</string>
+        <string name="config_fist_foto">With a ready pet, you can start uploading content.</string>
+
+        <string name="firt_follow_pets">Most recent publications...</string>
+
+        <string name="account">Account</string>
+        <string name="saved">Saved</string>
+        <string name="post_saved">Saved posts</string>
+
+        <string name="share_profile">Share your profile</string>
+        <string name="share">Share</string>
+        <string name="your_identity">Your id</string>
+        <string name="administrate_account">Manage your account</string>
+        <string name="general">General</string>
+
+
+        <string name="center_help">Centro de Hayuda</string>
+
+        <string name="terms">Terms of use</string>
+
+        <string name="politicas_privacy">Privacy policy</string>
+
+        <string name="close_session">Close session</string>
+
+        <string name="post_private">Post Privados</string>
+        <string name="favorite">Favorites</string>
+
+        <string name="post">Posts</string>
+        <string name="new_post">New Publication</string>
+
+        <string name="full_comments">Are all comments</string>
+        <string name="likes"> like</string>
+
+
+        <!-- STRING FOR PUSH /////////////////// -->
+        <string name="title_follow">new like</string>
+        <string name="body_follow"> he liked your post!!!</string>
+
+        <string name="title_comment">New comment</string>
+        <string name="body_comment">  commented on your publication, see what it is about!!!</string>
+
+        <string name="Followed">Followed</string>
+        <string name="followers">Followers</string>
+        <string name="delete_pet_title">Do you want to delete your pet?</string>
+        <string name="delete_pet_body">Recuerda que los perfiles y contenido de tu mascota son tus recuerdos que siempre estaran disponibles para ti en Instappets no necesitas eliminarla definitivamente.</string>
+
+        <string name="people_like_this">people like this</string>
+
+        <string name="no_sigues">You still don\'t follow anyone</string>
+
+        <string name="completed">COMPLETED</string>
+
+        <string name="no_recent_search_title">No recent searches</string>
+        <string name="no_recent_search_body">No hay busquedas recientes, empieza por buscar a un usuario o mascota de tu preferencia.</string>
+
+        <string name="me_gusta">I like it</string>
+
+        <string name="instapetts_tips">INSTAPETS TIP</string>
+
+        <string name="no_saved_post_title">You have nothing saved.</string>
+        <string name="no_saved_post_body">Los posts que guardes apareceran en esta sección.</string>
+
+        <string name="censored_post">This post is under review</string>
+
+        <string name="recomendacion_label">Pet tips</string>
+        <string name="notice">News</string>
+
+        <string name="delete_history">Delete this story?</string>
+
+        <string name="correo_invalido">Invalid email</string>
+        <string name="error_credenciales">Check your credentials</string>
+        <string name="user_no_existe">User does not exist</string>
+        <string name="verify_email">Check your email</string>
+
+        <string name="body_no_noty">Cuando alguien te siga,comente o publique algo nuevo apareceran notificaciones en este apartado.</string>
+        <string name="title_no_noty">No notifications yet</string>
+        <string name="help_pet">PET IN TROUBLE</string>
+        <string name="calificacion_pet">Pets rating</string>
+
+
+        <string name="ver"> See </string>
+        <string name="comentarios">comments</string>
+        <string name="video"> Video </string>
+
+        <string name="unfollow_user">Unfollow</string>
+        <string name="follow_user">Follow</string>
+        <string name="in_progress">In progress...</string>
+
+        <string name="no_wifi">Check your connection</string>
+        <string name="refreshed">Updated</string>
+        <string name="pet_list">Pet Lists</string>
+        <string name="no_post_title">No Publications</string>
+        <string name="no_post_body">"Aun no hay publicaciones con esta opcion,quiza mas tarde.</string>
+    </resources>

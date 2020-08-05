@@ -70,14 +70,23 @@
         <activity
             android:name=".activitys.PlayVideo.PlayVideoActivity"
             android:configChanges="keyboardHidden|orientation" />
-        <activity android:name=".utils.videoCrop.VideoCropActivity" />
-        <activity android:name=".activitys.side_menus_activities.SideMenusActivities" />
-        <activity android:name=".activitys.intro.IntroActivity" />
-        <activity android:name=".activitys.login.LoginActivity" />
+        <activity android:name=".utils.videoCrop.VideoCropActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activitys.side_menus_activities.SideMenusActivities"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activitys.intro.IntroActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activitys.login.LoginActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activitys.main.Main"
             android:windowSoftInputMode="adjustPan"
-            android:screenOrientation="fullSensor">
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -121,18 +130,26 @@
         </activity>
         <activity
             android:name=".activitys.wizardPets.WizardPetActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <activity android:name=".activitys.story_player.StoryPlayer" />
         <activity
             android:name=".activitys.share_post.ShareActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activitys.camera_history.CameraHistoryActivity"
-            android:screenOrientation="fullUser"
-            android:rotationAnimation="seamless" />
-        <activity android:name=".activitys.reports.ReportActiviy" />
-        <activity android:name=".activitys.searchqr.QrSearchActivity" />
-<activity android:name=".activitys.PlayVideo.PlayVideoActivity2"></activity>
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".activitys.reports.ReportActiviy"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activitys.searchqr.QrSearchActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"/>
         <service
             android:name=".services.ImageService"
             android:enabled="true" />

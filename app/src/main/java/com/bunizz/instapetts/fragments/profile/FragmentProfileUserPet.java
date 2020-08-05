@@ -304,7 +304,6 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         spinky_loading_profile_info.setIndeterminateDrawable(drawable);
         spinky_loading_profile_info.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         loanding_preview_root.setVisibility(View.VISIBLE);
-        root_info_ptofile.setVisibility(View.GONE);
         title_toolbar.setText(App.read(PREFERENCES.NAME_USER,"USUARIO"));
         name_property_pet.setText("@" + App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"USUARIO"));
             follow_edit.setText(R.string.edit_profile);
@@ -316,6 +315,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         Glide.with(getContext()).load(URL_UPDATED)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
+                .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
                 .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
 
         presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0),POSITION_PAGER);
@@ -360,6 +360,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
             Glide.with(getContext()).load(url)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
+                    .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
                     .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
         }
     }
@@ -417,6 +418,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         Glide.with(getContext()).load(USERBEAN.getPhoto_user())
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
+                .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
                 .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
         Log.e("REFRESH_MY_PETS","-->2" + PETS.size());
         petsPropietaryAdapter.setPets(PETS);
@@ -482,7 +484,9 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
 
     @Override
     public void ErrorPostUsers() {
-       // refresh_profile.setRefreshing(false);
+        refresh_profile.setRefreshing(false);
+        loanding_preview_root.setVisibility(View.GONE);
+        listener_conexion.noWifiRequest();
     }
 
     @Override
@@ -510,13 +514,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         }
 
         public void addFragment(Fragment fragment, String title) {
-            if(mFragmentList.size()==1)
-              ((FragmentPostGalery) fragment).setIdUser(App.read(PREFERENCES.ID_USER_FROM_WEB,0),1);
-            else if((mFragmentList.size()==2))
-                ((FragmentPostGalery) fragment).setIdUser(App.read(PREFERENCES.ID_USER_FROM_WEB,0),2);
-            else
-                ((FragmentPostGalery) fragment).setIdUser(App.read(PREFERENCES.ID_USER_FROM_WEB,0),0);
-
+            ((FragmentPostGalery) fragment).setListener_pager(() -> POSITION_PAGER);
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }

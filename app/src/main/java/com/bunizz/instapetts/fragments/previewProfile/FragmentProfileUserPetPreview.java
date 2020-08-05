@@ -41,6 +41,7 @@ import com.bunizz.instapetts.fragments.profile.ProfileUserContract;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.folowFavoriteListener;
+import com.bunizz.instapetts.listeners.get_current_pager_listener;
 import com.bunizz.instapetts.listeners.open_sheet_listener;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.dilogs.DialogPreviewImage;
@@ -49,6 +50,7 @@ import com.bunizz.instapetts.utils.loadings.SpriteFactory;
 import com.bunizz.instapetts.utils.loadings.Style;
 import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
 import com.bunizz.instapetts.utils.tabs2.SmartTabLayout;
+import com.facebook.places.model.CurrentPlaceRequestParams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -228,6 +230,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         });
         list_pets_propietary.setAdapter(petsPropietaryAdapter);
         viewpager_profile.setAdapter(adapter_pager);
+        viewpager_profile.setOffscreenPageLimit(1);
         viewpager_profile.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -241,10 +244,11 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
                 if (frag instanceof FragmentPostGalery) {
                     if(!((FragmentPostGalery) frag).isDataAdded()) {
                         Log.e("DATOS_CARGADOS","YA_CARGUE_DATOS_AQUI : " + POSITION_PAGER);
-                        presenter.getPostUser(true, userBean.getId(), POSITION_PAGER);
+                        presenter.getPostUser(true, ID_USER_PARAMETER, POSITION_PAGER);
                     }
-                    else
-                        Log.e("DATOS_CARGADOS","YA_CARGUE_DATOS_AQUI");
+                    else {
+                        Log.e("DATOS_CARGADOS", "YA_CARGUE_DATOS_AQUI" + POSITION_PAGER);
+                    }
                 }
             }
 
@@ -410,7 +414,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         ArrayList<Object> results = new ArrayList<>();
         results.addAll(POSTS);
         if (frag instanceof FragmentPostGalery) {
-            ((FragmentPostGalery) frag).setIdUser(ID_USER_PARAMETER,0);
+            ((FragmentPostGalery) frag).setIdUser(ID_USER_PARAMETER);
             ((FragmentPostGalery) frag).setData_posts(results);
         }
     }
@@ -471,6 +475,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         }
 
         public void addFragment(Fragment fragment, String title) {
+            ((FragmentPostGalery) fragment).setListener_pager(() -> POSITION_PAGER);
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }

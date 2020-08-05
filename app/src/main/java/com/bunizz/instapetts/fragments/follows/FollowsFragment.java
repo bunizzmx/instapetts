@@ -45,15 +45,9 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
     public static FollowsFragment newInstance() {
         return new FollowsFragment();
     }
-    String ID_PET="";
-    String NAME_PET="";
-    PetHelper petHelper;
-    PetBean petBean;
     String name_user;
     int id_user=0;
     String uuid="";
-    ArrayList<UserBean> userBeans = new ArrayList<>();
-
     @BindView(R.id.list_follows)
     RecyclerView list_follows;
 
@@ -160,10 +154,10 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
                             loading = false;
                             if(IS_ALL == false) {
                                 loanding_more_users.setVisibility(View.VISIBLE);
-                                Log.e("DONWLOAD_MORE_COMMENTS","SI");
+                                Log.e("DOWNLOAD_ORE_FOLLOWERS","SI");
                                 presenter.nextFollowers();
                             }else {
-                                Log.e("DONWLOAD_MORE_COMMENTS","NO");
+                                Log.e("DOWNLOAD_ORE_FOLLOWERS","NO");
                             }
                         }
                     }

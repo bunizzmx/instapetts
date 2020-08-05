@@ -27,6 +27,7 @@ import com.bunizz.instapetts.fragments.tips.adapters.TipsAdapter;
 import com.bunizz.instapetts.listeners.PlayStopVideoListener;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.conexion_listener;
 import com.bunizz.instapetts.utils.loadings.SpinKitView;
 import com.bunizz.instapetts.utils.loadings.SpriteFactory;
 import com.bunizz.instapetts.utils.loadings.Style;
@@ -50,7 +51,7 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
     TipsAdapter adapter;
     TipsPresenter presenter;
     ArrayList<Object> data = new ArrayList<>();
-
+    conexion_listener listener_wifi;
     @BindView(R.id.root_loading)
     RelativeLayout root_loading;
 
@@ -167,6 +168,7 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
         super.onAttach(context);
         listener= (change_instance) context;
         listener_change= (changue_fragment_parameters_listener) context;
+        listener_wifi =(conexion_listener) context;
     }
 
     @Override
@@ -201,6 +203,7 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
         refresh_tips.setRefreshing(false);
         root_loading.setVisibility(View.GONE);
         root_no_internet.setVisibility(View.VISIBLE);
+        listener_wifi.noWifiRequest();
     }
 
     private RequestManager initGlide() {

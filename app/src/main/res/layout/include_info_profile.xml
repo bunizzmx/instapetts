@@ -5,6 +5,7 @@
     android:id="@+id/root_info_profile_include"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="200dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 

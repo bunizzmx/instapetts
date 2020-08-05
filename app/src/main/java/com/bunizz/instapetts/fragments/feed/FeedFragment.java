@@ -82,6 +82,8 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     @BindView(R.id.refresh_feed)
     SwipeRefreshLayout refresh_feed;
 
+    boolean IS_FEED_RECOMENDED = false;
+
 
     @BindView(R.id.smoot_progress)
     SmoothProgressBar smoot_progress;
@@ -272,17 +274,19 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
                 int pastVisiblesItems = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
                 if (dy > 0) {
                     if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                        if(loading){
-                            loading = false;
-                            if(IS_ALL == false) {
-                                Log.e("GENT_MORE_FEED","SI");
-                                smoot_progress.setVisibility(View.VISIBLE);
-                                mPresenter.get_next_feed(false,0,PAGINADOR);
-                            }else {
-                                smoot_progress.setVisibility(View.GONE);
-                                Log.e("GENT_MORE_FEED","NO");
+                        if (!IS_FEED_RECOMENDED){
+                            if (loading) {
+                                loading = false;
+                                if (IS_ALL == false) {
+                                    Log.e("GENT_MORE_FEED", "SI");
+                                    smoot_progress.setVisibility(View.VISIBLE);
+                                    mPresenter.get_next_feed(false, 0, PAGINADOR);
+                                } else {
+                                    smoot_progress.setVisibility(View.GONE);
+                                    Log.e("GENT_MORE_FEED", "NO");
+                                }
                             }
-                        }
+                    }
                     }
                 }
             }
@@ -304,7 +308,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
 
     @Override
     public void show_feed(ArrayList<PostBean> data,ArrayList<HistoriesBean> data_stories) {
-        Log.e("SHOW_FEED","SI");
+        IS_FEED_RECOMENDED = false;
         loading = true;
         refresh_feed.setRefreshing(false);
         if(data.size()>0) {
@@ -334,6 +338,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
 
     @Override
     public void show_next_feed(ArrayList<PostBean> data) {
+        IS_FEED_RECOMENDED = false;
         loading =true;
         smoot_progress.setVisibility(View.GONE);
         if(data.size()>0) {
@@ -350,6 +355,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
 
     @Override
     public void show_feed_recomended(ArrayList<PostBean> data, ArrayList<UserBean> users) {
+        IS_FEED_RECOMENDED = true;
         refresh_feed.setRefreshing(false);
         cirlce_progress.setVisibility(View.GONE);
         valueAnimator.cancel();

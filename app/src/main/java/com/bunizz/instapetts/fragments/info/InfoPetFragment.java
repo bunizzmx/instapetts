@@ -34,6 +34,7 @@ import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.listeners.RatePetListener;
+import com.bunizz.instapetts.listeners.conexion_listener;
 import com.bunizz.instapetts.listeners.delete;
 import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.services.ImageService;
@@ -41,6 +42,7 @@ import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.dilogs.DialogDeletes;
 import com.bunizz.instapetts.utils.dilogs.DialogPreviewImage;
 import com.bunizz.instapetts.utils.dilogs.DialogRatePet;
+import com.bunizz.instapetts.utils.snackbar.SnackBar;
 
 import org.parceler.Parcels;
 
@@ -124,8 +126,7 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
     uploads listener;
 
     String REFRESH_IMAGE ="INVALID";
-
-
+    conexion_listener  listener_conexion;
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.rate_pet_card)
@@ -161,6 +162,7 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
             dialogRatePet.setListener((rate, comment, id_pet, id_usuario, uuid) -> {
                 icon_star_rated.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_estrella_black));
                 presenter.ratePet(Integer.valueOf(petBean.getId_pet()),(int)rate);
+                listener_conexion.refreshedComplete();
             });
             dialogRatePet.show();
 
@@ -336,6 +338,7 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         listener = (uploads) context;
+        listener_conexion =(conexion_listener)context;
     }
 
     void UploadImagePet(String url,String name_pet){

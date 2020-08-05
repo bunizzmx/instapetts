@@ -108,6 +108,10 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
     @BindView(R.id.open_dialog_options)
     RelativeLayout open_dialog_options;
 
+    @BindView(R.id.layout_descripcion)
+    LinearLayout layout_descripcion;
+
+
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.like_video_post)
@@ -248,6 +252,9 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
 
 
     if (TYPE_PLAYER == 1) {
+        if(POST_BEAN.getDescription().trim().isEmpty())
+            layout_descripcion.setVisibility(View.GONE);
+        
         if (presenter.isLiked(POST_BEAN.getId_post_from_web()))
             POST_BEAN.setLiked(true);
         else

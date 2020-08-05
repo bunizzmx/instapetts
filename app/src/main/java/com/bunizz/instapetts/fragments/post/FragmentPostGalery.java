@@ -25,6 +25,7 @@ import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.profile.AdapterGridPostsProfile;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.get_current_pager_listener;
 import com.bunizz.instapetts.listeners.postsListener;
 import com.bunizz.instapetts.web.parameters.PostActions;
 
@@ -59,7 +60,15 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
 
     int PAGINADOR = -999;
     int ID_USER = -999;
-    int FILTER = 0;
+    get_current_pager_listener listener_pager;
+
+    public get_current_pager_listener getListener_pager() {
+        return listener_pager;
+    }
+
+    public void setListener_pager(get_current_pager_listener listener_pager) {
+        this.listener_pager = listener_pager;
+    }
 
     public void setData_posts(ArrayList<Object> data_posts) {
         IS_ALL = false;
@@ -93,9 +102,8 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
 
     }
 
-    public void setIdUser(int id,int filter){
+    public void setIdUser(int id){
         ID_USER = id;
-        FILTER= filter;
     }
 
 
@@ -238,8 +246,10 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
                         if(loading){
                             loading = false;
                             if(IS_ALL == false) {
-                                Log.e("DONWLOAD_MORE_COMMENTS","SI : " + FILTER);
-                                presenter.getMorePost(3,PAGINADOR,ID_USER,FILTER);
+                                if(listener_pager!=null)
+                                   presenter.getMorePost(3,PAGINADOR,ID_USER,listener_pager.getCurrentItemPager());
+                                else
+                                    presenter.getMorePost(3,PAGINADOR,ID_USER,0);
                             }else {
                                 Log.e("DONWLOAD_MORE_COMMENTS","NO");
                             }
