@@ -34,7 +34,7 @@
                 android:layout_marginTop="10dp"
                 style="@style/FontNormalTitleSecondary"
                 android:layout_gravity="center_horizontal"
-                android:text="Que tan feliz se ve esta mascota?"
+                android:text="@string/felicidad_mascota"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -75,7 +75,7 @@
                 android:layout_gravity="center_vertical"
                 android:fontFamily="@font/avenir_b"
                 android:inputType="textMultiLine"
-                android:hint="Escribe un comentario o solo califica"
+                android:hint="@string/comment_or_rate"
                 android:padding="10dp"
                 android:background="#00FFFFFF"
                 android:layout_width="match_parent"

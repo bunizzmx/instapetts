@@ -290,7 +290,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         if(!address.equals("INVALID"))
           location_user.setText(address);
         else
-            location_user.setText("NO DISPONIBLE");
+            location_user.setText(getContext().getString(R.string.no_available));
     }
 
     private void beginUploadInBackground(ArrayList<String> filePaths,boolean is_video) {

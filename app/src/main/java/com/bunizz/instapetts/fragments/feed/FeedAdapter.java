@@ -278,7 +278,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 e.list_post_recomended.setHasFixedSize(true);
                 e.list_post_recomended.setAdapter(feedAdapterRecomended);
                 e.title_no_data.setText(context.getResources().getString(R.string.no_sigues));
-                e.body_no_data.setText("Te recomendamos a estas hermosas mascotas,porque no les echas un ojo.");
+                e.body_no_data.setText(context.getString(R.string.pet_recomended));
                 e.list_news_users.setLayoutManager(new LinearLayoutManager(context,RecyclerView.HORIZONTAL,false));
                 adaptaer_n_users.setData(data_news_users);
                 adaptaer_n_users.setListener((id_user, uuid) -> {

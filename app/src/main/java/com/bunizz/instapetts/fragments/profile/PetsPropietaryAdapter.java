@@ -83,7 +83,7 @@ public class PetsPropietaryAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
                 h.image_pet_history_add.setOnClickListener(view -> listener.open_wizard_pet());
                 h.image_pet_history_add.setVisibility(View.VISIBLE);
                 h.image_pet_history.setVisibility(View.GONE);
-                h.name_pet_item.setText("New Pet");
+                h.name_pet_item.setText(context.getString(R.string.new_pet));
                 h.type_pet_icon.setVisibility(View.GONE);
             } else {
                 h.type_pet_icon.setVisibility(View.VISIBLE);

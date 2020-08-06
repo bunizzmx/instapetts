@@ -105,7 +105,7 @@ public class FragmentFirstUser extends Fragment implements  FirstUserContract.Vi
                 status_icon_name_tag.setVisibility(View.VISIBLE);
                 status_icon_name_tag.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_no_available));
                 label_tag_instapets.setVisibility(View.VISIBLE);
-                label_tag_instapets.setText("Debe tener mas de 3 caracteres");
+                label_tag_instapets.setText(getContext().getString(R.string.more_caracteres));
             }
         }
     }
@@ -150,7 +150,7 @@ public class FragmentFirstUser extends Fragment implements  FirstUserContract.Vi
                     }
                     else {
                         label_tag_instapets.setVisibility(View.VISIBLE);
-                        label_tag_instapets.setText("Debe tener mas de 3 caracteres");
+                        label_tag_instapets.setText(getContext().getString(R.string.more_caracteres));
                     }
                 });
 

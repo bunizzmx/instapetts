@@ -52,7 +52,7 @@
                     android:layout_toRightOf="@+id/back_to_main"
 
                     android:textStyle="bold"
-                    android:text="Publicaciones"
+                    android:text="@string/post"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </RelativeLayout>

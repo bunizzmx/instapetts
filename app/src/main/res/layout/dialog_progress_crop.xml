@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:layout_marginTop="20dp"
-                android:text="Procesando.."
+                android:text="@string/procesando"
                 android:textAllCaps="true"
                 android:textSize="30sp"
                 android:fontFamily="@font/avenir_b"

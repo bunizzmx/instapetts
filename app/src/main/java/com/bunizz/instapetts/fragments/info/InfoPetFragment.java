@@ -256,7 +256,7 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
             delete_trash.setVisibility(View.GONE);
             edit_photo_pet.setVisibility(View.GONE);
         }
-        acerca_de_pet.setText("Acerca de " + petBean.getName_pet());
+        acerca_de_pet.setText(getContext().getString(R.string.about_pet) + " " +  petBean.getName_pet());
         switch (petBean.getType_pet()){
             case 1:
                 icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_perro));
@@ -291,10 +291,10 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
 
         }
         if(petBean.getRaza_pet() == null ){
-            name_raza_pet.setText("DESCONOCIDA");
+            name_raza_pet.setText(getContext().getString(R.string.indeterminate));
         }else{
             if(petBean.getRaza_pet().trim().isEmpty() || petBean.getRaza_pet().equals("undefined")){
-                name_raza_pet.setText("DESCONOCIDA");
+                name_raza_pet.setText(getContext().getString(R.string.indeterminate));
             }else{
                 name_raza_pet.setText(petBean.getRaza_pet());
             }

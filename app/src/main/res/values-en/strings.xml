@@ -171,7 +171,7 @@
 
 
         <string name="pager_discover">Discover</string>
-        <string name="pager_more_views">Lo más visto</string>
+        <string name="pager_more_views">Most viewed</string>
         <string name="pager_adorable">Adorables</string>
         <string name="pager_recent">The most recent</string>
 
@@ -258,7 +258,7 @@
         <string name="Followed">Followed</string>
         <string name="followers">Followers</string>
         <string name="delete_pet_title">Do you want to delete your pet?</string>
-        <string name="delete_pet_body">Recuerda que los perfiles y contenido de tu mascota son tus recuerdos que siempre estaran disponibles para ti en Instappets no necesitas eliminarla definitivamente.</string>
+        <string name="delete_pet_body">The most Remember that the profiles and content of your pet are your memories that will always be available to you in Instappets you do not need to permanently delete it..</string>
 
         <string name="people_like_this">people like this</string>
 
@@ -267,14 +267,14 @@
         <string name="completed">COMPLETED</string>
 
         <string name="no_recent_search_title">No recent searches</string>
-        <string name="no_recent_search_body">No hay busquedas recientes, empieza por buscar a un usuario o mascota de tu preferencia.</string>
+        <string name="no_recent_search_body">There are no recent searches, start by searching for a user or pet of your choice.</string>
 
         <string name="me_gusta">I like it</string>
 
         <string name="instapetts_tips">INSTAPETS TIP</string>
 
         <string name="no_saved_post_title">You have nothing saved.</string>
-        <string name="no_saved_post_body">Los posts que guardes apareceran en esta sección.</string>
+        <string name="no_saved_post_body">The posts you save appear in this section.</string>
 
         <string name="censored_post">This post is under review</string>
 
@@ -288,7 +288,7 @@
         <string name="user_no_existe">User does not exist</string>
         <string name="verify_email">Check your email</string>
 
-        <string name="body_no_noty">Cuando alguien te siga,comente o publique algo nuevo apareceran notificaciones en este apartado.</string>
+        <string name="body_no_noty">When someone follows you, comments or posts something new, notifications appear in this section.</string>
         <string name="title_no_noty">No notifications yet</string>
         <string name="help_pet">PET IN TROUBLE</string>
         <string name="calificacion_pet">Pets rating</string>
@@ -306,5 +306,66 @@
         <string name="refreshed">Updated</string>
         <string name="pet_list">Pet Lists</string>
         <string name="no_post_title">No Publications</string>
-        <string name="no_post_body">"Aun no hay publicaciones con esta opcion,quiza mas tarde.</string>
-    </resources>
+        <string name="no_post_body">There are no publications with this option yet, maybe later.</string>
+       <string name="terminar">Finish</string>
+
+
+
+    <string name="when_follow">When you follow 1 or more accounts they will appear here</string>
+    <string name="indeterminate">INDETERMINATE</string>
+    <string name="buena">Good</string>
+    <string name="corta">Very shor</string>
+    <string name="correcto">Right</string>
+    <string name="no_coinciden">Do not match</string>
+    <string name="more_caracteres">Must be more than 3 characters</string>
+    <string name="pet_recomended">We recommend these beautiful pets, because you do not keep an eye on them.</string>
+    <string name="new_pet">New pet</string>
+    <string name="no_available">NOT AVAILABLE</string>
+
+    <string name="delete_all">delete all</string>
+    <string name="continuar">Continue</string>
+
+    <string name="only_videos">only videos</string>
+    <string name="only_photos">only photos</string>
+    <string name="rate_pets">rate pet</string>
+    <string name="no_pet_no_post">You can only post if you have pets added</string>
+    <string name="comment_or_rate">Write a comment or just rate</string>
+    <string name="gustos_pet" >Describe your pet</string>
+    <string name="felicidad_mascota">How happy does this pet look?</string>
+    <string name="type_pet">type pet</string>
+
+
+    <string name="back_to_qr">Back to your QR</string>
+    <string name="procesando">Processing..</string>
+    <string name="problem_conexion_title">Connection issues</string>
+    <string name="problem_conexion_body">Check your internet connection and try again.</string>
+    <string name="report_post">Report Publication</string>
+    <string name="delete_post">Delete post</string>
+    <string name="label_qr_scann">Use the latest version of the app to scan the code</string>
+    <string name="scan_qr">Scan the PetCode to follow me</string>
+    <string name="scan_rq">Scan QR</string>
+
+    <string name="profile_pet">Profile pet</string>
+    <string name="peso">Weight</string>
+    <string name="raza">Race</string>
+    <string name="genero">Gender</string>
+    <string name="edad">Age</string>
+    <string name="info_pet">Pet information</string>
+
+    <string name="about_pet">About</string>
+    <string name="close_session_confirm">Do you want to log out?</string>
+    <string name="yes">Yes</string>
+
+    <string name="general_data">General data</string>
+    <string name="nacimiento">Birth of your pet</string>
+    <string name="hembra">Female</string>
+    <string name="macho">Male</string>
+
+    <string name="raza_pet">Pet Breed</string>
+    <string name="raza_desconocida">I do not know the race</string>
+    <string name="write_name_pet">Write a name...</string>
+
+    <string name="label_pet_name">Jhon</string>
+    <string name="label_pet_descripcion">My pet is...</string>
+    <string name="profile_updated">UPDATED PROFILE</string>
+</resources>

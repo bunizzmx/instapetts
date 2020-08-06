@@ -106,12 +106,12 @@ public class FragmentSigin extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if(password_signin.getText().length() > 6){
-                    label_check_password_first.setText("Buena");
+                    label_check_password_first.setText(getContext().getString(R.string.buena));
                     label_check_password_first.setTextColor(getActivity().getResources().getColor(R.color.colorPrimaryDark));
                     label_check_password_first.setVisibility(View.VISIBLE);
                     see_password.setVisibility(View.VISIBLE);
                 }else{
-                    label_check_password_first.setText("Muy Corta");
+                    label_check_password_first.setText(getContext().getString(R.string.corta));
                     label_check_password_first.setTextColor(getActivity().getResources().getColor(R.color.primary));
                     label_check_password_first.setVisibility(View.VISIBLE);
                     see_password.setVisibility(View.GONE);
@@ -135,13 +135,13 @@ public class FragmentSigin extends Fragment {
                     if(password_signin.getText().toString().trim().equals(password_signin_confirm.getText().toString().trim())){
                         IS_PASSWORD_CHECHED = true;
                         label_check_password.setVisibility(View.VISIBLE);
-                        label_check_password.setText("Correcto");
+                        label_check_password.setText(getContext().getString(R.string.correcto));
                         label_check_password.setTextColor(getActivity().getResources().getColor(R.color.colorPrimaryDark));
                     }else{
                         IS_PASSWORD_CHECHED = false;
                         label_check_password.setTextColor(getActivity().getResources().getColor(R.color.primary));
                         label_check_password.setVisibility(View.VISIBLE);
-                        label_check_password.setText("No coinciden");
+                        label_check_password.setText(getContext().getString(R.string.no_coinciden));
                     }
                 }else{
                     IS_PASSWORD_CHECHED = false;

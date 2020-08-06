@@ -10,7 +10,7 @@
        android:id="@+id/label_first_pet"
        android:textStyle="bold"
        android:textSize="24dp"
-       android:text="Tipo Mascota"
+       android:text="@string/type_pet"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"/>
    <com.bunizz.instapetts.utils.ImagenCircular

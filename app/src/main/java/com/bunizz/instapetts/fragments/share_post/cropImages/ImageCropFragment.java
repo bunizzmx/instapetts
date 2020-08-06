@@ -193,9 +193,9 @@ public class ImageCropFragment extends Fragment {
         indicator_4_4.setVisibility(View.VISIBLE);
         cropLayout.setImageFilePath(paths.get(CURRENT_INDEX));
         if (paths.size() == 1)
-            crop_now_selected.setText("Finalizar");
+            crop_now_selected.setText(getContext().getString(R.string.terminar));
         else
-            crop_now_selected.setText("Siguiente");
+            crop_now_selected.setText(getContext().getString(R.string.next));
         crop_now_selected.setOnClickListener(view1 -> {
             if(CURRENT_INDEX < paths.size()-1){
                 adapter.update_croped_item(CURRENT_INDEX);
@@ -252,7 +252,7 @@ public class ImageCropFragment extends Fragment {
                     }else{
                         CURRENT_INDEX ++;
                         if(CURRENT_INDEX == paths.size()-1)
-                            crop_now_selected.setText("Finalizar");
+                            crop_now_selected.setText(getContext().getString(R.string.terminar));
                         cropLayout.setImageFilePath(paths.get(CURRENT_INDEX));
                     }
 

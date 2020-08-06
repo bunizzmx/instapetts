@@ -53,7 +53,7 @@
         android:layout_below="@+id/image_pet_history"
         android:textSize="10dp"
         android:textColor="@color/black"
-        android:text="El firulais"
+        android:text="@string/label_pet_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </LinearLayout>

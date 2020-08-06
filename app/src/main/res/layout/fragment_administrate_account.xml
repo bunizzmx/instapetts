@@ -78,7 +78,7 @@
         android:layout_height="wrap_content">
         <TextView
             android:textColor="@color/black"
-            android:text="Correo Electronico"
+            android:text="@string/mail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
@@ -91,7 +91,7 @@
         android:layout_height="wrap_content">
         <TextView
             android:textColor="@color/black"
-            android:text="Contraseña"
+            android:text="@string/password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>

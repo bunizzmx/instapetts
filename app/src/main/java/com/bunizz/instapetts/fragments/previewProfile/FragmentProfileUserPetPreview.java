@@ -174,9 +174,9 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         super.onCreate(savedInstanceState);
         petsPropietaryAdapter = new PetsPropietaryAdapter(getContext());
         adapter_pager = new ViewPagerAdapter(getChildFragmentManager());
-        adapter_pager.addFragment(new FragmentPostGalery(), "Publicaciones");
-        adapter_pager.addFragment(new FragmentPostGalery(), "Solo Videos");
-        adapter_pager.addFragment(new FragmentPostGalery(), "Fotos y galerias");
+        adapter_pager.addFragment(new FragmentPostGalery(), getContext().getString(R.string.post));
+        adapter_pager.addFragment(new FragmentPostGalery(), getContext().getString(R.string.only_videos));
+        adapter_pager.addFragment(new FragmentPostGalery(), getContext().getString(R.string.only_photos));
         petHelper = new PetHelper(getContext());
         presenter = new PreviewProfileUserPresenter(this,getContext());
         Bundle bundle=getArguments();

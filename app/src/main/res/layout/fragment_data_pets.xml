@@ -30,13 +30,13 @@
       android:background="@drawable/button_follow"
       android:textAllCaps="false"
       android:layout_alignParentRight="true"
-      android:text="Siguiente"
+      android:text="@string/next"
       android:layout_width="wrap_content"
       android:layout_height="40dp"/>
     <TextView
         android:textColor="@color/black"
         android:fontFamily="@font/avenir_black"
-        android:text="Datos generales"
+        android:text="@string/general_data"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
@@ -66,7 +66,7 @@
                 android:fontFamily="@font/avenir_black"
                 android:textColor="@color/black"
                android:layout_gravity="center_horizontal"
-                android:text="Nacimiento de tu mascota"
+                android:text="@string/nacimiento"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
@@ -112,7 +112,7 @@
                 android:textColor="@color/black"
                 android:fontFamily="@font/avenir_black"
                 android:layout_gravity="center_horizontal"
-                android:text="Hembra"
+                android:text="@string/hembra"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -142,7 +142,7 @@
                 android:textColor="@color/black"
                 android:fontFamily="@font/avenir_black"
                 android:layout_gravity="center_horizontal"
-                android:text="Macho"
+                android:text="@string/macho"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>

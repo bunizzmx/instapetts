@@ -1133,7 +1133,7 @@ public class Main extends AppCompatActivity implements change_instance,
         if (mCurrentFragment.getFragment() instanceof FragmentProfileUserPet) {
             ((FragmentProfileUserPet) mCurrentFragment.getFragment()).change_descripcion_profile();
         }
-         Toast.makeText(Main.this,"PERFIL ACTUALIZADO",Toast.LENGTH_LONG).show();
+         Toast.makeText(Main.this,getString(R.string.profile_updated),Toast.LENGTH_LONG).show();
         Glide.with(Main.this).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)

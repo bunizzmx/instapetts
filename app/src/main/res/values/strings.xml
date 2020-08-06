@@ -135,6 +135,7 @@
 
     <string name="chose_photo">Elige una foto</string>
     <string name="write_name">Escribe tu nombre...</string>
+    <string name="write_name_pet">Escribe un nombre...</string>
     <string name="write_description">Escribe algo sobre ti...</string>
 
     <string name="label_config_user">Configura tu usuario</string>
@@ -306,4 +307,56 @@
     <string name="pet_list">Lista de mascotas</string>
     <string name="no_post_title">No hay Publicaciones</string>
     <string name="no_post_body">"Aun no hay publicaciones con esta opcion,quiza mas tarde.</string>
+    <string name="terminar">Finalizar</string>
+
+    <string name="when_follow">Cuando sigas 1 o mas cuentas apareceran aqui</string>
+    <string name="indeterminate">INDETERMINADO</string>
+    <string name="buena">Buena</string>
+    <string name="corta">Muy corta</string>
+    <string name="correcto">Correcto</string>
+    <string name="no_coinciden">No coinciden</string>
+    <string name="more_caracteres">Debe tener mas de 3 caracteres</string>
+    <string name="pet_recomended">Te recomendamos a estas hermosas mascotas,porque no les echas un ojo.</string>
+    <string name="new_pet">Nueva mascota</string>
+    <string name="no_available">NO DISPONIBLE</string>
+    <string name="delete_all">Eliminar todas</string>
+    <string name="continuar">Continuar</string>
+
+    <string name="only_videos">Solo videos</string>
+    <string name="only_photos">Solo fotos</string>
+
+    <string name="no_pet_no_post">Solo puedes hacer publicaciones si tienes mascotas agregadas</string>
+    <string name="comment_or_rate">Escribe un comentario o solo califica</string>
+    <string name="gustos_pet" >Describe a tu mascota</string>
+    <string name="felicidad_mascota">Esta mascota se ve feliz?</string>
+    <string name="type_pet">tipo mascota</string>
+    <string name="back_to_qr">Volver a tu QR</string>
+    <string name="procesando">Procesando..</string>
+    <string name="problem_conexion_title">Problemas de conexion</string>
+    <string name="problem_conexion_body">Revisa tu conexion a internet o intentalo de nuevo.</string>
+    <string name="report_post">Reportar Publicacion</string>
+    <string name="delete_post">Eliminar publicacion</string>
+    <string name="label_qr_scann">Usa la version mas reciente de la aplicacion para escanear el codigo</string>
+    <string name="scan_qr">Escanea el PetCode para seguirme</string>
+    <string name="scan_rq">Escanear QR</string>
+    <string name="profile_pet">Perfil mascota</string>
+    <string name="peso">Peso</string>
+    <string name="raza">Raza</string>
+    <string name="genero">Genero</string>
+    <string name="edad">Edad</string>
+    <string name="info_pet">Informacion de la mascota</string>
+    <string name="rate_pets">calificacion mascota</string>
+    <string name="about_pet">Acerca de </string>
+    <string name="close_session_confirm">Deceas cerrar session?</string>
+    <string name="yes">Si</string>
+    <string name="general_data">Datos generales</string>
+    <string name="nacimiento">Nacimiento de tu mascota</string>
+    <string name="hembra">Hembra</string>
+    <string name="macho">Macho</string>
+    <string name="raza_pet">Raza Mascota</string>
+    <string name="raza_desconocida">Desconozco la raza</string>
+
+    <string name="label_pet_name">Firulais..</string>
+    <string name="label_pet_descripcion">Mi mascota es...</string>
+    <string name="profile_updated">PERFIL ACTUALIZADO</string>
 </resources>

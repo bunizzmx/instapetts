@@ -85,11 +85,16 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
 
     @BindView(R.id.durationView)
     TextView durationView;
+    boolean IS_IN_CROP = false;
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.btSave)
     void btSave() {
-        handleCropStart();
+        if(!IS_IN_CROP){
+            handleCropStart();
+        }
+
+
     }
 
     @SuppressLint("MissingPermission")
@@ -269,7 +274,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
 
     @SuppressLint("DefaultLocale")
     private void handleCropStart() {
-
+        IS_IN_CROP = true;
         Rect cropRect = mCropVideoView.getCropRect();
         if(STARTCROP < 0){
             STARTCROP =0;
@@ -301,6 +306,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
             mFFTask = mFFMpeg.execute(cmd, new ExecuteBinaryResponseHandler() {
                 @Override
                 public void onSuccess(String message) {
+                    IS_IN_CROP = false;
                     Intent intent = new Intent();
                     intent.putExtra(BUNDLES.VIDEO_DURATION,(DURATION /1000));
                     intent.putExtra(BUNDLES.VIDEO_ASPECT,ASPECT);
@@ -315,6 +321,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
 
                 @Override
                 public void onFailure(String message) {
+                    IS_IN_CROP = false;
                     Toast.makeText(VideoCropActivity.this, "Failed to crop!", Toast.LENGTH_SHORT).show();
                     Log.e("onFailure", message);
                 }
@@ -337,6 +344,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
 
                 @Override
                 public void onFinish() {
+                    IS_IN_CROP = false;
                     dialogProgresCrop.dismiss();
                 }
             }, DURATION * 1.0f / 1000);

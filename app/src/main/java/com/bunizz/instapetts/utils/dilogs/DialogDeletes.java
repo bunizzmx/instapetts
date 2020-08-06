@@ -70,7 +70,7 @@ public class DialogDeletes extends BaseAlertDialog{
         else if(type_dialog == 1) {
             is_cancelable =true;
             layout_delete_algo.setVisibility(View.GONE);
-            text_delete_dialog.setText("Eliminar todas");
+            text_delete_dialog.setText(context.getString(R.string.delete_all));
             delete_now_layout.setOnClickListener(v -> {
                 if(listener!=null) {
                     if(type_dialog == 1) {

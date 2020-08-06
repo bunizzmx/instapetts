@@ -39,7 +39,7 @@
             <TextView
                 android:id="@+id/text_smoot"
                 android:textSize="10dp"
-                android:text="En progreso..."
+                android:text="@string/procesando"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <com.bunizz.instapetts.utils.smoot.SmoothProgressBar

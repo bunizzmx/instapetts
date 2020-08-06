@@ -199,8 +199,8 @@ public class DialogShosePet extends BaseAlertDialog{
             });
             h.rate_pet_chose_pet.setText(""+ petBeans.get(position).getRate_pet());
             if(petBeans.get(position).getType_pet() == -999){
-                h.edad_pet_chose.setText("INDETERMINADO");
-                h.raza_mascota_chose_pet.setText("INDETERMINADO");
+                h.edad_pet_chose.setText(context.getString(R.string.indeterminate));
+                h.raza_mascota_chose_pet.setText(context.getString(R.string.indeterminate));
                 Glide.with(context).load(context.getResources().getDrawable(R.drawable.logo)).into(h.pet_chose_list);
             }else{
                 Glide.with(context).load(petBeans.get(position).getUrl_photo_tumbh()).into(h.pet_chose_list);

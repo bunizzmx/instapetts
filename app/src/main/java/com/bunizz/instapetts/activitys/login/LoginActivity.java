@@ -493,7 +493,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
             @Override
             public void onSuccess(AuthResult authResult) {
                 View v = findViewById(R.id.root_login);
-                SnackBar.success(v, "Completado", SnackBar.LENGTH_LONG).show();
+                SnackBar.success(v, getString(R.string.completed), SnackBar.LENGTH_LONG).show();
             }
         })
         .addOnCanceledListener(new OnCanceledListener() {

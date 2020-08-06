@@ -28,7 +28,7 @@
                         android:textColor="@color/white"
                         android:background="@drawable/button_follow"
                         android:layout_alignParentRight="true"
-                        android:text="Continuar"
+                        android:text="@string/continuar"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"/>
                 </RelativeLayout>

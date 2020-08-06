@@ -128,11 +128,11 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
         spin_kit.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         spin_kit.setVisibility(View.VISIBLE);
         if(tipo_descarga == 1) {
-            name_user_folowers.setText("Seguidos");
+            name_user_folowers.setText(getContext().getString(R.string.Followed));
             presenter.getFirstFollowed(uuid);
         }
         else {
-            name_user_folowers.setText("Seguidores");
+            name_user_folowers.setText(getContext().getString(R.string.followers));
             presenter.getFirstFolowers(uuid);
         }
 
@@ -181,11 +181,11 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
             adapter.setTipo_descarga(tipo_descarga);
 
             if(tipo_descarga == 1) {
-                name_user_folowers.setText("Seguidos");
+                name_user_folowers.setText(getContext().getString(R.string.Followed));
                 presenter.getFirstFollowed(uuid);
             }
             else {
-                name_user_folowers.setText("Seguidores");
+                name_user_folowers.setText(getContext().getString(R.string.followers));
                 presenter.getFirstFolowers(uuid);
             }
         }else{
@@ -202,8 +202,8 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
             spin_kit.setVisibility(View.GONE);
             adapter.setUserBeans(followsBeans);
         }else{
-            body_no_data.setText("Cuando sigas 1 o mas cuentas apareceran aqui");
-            title_no_internet.setText("Aun no sigues a nadie");
+            body_no_data.setText(getContext().getString(R.string.when_follow));
+            title_no_internet.setText(getContext().getString(R.string.no_sigues));
             icon_no_internet.setVisibility(View.GONE);
             spin_kit.setVisibility(View.GONE);
             root_no_internet.setVisibility(View.VISIBLE);
@@ -232,8 +232,8 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
             adapter.setUserBeans(FIRST_FOLLOWEDS);
             root_no_internet.setVisibility(View.GONE);
         }else{
-            body_no_data.setText("Cuando sigas 1 o mas cuentas apareceran aqui");
-            title_no_internet.setText("Aun no sigues a nadie");
+            body_no_data.setText(getContext().getString(R.string.when_follow));
+            title_no_internet.setText(getContext().getString(R.string.no_sigues));
             icon_no_internet.setVisibility(View.GONE);
             spin_kit.setVisibility(View.GONE);
             root_no_internet.setVisibility(View.VISIBLE);
@@ -269,8 +269,8 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
     public void UnfollowSuccess() {
         adapter.notifyDataSetChanged();
         if(adapter.size_items()==0){
-            body_no_data.setText("Cuando sigas 1 o mas cuentas apareceran aqui");
-            title_no_internet.setText("Aun no sigues a nadie");
+            body_no_data.setText(getContext().getString(R.string.when_follow));
+            title_no_internet.setText(getContext().getString(R.string.no_sigues));
             icon_no_internet.setVisibility(View.GONE);
             spin_kit.setVisibility(View.GONE);
             root_no_internet.setVisibility(View.VISIBLE);
@@ -373,9 +373,9 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
             h.name_propietary_pet_searching.setText("@" + userBeans.get(position).getName_nip_user());
 
             if(tipo_descarga ==2){
-                h.label_unfollow.setText("Eliminar");
+                h.label_unfollow.setText(getContext().getString(R.string.delete_button_alt));
             }else{
-                h.label_unfollow.setText("Dejar de seguir");
+                h.label_unfollow.setText(getContext().getString(R.string.unfollow_user));
             }
             if(userBeans.get(position).getId_user() == App.read(PREFERENCES.ID_USER_FROM_WEB,0))
                 h.delete_recent.setVisibility(View.GONE);

@@ -34,7 +34,7 @@
                 <TextView
                     android:textColor="@color/black"
                     android:layout_centerHorizontal="true"
-                    android:text="Dejar de seguir"
+                    android:text="@string/unfollow_user"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </RelativeLayout>
@@ -46,7 +46,7 @@
                 <TextView
                     android:textColor="@color/black"
                     android:layout_centerHorizontal="true"
-                    android:text="Reportar Publicacion"
+                    android:text="@string/report_post"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </RelativeLayout>
@@ -58,7 +58,7 @@
                 <TextView
                     android:textColor="@color/black"
                     android:layout_centerHorizontal="true"
-                    android:text="Eliminar publicacion"
+                    android:text="@string/delete_post"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             </RelativeLayout>

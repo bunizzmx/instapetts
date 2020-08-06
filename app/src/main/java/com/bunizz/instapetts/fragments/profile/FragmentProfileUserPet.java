@@ -236,9 +236,9 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         Log.e("REFRESH_MY_PETS","-->3"  +PETS.size());
             petsPropietaryAdapter.setPets(PETS);
         adapter_pager = new ViewPagerAdapter(getChildFragmentManager());
-        adapter_pager.addFragment(new FragmentPostGalery(), "Publicaciones");
-        adapter_pager.addFragment(new FragmentPostGalery(), "Solo Videos");
-        adapter_pager.addFragment(new FragmentPostGalery(), "Fotos y galerias");
+        adapter_pager.addFragment(new FragmentPostGalery(), getContext().getString(R.string.post));
+        adapter_pager.addFragment(new FragmentPostGalery(), getContext().getString(R.string.only_videos));
+        adapter_pager.addFragment(new FragmentPostGalery(), getContext().getString(R.string.only_photos));
     }
 
     @Nullable

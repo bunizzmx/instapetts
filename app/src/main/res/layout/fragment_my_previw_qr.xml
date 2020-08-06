@@ -32,7 +32,7 @@
             <TextView
                 android:textSize="10dp"
                 android:layout_gravity="center_horizontal"
-                android:text="EScanea el PetCode para seguirme"
+                android:text="@string/scan_qr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <ImageView
@@ -57,7 +57,7 @@
 
         android:textSize="10dp"
         android:layout_gravity="center_horizontal"
-        android:text="Usa la version mas reciente de la aplicacion para escanear el codigo"
+        android:text="@string/label_qr_scann"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <RelativeLayout
@@ -71,7 +71,7 @@
             android:textColor="@color/black"
             android:fontFamily="@font/avenir_b"
             android:textSize="18dp"
-            android:text="Escanear QR de mascota"
+            android:text="@string/scan_rq"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </RelativeLayout>

@@ -140,7 +140,7 @@
         android:id="@+id/finishBtn"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="Terminar"
+        android:text="@string/terminar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </RelativeLayout>

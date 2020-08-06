@@ -92,7 +92,7 @@
             android:paddingRight="20dp"
             android:id="@+id/btSave"
             android:layout_marginBottom="10dp"
-            android:text="Terminar"
+            android:text="@string/terminar"
             android:textAllCaps="false"
             android:background="@drawable/button_follow"
             android:textColor="@color/white"

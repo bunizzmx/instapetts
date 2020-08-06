@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
-                android:text="No tienes mascotas aun"
+                android:text="no_p"
                 android:textAlignment="center"
                 android:textColor="#F44336"
                 android:textSize="24dp" />
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
-                android:text="Solo puedes hacer publicaciones si tienes mascotas agregadas"
+                android:text="@string/no_pet_no_post"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="18dp" />

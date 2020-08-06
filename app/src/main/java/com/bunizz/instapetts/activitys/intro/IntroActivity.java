@@ -101,7 +101,7 @@ public class IntroActivity extends AppCompatActivity implements VisibleItem {
                         back.setVisibility(View.VISIBLE);
                     }else{
                         omitter.setVisibility(View.GONE);
-                        skip.setText("Continuar");
+                        skip.setText(getString(R.string.continuar));
                     }
 
                 }

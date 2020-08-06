@@ -227,8 +227,8 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
                 getContext().startActivity(i);
             }
         });
-        title_no_data.setText("No hay publicaciones");
-        body_no_data.setText("Demuestrale al mundo la mascota linda que tienes escondida, todos queremos verla¡¡.");
+        title_no_data.setText(getContext().getString(R.string.no_post_title));
+        body_no_data.setText(getContext().getString(R.string.no_post_body));
         list_galery.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
