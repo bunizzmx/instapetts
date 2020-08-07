@@ -87,11 +87,14 @@ class VideoPickerPresenter(
 
                 val file = File(path)
                 if (file.exists()) {
-                    if (albums[bucket] == null) {
-                        albums[bucket] = AlbumVideo(bucket)
-                    }
-                    albums[context?.getString(R.string.text_imagepicker_album_all_key)]?.videos?.add(Video(id, name, path,duration))
-                    albums[bucket]?.videos?.add(Video(id, name, path,duration))
+                    if (bucket != null)
+                    {
+                        if (albums[bucket] == null) {
+                            albums[bucket] = AlbumVideo(bucket)
+                        }
+                    albums[context?.getString(R.string.text_imagepicker_album_all_key)]?.videos?.add(Video(id, name, path, duration))
+                    albums[bucket]?.videos?.add(Video(id, name, path, duration))
+                }
                 }
             } while (it.moveToPrevious())
         }

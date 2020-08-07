@@ -48,7 +48,7 @@ android {
             versionName "1.0.0"
             versionCode 4
             dimension "instance"
-            buildConfigField 'String', 'ADS_NATIVO', '"ca-app-pub-9180706110192425/3901685678"'
+            buildConfigField 'String', 'ADS_NATIVO', '"ca-app-pub-1460003590771124/7976202603"'
             buildConfigField 'Boolean', 'DEVELOPMENT', 'false'
             signingConfig signingConfigs.release
         }

@@ -184,10 +184,6 @@ public class Main extends AppCompatActivity implements change_instance,
     @BindView(R.id.close_smoot)
     RelativeLayout close_smoot;
 
-    @BindView(R.id.adView)
-    AdView adView;
-
-
 
     @BindView(R.id.root_bottom_nav)
     RelativeLayout root_bottom_nav;
@@ -399,48 +395,6 @@ public class Main extends AppCompatActivity implements change_instance,
     }catch (Exception e){
                 Log.e("EXCEPCION_MAIN","MAIN" + e.getMessage());
         }
-
-        if(App.read(PREFERENCES.ADS_ACTIVADOS,false)) {
-            MobileAds.initialize(this, initializationStatus -> {
-            });
-            adView = findViewById(R.id.adView);
-            AdRequest adRequest = new AdRequest.Builder().build();
-            adView.loadAd(adRequest);
-            adView.setAdListener(new AdListener() {
-                @Override
-                public void onAdLoaded() {
-                    adView.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onAdFailedToLoad(int errorCode) {
-                    adView.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onAdOpened() {
-                    // Code to be executed when an ad opens an overlay that
-                    // covers the screen.
-                }
-
-                @Override
-                public void onAdClicked() {
-                    // Code to be executed when the user clicks on an ad.
-                }
-
-                @Override
-                public void onAdLeftApplication() {
-                    // Code to be executed when the user has left the app.
-                }
-
-                @Override
-                public void onAdClosed() {
-                    // Code to be executed when the user is about to return
-                    // to the app after tapping on an ad.
-                }
-            });
-        }
-
         presenter.updateConexion();
     }
 
