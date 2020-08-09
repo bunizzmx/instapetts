@@ -107,7 +107,7 @@
                 android:textSize="14dp"
                 android:layout_gravity="center_vertical"
                 android:fontFamily="@font/avenir_b"
-                android:hint="Escribe algo sobre ti..."
+                android:hint="@string/write_description"
                 android:padding="10dp"
                 android:background="#00FFFFFF"
                 android:layout_width="match_parent"

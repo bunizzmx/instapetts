@@ -42,7 +42,6 @@
             android:fontFamily="@font/avenir_black"
             android:layout_marginLeft="20dp"
             android:layout_gravity="center_vertical"
-            android:text="Firulais"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -55,7 +54,7 @@
             android:layout_height="wrap_content">
             <TextView
                 android:textSize="12dp"
-                android:text="Raza mascota"
+                android:text="@string/raza"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
@@ -77,7 +76,7 @@
             android:layout_height="wrap_content">
             <TextView
                 android:textSize="12dp"
-                android:text="Edad"
+                android:text="@string/edad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
@@ -99,7 +98,7 @@
             android:layout_height="wrap_content">
             <TextView
                 android:textSize="12dp"
-                android:text="Rate pet"
+                android:text="@string/rate_pets"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView

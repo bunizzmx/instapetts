@@ -281,7 +281,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             }
         }else{
             if(getContext()!=null)
-            Toast.makeText(getContext(),"FALLO AL PUBLICAR INTENTA DE NUEVO",Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(),getContext().getString(R.string.error_upload_post),Toast.LENGTH_LONG).show();
         }
     }
 

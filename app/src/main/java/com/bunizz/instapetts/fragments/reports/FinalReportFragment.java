@@ -124,7 +124,7 @@ public class FinalReportFragment extends Fragment implements ReportsContract.Vie
 
     @Override
     public void reportSended() {
-        Toast.makeText(getContext(),"Reporte Enviado",Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(),getContext().getString(R.string.report_sended),Toast.LENGTH_LONG).show();
         getActivity().finish();
     }
 

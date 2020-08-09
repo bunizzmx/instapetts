@@ -145,7 +145,7 @@ public class FragmentPickerGalery  extends Fragment implements  ImagePickerContr
                     listener.change_fragment_parameter(FragmentElement.INSTANCE_CROP_IMAGE, b);
                 }
             }else{
-                Toast.makeText(getActivity(),"Selecciona una imagen primero",Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(),getContext().getString(R.string.selecciona_imagen),Toast.LENGTH_LONG).show();
             }
         });
         spinner_album.setAdapter(albumAdapter);

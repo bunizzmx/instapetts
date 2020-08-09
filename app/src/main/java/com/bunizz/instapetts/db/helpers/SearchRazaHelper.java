@@ -34,7 +34,6 @@ public class SearchRazaHelper extends GenericHelper {
 
 
     public void saveRaza(RazaBean raza) {
-        Log.e("SAVE_RAZA",":)");
         ContentValues contentValues = new ContentValues();
         contentValues.put(NAME_ENG, raza.getName_raza_eng());
         contentValues.put(NAME_ESP, raza.getName_raza_esp());

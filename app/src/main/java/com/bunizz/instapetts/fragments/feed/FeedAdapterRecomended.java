@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.listeners.SelectUserListener;
 import com.bunizz.instapetts.utils.ImagenCircular;
 
@@ -81,7 +82,11 @@ public class FeedAdapterRecomended extends RecyclerView.Adapter<RecyclerView.Vie
         if(App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()).contains(context.getString(R.string.hace))){
             h.date_user_recomended.setText( App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()));
         }else{
-            h.date_user_recomended.setText(context.getString(R.string.hace) + " "  + App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()));
+            if(App.read(PREFERENCES.IDIOMA,"es").equals("es"))
+              h.date_user_recomended.setText(context.getString(R.string.hace) + " "  + App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()));
+            else
+                h.date_user_recomended.setText( App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post())   + " ago");
+
         }
 
         h.root_simple_recomended_user.setOnClickListener(view -> listener.onSelectUser(data_parsed.getId_usuario(),data_parsed.getUuid()));

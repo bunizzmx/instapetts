@@ -38,6 +38,7 @@ import com.bunizz.instapetts.beans.AspectBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.TipsBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.feed.UnifiedAddHolder;

@@ -80,6 +80,10 @@ public class UserBean {
     @Expose
     String name_tag;
 
+    @SerializedName("idioma")
+    @Expose
+    String idioma;
+
 
     public UserBean() {
     }
@@ -260,5 +264,13 @@ public class UserBean {
 
     public void setFollowed(int followed) {
         this.followed = followed;
+    }
+
+    public String getIdioma() {
+        return idioma;
+    }
+
+    public void setIdioma(String idioma) {
+        this.idioma = idioma;
     }
 }

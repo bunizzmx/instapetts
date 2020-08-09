@@ -9,6 +9,7 @@ public class AutenticateBean {
     String token;
     String target;
     int paginador;
+    String idioma;
 
     public AutenticateBean() {
     }
@@ -50,6 +51,14 @@ public class AutenticateBean {
 
     public int getPaginador() {
         return paginador;
+    }
+
+    public String getIdioma() {
+        return idioma;
+    }
+
+    public void setIdioma(String idioma) {
+        this.idioma = idioma;
     }
 
     public void setPaginador(int paginador) {

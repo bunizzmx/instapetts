@@ -314,8 +314,8 @@ public class App extends Application {
                    }
                }
                else{
-                   if((horas/24)/4 > 1)
-                     return  "" + ((horas/24)/4)  + " " + getApplicationContext().getResources().getString(R.string.weeks);
+                   if(((horas/24)/4) > 1)
+                      return  "" + ((horas/24)/4)  + " " + getApplicationContext().getResources().getString(R.string.weeks);
                    else
                        return  "" + ((horas/24)/4)  + " " + getApplicationContext().getResources().getString(R.string.week);
                }
@@ -360,9 +360,16 @@ public class App extends Application {
 
         if(totalMinutos > 0 && totalMinutos< 60) {
             if(totalMinutos==1){
-                return getApplicationContext().getResources().getString(R.string.hace)  + " " + totalMinutos + " " + getApplicationContext().getResources().getString(R.string.minute);
+                if(read(PREFERENCES.IDIOMA,"es").equals("es"))
+                  return getApplicationContext().getResources().getString(R.string.hace)  + " " + totalMinutos + " " + getApplicationContext().getResources().getString(R.string.minute);
+                else
+                    return  totalMinutos + " " + getApplicationContext().getResources().getString(R.string.minute) + " ago";
+
             }else{
-                return getApplicationContext().getResources().getString(R.string.hace) + " " + totalMinutos + " " + getApplicationContext().getResources().getString(R.string.minutes);
+                if(read(PREFERENCES.IDIOMA,"es").equals("es"))
+                  return getApplicationContext().getResources().getString(R.string.hace) + " " + totalMinutos + " " + getApplicationContext().getResources().getString(R.string.minutes);
+                else
+                    return  totalMinutos + " " + getApplicationContext().getResources().getString(R.string.minutes) + " ago";
             }
 
         }else if(totalMinutos ==0){
@@ -376,10 +383,16 @@ public class App extends Application {
         long totalMinutos=0;
         totalMinutos=((fechaFinal.getTimeInMillis()-fechaInicial.getTimeInMillis())/1000/60/60);
         if(totalMinutos ==1){
-            return getApplicationContext().getResources().getString(R.string.hace) + " "+ totalMinutos + " "+ getApplicationContext().getResources().getString(R.string.hour);
+            if(read(PREFERENCES.IDIOMA,"es").equals("es"))
+              return getApplicationContext().getResources().getString(R.string.hace) + " "+ totalMinutos + " "+ getApplicationContext().getResources().getString(R.string.hour);
+            else
+                return  totalMinutos + " "+ getApplicationContext().getResources().getString(R.string.hour)  + " ago";
         }else{
             if(totalMinutos < 24){
-                return getApplicationContext().getResources().getString(R.string.hace) + " "+ totalMinutos + " "+ getApplicationContext().getResources().getString(R.string.hours);
+                if(read(PREFERENCES.IDIOMA,"es").equals("es"))
+                  return getApplicationContext().getResources().getString(R.string.hace) + " "+ totalMinutos + " "+ getApplicationContext().getResources().getString(R.string.hours);
+                 else
+                   return  totalMinutos + " "+ getApplicationContext().getResources().getString(R.string.hours)  +  " ago";
             }else{
                 return  diferenciaHorasDias(totalMinutos);
             }

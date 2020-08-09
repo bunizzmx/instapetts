@@ -368,4 +368,52 @@
     <string name="label_pet_name">Jhon</string>
     <string name="label_pet_descripcion">My pet is...</string>
     <string name="profile_updated">UPDATED PROFILE</string>
+
+
+
+    <string name="selecciona_imagen">Select an image first</string>
+    <string name="seleciona_genero">SELECT GENDER</string>
+    <string name="selecciona_fecha">SELECT DATE</string>
+    <string name="escribe_algo">Write something...</string>
+    <string name="rate_first">You must rate first</string>
+    <string name="unfollow_succes">This user was unfollowed</string>
+    <string name="delete_post_succes">POST REMOVED</string>
+    <string name="delete_post_error">THE POSTS COULD NOT BE DELETED TRY AGAIN</string>
+    <string name="error_upload_post">POST FAILED TRY AGAIN</string>
+    <string name="no_posible_delete">Could not delete try again</string>
+    <string name="no_more">THERE\'S NO MORE</string>
+    <string name="user_existe">Existing user</string>
+    <string name="history_deleted">History Deleted</string>
+    <string name="only_five_photos">You can only select 5 images</string>
+    <string name="try_again">Try again</string>
+    <string name="correo_enviado">A VERIFICATION EMAIL WAS SENT</string>
+    <string name="no_qr_valid">It is not an Instapetts QR</string>
+    <string name="name_invalid">Invalid name</string>
+    <string name="pet_updated">Updated Pet</string>
+    <string name="report_sended">Report Sent</string>
+    <string name="revisa_credenciales">Check email or password</string>
+    <string name="actualizando_foto">Updating photo</string>
+
+
+    <string name="photo_uploaded">Photograph uploaded correctly</string>
+    <string name="upload_post">UPLOADING POST</string>
+    <string name="historia_subida">HISTORY UPLOADED</string>
+    <string name="pet_created">PET CREATED</string>
+    <string name="configurando_pet">CONFIGURING YOUR PET</string>
+    <string name="subiendo_historias">UPLOADING STORIES</string>
+    <string name="denunciar">Report</string>
+    <string name="send">Send</string>
+    <string name="more_report">Provide as much detail as possible</string>
+    <string name="contact_autorities">If you know that someone or a pet is in physical danger, please contact your authorities</string>
+    <string name="description_denuncia">Description of the complaint (Optional)</string>
+    <string name="motivo">Reason:</string>
+    <string name="comentar_algo">Comment something...</string>
+
+    <string name="coments_desactivated">Comments disabled by user</string>
+    <string name="publicar">Comment</string>
+    <string name="omitir">Omit</string>
+
+    <string name="cerca_De_ti">Near you</string>
+    <string name="users_news">New users</string>
+    <string name="recent_search">Recent searches</string>
 </resources>

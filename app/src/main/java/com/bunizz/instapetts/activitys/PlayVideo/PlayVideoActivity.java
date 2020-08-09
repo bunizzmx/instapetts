@@ -480,7 +480,7 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
 
     @Override
     public void deletePostError(boolean deleted) {
-        Toast.makeText(this,"Publicacion eliminada",Toast.LENGTH_LONG).show();
+        Toast.makeText(this,getString(R.string.delete_post_succes),Toast.LENGTH_LONG).show();
         finish();
     }
 }

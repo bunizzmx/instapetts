@@ -349,7 +349,7 @@ public class FragmentListGalery extends Fragment implements  ListGaleryContract.
                     adapter.addMorePosts(data);
             }
         }else{
-            Toast.makeText(getContext(),"NO HAY MAS",Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(),getContext().getString(R.string.no_more),Toast.LENGTH_LONG).show();
         }
     }
 }

@@ -217,7 +217,7 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
         if(followsBeans.size()>0) {
             adapter.addMoreUsers(followsBeans);
         }else{
-            Toast.makeText(getContext(),"YA ES TODO",Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(),getContext().getString(R.string.no_more),Toast.LENGTH_LONG).show();
             IS_ALL =true;
         }
     }
@@ -249,7 +249,7 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
         if(NEXT_FOLLOWEDS.size()>0) {
             adapter.addMoreUsers(NEXT_FOLLOWEDS);
         }else{
-            Toast.makeText(getContext(),"YA ES TODO",Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(),getContext().getString(R.string.no_more),Toast.LENGTH_LONG).show();
             IS_ALL =true;
         }
     }

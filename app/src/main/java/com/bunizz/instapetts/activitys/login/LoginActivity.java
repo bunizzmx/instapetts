@@ -374,7 +374,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                 });
         */
         }else{
-            Toast.makeText(LoginActivity.this,"Revisa tus credenciales",Toast.LENGTH_LONG).show();
+            Toast.makeText(LoginActivity.this,getString(R.string.error_credenciales),Toast.LENGTH_LONG).show();
         }
     }
 
@@ -390,7 +390,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                         user.sendEmailVerification()
                                 .addOnCompleteListener(task1 -> {
                                     if (task1.isSuccessful()) {
-                                        Toast.makeText(LoginActivity.this,"SE ENVIO UN CORREO DE VERIFICACION",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(LoginActivity.this,getString(R.string.correo_enviado),Toast.LENGTH_LONG).show();
                                         changeOfInstance(FragmentElement.INSTANCE_MAIN_LOGIN,false);
                                     }
                                 });
@@ -403,14 +403,14 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                 App.getInstance().vibrate();
                 Log.e("EEROR_LOGIN","-->" + e.getMessage());
                 if(e.getMessage().contains("badly formatted")){
-                    Toast.makeText(LoginActivity.this, "Correo no valido", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.correo_invalido), Toast.LENGTH_LONG).show();
                 }else if(e.getMessage().contains("There is no user")){
-                    Toast.makeText(LoginActivity.this, "Usuario no existe" , Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.user_no_existe) , Toast.LENGTH_LONG).show();
                 }else if(e.getMessage().contains("The password is invalid")){
-                    Toast.makeText(LoginActivity.this, "Revisa tus credenciales" , Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.error_credenciales) , Toast.LENGTH_LONG).show();
                 }
                 else if(e.getMessage().contains("use by another account")){
-                    Toast.makeText(LoginActivity.this, "Usuario ya existente" , Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.user_existe) , Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -576,7 +576,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     @Override
     public void registerError() {
         dialogLoanding.dismiss();
-         Toast.makeText(LoginActivity.this,"Intentalo Nuevamente",Toast.LENGTH_LONG).show();
+         Toast.makeText(LoginActivity.this,getString(R.string.try_again),Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -691,7 +691,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                             });
                         } else {
                             Log.e("ERROR_LOGIN","-->TODO MAL" + task.getException().getMessage());
-                            Toast.makeText(LoginActivity.this, "Intente de nuevo", Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, getString(R.string.try_again), Toast.LENGTH_LONG).show();
                         }
                     }
                 });

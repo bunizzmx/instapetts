@@ -61,7 +61,7 @@ public class DialogRatePet extends BaseAlertDialog{
                     listener.onRate(rate_number, input_comment_rate_pet.getText().toString(), Integer.parseInt(petBean.getId_pet()), petBean.getId_propietary(), petBean.getUuid());
                     dismiss();
                 }else{
-                    Toast.makeText(context,"Debes calificar primero",Toast.LENGTH_LONG).show();
+                    Toast.makeText(context,context.getString(R.string.rate_first),Toast.LENGTH_LONG).show();
                 }
             }
         });

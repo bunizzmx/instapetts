@@ -44,6 +44,7 @@ public class ReportPresenter implements ReportsContract.Presenter {
         UserBean user = new UserBean();
         user.setTarget(WEBCONSTANTS.GET);
         user.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        user.setIdioma(App.read(PREFERENCES.IDIOMA,"es"));
         disposable.add(
                 apiService.getListReports(user)
                         .subscribeOn(Schedulers.io())

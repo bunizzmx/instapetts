@@ -69,7 +69,7 @@ public class FragmentSigin extends Fragment {
             if (login_listener != null)
                 login_listener.sigInWithEmail(email_signin.getText().toString(), password_signin.getText().toString());
         }else{
-            Toast.makeText(getContext(),"Revisa correo o contraseña",Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(),getContext().getString(R.string.revisa_credenciales),Toast.LENGTH_LONG).show();
         }
     }
 

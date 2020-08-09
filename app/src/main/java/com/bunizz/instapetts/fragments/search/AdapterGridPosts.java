@@ -210,6 +210,49 @@ public class AdapterGridPosts extends RecyclerView.Adapter<RecyclerView.ViewHold
                             return false;
                         }
                     });
+
+                    h.root_posts_search_item.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(((PostBean) posts.get(position)).getType_post() == 0) {
+                                dialogPreviewPost = new DialogPreviewPost(context, data_parsed);
+                                dialogPreviewPost.setListener_post(new postsListener() {
+                                    @Override
+                                    public void onLike(int id_post, boolean type_like, int id_usuario, String url_image) {
+                                        listener_post.onLike(id_post,type_like,id_usuario,url_image);
+                                    }
+
+                                    @Override
+                                    public void onFavorite(int id_post, PostBean postBean) {
+                                        listener_post.onFavorite(id_post,postBean);
+                                    }
+
+                                    @Override
+                                    public void onDisfavorite(int id_post) {
+                                        listener_post.onDisfavorite(id_post);
+                                    }
+
+                                    @Override
+                                    public void openMenuOptions(int id_post, int id_usuario, String uuid) {
+
+                                    }
+
+                                    @Override
+                                    public void commentPost(int id_post, boolean can_comment,int id_usuario) {
+
+                                    }
+
+                                    @Override
+                                    public void reproduceVideoActivity(PostBean postBean) {
+
+                                    }
+                                });
+                                dialogPreviewPost.show();
+                            }else{
+                                listener_post.reproduceVideoActivity(data_parsed);
+                            }
+                        }
+                    });
                     break;
 
                 case TYPE_ADD:

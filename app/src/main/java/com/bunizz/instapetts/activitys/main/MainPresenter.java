@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.bunizz.instapetts.App;
+import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.IdentificadoresHistoriesBean;
 import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
@@ -260,12 +261,12 @@ public class MainPresenter implements MainContract.Presenter {
                                                     Log.e("BORRE_FOLLOW","DE MI");});
                                     }
                                 }  else{
-                                    Toast.makeText(mContext,"No se pudo eliminar intente de nuevo",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mContext,mContext.getString(R.string.no_posible_delete),Toast.LENGTH_SHORT).show();
                                 }
                             }
                             @Override
                             public void onError(Throwable e) {
-                                Toast.makeText(mContext,"No se pudo eliminar intente de nuevo",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext,mContext.getString(R.string.no_posible_delete),Toast.LENGTH_SHORT).show();
                             }
                         })
         );

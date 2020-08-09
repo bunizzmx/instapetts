@@ -24,7 +24,7 @@
 
     </androidx.cardview.widget.CardView>
     <TextView
-        android:text="Denunciar"
+        android:text="@string/denunciar"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"

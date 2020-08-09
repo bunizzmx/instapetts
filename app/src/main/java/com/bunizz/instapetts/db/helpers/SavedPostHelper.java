@@ -36,7 +36,6 @@ public class SavedPostHelper extends GenericHelper {
 
 
     public void savePost(PostBean postBean) {
-        Log.e("SAVE_RAZA",":)");
         ContentValues contentValues = new ContentValues();
         contentValues.put(NAME_URLS_POSTS, postBean.getUrls_posts());
         contentValues.put(NAME_PET, postBean.getName_pet());

@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.abedelazizshe.lightcompressorlibrary.CompressionListener;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.constantes.BUNDLES;
@@ -34,9 +35,12 @@ import com.bunizz.instapetts.utils.videoCrop.ffmpeg.ExecuteBinaryResponseHandler
 import com.bunizz.instapetts.utils.videoCrop.ffmpeg.FFmpeg;
 import com.bunizz.instapetts.utils.videoCrop.ffmpeg.FFtask;
 import com.bunizz.instapetts.utils.videoCrop.player.VideoPlayer;
+import com.bunizz.instapetts.utils.videocrop3.VideoCompressor;
+import com.bunizz.instapetts.utils.videocrop3.VideoQuality;
 import com.google.android.exoplayer2.util.Util;
 
 
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.Formatter;
@@ -287,8 +291,60 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
         Log.e("INIDCES_VIDEO","--> : "+ STARTCROP + "/" + DURATION);
         Log.e("INIDCES_VIDEO","--> : "+ start + "/" + duration);
 
+        VideoCompressor.INSTANCE.start(inputPath,
+                outputPath,
+                new CompressionListener() {
+                    @Override
+                    public void onStart() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                dialogProgresCrop = new DialogProgresCrop(VideoCropActivity.this);
+                                dialogProgresCrop.show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onSuccess() {
+                        IS_IN_CROP = false;
+                        dialogProgresCrop.dismiss();
+                        IS_IN_CROP = false;
+                        Intent intent = new Intent();
+                        intent.putExtra(BUNDLES.VIDEO_DURATION,(DURATION /1000));
+                        intent.putExtra(BUNDLES.VIDEO_ASPECT,ASPECT);
+                        setResult(RESULT_OK,intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(@NotNull String failureMessage) {
+                        IS_IN_CROP = false;
+                        Toast.makeText(VideoCropActivity.this, "Failed to crop!", Toast.LENGTH_SHORT).show();
+                        Log.e("onFailure", failureMessage);
+                        IS_IN_CROP = false;
+                        dialogProgresCrop.dismiss();
+                    }
+
+                    @Override
+                    public void onProgress(float percent) {
+                        dialogProgresCrop.set_progress_percentage(percent);
+                    }
+
+                    @Override
+                    public void onCancelled() {
+                        IS_IN_CROP = false;
+                        dialogProgresCrop.dismiss();
+                    }
+
+                }
+                , VideoQuality.MEDIUM,
+                false,
+                false
+        );
+
         mFFMpeg = FFmpeg.getInstance(this);
-        if (mFFMpeg.isSupported()) {
+      /*  if (mFFMpeg.isSupported()) {
             String crop = String.format("crop=%d:%d:%d:%d:exact=0", cropRect.right, cropRect.bottom, cropRect.left, cropRect.top);
             String[] cmd = {
                     "-y",
@@ -303,7 +359,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
                     outputPath
             };
 
-            mFFTask = mFFMpeg.execute(cmd, new ExecuteBinaryResponseHandler() {
+           mFFTask = mFFMpeg.execute(cmd, new ExecuteBinaryResponseHandler() {
                 @Override
                 public void onSuccess(String message) {
                     IS_IN_CROP = false;
@@ -348,7 +404,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
                     dialogProgresCrop.dismiss();
                 }
             }, DURATION * 1.0f / 1000);
-        }
+        }*/
     }
 
     @Override

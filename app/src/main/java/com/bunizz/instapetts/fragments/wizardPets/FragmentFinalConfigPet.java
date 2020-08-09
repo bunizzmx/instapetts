@@ -51,25 +51,22 @@ public class FragmentFinalConfigPet extends Fragment {
     {
        if(!configure_name_pet.getText().toString().isEmpty() &&  !descripcion_pet.getText().toString().isEmpty() && URL_PET.length() > 5){
            if(listener!=null){
-               Log.e("PET_FINALICE",":)");
                Bundle b = new Bundle();
                b.putString(BUNDLES.NAME_PET,configure_name_pet.getText().toString());
                b.putString(BUNDLES.DESCRIPCION_PET,descripcion_pet.getText().toString());
                b.putString(BUNDLES.URL_PHOTO_PET,URL_PET);
                listener_pet_config.SaveDataPet(b,4);
                listener.onpetFinish(true);
-           }else{
-               Log.e("PET_FINALICE","nulo");
            }
        }else{
          if(configure_name_pet.getText().toString().isEmpty())
-             Toast.makeText(getContext(),"EScribe nomvre de mascota",Toast.LENGTH_LONG).show();
+             Toast.makeText(getContext(),getContext().getString(R.string.write_name_pet),Toast.LENGTH_LONG).show();
 
          if(descripcion_pet.getText().toString().isEmpty())
-               Toast.makeText(getContext(),"Que le gusta a tu mascota?",Toast.LENGTH_LONG).show();
+               Toast.makeText(getContext(),getContext().getString(R.string.gustos_pet),Toast.LENGTH_LONG).show();
 
            if(URL_PET.length() < 5)
-               Toast.makeText(getContext(),"Elige una foto",Toast.LENGTH_LONG).show();
+               Toast.makeText(getContext(),getContext().getString(R.string.chose_photo),Toast.LENGTH_LONG).show();
        }
 
     }

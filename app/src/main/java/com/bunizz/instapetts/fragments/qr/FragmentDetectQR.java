@@ -102,7 +102,7 @@ public class FragmentDetectQR extends Fragment implements Callback {
                                 listener.change_fragment_parameter(INSTANCE_PREVIEW_PROFILE, b);
                             }
                         }else{
-                            Toast.makeText(getContext(),"No es un QR de Instapetts",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(),getContext().getString(R.string.no_qr_valid),Toast.LENGTH_LONG).show();
                             App.getInstance().vibrate();
                             mCodeScanner.startPreview();
                         }

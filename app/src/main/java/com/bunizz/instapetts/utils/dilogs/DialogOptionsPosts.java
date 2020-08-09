@@ -71,7 +71,7 @@ public class DialogOptionsPosts extends BaseAlertDialog{
                 public void onClick(View v) {
                     listener.unfollowUser(id_usuario,uuid);
                     dismiss();
-                    Toast.makeText(context, "Se dejo de seguir a este usuario", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context,context.getString(R.string.unfollow_succes), Toast.LENGTH_LONG).show();
                 }
             });
 

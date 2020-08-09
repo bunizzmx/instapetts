@@ -97,12 +97,11 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
         super.onCreate(savedInstanceState);
         rxPermissions = new RxPermissions(getActivity());
         presenter = new SearchPetPresenter(this,getContext());
-        Log.e("CRE_FRAGMENT","ONCREATE SERACH");
         adapter_pager = new ViewPagerAdapterx(getChildFragmentManager());
-        adapter_pager.addFragment(new FragmentPopietaryList(), "Usuarios");
-        adapter_pager.addFragment(new FragmentPetList(), "Mascotas");
-        adapter_pager.addFragment(new FragmentPetList(), "Cerca de ti");
-        adapter_pager.addFragment(new FragmentPetList(), "Usuarios nuevos");
+        adapter_pager.addFragment(new FragmentPopietaryList(), getContext().getString(R.string.users));
+        adapter_pager.addFragment(new FragmentPetList(), getContext().getString(R.string.pets));
+        adapter_pager.addFragment(new FragmentPetList(), getContext().getString(R.string.cerca_De_ti));
+        adapter_pager.addFragment(new FragmentPetList(),  getContext().getString(R.string.users_news));
 
     }
 

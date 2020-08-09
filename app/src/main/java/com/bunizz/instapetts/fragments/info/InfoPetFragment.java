@@ -325,7 +325,7 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
 
     @Override
     public void petUpdated() {
-        Toast.makeText(getActivity(),"Mascota Actualizada",Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(),getContext().getString(R.string.pet_updated),Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -350,7 +350,7 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
         intent.putExtra(BUNDLES.NAME_PET,name_pet);
         intent.putExtra(ImageService.INTENT_TRANSFER_OPERATION, ImageService.TRANSFER_OPERATION_UPLOAD);
         getActivity().startService(intent);
-        Toast.makeText(getActivity(),"Actualizando foto",Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(),getContext().getString(R.string.actualizando_foto),Toast.LENGTH_LONG).show();
         App.getInstance().delete_cache();
     }
 }

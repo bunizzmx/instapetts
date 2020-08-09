@@ -3,7 +3,9 @@ package com.bunizz.instapetts.fragments.tips;
 import android.content.Context;
 import android.util.Log;
 
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.beans.AutenticateBean;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
@@ -36,6 +38,7 @@ public class TipsPresenter implements TipsContract.Presenter {
         autenticateBean.setName_user("DEMO");
         autenticateBean.setToken("xxxx");
         autenticateBean.setPaginador(-999);
+        autenticateBean.setIdioma(App.read(PREFERENCES.IDIOMA,"es"));
         disposable.add(
                 apiService.getTips(autenticateBean)
                         .subscribeOn(Schedulers.io())
@@ -75,6 +78,7 @@ public class TipsPresenter implements TipsContract.Presenter {
         autenticateBean.setName_user("DEMO");
         autenticateBean.setToken("xxxx");
         autenticateBean.setPaginador(paginador);
+        autenticateBean.setIdioma(App.read(PREFERENCES.IDIOMA,"es"));
         disposable.add(
                 apiService.getTips(autenticateBean)
                         .subscribeOn(Schedulers.io())

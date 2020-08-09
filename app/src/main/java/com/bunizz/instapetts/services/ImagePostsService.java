@@ -87,19 +87,20 @@ public class ImagePostsService extends Service {
         if(intent!=null) {
             TYPE_NOTIFICATION = intent.getIntExtra("NOTIFICATION_TIPE", 0);
             if (TYPE_NOTIFICATION == 0) {
-                TITLE = "SUBIENDO POST";
-                TITLE_SUCCESS = "COMPLETADO";
+                TITLE = this.getString(R.string.upload_post);
+                TITLE_SUCCESS = this.getString(R.string.completed);
             } else if (TYPE_NOTIFICATION == 1) {
-                TITLE_SUCCESS = "PERFIL ACTUALIZADO";
-                TITLE = "ACTUALIZANDO PERFIL";
+                TITLE_SUCCESS = this.getString(R.string.profile_updated);
+                TITLE =  this.getString(R.string.upload_post);
             } else if (TYPE_NOTIFICATION == 2) {
-                TITLE_SUCCESS = "HISTORIA SUBIDA";
-                TITLE = "SUBIENDO HISTORIAS";
+                TITLE_SUCCESS =this.getString(R.string.historia_subida);
+                TITLE = this.getString(R.string.subiendo_historias);
             } else if (TYPE_NOTIFICATION == 3) {
-                TITLE_SUCCESS = "MASCOTA CREADA";
-                TITLE = "CONFIGURANDO TU MASCOTA";
+                TITLE_SUCCESS = this.getString(R.string.pet_created);
+                TITLE = this.getString(R.string.configurando_pet);
                 NAME_PET = intent.getStringExtra(BUNDLES.NAME_PET);
             }
+
 
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
             notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

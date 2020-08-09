@@ -96,10 +96,10 @@ public class FragmentFirstUser extends Fragment implements  FirstUserContract.Vi
             listener_uploads.UpdateProfile(b);
         }else{
             if(descripcion_user.getText().toString().length() < 5){
-                Toast.makeText(getContext(),"Elige nombre valido",Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(),getContext().getString(R.string.name_invalid),Toast.LENGTH_LONG).show();
             }
             if(URL_LOCAL.equals("INVALID")){
-                Toast.makeText(getContext(),"Elige una foto primero",Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(),getContext().getString(R.string.chose_photo),Toast.LENGTH_LONG).show();
             }
             if(user_instapetts.getText().toString().trim().length() <= 3){
                 status_icon_name_tag.setVisibility(View.VISIBLE);

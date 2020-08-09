@@ -266,11 +266,11 @@ public class FragmentListOfPosts extends Fragment implements FeedContract.View {
         if(deleted) {
             Log.e("DELETED_POST","TRUE");
             getActivity().onBackPressed();
-            Toast.makeText(getContext(), "POST ELIMINADO", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getContext().getString(R.string.delete_post_succes), Toast.LENGTH_LONG).show();
         }
         else {
             Log.e("DELETED_POST","FALSE");
-            Toast.makeText(getContext(), "NO SE PUDO BORRAR EL POSTS INTENTA DE NUEVO", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getContext().getString(R.string.delete_post_error), Toast.LENGTH_LONG).show();
         }
     }
 

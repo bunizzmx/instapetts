@@ -359,4 +359,49 @@
     <string name="label_pet_name">Firulais..</string>
     <string name="label_pet_descripcion">Mi mascota es...</string>
     <string name="profile_updated">PERFIL ACTUALIZADO</string>
+
+    <string name="selecciona_imagen">Selecciona una imagen primero</string>
+    <string name="seleciona_genero">SELECIONA GENER</string>
+    <string name="selecciona_fecha">SELECIONA FECHA</string>
+    <string name="escribe_algo">Escribe algo...</string>
+    <string name="rate_first">Debes calificar primero</string>
+    <string name="unfollow_succes">Se dejo de seguir a este usuario</string>
+    <string name="delete_post_succes">POST ELIMINADO</string>
+    <string name="delete_post_error">NO SE PUDO BORRAR EL POSTS INTENTA DE NUEVO</string>
+    <string name="error_upload_post">FALLO AL PUBLICAR INTENTA DE NUEVO</string>
+    <string name="no_posible_delete">No se pudo eliminar intente de nuevo</string>
+    <string name="no_more">NO HAY MAS</string>
+    <string name="user_existe">Usuario ya existente</string>
+    <string name="history_deleted">Historia Eliminada</string>
+    <string name="only_five_photos">Solo puedes seleccionar 5 imagenes</string>
+    <string name="try_again">Intente de nuevo</string>
+    <string name="correo_enviado">SE ENVIO UN CORREO DE VERIFICACION</string>
+    <string name="no_qr_valid">No es un QR de Instapetts</string>
+    <string name="name_invalid">Nombre invalido</string>
+    <string name="pet_updated">Mascota Actualizada</string>
+    <string name="report_sended">Reporte Enviado</string>
+    <string name="revisa_credenciales">Revisa correo o contraseña</string>
+    <string name="actualizando_foto">Actualizando foto</string>
+
+    <string name="photo_uploaded">Fotografia subida correctamente</string>
+    <string name="upload_post">SUBIENDO POST</string>
+    <string name="historia_subida">HISTORIA SUBID</string>
+    <string name="pet_created">MASCOTA CREADA</string>
+    <string name="configurando_pet">CONFIGURANDO TU MASCOTA</string>
+    <string name="subiendo_historias">SUBIENDO HISTORIAS</string>
+    <string name="denunciar">Denunciar</string>
+    <string name="send">Enviar</string>
+    <string name="more_report">Proporciona la mayor cantidad de detalles posible</string>
+    <string name="contact_autorities">Si sabes que alguien o alguna mascota esta en peligro fisico, por favor ponte en contacto con tus autoridades</string>
+    <string name="description_denuncia">Descripcion de la denuncia(Opcional)</string>
+    <string name="motivo">Motivo:</string>
+    <string name="comentar_algo">Comentar algo...</string>
+    <string name="coments_desactivated">Comentarios desactivados por el usuario</string>
+    <string name="publicar">Publicar</string>
+    <string name="omitir">Omitir</string>
+
+    <string name="cerca_De_ti">Cerca de ti</string>
+    <string name="users_news">Usuarios nuevos</string>
+    <string name="recent_search">Busquedas recientes</string>
+
 </resources>

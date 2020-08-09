@@ -10,7 +10,7 @@
         android:visibility="gone"
         android:layout_marginLeft="10dp"
         android:id="@+id/search_recent_label"
-        android:text="Busquedas recientes"
+        android:text="@string/recent_search"
         android:textStyle="bold"
         android:textColor="@color/black"
         android:layout_marginBottom="20dp"

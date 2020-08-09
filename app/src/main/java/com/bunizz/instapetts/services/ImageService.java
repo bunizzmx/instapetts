@@ -216,7 +216,7 @@ public class ImageService extends Service {
                 .setBadgeIconType(R.drawable.ic_stat_name)
                 .setLargeIcon(bitmap)
                 .setContentTitle(TITLE)
-                .setContentText("Fotografia subida correctamente")
+                .setContentText(this.getString(R.string.photo_uploaded))
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)

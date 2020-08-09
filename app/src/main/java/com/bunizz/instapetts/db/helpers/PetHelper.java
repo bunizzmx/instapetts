@@ -5,8 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.GenericHelper;
 
 import net.sqlcipher.database.SQLiteConstraintException;
@@ -85,6 +87,7 @@ public class PetHelper extends GenericHelper {
                 null,
                 null,
                 null, null, null, null, null);
+
         try {
             while (cursor.moveToNext()) {
                 PetBean h ;

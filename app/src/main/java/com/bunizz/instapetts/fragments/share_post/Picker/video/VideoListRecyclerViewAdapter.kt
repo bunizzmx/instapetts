@@ -66,7 +66,7 @@ class VideoListRecyclerViewAdapter(private val context: Context) : RecyclerView.
             it.setOnClickListener { view ->
                 run {
                     if (!selectable && !isSelectedImage) {
-                        Toast.makeText(context, "Solo puedes seleccionar 5 imagenes", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, context.getString(R.string.only_five_photos), Toast.LENGTH_LONG).show()
                     }
                     onItemClickListener
                             ?.onItemClick(

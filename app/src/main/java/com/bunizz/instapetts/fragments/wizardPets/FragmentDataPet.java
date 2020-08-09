@@ -74,13 +74,19 @@ public class FragmentDataPet extends Fragment {
 
     String FECHA_CUMPLEAN ="NULO";
 
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.back_to_main)
+    void back_to_main()
+    {
+        getActivity().onBackPressed();
+    }
+
     @SuppressLint("MissingPermission")
     @OnClick(R.id.next_finalize)
     void finalice_pet()
     {
-        Log.e("PET_FINALICE","xxx");
         if(listener!=null){
-            Log.e("PET_FINALICE",":)");
             Bundle b = new Bundle();
             b.putString(BUNDLES.PESO_PET,String.valueOf(height_ruler_picker.getCurrentValue()));
             if(GENERO == 1)
@@ -91,10 +97,10 @@ public class FragmentDataPet extends Fragment {
             b.putString(BUNDLES.EDAD_PET,FECHA_CUMPLEAN);
             listener_pet_config.SaveDataPet(b,3);
             if(GENERO == 0){
-                Toast.makeText(getContext(),"SELECIONA GENERO",Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(),getContext().getString(R.string.seleciona_genero),Toast.LENGTH_LONG).show();
             }else{
                 if(date_selected.getText().toString().isEmpty() || FECHA_CUMPLEAN.equals("NULO"))
-                    Toast.makeText(getContext(),"SELECIONA FECHA",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(),getContext().getString(R.string.selecciona_fecha),Toast.LENGTH_LONG).show();
                 else {
                     listener_pet_config.SaveDataPet(b,3);
                     listener.onchange(FragmentElement.INSTANCE_FINAL_CONFIG_PET, null);
@@ -168,10 +174,6 @@ public class FragmentDataPet extends Fragment {
             case HAMSTER:
                 height_ruler_picker.setMinMaxValue(100,1000);
                 height_ruler_picker.selectValue(200);
-                break;
-            case OTRO:
-                height_ruler_picker.setMinMaxValue(1,50);
-                height_ruler_picker.selectValue(10);
                 break;
             default:
                 height_ruler_picker.setMinMaxValue(1,50);

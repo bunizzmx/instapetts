@@ -79,7 +79,7 @@
             android:textColor="#696666"
             android:textAllCaps="false"
             android:textSize="14dp"
-            android:text="Enviar codigo"
+            android:text=""
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>

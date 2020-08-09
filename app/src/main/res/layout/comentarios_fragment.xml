@@ -28,7 +28,7 @@
             android:textStyle="bold"
             android:textColor="@color/black"
             android:layout_centerHorizontal="true"
-            android:text="Comentarios"
+            android:text="@string/comentarios"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </RelativeLayout>
@@ -95,7 +95,7 @@
             android:layout_height="25dp"/>
         <EditText
             android:id="@+id/input_commentarios"
-            android:hint="Comentar algo..."
+            android:hint="@string/comentar_algo"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
@@ -116,7 +116,7 @@
                 android:textStyle="bold"
                 android:id="@+id/text_label"
                 android:textColor="#CAC7C7"
-                android:text="Publicar"
+                android:text="@string/publicar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </RelativeLayout>
@@ -127,7 +127,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp">
             <TextView
-                android:text="Comentarios desactivados por el usuario"
+                android:text="@string/coments_desactivated"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"

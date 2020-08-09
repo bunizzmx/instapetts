@@ -110,7 +110,7 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
             @Override
             public void delete(boolean delete) {
                 if(delete) {
-                    Toast.makeText(getContext(),"Historia Eliminada",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(),getContext().getString(R.string.history_deleted),Toast.LENGTH_LONG).show();
                     listener.onItemDeleted(uris_fotos.get(COUNTER).getIdentificador());
                     getActivity().onBackPressed();
                 }else{
