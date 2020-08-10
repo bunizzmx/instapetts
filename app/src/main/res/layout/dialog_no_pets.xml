@@ -28,7 +28,7 @@
             android:layout_height="wrap_content">
             <com.bunizz.instapetts.utils.ImagenCircular
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/ic_holder"
+                android:src="@drawable/logoapp"
                 android:layout_width="200dp"
                 android:layout_height="200dp"/>
             <TextView
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
-                android:text="no_p"
+                android:text="@string/no_pets"
                 android:textAlignment="center"
                 android:textColor="#F44336"
                 android:textSize="24dp" />
@@ -58,17 +58,12 @@
                 android:textColor="@color/black"
                 android:textSize="18dp" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-              android:id="@+id/new_pet_button"
-               android:layout_marginBottom="10dp"
-                android:layout_marginTop="20dp"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/ic_food_pet"
-                android:tint="@color/white"
-                app:fabSize="auto"
-                app:elevation="2dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+           <Button
+               android:layout_margin="10dp"
+               android:id="@+id/add_pet_dialog"
+               android:text="@string/add_pet"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"/>
         </LinearLayout>
 
 

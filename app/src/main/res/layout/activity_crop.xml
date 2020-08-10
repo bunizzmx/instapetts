@@ -58,33 +58,6 @@
                 android:layout_width="15dp"
                 android:layout_height="15dp"/>
         </RelativeLayout>
-        <LinearLayout
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/change_4_5"
-                android:tint="@color/white"
-                android:src="@drawable/ic_crop_portrait"
-                android:layout_width="20dp"
-                android:layout_height="20dp"/>
-            <ImageView
-                android:layout_marginLeft="20dp"
-                android:id="@+id/change_4_3"
-                android:tint="@color/white"
-                android:src="@drawable/ic_crop_4_3"
-                android:layout_width="20dp"
-                android:layout_height="20dp"/>
-            <ImageView
-                android:id="@+id/change_16_9"
-                android:layout_marginLeft="20dp"
-                android:tint="@color/white"
-                android:src="@drawable/ic_crop_16_9"
-                android:layout_width="20dp"
-                android:layout_height="20dp"/>
-        </LinearLayout>
         <Button
             android:layout_marginRight="20dp"
             android:layout_alignParentRight="true"

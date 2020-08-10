@@ -67,7 +67,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
     DialogProgresCrop dialogProgresCrop;
 
     private CropVideoView mCropVideoView;
-
+    MediaMetadataRetriever mediaMetadataRetriever;
     private String inputPath;
     private String outputPath;
     private boolean isVideoPlaying = false;
@@ -101,7 +101,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
 
     }
 
-    @SuppressLint("MissingPermission")
+   /* @SuppressLint("MissingPermission")
     @OnClick(R.id.change_16_9)
     void change_16_9() {
         ASPECT ="16_9";
@@ -126,7 +126,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
         ASPECT ="4_3";
         mCropVideoView.setFixedAspectRatio(true);
         mCropVideoView.setAspectRatio(4, 3);
-    }
+    }*/
 
 
     @Override
@@ -148,6 +148,17 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
         Log.e("URI_VIDEO","-->" + inputPath);
         findViews();
         requestStoragePermission();
+        mediaMetadataRetriever = new MediaMetadataRetriever();
+         mediaMetadataRetriever.setDataSource(inputPath);
+        int heightData = Integer.parseInt(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+        int widthData = Integer.parseInt(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+        Log.e("WIDTH_HSDHDHD","-->" + heightData  + "/" + widthData);
+        if(heightData < widthData){
+            ASPECT ="16_9";
+        }else
+        {
+            ASPECT =" 4_3 ";
+        }
 
     }
 
@@ -291,7 +302,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
         Log.e("INIDCES_VIDEO","--> : "+ STARTCROP + "/" + DURATION);
         Log.e("INIDCES_VIDEO","--> : "+ start + "/" + duration);
 
-        VideoCompressor.INSTANCE.start(inputPath,
+      /*  VideoCompressor.INSTANCE.start(inputPath,
                 outputPath,
                 new CompressionListener() {
                     @Override
@@ -341,25 +352,12 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
                 , VideoQuality.MEDIUM,
                 false,
                 false
-        );
+        );*/
 
         mFFMpeg = FFmpeg.getInstance(this);
-      /*  if (mFFMpeg.isSupported()) {
-            String crop = String.format("crop=%d:%d:%d:%d:exact=0", cropRect.right, cropRect.bottom, cropRect.left, cropRect.top);
-            String[] cmd = {
-                    "-y",
-                    "-ss",
-                    start,
-                    "-i",
-                    inputPath,
-                    "-t",
-                    duration,
-                    "-vf",
-                    crop,
-                    outputPath
-            };
-
-           mFFTask = mFFMpeg.execute(cmd, new ExecuteBinaryResponseHandler() {
+       if (mFFMpeg.isSupported()) {
+            String[] complexCommand = {"-ss", "" + start, "-y", "-i",inputPath , "-t", "" + duration,"-vcodec", "mpeg4", "-b:v", "2097152", "-b:a", "48000", "-ac", "2", "-ar", "22050", outputPath};
+           mFFTask = mFFMpeg.execute(complexCommand, new ExecuteBinaryResponseHandler() {
                 @Override
                 public void onSuccess(String message) {
                     IS_IN_CROP = false;
@@ -404,7 +402,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
                     dialogProgresCrop.dismiss();
                 }
             }, DURATION * 1.0f / 1000);
-        }*/
+        }
     }
 
     @Override

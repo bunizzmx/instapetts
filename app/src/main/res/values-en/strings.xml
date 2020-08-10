@@ -394,7 +394,7 @@
     <string name="revisa_credenciales">Check email or password</string>
     <string name="actualizando_foto">Updating photo</string>
 
-
+    <string name="con_gmail">Continue with gmail</string>
     <string name="photo_uploaded">Photograph uploaded correctly</string>
     <string name="upload_post">UPLOADING POST</string>
     <string name="historia_subida">HISTORY UPLOADED</string>
@@ -416,4 +416,6 @@
     <string name="cerca_De_ti">Near you</string>
     <string name="users_news">New users</string>
     <string name="recent_search">Recent searches</string>
+    <string name="no_pets">You don\'t have pets</string>
+
 </resources>

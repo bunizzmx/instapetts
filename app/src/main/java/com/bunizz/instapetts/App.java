@@ -10,6 +10,7 @@ import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -39,6 +40,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

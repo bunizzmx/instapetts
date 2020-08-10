@@ -403,5 +403,6 @@
     <string name="cerca_De_ti">Cerca de ti</string>
     <string name="users_news">Usuarios nuevos</string>
     <string name="recent_search">Busquedas recientes</string>
-
+    <string name="con_gmail">Continuar con gmail</string>
+    <string name="no_pets">No tienes mascotas</string>
 </resources>

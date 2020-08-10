@@ -87,6 +87,7 @@ public class PetsPropietaryAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
                 h.type_pet_icon.setVisibility(View.GONE);
             } else {
                 h.type_pet_icon.setVisibility(View.VISIBLE);
+                Log.e("TIPO_PETO","-->"+pets.get(position).getType_pet() + "/" + pets.get(position).getId_propietary() );
                 switch (pets.get(position).getType_pet()){
                     case 1:
                         h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_perro));
@@ -109,15 +110,6 @@ public class PetsPropietaryAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
                     case 7:
                         h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_otro));
                         break;
-                    case 8:break;
-                    case 9:break;
-                    case 10:break;
-                    case 11:break;
-                    case 12:break;
-                    case 13:break;
-                    case 14:break;
-                    case 15:break;
-                    case 16:break;
                     default:
                         h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_otro));
                         break;

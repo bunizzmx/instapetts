@@ -55,25 +55,10 @@ public class InfoPetPresenter implements  InfoPetContract.Presenter {
                             public void onSuccess(SimpleResponse responsePost) {
                                 if(responsePost.getCode_response()==200) {
                                       mView.petDeleted();
-                                }else{
-                                    RETRY ++;
-                                    if(RETRY < 3) {
-                                        //mView.peticionError();
-                                    }else{
-                                        Log.e("NO_INTERNET","-->request" );
-                                        // mView.noInternet();
-                                    }
-                                }
+                                }else{ }
                             }
                             @Override
                             public void onError(Throwable e) {
-                                RETRY ++;
-                                if(RETRY < 3) {
-                                    //mView.peticionError();
-                                }else{
-                                    Log.e("NO_INTERNET","-->error" );
-                                    //mView.noInternet();
-                                }
                             }
                         })
         );

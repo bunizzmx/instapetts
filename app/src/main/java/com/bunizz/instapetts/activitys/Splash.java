@@ -24,7 +24,7 @@ public class Splash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if(App.read(IS_INTRO_COMPLETED,false)) {
             Log.e("STATUS_USER","INTRO_COMPLETED");
-            if(App.read(IS_LOGUEDD,false) || App.read(PREFERENCES.ID_USER_FROM_WEB,0) == 0) {
+            if(App.read(IS_LOGUEDD,false) && App.read(PREFERENCES.ID_USER_FROM_WEB,0) != 0   && !App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"INVALID").contains("INVALID")) {
                 Log.e("STATUS_USER","IS LOGUEADO");
                 i = new Intent(Splash.this, Main.class);
                 i.putExtra("LOGIN_AGAIN",0);

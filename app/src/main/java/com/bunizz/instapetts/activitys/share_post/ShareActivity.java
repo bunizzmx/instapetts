@@ -442,7 +442,10 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
             Log.e("ESTATUS_SD","-----SI TIENE SD");
             File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + "Instapetts");
             if (!file.exists()) {
+                Log.e("SI_EXISTE","xxx");
                 file.mkdir();
+            }else{
+                Log.e("SI_EXISTE","xxx222");
             }
             file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + "Instapetts" + File.separator);
             return  file;
@@ -458,6 +461,19 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
             return  file;
         }
 
+    }
+
+    public static File rootfile(){
+        File file = new File(Environment.getDownloadCacheDirectory().getAbsolutePath() + File.separator + "Instapetts");
+        if (!file.exists()) {
+            Log.e("ESTATUS_SD","-----NO EXISTEAUN ASI");
+            file.mkdir();
+        }else{
+            Log.e("ESTATUS_SD","-----esta vex si");
+        }
+        String  fileex  ="" + UUID.randomUUID();
+        file = new File(Environment.getDataDirectory().getAbsolutePath() + File.separator + "Instapetts" + File.separator + fileex + ".jpg");
+        return  file;
     }
 
 

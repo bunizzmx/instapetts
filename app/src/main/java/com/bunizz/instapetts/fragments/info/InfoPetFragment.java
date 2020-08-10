@@ -330,6 +330,8 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
 
     @Override
     public void petDeleted() {
+        Log.e("PET_DELETED","SI");
+        listener_conexion.message("Mascota eliminada");
         getActivity().onBackPressed();
     }
 

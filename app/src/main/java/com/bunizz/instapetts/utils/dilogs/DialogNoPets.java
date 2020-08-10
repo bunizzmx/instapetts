@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -29,7 +30,7 @@ public class DialogNoPets extends BaseAlertDialog{
     private boolean cancelable = true;
     private boolean isLocked = false;
     Activity context;
-    FloatingActionButton new_pet_button;
+    Button new_pet_button;
     chose_pet_listener listener;
 
     public chose_pet_listener getListener() {
@@ -46,7 +47,7 @@ public class DialogNoPets extends BaseAlertDialog{
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this.context);
         LayoutInflater inflater = LayoutInflater.from(this.context);
         dialogView = inflater.inflate(R.layout.dialog_no_pets, null);
-        new_pet_button = dialogView.findViewById(R.id.new_pet_button);
+        new_pet_button = dialogView.findViewById(R.id.add_pet_dialog);
         new_pet_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

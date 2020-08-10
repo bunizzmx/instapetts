@@ -154,7 +154,7 @@
                     android:layout_centerVertical="true"
                     android:textColor="@color/white"
                     android:textStyle="bold"
-                    android:text="Continuar con gmail"
+                    android:text="@string/con_gmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </RelativeLayout>

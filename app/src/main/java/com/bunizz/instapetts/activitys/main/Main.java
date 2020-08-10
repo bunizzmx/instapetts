@@ -6,16 +6,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.Color;
 import android.location.Geocoder;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.security.keystore.KeyGenParameterSpec;
 import android.text.SpannableString;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -27,14 +28,12 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bunizz.instapetts.App;
-import com.bunizz.instapetts.BuildConfig;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.camera_history.CameraHistoryActivity;
 import com.bunizz.instapetts.activitys.login.LoginActivity;
@@ -42,8 +41,6 @@ import com.bunizz.instapetts.activitys.searchqr.QrSearchActivity;
 import com.bunizz.instapetts.activitys.share_post.ShareActivity;
 import com.bunizz.instapetts.activitys.side_menus_activities.SideMenusActivities;
 import com.bunizz.instapetts.activitys.wizardPets.WizardPetActivity;
-import com.bunizz.instapetts.beans.HistoriesBean;
-import com.bunizz.instapetts.beans.IdentificadoresHistoriesBean;
 import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.UserBean;
@@ -79,19 +76,11 @@ import com.bunizz.instapetts.services.JobsServices;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
 import com.bunizz.instapetts.utils.dilogs.DialogLogout;
-import com.bunizz.instapetts.utils.slidemenu.SlideMenuLayout;
 import com.bunizz.instapetts.utils.smoot.SmoothProgressBar;
 import com.bunizz.instapetts.utils.snackbar.SnackBar;
 import com.bunizz.instapetts.utils.target.TapTarget;
 import com.bunizz.instapetts.utils.target.TapTargetView;
 import com.bunizz.instapetts.web.CONST;
-import com.google.android.exoplayer2.source.ads.AdsLoader;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -99,12 +88,9 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import org.parceler.Parcels;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.security.GeneralSecurityException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Stack;
@@ -289,6 +275,12 @@ public class Main extends AppCompatActivity implements change_instance,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ButterKnife.bind(this);
+
+
+
+
+
+
         jobsServices = new JobsServices(this);
         jobsServices.startNotificationsRequest();
         try{
@@ -364,7 +356,6 @@ public class Main extends AppCompatActivity implements change_instance,
             }
         });
 
-        if (DOWNLOAD_INFO)
             download_pets();
 
 
@@ -396,6 +387,23 @@ public class Main extends AppCompatActivity implements change_instance,
                 Log.e("EXCEPCION_MAIN","MAIN" + e.getMessage());
         }
         presenter.updateConexion();
+
+
+
+
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo("com.bunizz.instapetts", PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.e("MY_KEY_HASH:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e("MY_KEY_HASH:", e.getMessage());
+        } catch (NoSuchAlgorithmException e) {
+            Log.e("MY_KEY_HASH:",e.getLocalizedMessage());
+        }
+
     }
 
     @Override
@@ -800,6 +808,9 @@ public class Main extends AppCompatActivity implements change_instance,
 
     @Override
     public void onBackPressed() {
+        if(IS_SHEET_OPEN){
+            mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        }
         if(FROM_PUSH == 1){
             repaint_nav(R.id.tab_feed);
             changeOfInstance(FragmentElement.INSTANCE_FEED, null, false);
@@ -1308,6 +1319,12 @@ public class Main extends AppCompatActivity implements change_instance,
         SnackBar.success(v, R.string.refreshed, SnackBar.LENGTH_LONG).show();
     }
 
+    @Override
+    public void message(String message) {
+        View v = findViewById(R.id.root_main);
+        SnackBar.info(v, message, SnackBar.LENGTH_LONG).show();
+    }
+
     class AddressResultReceiver extends ResultReceiver {
         public AddressResultReceiver(Handler handler) {
             super(handler);
@@ -1365,7 +1382,7 @@ public class Main extends AppCompatActivity implements change_instance,
     }
 
 
-    @SuppressLint("CheckResult")
+    @SuppressLint({"CheckResult", "MissingPermission"})
     void getLocation(){
         rxPermissions
                 .request(Manifest.permission.ACCESS_FINE_LOCATION,

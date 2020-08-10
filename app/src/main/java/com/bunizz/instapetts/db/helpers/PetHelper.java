@@ -85,7 +85,7 @@ public class PetHelper extends GenericHelper {
         cursor = getReadableDatabase().query(
                 TABLE_NAME,
                 null,
-                null,
+                "id_propietary =" +App.read(PREFERENCES.ID_USER_FROM_WEB,0)+"",
                 null, null, null, null, null);
 
         try {

@@ -121,7 +121,7 @@ public class FragmentPickerVideo extends Fragment implements   VideoPickerContra
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),4));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
         //recyclerView.setTag(ImagePickerFragment.IMAGE);
         recyclerView.setAdapter(adapter);
         spinner_album.setAdapter(albumAdapter);
