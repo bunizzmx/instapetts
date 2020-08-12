@@ -18,10 +18,16 @@ import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.mobileconnectors.s3.transfermanager.TransferManager;
+import com.amazonaws.mobileconnectors.s3.transfermanager.Upload;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -232,6 +238,8 @@ public class ImagePostsService extends Service {
         Log.e("FILENAME_TRANSFER","-->"+filename +"/"+file);
         transferObserver = transferUtility.upload(filename, file);
         transferObserver.setTransferListener(new UploadListener());
+
+
     }
 
 
@@ -247,11 +255,17 @@ public class ImagePostsService extends Service {
         }
         @Override
         public void onProgressChanged(int id, long bytesCurrent, long bytesTotal) {
+            double total =(bytesCurrent * 100) / bytesTotal;
+            Log.e("PORCENTAJE","-->" + total);
+            App.write(PREFERENCES.PORCENTAJE_SUBIDA,(int)total);
+                intent_broadcast.setAction(Main.POST_SUCCESFULL);
+                sendBroadcast(intent_broadcast);
 
         }
         @Override
         public void onStateChanged(int id, TransferState state) {
             if(state == TransferState.COMPLETED){
+                App.write(PREFERENCES.ESTATUS_SUBIDA_VIDEO,true);
                 notificationManager.notify(notificationId, mBuilder.build());
                 intent_broadcast.putExtra("COMPLETED", false);
                 intent_broadcast.setAction(Main.POST_SUCCESFULL);

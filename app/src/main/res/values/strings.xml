@@ -405,4 +405,5 @@
     <string name="recent_search">Busquedas recientes</string>
     <string name="con_gmail">Continuar con gmail</string>
     <string name="no_pets">No tienes mascotas</string>
+    <string name="progress">PROGRESO : </string>
 </resources>

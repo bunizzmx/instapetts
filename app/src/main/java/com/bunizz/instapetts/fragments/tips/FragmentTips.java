@@ -190,12 +190,7 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
         if(tips_list.size()==0)
             IS_ALL = true;
         loading = true;
-        if(tips_list.size()>0) {
-            ArrayList<Object> data = new ArrayList<>();
-            data.addAll(tips_list);
-            PAGINADOR = tips_list.get(tips_list.size() - 1).getId();
-            adapter.setMoreTips(data);
-        }
+         insertAdsInMenuItemsBelow(tips_list);
     }
 
     @Override
@@ -229,6 +224,29 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
 
     }
 
+
+    private void insertAdsInMenuItemsBelow(ArrayList<TipsBean> tips_list) {
+        ArrayList<Object> data_below = new ArrayList<>();
+        if(tips_list.size()>0) {
+            data_below.addAll(tips_list);
+            PAGINADOR = tips_list.get(tips_list.size() - 1).getId();
+            mNativeAds.clear();
+            mNativeAds.addAll(App.getInstance().getMoreAds());
+            if (mNativeAds.size() <= 0) { return;}
+            int offset = mNativeAds.size() + 1;
+            int index = 3;
+            for (UnifiedNativeAd ad: mNativeAds) {
+                if(index< data_below.size())
+                    data_below.add(index, ad);
+                if((offset % 2 != 0)) {}
+                else{offset +=1;}
+                index = index + offset;
+            }
+            adapter.setMoreTips(data_below);
+            refresh_tips.setRefreshing(false);
+        }
+
+    }
 
 
     private void insertAdsInMenuItems(boolean more) {

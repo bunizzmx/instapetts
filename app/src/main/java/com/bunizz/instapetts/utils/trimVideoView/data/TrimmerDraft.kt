@@ -15,7 +15,7 @@ data class TrimmerDraft(
 ): Parcelable, Comparable<TrimmerDraft> {
 
     constructor(parcel: Parcel) : this(
-            parcel.readString(),
+            parcel.readString().toString(),
             parcel.readLong(),
             parcel.readLong(),
             parcel.readLong(),

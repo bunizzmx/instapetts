@@ -56,6 +56,7 @@ public class PreviewProfileUserPresenter implements   ProfileUserContract.Presen
 
     @Override
     public void getInfoUser(UserBean user) {
+        Log.e("DATA_FOR_PREVIEW","PRESENTER _ id_usuario : " + user.getId());
     disposable.add(
                 apiService
                         .getInfoUser(user)

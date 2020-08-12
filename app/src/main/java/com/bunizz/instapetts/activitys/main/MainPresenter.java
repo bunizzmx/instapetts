@@ -1,5 +1,6 @@
 package com.bunizz.instapetts.activitys.main;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
@@ -14,6 +15,7 @@ import com.bunizz.instapetts.beans.IdentificadoresHistoriesBean;
 import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean$$Parcelable;
 import com.bunizz.instapetts.beans.PetBean;
+import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.FIRESTORE;
 import com.bunizz.instapetts.constantes.PREFERENCES;
@@ -23,6 +25,7 @@ import com.bunizz.instapetts.db.helpers.IdentificadoresHistoriesHelper;
 import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
 import com.bunizz.instapetts.db.helpers.MyStoryHelper;
 import com.bunizz.instapetts.db.helpers.PetHelper;
+import com.bunizz.instapetts.db.helpers.TempPostVideoHelper;
 import com.bunizz.instapetts.fragments.share_post.Share.SharePostContract;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.CONST;
@@ -70,6 +73,7 @@ public class MainPresenter implements MainContract.Presenter {
     IdsUsersHelper idsUsersHelper;
     private CompositeDisposable disposable = new CompositeDisposable();
     StorageMetadata metadata;
+    TempPostVideoHelper tempPostVideoHelper;
     MainPresenter(MainContract.View view, Context context) {
         this.mView = view;
         this.mContext = context;
@@ -81,6 +85,7 @@ public class MainPresenter implements MainContract.Presenter {
         petHelper = new PetHelper(mContext);
         db = App.getIntanceFirestore();
         storageReference = FirebaseStorage.getInstance(CONST.BUCKET_FILES_BACKUP).getReference();
+        tempPostVideoHelper = new TempPostVideoHelper(mContext);
     }
 
     @Override
@@ -538,5 +543,47 @@ public class MainPresenter implements MainContract.Presenter {
                             }
                         })
         );
+    }
+
+
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void sendPostVideo(PostBean postBean) {
+        postBean.setId_usuario(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        postBean.setCp(App.read(PREFERENCES.CP,0));
+        postBean.setName_user(App.read(PREFERENCES.NAME_USER,""));
+        if(App.read(PREFERENCES.ALLOW_LOCATION_POST,true))
+            postBean.setAddress(App.read(PREFERENCES.ADDRESS_USER,"INVALID"));
+        postBean.setUuid(App.read(PREFERENCES.UUID,""));
+        postBean.setUrl_photo_user(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,""));
+        postBean.setCensored(0);
+        postBean.setType_post(1);
+        postBean.setDate_post(App.formatDateGMT(new Date()));
+        postBean.setLikes(0);
+        postBean.setSaved(false);
+        postBean.setLat(App.read(PREFERENCES.LAT,0f));
+        postBean.setLon(App.read(PREFERENCES.LON,0f));
+        postBean.setTarget(WEBCONSTANTS.NEW);
+        apiService.sendPost(postBean)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                    @Override
+                    public void onSuccess(SimpleResponse response) {
+                        Log.e("POST","SUCCESS");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+
+    }
+
+    @Override
+    public void getPostVideo() {
+        mView.sendPostVideoView(tempPostVideoHelper.getPostVideo());
     }
 }

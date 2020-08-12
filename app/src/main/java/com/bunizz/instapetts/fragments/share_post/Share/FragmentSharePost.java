@@ -318,7 +318,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             }
             intent.putExtra(BUNDLES.PHOTO_TUMBH,uri_tuhmbh);
             intent.putExtra(BUNDLES.POST_TYPE, 1);
-            send_post();
+            save_post_for_later();
         }
         else {
             if(filePaths.size() == 1)
@@ -393,6 +393,22 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             presenter.sendPost(post);
         }
 
+    }
+
+    void save_post_for_later(){
+        post.setDescription(description_post.getText().toString());
+        post.setName_user(App.read(PREFERENCES.NAME_USER, "INVALID"));
+        post.setUrl_photo_user(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH, "INVALID"));
+        post.setUrls_posts(concat_paths);
+        post.setUuidbucket("xx");
+        post.setUuid(App.read(PREFERENCES.UUID, "INVALID"));
+        post.setDate_post(App.formatDateGMT(new Date()));
+        post.setTarget(WEBCONSTANTS.NEW);
+        post.setType_post(is_video);
+        if(App.read(PREFERENCES.ALLOW_LOCATION_POST,true))
+            post.setAddress(App.read(PREFERENCES.ADDRESS_USER,"INVALID"));
+        post.setId_usuario(App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
+        presenter.savePostVideo(post);
     }
 }
 

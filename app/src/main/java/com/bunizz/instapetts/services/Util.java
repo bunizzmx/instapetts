@@ -19,11 +19,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.client.Callback;
 import com.amazonaws.mobile.client.UserStateDetails;
 import com.amazonaws.mobile.config.AWSConfiguration;
+import com.amazonaws.mobileconnectors.s3.transfermanager.TransferManager;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.regions.Region;
@@ -90,7 +92,12 @@ public class Util {
      */
     public AmazonS3Client getS3Client(Context context) {
         if (sS3Client == null) {
-            sS3Client = new AmazonS3Client(getCredProvider(context));
+            ClientConfiguration s3Config = new ClientConfiguration();
+            s3Config.setMaxConnections(10);
+            s3Config.setSocketTimeout(600000);
+            s3Config.setConnectionTimeout(600000);
+            //AmazonS3Client s3Client = new AmazonS3Client(credential, s3Config);
+            sS3Client = new AmazonS3Client(getCredProvider(context),s3Config);
             try {
                 String regionString = new AWSConfiguration(context)
                         .optJsonObject("S3TransferUtility")

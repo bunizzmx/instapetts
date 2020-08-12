@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,14 +18,18 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.AspectBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.db.helpers.LikePostHelper;
 import com.bunizz.instapetts.db.helpers.SavedPostHelper;
+import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.chose_pet_listener;
 import com.bunizz.instapetts.listeners.postsListener;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AlertDialog;
+
+import static com.bunizz.instapetts.fragments.FragmentElement.INSTANCE_PREVIEW_PROFILE;
 
 public class DialogPreviewPost extends BaseAlertDialog{
     private boolean allowAnimation = true;
@@ -37,6 +43,10 @@ public class DialogPreviewPost extends BaseAlertDialog{
     TextView num_likes_posts_dialog,name_pet_post_dialog;
     ImageView image_preview_dialog;
     ImageView save_posts;
+    changue_fragment_parameters_listener listener_fragment;
+
+
+    LinearLayout open_profile_user;
 
     RelativeLayout l_like_post,l_saved_post;
     ImageView icon_like;
@@ -46,6 +56,14 @@ public class DialogPreviewPost extends BaseAlertDialog{
 
     public postsListener getListener_post() {
         return listener_post;
+    }
+
+    public changue_fragment_parameters_listener getListener_fragment() {
+        return listener_fragment;
+    }
+
+    public void setListener_fragment(changue_fragment_parameters_listener listener_fragment) {
+        this.listener_fragment = listener_fragment;
     }
 
     public void setListener_post(postsListener listener_post) {
@@ -63,6 +81,7 @@ public class DialogPreviewPost extends BaseAlertDialog{
     public DialogPreviewPost(Context context,PostBean postBean){
         this.context = context;
         this.postBean =postBean;
+        Log.e("DATA_FOR_PREVIEW","PARAMETRO _ id_usuario : " + postBean.getId_usuario());
         likePostHelper = new LikePostHelper(this.context);
         savedPostHelper = new SavedPostHelper(this.context);
 
@@ -80,6 +99,7 @@ public class DialogPreviewPost extends BaseAlertDialog{
         LayoutInflater inflater = LayoutInflater.from(this.context);
         dialogView = inflater.inflate(R.layout.dialog_preview_post, null);
         image_pet_dialog = dialogView.findViewById(R.id.image_pet_dialog);
+        open_profile_user = dialogView.findViewById(R.id.open_profile_user);
         addres_post_dialog = dialogView.findViewById(R.id.addres_post_dialog);
         name_pet_post_dialog = dialogView.findViewById(R.id.name_pet_post_dialog);
         num_likes_posts_dialog = dialogView.findViewById(R.id.num_likes_posts_dialog);
@@ -93,6 +113,19 @@ public class DialogPreviewPost extends BaseAlertDialog{
         aspect_image = App.getInstance().getAspect(postBean.getAspect());
         LinearLayout.LayoutParams tam_img = new LinearLayout.LayoutParams(aspect_image.getWidth(), aspect_image.getHeight());
         image_preview_dialog.setLayoutParams(tam_img);
+
+        open_profile_user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+                Bundle b = new Bundle();
+                Log.e("DATA_FOR_PREVIEW","id_usuario : " + postBean.getId_usuario());
+                b.putString(BUNDLES.UUID,postBean.getUuid());
+                b.putInt(BUNDLES.ID_USUARIO,postBean.getId_usuario());
+                if(listener_fragment!=null)
+                   listener_fragment.change_fragment_parameter(INSTANCE_PREVIEW_PROFILE,b);
+            }
+        });
 
         if(is_multiple(this.postBean.getUrls_posts())) {
             String splits[]  = this.postBean.getUrls_posts().split(",");

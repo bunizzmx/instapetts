@@ -10,6 +10,7 @@ public interface SharePostContract {
          void sendPost(PostBean post);
          void sendPostHelpPet(PostBean post);
          void getLocation();
+         void savePostVideo(PostBean postBean);
 
     }
 

@@ -23,29 +23,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import com.abedelazizshe.lightcompressorlibrary.CompressionListener;
+
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.db.Utilities;
 import com.bunizz.instapetts.utils.dilogs.DialogProgresCrop;
+import com.bunizz.instapetts.utils.snackbar.SnackBar;
 import com.bunizz.instapetts.utils.trimVideoView.VideoTrimmerView;
 import com.bunizz.instapetts.utils.videoCrop.cropview.window.CropVideoView;
 import com.bunizz.instapetts.utils.videoCrop.ffmpeg.ExecuteBinaryResponseHandler;
 import com.bunizz.instapetts.utils.videoCrop.ffmpeg.FFmpeg;
 import com.bunizz.instapetts.utils.videoCrop.ffmpeg.FFtask;
 import com.bunizz.instapetts.utils.videoCrop.player.VideoPlayer;
-import com.bunizz.instapetts.utils.videocrop3.VideoCompressor;
-import com.bunizz.instapetts.utils.videocrop3.VideoQuality;
+import com.bunizz.instapetts.utils.videocrop4.TrimmerUtils;
 import com.google.android.exoplayer2.util.Util;
 
-
+import Jni.FFmpegCmd;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.Formatter;
 import java.util.Locale;
 
+import VideoHandle.OnEditorListener;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -299,62 +300,40 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
         start += "." + STARTCROP % 1000;
         duration += "." + DURATION % 1000;
 
-        Log.e("INIDCES_VIDEO","--> : "+ STARTCROP + "/" + DURATION);
+        Log.e("INIDCES_VIDEO","--> : "+ (STARTCROP/1000) + "/" + ((DURATION / 1000) + (STARTCROP / 1000)));
         Log.e("INIDCES_VIDEO","--> : "+ start + "/" + duration);
 
-      /*  VideoCompressor.INSTANCE.start(inputPath,
-                outputPath,
-                new CompressionListener() {
-                    @Override
-                    public void onStart() {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                dialogProgresCrop = new DialogProgresCrop(VideoCropActivity.this);
-                                dialogProgresCrop.show();
-                            }
-                        });
-                    }
 
-                    @Override
-                    public void onSuccess() {
-                        IS_IN_CROP = false;
-                        dialogProgresCrop.dismiss();
-                        IS_IN_CROP = false;
-                        Intent intent = new Intent();
-                        intent.putExtra(BUNDLES.VIDEO_DURATION,(DURATION /1000));
-                        intent.putExtra(BUNDLES.VIDEO_ASPECT,ASPECT);
-                        setResult(RESULT_OK,intent);
-                        finish();
-                    }
+        String[] complexCommand =
+                {"ffmpeg","-ss",TrimmerUtils.formatCSeconds((STARTCROP/1000))
+                ,"-i",String.valueOf(inputPath),"-to", TrimmerUtils.formatCSeconds(((DURATION / 1000) + (STARTCROP / 1000))),"-c","copy",outputPath};
+        dialogProgresCrop = new DialogProgresCrop(VideoCropActivity.this);
+        dialogProgresCrop.show();
+        FFmpegCmd.exec(complexCommand, 0, new OnEditorListener() {
+            @Override
+            public void onSuccess() {
+                dialogProgresCrop.dismiss();
+                IS_IN_CROP = false;
+                Intent intent = new Intent();
+                intent.putExtra(BUNDLES.VIDEO_DURATION,(DURATION /1000));
+                intent.putExtra(BUNDLES.VIDEO_ASPECT,ASPECT);
+                setResult(RESULT_OK,intent);
+                finish();
+            }
 
-                    @Override
-                    public void onFailure(@NotNull String failureMessage) {
-                        IS_IN_CROP = false;
-                        Toast.makeText(VideoCropActivity.this, "Failed to crop!", Toast.LENGTH_SHORT).show();
-                        Log.e("onFailure", failureMessage);
-                        IS_IN_CROP = false;
-                        dialogProgresCrop.dismiss();
-                    }
+            @Override
+            public void onFailure() {
+                IS_IN_CROP = false;
+                Toast.makeText(VideoCropActivity.this, "Failed to crop!", Toast.LENGTH_SHORT).show();
+            }
 
-                    @Override
-                    public void onProgress(float percent) {
-                        dialogProgresCrop.set_progress_percentage(percent);
-                    }
+            @Override
+            public void onProgress(float progress) {
+                dialogProgresCrop.set_progress_percentage(progress);
 
-                    @Override
-                    public void onCancelled() {
-                        IS_IN_CROP = false;
-                        dialogProgresCrop.dismiss();
-                    }
-
-                }
-                , VideoQuality.MEDIUM,
-                false,
-                false
-        );*/
-
-        mFFMpeg = FFmpeg.getInstance(this);
+            }
+        });
+      /*  mFFMpeg = FFmpeg.getInstance(this);
        if (mFFMpeg.isSupported()) {
             String[] complexCommand = {"-ss", "" + start, "-y", "-i",inputPath , "-t", "" + duration,"-vcodec", "mpeg4", "-b:v", "2097152", "-b:a", "48000", "-ac", "2", "-ar", "22050", outputPath};
            mFFTask = mFFMpeg.execute(complexCommand, new ExecuteBinaryResponseHandler() {
@@ -402,7 +381,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
                     dialogProgresCrop.dismiss();
                 }
             }, DURATION * 1.0f / 1000);
-        }
+        }*/
     }
 
     @Override

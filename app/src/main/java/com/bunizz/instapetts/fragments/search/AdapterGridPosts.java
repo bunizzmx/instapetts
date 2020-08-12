@@ -22,6 +22,7 @@ import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity;
 import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity2;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.TipsBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.UnifiedAddHolder;
 import com.bunizz.instapetts.fragments.tips.adapters.TipsAdapter;
@@ -172,6 +173,7 @@ public class AdapterGridPosts extends RecyclerView.Adapter<RecyclerView.ViewHold
                         public boolean onLongClick(View view) {
                             if(((PostBean) posts.get(position)).getType_post() == 0) {
                                 dialogPreviewPost = new DialogPreviewPost(context, data_parsed);
+                                dialogPreviewPost.setListener_fragment((type_fragment, data) -> listener.change_fragment_parameter(type_fragment,data));
                                 dialogPreviewPost.setListener_post(new postsListener() {
                                     @Override
                                     public void onLike(int id_post, boolean type_like, int id_usuario, String url_image) {
@@ -216,12 +218,15 @@ public class AdapterGridPosts extends RecyclerView.Adapter<RecyclerView.ViewHold
                         public void onClick(View v) {
                             if(((PostBean) posts.get(position)).getType_post() == 0) {
                                 dialogPreviewPost = new DialogPreviewPost(context, data_parsed);
+                                dialogPreviewPost.setListener_fragment((type_fragment, data) -> {
+                                    Log.e("DATA_FOR_PREVIEW","INTO_LITENER : " + data.getInt(BUNDLES.ID_USUARIO));
+                                    listener.change_fragment_parameter(type_fragment,data);
+                                });
                                 dialogPreviewPost.setListener_post(new postsListener() {
                                     @Override
                                     public void onLike(int id_post, boolean type_like, int id_usuario, String url_image) {
                                         listener_post.onLike(id_post,type_like,id_usuario,url_image);
                                     }
-
                                     @Override
                                     public void onFavorite(int id_post, PostBean postBean) {
                                         listener_post.onFavorite(id_post,postBean);
@@ -238,9 +243,7 @@ public class AdapterGridPosts extends RecyclerView.Adapter<RecyclerView.ViewHold
                                     }
 
                                     @Override
-                                    public void commentPost(int id_post, boolean can_comment,int id_usuario) {
-
-                                    }
+                                    public void commentPost(int id_post, boolean can_comment,int id_usuario) { }
 
                                     @Override
                                     public void reproduceVideoActivity(PostBean postBean) {

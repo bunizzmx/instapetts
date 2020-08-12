@@ -417,5 +417,5 @@
     <string name="users_news">New users</string>
     <string name="recent_search">Recent searches</string>
     <string name="no_pets">You don\'t have pets</string>
-
+    <string name="progress">PROGRESS : </string>
 </resources>

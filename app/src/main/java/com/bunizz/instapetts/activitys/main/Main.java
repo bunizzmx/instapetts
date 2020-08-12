@@ -43,6 +43,7 @@ import com.bunizz.instapetts.activitys.side_menus_activities.SideMenusActivities
 import com.bunizz.instapetts.activitys.wizardPets.WizardPetActivity;
 import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PetBean;
+import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
@@ -1417,9 +1418,11 @@ public class Main extends AppCompatActivity implements change_instance,
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            Log.e("BROADCAST","-->" + action);
-            if (POST_SUCCESFULL.equals(action)) {
+            String porcentaje = getString(R.string.progress) +  App.read(PREFERENCES.PORCENTAJE_SUBIDA,0) + "%";
+            text_smoot.setText(porcentaje);
+            if (App.read(PREFERENCES.ESTATUS_SUBIDA_VIDEO,false)) {
+                presenter.getPostVideo();
+                App.write(PREFERENCES.ESTATUS_SUBIDA_VIDEO,false);
                 close_smoot.setVisibility(View.VISIBLE);
                 smoot_progress.setVisibility(View.GONE);
                 text_smoot.setText(getString(R.string.completed));
@@ -1445,7 +1448,16 @@ public class Main extends AppCompatActivity implements change_instance,
 
     @Override
     public void setActivateAds(boolean activated) {
-        Log.e("ESTATUS_ANUNCIOS","-->" + activated);
         App.write(PREFERENCES.ADS_ACTIVADOS,activated);
+    }
+
+    @Override
+    public void sendPostVideoView(PostBean postBean) {
+        if(postBean!=null) {
+            Log.e("POST_DB","SI HABIA");
+            presenter.sendPostVideo(postBean);
+        }
+        else
+            Log.e("POST_DB","VACIO");
     }
 }

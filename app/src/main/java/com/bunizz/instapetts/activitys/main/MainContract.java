@@ -4,6 +4,7 @@ import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.IdentificadoresHistoriesBean;
 import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PetBean;
+import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
 
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ public interface MainContract {
         void delete_data();
         void isAdsActive();
         void updateConexion();
+        void sendPostVideo(PostBean postBean);
+        void getPostVideo();
     }
 
     interface View{
@@ -35,5 +38,6 @@ public interface MainContract {
        void havePetsResult(boolean result);
        void noWifi();
        void setActivateAds(boolean activated);
+       void sendPostVideoView(PostBean postBean);
     }
 }

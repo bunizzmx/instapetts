@@ -9,6 +9,7 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.beans.AutenticateBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.db.helpers.TempPostVideoHelper;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
 import com.bunizz.instapetts.web.responses.ResponsePost;
@@ -26,12 +27,14 @@ public class SharePostPresenter implements SharePostContract.Presenter {
     private SharePostContract.View mView;
     private Context mContext;
     WebServices apiService;
+    TempPostVideoHelper tempPostVideoHelper;
 
     SharePostPresenter(SharePostContract.View view, Context context) {
         this.mView = view;
         this.mContext = context;
         apiService = ApiClient.getClient(context)
                 .create(WebServices.class);
+        tempPostVideoHelper = new TempPostVideoHelper(mContext);
     }
 
 
@@ -106,5 +109,10 @@ public class SharePostPresenter implements SharePostContract.Presenter {
     @Override
     public void getLocation() {
         mView.showLocation(App.read(PREFERENCES.ADDRESS_USER,"INVALID"));
+    }
+
+    @Override
+    public void savePostVideo(PostBean postBean) {
+        tempPostVideoHelper.savePostVideo(postBean);
     }
 }

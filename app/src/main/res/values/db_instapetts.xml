@@ -19,4 +19,7 @@
     <string name="table_ids_users_follows">CREATE TABLE IF NOT EXISTS ids_users_follows(id INTEGER PRIMARY KEY AUTOINCREMENT, id_user INTEGER)</string>
     <string name="table_identificadores_histories">CREATE TABLE IF NOT EXISTS identificadores_histories(id INTEGER PRIMARY KEY AUTOINCREMENT, num_likes INTEGER,num_views INTEGER,identificador TEXT)</string>
     <string name="table_liked_stories">CREATE TABLE IF NOT EXISTS liked_stories(id INTEGER PRIMARY KEY AUTOINCREMENT, identificador TEXT);</string>
+    <string name="table_temp_video_post">CREATE TABLE IF NOT EXISTS temp_video_post(id INTEGER PRIMARY KEY AUTOINCREMENT, can_comment INTEGER,duracion INTEGER,aspect TEXT,type_pet INTEGER,type_post INTEGER, id_pet INTEGER,date_post TEXT,description TEXT,url_photo_pet TEXT,name_pet TEXT,thumb_video TEXT,urls_posts TEXT);</string>
+
+
 </resources>

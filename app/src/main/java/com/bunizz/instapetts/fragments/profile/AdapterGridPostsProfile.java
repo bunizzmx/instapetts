@@ -19,6 +19,7 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity;
 import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity2;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.listener_change_posts;
@@ -157,6 +158,10 @@ public class AdapterGridPostsProfile extends RecyclerView.Adapter<RecyclerView.V
                     }
                 }else{
                     DialogPreviewPost dialogPreviewPost = new DialogPreviewPost(context,data_parsed);
+                    dialogPreviewPost.setListener_fragment((type_fragment, data) -> {
+                        Log.e("DATA_FOR_PREVIEW","INTO_LITENER : " + data.getInt(BUNDLES.ID_USUARIO));
+                        listener.change_fragment_parameter(type_fragment,data);
+                    });
                     dialogPreviewPost.setListener_post(new postsListener() {
                         @Override
                         public void onLike(int id_post, boolean type_like, int id_usuario, String url_image) {
