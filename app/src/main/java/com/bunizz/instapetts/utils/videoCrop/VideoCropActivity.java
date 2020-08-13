@@ -76,7 +76,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
     private FFtask mFFTask;
     private FFmpeg mFFMpeg;
     long STARTCROP = 0;//mTmbProgress.getLeftProgress();
-    long DURATION = 0;//mTmbProgress.getRightProgress() - mTmbProgress.getLeftProgress();
+    long DURATION = 30;//mTmbProgress.getRightProgress() - mTmbProgress.getLeftProgress();
     String ASPECT="";
 
     public static Intent createIntent(Context context, String inputPath, String outputPath) {
@@ -263,7 +263,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
         int videoWidth = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
         int videoHeight = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
         int rotationDegrees = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));
-
+        Log.e("ROTATE_dEGRESS","--:" + rotationDegrees);
         mCropVideoView.initBounds(videoWidth, videoHeight, rotationDegrees);
     }
 
@@ -305,8 +305,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
 
 
         String[] complexCommand =
-                {"ffmpeg","-ss",TrimmerUtils.formatCSeconds((STARTCROP/1000))
-                ,"-i",String.valueOf(inputPath),"-to", TrimmerUtils.formatCSeconds(((DURATION / 1000) + (STARTCROP / 1000))),"-c","copy",outputPath};
+                {"ffmpeg", "-ss",TrimmerUtils.formatCSeconds((STARTCROP/1000)) ,"-i",String.valueOf(inputPath),"-to", TrimmerUtils.formatCSeconds(((DURATION / 1000) + (STARTCROP / 1000))),"-c","copy",outputPath};
         dialogProgresCrop = new DialogProgresCrop(VideoCropActivity.this);
         dialogProgresCrop.show();
         FFmpegCmd.exec(complexCommand, 0, new OnEditorListener() {
@@ -324,7 +323,6 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
             @Override
             public void onFailure() {
                 IS_IN_CROP = false;
-                Toast.makeText(VideoCropActivity.this, "Failed to crop!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -404,6 +402,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
         Long duration = (endMillis - startMillis) / 1000L;
         STARTCROP = startMillis;
         DURATION = endMillis - startMillis;
+        Log.e("DURACION_VIDEO","-->x :"  + (DURATION /1000));
         durationView.setText(duration + " seconds selected");
     }
 
@@ -420,6 +419,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
 
     @Override
     public void onFirstTimeUpdate(long duration, long currentPosition) {
+        Log.e("DURACION_VIDEO","-->1" + duration  + "/" + currentPosition);
 
     }
 }

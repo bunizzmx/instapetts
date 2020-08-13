@@ -46,6 +46,7 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
     public RelativeLayout l_icon_like,l_icon_commentar,l_saved_post;
     public SmoothProgressBar progressBar;
     public LinearLayout layout_descripcion;
+    public TextView time_video;
     public PlayerViewHolder(@NonNull View itemView) {
         super(itemView);
         parent = itemView;
@@ -76,6 +77,7 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
         card_view_full = itemView.findViewById(R.id.card_view_full);
         progressBar = itemView.findViewById(R.id.progressBar);
         layout_descripcion = itemView.findViewById(R.id.layout_descripcion);
+        time_video = itemView.findViewById(R.id.time_video);
     }
 
 

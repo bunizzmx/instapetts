@@ -68,6 +68,8 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     private FrameLayout mediaContainer;
     private PlayerView videoSurfaceView;
     private SimpleExoPlayer videoPlayer;
+    boolean AUTOPLAY=false;
+    int currentPosition =0;
     /**
      * variable declaration
      */
@@ -124,16 +126,17 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     if (mediaCoverImage != null) {
-                        // show the old thumbnail
                         mediaCoverImage.setVisibility(VISIBLE);
                     }
-                    // There's a special case when the end of the list has been reached.
-                    // Need to handle that with this bit of logic
                     if (!recyclerView.canScrollVertically(1)) {
+                        Log.d(TAG, "RETORNOOOOOOOOOOO  10");
                         playVideo(true);
                     } else {
+                        Log.d(TAG, "RETORNOOOOOOOOOOO  11");
                         playVideo(false);
                     }
+                }else{
+                    Log.d(TAG, "RETORNOOOOOOOOOOO  88");
                 }
             }
             @Override
@@ -213,8 +216,10 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         });
     }
     public void playVideo(boolean isEndOfList) {
+        Log.d(TAG, "RETORNOOOOOOOOOOO  PLAY");
         int targetPosition;
         if (!isEndOfList) {
+            Log.d(TAG, "RETORNOOOOOOOOOOO  FIN");
             int startPosition = ((LinearLayoutManager) Objects.requireNonNull(
                     getLayoutManager())).findFirstVisibleItemPosition();
             int endPosition = ((LinearLayoutManager) getLayoutManager()).findLastVisibleItemPosition();
@@ -224,6 +229,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             }
             // something is wrong. return.
             if (startPosition < 0 || endPosition < 0) {
+                Log.d(TAG, "RETORNOOOOOOOOOOO  3333");
                 return;
             }
             // if there is more than 1 list-item on the screen
@@ -236,12 +242,12 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                 targetPosition = startPosition;
             }
         } else {
-            targetPosition = mediaObjects.size() - 1;
+                targetPosition = mediaObjects.size() - 1;
         }
         Log.d(TAG, "playVideo: target position: " + targetPosition);
         // video is already playing so return
         if (targetPosition == playPosition) {
-            Log.d(TAG, "RETORNOOOOOOOOOOO");
+            Log.d(TAG, "RETORNOOOOOOOOOOO  1111");
             return;
         }
         // set the position of the list-item that is to be played
@@ -253,12 +259,12 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         // remove any old surface views from previously playing videos
         videoSurfaceView.setVisibility(INVISIBLE);
         removeVideoView(videoSurfaceView);
-        int currentPosition =
-                targetPosition - ((LinearLayoutManager) Objects.requireNonNull(
-                        getLayoutManager())).findFirstVisibleItemPosition();
+
+            currentPosition = targetPosition - ((LinearLayoutManager) Objects.requireNonNull( getLayoutManager())).findFirstVisibleItemPosition();
+
         View child = getChildAt(currentPosition);
         if (child == null) {
-            Log.e("REPRODUCER_MOTA","si");
+            Log.d(TAG, "RETORNOOOOOOOOOOO  6666");
             return;
         }
         if(getChildViewHolder(child) instanceof PlayerViewHolder) {
@@ -289,7 +295,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                 videoPlayer.setPlayWhenReady(true);
             }
         }else{
-            Log.e("REPRODUCER_MOTA","si");
+            Log.d(TAG, "RETORNOOOOOOOOOOO  777");
             videoPlayer.stop();
         }
     }

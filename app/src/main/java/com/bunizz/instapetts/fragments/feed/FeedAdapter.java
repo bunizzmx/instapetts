@@ -318,6 +318,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         listener_post.commentPost(mo.getId_post_from_web(),true,mo.getId_usuario());
                 });
 
+                vid_h.time_video.setText(mo.getDuracion() + " seg");
+
 
                 AspectBean aspectBean = new AspectBean();
                 aspectBean = App.getInstance().getAspect(mo.getAspect());

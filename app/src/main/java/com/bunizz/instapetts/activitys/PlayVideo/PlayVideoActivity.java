@@ -325,7 +325,6 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
             else
                 videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_ZOOM);
         }
-
         videoSurfaceView.showController();
         videoSurfaceView.setControllerShowTimeoutMs(5000);
         videoSurfaceView.setControllerVisibilityListener(visibility -> {
