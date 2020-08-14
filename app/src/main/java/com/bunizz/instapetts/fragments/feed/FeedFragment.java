@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,6 +40,9 @@ import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.conexion_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.postsListener;
+import com.bunizz.instapetts.utils.AnimatedTextViews.AnimationListener;
+import com.bunizz.instapetts.utils.AnimatedTextViews.HTextView;
+import com.bunizz.instapetts.utils.AnimatedTextViews.TyperTextView;
 import com.bunizz.instapetts.utils.ProgressCircle;
 import com.bunizz.instapetts.utils.dilogs.DialogOptionsPosts;
 import com.bunizz.instapetts.utils.loadings.SpinKitView;
@@ -81,6 +85,13 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
 
     @BindView(R.id.refresh_feed)
     SwipeRefreshLayout refresh_feed;
+
+    @BindView(R.id.animated_title)
+    TyperTextView animated_title;
+
+    @BindView(R.id.label_toolbar)
+    TextView label_toolbar;
+
 
     boolean IS_FEED_RECOMENDED = false;
 
@@ -291,6 +302,13 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
                 }
             }
         });
+        animated_title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                animated_title.animateText(getString(R.string.app_name));
+            }
+        });
+
     }
     private RequestManager initGlide() {
         RequestOptions options = new RequestOptions();

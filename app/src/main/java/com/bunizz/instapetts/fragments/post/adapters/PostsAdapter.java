@@ -216,6 +216,9 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 else
                     vid_h.num_likes_posts.setText(context.getResources().getString(R.string.first_like));
 
+                vid_h.time_video.setText(mo.getDuracion() + " seg");
+                vid_h.blink_text.setText(mo.getDuracion() + " seg");
+                vid_h.blink_text.setFadingDuration(500);
 
 
                 vid_h.root_preview_perfil_click.setOnClickListener(view ->{

@@ -38,6 +38,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class FollowsFragment extends Fragment implements FollowsContract.View {
 
@@ -80,6 +81,15 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
     FollowsPresenter presenter;
     changue_fragment_parameters_listener listener;
     int tipo_descarga=1;
+
+
+    @OnClick(R.id.back_to_main)
+    void back_to_main()
+    {
+      getActivity().onBackPressed();
+    }
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +103,8 @@ public class FollowsFragment extends Fragment implements FollowsContract.View {
             tipo_descarga = bundle.getInt("TIPO_DESCARGA");
         }
     }
+
+
 
     @Nullable
     @Override

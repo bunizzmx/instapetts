@@ -28,6 +28,7 @@ import com.bunizz.instapetts.listeners.PlayStopVideoListener;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.conexion_listener;
+import com.bunizz.instapetts.utils.AnimatedTextViews.TyperTextView;
 import com.bunizz.instapetts.utils.loadings.SpinKitView;
 import com.bunizz.instapetts.utils.loadings.SpriteFactory;
 import com.bunizz.instapetts.utils.loadings.Style;
@@ -71,6 +72,9 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
 
     @BindView(R.id.root_no_internet)
     RelativeLayout root_no_internet;
+
+    @BindView(R.id.animated_title)
+    TyperTextView animated_title;
 
     @BindView(R.id.open_notifications)
     RelativeLayout open_notifications;
@@ -130,6 +134,14 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
         spin_kit.setIndeterminateDrawable(drawable);
         spin_kit.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         label_toolbar.setText(getActivity().getResources().getString(R.string.tips_notice));
+        animated_title.animateText(getActivity().getResources().getString(R.string.tips_notice));
+        animated_title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                animated_title.animateText(getActivity().getResources().getString(R.string.tips_notice));
+            }
+        });
+
         new_story.setVisibility(View.GONE);
         list_tips.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

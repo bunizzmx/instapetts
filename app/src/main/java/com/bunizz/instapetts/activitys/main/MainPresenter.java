@@ -25,6 +25,7 @@ import com.bunizz.instapetts.db.helpers.IdentificadoresHistoriesHelper;
 import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
 import com.bunizz.instapetts.db.helpers.MyStoryHelper;
 import com.bunizz.instapetts.db.helpers.PetHelper;
+import com.bunizz.instapetts.db.helpers.SearchResentHelper;
 import com.bunizz.instapetts.db.helpers.TempPostVideoHelper;
 import com.bunizz.instapetts.fragments.share_post.Share.SharePostContract;
 import com.bunizz.instapetts.web.ApiClient;
@@ -66,6 +67,7 @@ public class MainPresenter implements MainContract.Presenter {
     WebServices apiService;
     MyStoryHelper myStoryHelper;
     FirebaseFirestore db;
+    SearchResentHelper searchResentHelper;
     IdentificadoresHistoriesHelper identificadoresHistoriesHelper ;
     private StorageReference storageReference;
     PetHelper petHelper;
@@ -86,6 +88,7 @@ public class MainPresenter implements MainContract.Presenter {
         db = App.getIntanceFirestore();
         storageReference = FirebaseStorage.getInstance(CONST.BUCKET_FILES_BACKUP).getReference();
         tempPostVideoHelper = new TempPostVideoHelper(mContext);
+        searchResentHelper = new SearchResentHelper(mContext);
     }
 
     @Override
@@ -496,6 +499,7 @@ public class MainPresenter implements MainContract.Presenter {
         petHelper.cleanTable();
         idsUsersHelper.cleanTable();
         myStoryHelper.cleanTable();
+        searchResentHelper.cleanTable();
     }
 
     @Override

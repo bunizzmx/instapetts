@@ -1,5 +1,10 @@
 <resources>
 
+    <declare-styleable name="TyperTextView">
+        <attr name="typerSpeed" format="integer" />
+        <attr name="charIncrease" format="integer" />
+    </declare-styleable>
+
     <declare-styleable name="PreviewSeekBar">
         <attr name="previewFrameLayout" format="reference" />
     </declare-styleable>

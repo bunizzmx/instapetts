@@ -21,7 +21,18 @@
             android:layout_width="20dp"
             android:layout_height="20dp"/>
     </RelativeLayout>
+    <com.bunizz.instapetts.utils.AnimatedTextViews.TyperTextView
+        style="@style/titleapp"
+        android:id="@+id/animated_title"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        app:charIncrease="3"
+        app:typerSpeed="80"/>
    <TextView
+       android:visibility="gone"
        android:id="@+id/label_toolbar"
        style="@style/titleapp"
        android:textSize="18dp"

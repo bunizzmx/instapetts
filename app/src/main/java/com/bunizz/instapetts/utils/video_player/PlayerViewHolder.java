@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.RequestManager;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.utils.AnimatedTextViews.BlinkTextView;
 import com.bunizz.instapetts.utils.Dots.DotsIndicator;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.double_tap.DoubleTapLikeView;
@@ -44,9 +45,9 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
     public TextView num_coments;
     public LinearLayout num_comments_layout;
     public RelativeLayout l_icon_like,l_icon_commentar,l_saved_post;
-    public SmoothProgressBar progressBar;
     public LinearLayout layout_descripcion;
     public TextView time_video;
+    public BlinkTextView blink_text;
     public PlayerViewHolder(@NonNull View itemView) {
         super(itemView);
         parent = itemView;
@@ -75,9 +76,9 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
         num_coments = itemView.findViewById(R.id.num_coments);
         num_comments_layout = itemView.findViewById(R.id.num_comments_layout);
         card_view_full = itemView.findViewById(R.id.card_view_full);
-        progressBar = itemView.findViewById(R.id.progressBar);
         layout_descripcion = itemView.findViewById(R.id.layout_descripcion);
         time_video = itemView.findViewById(R.id.time_video);
+        blink_text = itemView.findViewById(R.id.blink_text);
     }
 
 

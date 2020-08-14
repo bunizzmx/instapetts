@@ -113,10 +113,20 @@
                 android:layout_marginRight="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
+                <com.bunizz.instapetts.utils.AnimatedTextViews.BlinkTextView
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/blink_text"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    />
                 <TextView
                     android:textStyle="bold"
                     android:textColor="@color/white"
-                    android:textSize="10dp"
+                    android:textSize="12dp"
                     android:id="@+id/time_video"
                     android:text="0:00"
                     android:layout_width="wrap_content"
@@ -164,14 +174,6 @@
             android:background="?selectableItemBackgroundBorderless"
             android:layout_width="60dp"
             android:layout_height="60dp" />
-        <com.bunizz.instapetts.utils.smoot.SmoothProgressBar
-            android:visibility="gone"
-            android:layout_alignParentBottom="true"
-            android:id="@+id/progressBar"
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            style="@style/GNowProgressBarWhite"
-            android:indeterminate="true"/>
     </RelativeLayout>
     <RelativeLayout
         android:paddingLeft="10dp"

@@ -147,13 +147,10 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
             int position = data.getInt("POSITION");
             Log.e("POSITION_SIZE","-->" + position + "/" + data_posts.size());
             Bundle b = new Bundle();
-            for (int i =0;i < data_posts.size();i++){
-                if(data_posts.get(i) instanceof  PostBean)
-                  Log.e("CLICK_PARSED",".---");
-                else
-                    Log.e("CLICK_PARSED","NO ES UN POST");
+            for (int i = position;i<data_posts.size();i++){
+                object_currents.add(data_posts.get(i));
             }
-            b.putParcelable("POSTS", Parcels.wrap(data_posts));
+            b.putParcelable("POSTS", Parcels.wrap(object_currents));
             listener.change_fragment_parameter(type_fragment,b);
         });
         feedAdapter.setListener_post(new postsListener() {

@@ -16,10 +16,12 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.bumptech.glide.RequestManager;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.utils.AnimatedTextViews.BlinkTextView;
 import com.bunizz.instapetts.utils.smoot.SmoothProgressBar;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -63,10 +65,11 @@ public class ExoPlayerRecyclerView extends RecyclerView {
      */
     private ImageView mediaCoverImage, volumeControl;
     private CardView card_view_mute;
-    private SmoothProgressBar progressBar;
     private View viewHolderParent;
     private FrameLayout mediaContainer;
     private PlayerView videoSurfaceView;
+    BlinkTextView blink_text;
+    TextView time_video;
     private SimpleExoPlayer videoPlayer;
     boolean AUTOPLAY=false;
     int currentPosition =0;
@@ -159,22 +162,25 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         videoPlayer.addListener(new Player.EventListener() {
             @Override
             public void onTimelineChanged(Timeline timeline, @Nullable Object manifest, int reason) {
+                Log.d(TAG, "SEKARIO  10");
             }
             @Override
             public void onTracksChanged(TrackGroupArray trackGroups,
                                         TrackSelectionArray trackSelections) {
+                Log.d(TAG, "SEKARIO  9");
             }
             @Override
             public void onLoadingChanged(boolean isLoading) {
+                Log.d(TAG, "SEKARIO  8");
             }
             @Override
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                Log.d(TAG, "SEKARIO  7 :" + playbackState);
                 switch (playbackState) {
                     case Player.STATE_BUFFERING:
                         Log.e(TAG, "onPlayerStateChanged: Buffering video.");
-                        if (progressBar != null) {
-                            progressBar.setVisibility(VISIBLE);
-                        }
+                        blink_text.setVisibility(VISIBLE);
+                        time_video.setVisibility(GONE);
                         break;
                     case Player.STATE_ENDED:
                         Log.d(TAG, "onPlayerStateChanged: Video ended.");
@@ -184,9 +190,8 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                         break;
                     case Player.STATE_READY:
                         Log.e(TAG, "onPlayerStateChanged: Ready to play.");
-                       if (progressBar != null) {
-                            progressBar.setVisibility(GONE);
-                        }
+                        blink_text.setVisibility(GONE);
+                        time_video.setVisibility(VISIBLE);
                         if (!isVideoViewAdded) {
                             addVideoView();
                         }
@@ -197,21 +202,27 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             }
             @Override
             public void onRepeatModeChanged(int repeatMode) {
+                Log.d(TAG, "SEKARIO  6");
             }
             @Override
             public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+                Log.d(TAG, "SEKARIO  5");
             }
             @Override
             public void onPlayerError(ExoPlaybackException error) {
+                Log.d(TAG, "SEKARIO  4");
             }
             @Override
             public void onPositionDiscontinuity(int reason) {
+                Log.d(TAG, "SEKARIO  3");
             }
             @Override
             public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+                Log.d(TAG, "SEKARIO  2");
             }
             @Override
             public void onSeekProcessed() {
+                Log.d(TAG, "SEKARIO  1");
             }
         });
     }
@@ -275,7 +286,8 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                 return;
             }
             mediaCoverImage = holder.mediaCoverImage;
-            progressBar = holder.progressBar;
+            time_video = holder.time_video;
+            blink_text = holder.blink_text;
             volumeControl = holder.volumeControl;
             card_view_mute = holder.card_view_mute;
             viewHolderParent = holder.mediaContainer;
@@ -321,6 +333,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     }
     // Remove the old player
     private void removeVideoView(PlayerView videoView) {
+        Log.e("RESET_VOODE","REMOVE");
         ViewGroup parent = (ViewGroup) videoView.getParent();
         if (parent == null) {
             return;
@@ -342,6 +355,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     }
     private void resetVideoView() {
         if (isVideoViewAdded) {
+            Log.e("RESET_VOODE","SI");
             removeVideoView(videoSurfaceView);
             playPosition = -1;
             videoSurfaceView.setVisibility(INVISIBLE);

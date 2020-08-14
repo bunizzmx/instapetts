@@ -319,6 +319,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 });
 
                 vid_h.time_video.setText(mo.getDuracion() + " seg");
+                vid_h.blink_text.setText(mo.getDuracion() + " seg");
+                vid_h.blink_text.setFadingDuration(500);
 
 
                 AspectBean aspectBean = new AspectBean();
