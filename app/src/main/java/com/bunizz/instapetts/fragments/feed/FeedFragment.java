@@ -362,6 +362,9 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         smoot_progress.setVisibility(View.GONE);
         if(data.size()>0) {
             PAGINADOR = data.get(data.size()-1).getId_post_from_web();
+        }else
+        {
+            IS_ALL = true;
         }
         ArrayList<Object> more_post = new ArrayList<>();
         more_post.addAll(data);

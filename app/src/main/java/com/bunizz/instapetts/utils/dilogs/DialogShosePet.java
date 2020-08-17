@@ -89,21 +89,23 @@ public class DialogShosePet extends BaseAlertDialog{
         return petBeans;
     }
 
-    public void setPetBeans(ArrayList<PetBean> petBeans) {
+    public void setPetBeans(ArrayList<PetBean> petBeans, boolean is_history) {
         this.petBeans.clear();
-        this.petBeans.add(new PetBean(
-                context.getString(R.string.help_pet),
-                "GENERAL",
-                "0",
-                "FFF",
-                "XXXX",
-                "M",
-                5.0f,
-                "Help instapetts",
-                App.read(PREFERENCES.ID_USER_FROM_WEB,0),
-                "-999",
-                -999
-        ));
+        if(!is_history) {
+            this.petBeans.add(new PetBean(
+                    context.getString(R.string.help_pet),
+                    "GENERAL",
+                    "0",
+                    "FFF",
+                    "XXXX",
+                    "M",
+                    5.0f,
+                    "Help instapetts",
+                    App.read(PREFERENCES.ID_USER_FROM_WEB, 0),
+                    "-999",
+                    -999
+            ));
+        }
         this.petBeans.addAll(petBeans);
         adapter.setPetBeans(this.petBeans);
     }

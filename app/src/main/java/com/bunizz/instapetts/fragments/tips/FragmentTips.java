@@ -185,24 +185,39 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
 
     @Override
     public void showTips(ArrayList<TipsBean> tips_list,ArrayList<PostBean> helps) {
-        Log.e("GENT_MORE_TIPS","SHOW FIRST");
         loading = true;
         if(tips_list!=null) {
             data.clear();
             PAGINADOR= tips_list.get(tips_list.size()-1).getId();
             data.addAll(tips_list);
-            interpolateHelps(helps);
+            if(helps!=null)
+            {
+                if(helps.size()>0)
+                    interpolateHelps(helps);
+                else{
+                    refresh_tips.setRefreshing(false);
+                    root_loading.setVisibility(View.GONE); root_loading.setVisibility(View.GONE);
+                    adapter.setData(data);
+                }
+            }else{
+                refresh_tips.setRefreshing(false);
+                root_loading.setVisibility(View.GONE);
+                adapter.setData(data);
+            }
         }
     }
 
     @Override
     public void showMoreTips(ArrayList<TipsBean> tips_list) {
-        Log.e("GENT_MORE_TIPS","SHOW MORE");
         smoot_progress.setVisibility(View.GONE);
-        if(tips_list.size()==0)
+        if(tips_list!=null){
+            if(tips_list.size()==0)
+                IS_ALL = true;
+            insertAdsInMenuItemsBelow(tips_list);
+        }else{
             IS_ALL = true;
-        loading = true;
-         insertAdsInMenuItemsBelow(tips_list);
+        }
+           loading = true;
     }
 
     @Override

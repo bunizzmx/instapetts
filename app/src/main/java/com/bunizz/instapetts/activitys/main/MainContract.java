@@ -39,5 +39,6 @@ public interface MainContract {
        void noWifi();
        void setActivateAds(boolean activated);
        void sendPostVideoView(PostBean postBean);
+       void login_invalid();
     }
 }

@@ -48,6 +48,7 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
     public LinearLayout layout_descripcion;
     public TextView time_video;
     public BlinkTextView blink_text;
+    public TextView loading_video;
     public PlayerViewHolder(@NonNull View itemView) {
         super(itemView);
         parent = itemView;
@@ -79,6 +80,7 @@ public class PlayerViewHolder extends RecyclerView.ViewHolder {
         layout_descripcion = itemView.findViewById(R.id.layout_descripcion);
         time_video = itemView.findViewById(R.id.time_video);
         blink_text = itemView.findViewById(R.id.blink_text);
+        loading_video = itemView.findViewById(R.id.loading_video);
     }
 
 

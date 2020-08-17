@@ -70,6 +70,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     private PlayerView videoSurfaceView;
     BlinkTextView blink_text;
     TextView time_video;
+    TextView loading_video;
     private SimpleExoPlayer videoPlayer;
     boolean AUTOPLAY=false;
     int currentPosition =0;
@@ -181,6 +182,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                         Log.e(TAG, "onPlayerStateChanged: Buffering video.");
                         blink_text.setVisibility(VISIBLE);
                         time_video.setVisibility(GONE);
+                        loading_video.setVisibility(VISIBLE);
                         break;
                     case Player.STATE_ENDED:
                         Log.d(TAG, "onPlayerStateChanged: Video ended.");
@@ -191,6 +193,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                     case Player.STATE_READY:
                         Log.e(TAG, "onPlayerStateChanged: Ready to play.");
                         blink_text.setVisibility(GONE);
+                        loading_video.setVisibility(GONE);
                         time_video.setVisibility(VISIBLE);
                         if (!isVideoViewAdded) {
                             addVideoView();
@@ -294,6 +297,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             requestManager = holder.requestManager;
             mediaContainer = holder.mediaContainer;
             videoSurfaceView.setPlayer(videoPlayer);
+            loading_video = holder.loading_video;
             viewHolderParent.setOnClickListener(videoViewClickListener);
             DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(
                     context, Util.getUserAgent(context, AppName));

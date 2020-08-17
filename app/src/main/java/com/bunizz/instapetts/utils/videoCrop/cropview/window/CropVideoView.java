@@ -16,7 +16,6 @@ import com.google.android.exoplayer2.ui.PlayerView;
 
 public class CropVideoView extends FrameLayout {
     private PlayerView mPlayerView;
-    private CropView mCropView;
     private int mVideoWidth;
     private int mVideoHeight;
     private int mVideoRotationDegrees;
@@ -50,8 +49,6 @@ public class CropVideoView extends FrameLayout {
         LayoutInflater inflater = LayoutInflater.from(context);
         View v = inflater.inflate(R.layout.view_crop, this, true);
         mPlayerView = v.findViewById(R.id.playerView);
-        mCropView = v.findViewById(R.id.cropView);
-        mCropView.setInitialAttributeValues(mGuidelines, mFixAspectRatio, mAspectRatioX, mAspectRatioY);
     }
 
     protected void onSizeChanged(int newWidth, int newHeight, int oldw, int oldh) {
@@ -76,13 +73,10 @@ public class CropVideoView extends FrameLayout {
 
         setLayoutParams(lp);
         Rect rect = new Rect(0, 0, lp.width, lp.height);
-        mCropView.setBitmapRect(rect);
-        mCropView.resetCropOverlayView();
     }
 
     public void setPlayer(SimpleExoPlayer player) {
         mPlayerView.setPlayer(player);
-        mCropView.resetCropOverlayView();
     }
 
     @Override
@@ -124,17 +118,6 @@ public class CropVideoView extends FrameLayout {
         }
 
         return result;
-    }
-
-    public void setFixedAspectRatio(boolean fixAspectRatio) {
-        mCropView.setFixedAspectRatio(fixAspectRatio);
-    }
-
-    public void setAspectRatio(int aspectRatioX, int aspectRatioY) {
-        mAspectRatioX = aspectRatioX;
-        mAspectRatioY = aspectRatioY;
-        mCropView.setAspectRatioX(this.mAspectRatioX);
-        mCropView.setAspectRatioY(this.mAspectRatioY);
     }
 
     public void initBounds(int videoWidth, int videoHeight, int rotationDegrees) {

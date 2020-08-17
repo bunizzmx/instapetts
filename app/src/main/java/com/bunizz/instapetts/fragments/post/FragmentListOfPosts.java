@@ -1,5 +1,6 @@
 package com.bunizz.instapetts.fragments.post;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -49,6 +50,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class FragmentListOfPosts extends Fragment implements FeedContract.View {
     @BindView(R.id.list_posts_publics_advanced)
@@ -59,6 +61,12 @@ public class FragmentListOfPosts extends Fragment implements FeedContract.View {
     FeedListPresenter mPresenter;
 
     ArrayList<Object> data = new ArrayList<>();
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.back_to_main)
+    void back_to_main() {
+        getActivity().onBackPressed();
+    }
 
     public static FragmentListOfPosts newInstance() {
         return new FragmentListOfPosts();

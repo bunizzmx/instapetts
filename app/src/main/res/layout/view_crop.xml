@@ -13,11 +13,4 @@
         app:use_controller="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
-    <com.bunizz.instapetts.utils.videoCrop.cropview.window.CropView
-        android:visibility="gone"
-        android:id="@+id/cropView"
-        android:layout_gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 </merge>

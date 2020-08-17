@@ -276,12 +276,6 @@ public class Main extends AppCompatActivity implements change_instance,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ButterKnife.bind(this);
-
-
-
-
-
-
         jobsServices = new JobsServices(this);
         jobsServices.startNotificationsRequest();
         try{
@@ -313,7 +307,6 @@ public class Main extends AppCompatActivity implements change_instance,
                 int ID_RESOURCE = 0;
                 TYPE_FRAGMENT_PUSH = b.getInt("TYPE_FRAGMENT");
                 ID_RESOURCE = b.getInt("ID_RESOURCE");
-                Log.e("ID_FROM_PUSH", "-->" + ID_RESOURCE);
                 if (TYPE_FRAGMENT_PUSH == FragmentElement.INSTANCE_PREVIEW_PROFILE) {
                     b_from_push.putInt(BUNDLES.ID_USUARIO, ID_RESOURCE);
                 } else if (TYPE_FRAGMENT_PUSH == FragmentElement.INSTANCE_COMENTARIOS) {
@@ -357,9 +350,7 @@ public class Main extends AppCompatActivity implements change_instance,
             }
         });
 
-            download_pets();
-
-
+        download_pets();
         presenter.have_pets();
         getLocation();
         resultReceiver = new AddressResultReceiver(new Handler());
@@ -1459,5 +1450,16 @@ public class Main extends AppCompatActivity implements change_instance,
         }
         else
             Log.e("POST_DB","VACIO");
+    }
+
+    @Override
+    public void login_invalid() {
+        FirebaseAuth.getInstance().signOut();
+        presenter.logout();
+        presenter.delete_data();
+        App.getInstance().clear_preferences();
+        Intent i = new Intent(Main.this, LoginActivity.class);
+        startActivity(i);
+        finish();
     }
 }

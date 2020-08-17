@@ -95,7 +95,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     {
         if(pets_cuerrent.size()> 0) {
             DialogShosePet dialogShosePet = new DialogShosePet(getActivity());
-            dialogShosePet.setPetBeans(pets_cuerrent);
+            dialogShosePet.setPetBeans(pets_cuerrent,false);
             dialogShosePet.setListener(new chose_pet_listener() {
                 @Override
                 public void chose(String url_foto, int id_pet, String name_pet) {

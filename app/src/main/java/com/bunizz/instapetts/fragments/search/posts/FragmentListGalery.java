@@ -264,13 +264,8 @@ public class FragmentListGalery extends Fragment implements  ListGaleryContract.
                             loading = false;
                             if(IS_ALL == false) {
                                 progressBar.setVisibility(View.VISIBLE);
-                                Log.e("DONWLOAD_MORE_COMMENTS","SI");
                                 presenter.getMorePost(TYPO_FRAGMENT,adapter.get_ultimo_id());
-                            }else {
-                                Log.e("DONWLOAD_MORE_COMMENTS","NO");
                             }
-                        }else{
-                            Log.e("DONWLOAD_MORE_COMMENTS","ESTA CARGANDO");
                         }
                     }
                 }

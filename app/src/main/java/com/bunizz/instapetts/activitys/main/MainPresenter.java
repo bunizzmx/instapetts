@@ -524,7 +524,6 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void updateConexion() {
-        Log.e("CONEXION_UPDATED","request ");
         UserBean userBean = new UserBean();
         userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         userBean.setTarget("ULTIMA_CONEXION");
@@ -538,6 +537,8 @@ public class MainPresenter implements MainContract.Presenter {
                                 if(responsePost!=null) {
                                     if(responsePost.getCode_response()==200){
                                         Log.e("CONEXION_UPDATED","CORRECTO ");
+                                    }else if(responsePost.getCode_response()==100){
+                                        mView.login_invalid();
                                     }
                                 }
                             }
@@ -590,4 +591,5 @@ public class MainPresenter implements MainContract.Presenter {
     public void getPostVideo() {
         mView.sendPostVideoView(tempPostVideoHelper.getPostVideo());
     }
+
 }

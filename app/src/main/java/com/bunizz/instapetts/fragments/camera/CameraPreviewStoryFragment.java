@@ -122,7 +122,7 @@ public class CameraPreviewStoryFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 DialogShosePet dialogShosePet = new DialogShosePet(getActivity());
-                dialogShosePet.setPetBeans(pets_cuerrent);
+                dialogShosePet.setPetBeans(pets_cuerrent,true);
                 dialogShosePet.setListener(new chose_pet_listener() {
                     @Override
                     public void chose(String url_foto, int id_pet, String name_pet) {

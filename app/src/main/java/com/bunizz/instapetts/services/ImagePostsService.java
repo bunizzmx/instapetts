@@ -205,7 +205,7 @@ public class ImagePostsService extends Service {
             return reference.getDownloadUrl();
         }).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                intent_broadcast.putExtra("COMPLETED", false);
+                App.write(PREFERENCES.ESTATUS_SUBIDA_VIDEO,true);
                 intent_broadcast.setAction(Main.POST_SUCCESFULL);
                 sendBroadcast(intent_broadcast);
             }
