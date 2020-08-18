@@ -230,10 +230,8 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 vid_h.name_pet.setText(mo.getName_pet());
                 vid_h.name_user_posts.setText(mo.getName_user());
                 if(mo.getDescription().trim().isEmpty()){
-                    Log.e("DESCRIPCION_VALID","NO");
                     vid_h.layout_descripcion.setVisibility(View.GONE);
                 }else{
-                    Log.e("DESCRIPCION_VALID","si");
                     vid_h.layout_descripcion.setVisibility(View.VISIBLE);
                     vid_h.description_posts.setText(mo.getDescription());
                 }

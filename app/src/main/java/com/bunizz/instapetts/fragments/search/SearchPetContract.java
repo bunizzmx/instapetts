@@ -12,6 +12,7 @@ public interface SearchPetContract {
     interface Presenter {
         void searchusers(String word);
         void searchPets(String word);
+        void searchNewUsers();
     }
 
     interface View{

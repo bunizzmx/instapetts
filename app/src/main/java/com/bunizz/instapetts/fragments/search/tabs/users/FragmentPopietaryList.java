@@ -65,9 +65,13 @@ public class FragmentPopietaryList  extends Fragment implements  UserListContrac
     }
 
     public void setData(ArrayList<Object> data) {
-        this.data = data;
+        this.data.clear();
+        this.data.addAll(data);
+        Log.e("SIZEDATAX","-->" + this.data.size());
         if(root_no_data!=null) {
+            Log.e("SIZEDATAX","1-->" + this.data.size());
             if (this.data.size() > 0) {
+                Log.e("SIZEDATAX","2-->" + this.data.size());
                 adapter.is_recent(false);
                 root_no_data.setVisibility(View.GONE);
                 list_propietary_search_recent.setVisibility(View.GONE);
@@ -75,6 +79,7 @@ public class FragmentPopietaryList  extends Fragment implements  UserListContrac
                 adapter.setHIDE_LABEL(true);
                 adapter.setData(data);
             } else {
+                Log.e("SIZEDATAX","3-->" + this.data.size());
                 title_no_data.setText(getString(R.string.no_recent_search_title));
                 body_no_data.setText(getString(R.string.no_recent_search_body));
                 root_no_data.setVisibility(View.VISIBLE);
@@ -212,13 +217,17 @@ public class FragmentPopietaryList  extends Fragment implements  UserListContrac
             ));
         }
         if(data.size()>0){
+            Log.e("SIZEDATAX","7-->" + this.data.size());
             adapter.is_recent(true);
             adapter.setData(data);
             root_no_data.setVisibility(View.GONE);
             list_propietary_search_recent.setVisibility(View.VISIBLE);
             list_propietary_search_result.setVisibility(View.GONE);
         }else{
+            Log.e("SIZEDATAX","6-->" + this.data.size());
             root_no_data.setVisibility(View.VISIBLE);
+            title_no_data.setText(getString(R.string.no_recent_search_title));
+            body_no_data.setText("" + getString(R.string.no_recent_search_body));
             list_propietary_search_recent.setVisibility(View.GONE);
             list_propietary_search_result.setVisibility(View.GONE);
 
@@ -226,6 +235,7 @@ public class FragmentPopietaryList  extends Fragment implements  UserListContrac
     }
 
     void hide_list(){
+        Log.e("SIZEDATAX","5-->" + this.data.size());
         title_no_data.setText(getString(R.string.no_recent_search_title));
         body_no_data.setText(""+getString(R.string.no_recent_search_body));
         root_no_data.setVisibility(View.VISIBLE);

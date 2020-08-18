@@ -351,7 +351,6 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
             insertAdsInMenuItems(data_feed,false);
         else
             feedAdapter.addData(data_feed);
-        Log.e("INSERTS_","BELO1");
         mRecyclerView.playVideo(true);
     }
 
@@ -469,7 +468,6 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
 
 
     private void insertAdsInMenuItems(ArrayList<Object>  data,boolean more) {
-        Log.e("INSERTS_","BELO2");
         ArrayList<Object> current_data = new ArrayList<>();
         current_data.addAll(data);
         mNativeAds.clear();

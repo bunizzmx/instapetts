@@ -154,7 +154,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void setHistoriesBeans(ArrayList<HistoriesBean> historiesBeans) {
-        Log.e("HISTORIES_BEANS","-->" + historiesBeans.size());
         this.historiesBeans.clear();
         this.historiesBeans.addAll(historiesBeans);
     }
@@ -171,10 +170,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.data.clear();
         this.data.addAll(data);
         if(this.data.size() > 1){
-            Log.e("SIZE_EMPTY","no empty");
             POST_EMPTY = false;
         }else{
-            Log.e("SIZE_EMPTY","add_empty");
             this.data.add(new DataEmptyBean("xxx","xx"));
             POST_EMPTY = true;
         }
@@ -423,10 +420,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
                 if(mo.getDescription().trim().isEmpty()){
-                    Log.e("DESCRIPCION_VALID","NO");
                     vid_h.layout_descripcion.setVisibility(View.GONE);
                 }else{
-                    Log.e("DESCRIPCION_VALID","si");
                     vid_h.layout_descripcion.setVisibility(View.VISIBLE);
                     vid_h.description_posts.setText(mo.getDescription());
                 }
@@ -559,10 +554,8 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
                 if(data_parsed.getDescription().trim().isEmpty()){
-                    Log.e("DESCRIPCION_VALID","NO");
                     f.layout_descripcion.setVisibility(View.GONE);
                 }else{
-                    Log.e("DESCRIPCION_VALID","si");
                     f.layout_descripcion.setVisibility(View.VISIBLE);
                     f.description_posts.setText(data_parsed.getDescription());
                 }

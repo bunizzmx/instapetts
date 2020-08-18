@@ -395,7 +395,7 @@ public class JobsServices {
     }
 
 
-    @SuppressLint("CheckResult")
+    @SuppressLint({"CheckResult", "MissingPermission"})
     public void obtener_localizacion(){
         rxPermissions
                 .request(Manifest.permission.ACCESS_FINE_LOCATION,
@@ -406,6 +406,10 @@ public class JobsServices {
                         LocationServices.getFusedLocationProviderClient(context).getLastLocation().addOnSuccessListener(location -> {
                             if(location!=null){
                                 Log.e("LOCALIZACION","-->" + location.getLatitude()  + "/" + location.getLongitude());
+                                if(location.getLatitude() != App.read(PREFERENCES.LAT,0f)){
+                                    Log.e("LOCALIZACION","SOSTITUYO VALOR");
+                                    App.write(PREFERENCES.LOCATION_CHANGED,true);
+                                }
                                 App.write(PREFERENCES.LAT,(float)location.getLatitude());
                                 App.write(PREFERENCES.LON,(float)location.getLongitude());
                                 startIntentService();

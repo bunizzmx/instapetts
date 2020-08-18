@@ -506,7 +506,6 @@ public class App extends Application {
 
 
     public AspectBean getAspect(String aspect){
-        Log.e("ASPECT_PARAM","-->" + aspect);
         int width=0;
         int height =0;
         DisplayMetrics metrics = new DisplayMetrics();

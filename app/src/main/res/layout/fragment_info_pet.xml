@@ -162,6 +162,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageView
+                android:rotation="180"
                 android:layout_marginEnd="8sp"
                 android:src="@drawable/ic_quotes"
                 android:layout_width="10dp"
@@ -174,7 +175,7 @@
                 android:text="-" />
             <ImageView
                 android:layout_marginLeft="5dp"
-                android:src="@drawable/ic_quotes_reverse"
+                android:src="@drawable/ic_quotes"
                 android:layout_width="10dp"
                 android:layout_height="10dp"/>
         </LinearLayout>

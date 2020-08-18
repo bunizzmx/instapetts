@@ -29,6 +29,7 @@ public interface MainContract {
         void updateConexion();
         void sendPostVideo(PostBean postBean);
         void getPostVideo();
+        void updateLocations();
     }
 
     interface View{

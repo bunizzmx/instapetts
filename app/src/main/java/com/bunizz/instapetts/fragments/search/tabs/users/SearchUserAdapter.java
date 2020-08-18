@@ -58,7 +58,8 @@ public class SearchUserAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setData(ArrayList<Object> data) {
         Log.e("REFRESH_DATA_SEARCH","--> xxxxxdata:" + data.size());
-        this.data = data;
+        this.data.clear();
+        this.data.addAll(data);
         notifyDataSetChanged();
     }
 

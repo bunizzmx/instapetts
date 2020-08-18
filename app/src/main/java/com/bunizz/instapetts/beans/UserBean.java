@@ -84,6 +84,13 @@ public class UserBean {
     @Expose
     String idioma;
 
+    @SerializedName("cp")
+    @Expose
+    int cp;
+
+    @SerializedName("ciudad")
+    @Expose
+    String ciudad;
 
     public UserBean() {
     }
@@ -272,5 +279,21 @@ public class UserBean {
 
     public void setIdioma(String idioma) {
         this.idioma = idioma;
+    }
+
+    public int getCp() {
+        return cp;
+    }
+
+    public void setCp(int cp) {
+        this.cp = cp;
+    }
+
+    public String getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
     }
 }

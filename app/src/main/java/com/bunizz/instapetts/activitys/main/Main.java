@@ -379,21 +379,11 @@ public class Main extends AppCompatActivity implements change_instance,
                 Log.e("EXCEPCION_MAIN","MAIN" + e.getMessage());
         }
         presenter.updateConexion();
-
-
-
-
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo("com.bunizz.instapetts", PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.e("MY_KEY_HASH:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e("MY_KEY_HASH:", e.getMessage());
-        } catch (NoSuchAlgorithmException e) {
-            Log.e("MY_KEY_HASH:",e.getLocalizedMessage());
+        if(App.read(PREFERENCES.LOCATION_CHANGED,false)){
+            Log.e("CAMBIO_LOCALIZACION","SI");
+            presenter.updateLocations();
+        }else{
+            Log.e("CAMBIO_LOCALIZACION","NO");
         }
 
     }
@@ -1385,6 +1375,11 @@ public class Main extends AppCompatActivity implements change_instance,
                             if(location!=null){
                                 Log.e("LOCALIZACION","-->" + location.getLatitude()  + "/" + location.getLongitude());
                                 if(location!=null){
+                                    Log.e("LOCALIZACION","-->" + location.getLatitude()  + "/" + location.getLongitude());
+                                    if(location.getLatitude() != App.read(PREFERENCES.LAT,0f)){
+                                        Log.e("LOCALIZACION","SOSTITUYO VALOR");
+                                        App.write(PREFERENCES.LOCATION_CHANGED,true);
+                                    }
                                     App.write(PREFERENCES.LAT,(float)location.getLatitude());
                                     App.write(PREFERENCES.LON,(float)location.getLongitude());
                                     startIntentService();

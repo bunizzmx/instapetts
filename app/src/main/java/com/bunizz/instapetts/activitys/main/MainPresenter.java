@@ -526,7 +526,11 @@ public class MainPresenter implements MainContract.Presenter {
     public void updateConexion() {
         UserBean userBean = new UserBean();
         userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        userBean.setLat(App.read(PREFERENCES.LAT,0f));
+        userBean.setLon(App.read(PREFERENCES.LON,0f));
+        userBean.setCp(App.read(PREFERENCES.CP,0));
         userBean.setTarget("ULTIMA_CONEXION");
+
         disposable.add(
                 apiService.updateConexion(userBean)
                         .subscribeOn(Schedulers.io())
@@ -590,6 +594,35 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void getPostVideo() {
         mView.sendPostVideoView(tempPostVideoHelper.getPostVideo());
+    }
+
+    @Override
+    public void updateLocations() {
+        UserBean userBean = new UserBean();
+        userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        userBean.setLat(App.read(PREFERENCES.LAT,0f));
+        userBean.setLon(App.read(PREFERENCES.LON,0f));
+        userBean.setCp(App.read(PREFERENCES.CP,0));
+        userBean.setTarget("UPDATE_LOCATIONS");
+        Log.e("CONEXION_UPDATED","UPDATE_LOCATIONS ");
+        disposable.add(
+                apiService.updateConexion(userBean)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                            @Override
+                            public void onSuccess(SimpleResponse responsePost) {
+                                if(responsePost!=null) {
+                                         App.write(PREFERENCES.LOCATION_CHANGED,false);
+                                         Log.e("CONEXION_UPDATED","CORRECTO desde web ");
+                                }
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.e("CONEXION_UPDATED","-->EROR : " + e.getMessage());
+                            }
+                        })
+        );
     }
 
 }

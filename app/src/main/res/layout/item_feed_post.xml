@@ -216,6 +216,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
+            android:rotation="190"
             android:src="@drawable/ic_quotes"
             android:layout_width="10dp"
             android:layout_height="10dp"/>
@@ -228,7 +229,7 @@
             android:layout_height="wrap_content"/>
         <ImageView
             android:layout_marginLeft="8dp"
-            android:src="@drawable/ic_quotes_reverse"
+            android:src="@drawable/ic_quotes"
             android:layout_width="10dp"
             android:layout_height="10dp"/>
     </LinearLayout>

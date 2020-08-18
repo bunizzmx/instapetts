@@ -259,18 +259,22 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
             PAGINADOR = tips_list.get(tips_list.size() - 1).getId();
             mNativeAds.clear();
             mNativeAds.addAll(App.getInstance().getMoreAds());
-            if (mNativeAds.size() <= 0) { return;}
-            int offset = mNativeAds.size() + 1;
-            int index = 3;
-            for (UnifiedNativeAd ad: mNativeAds) {
-                if(index< data_below.size())
-                    data_below.add(index, ad);
-                if((offset % 2 != 0)) {}
-                else{offset +=1;}
-                index = index + offset;
+            if(mNativeAds.size() > 0) {
+                int offset = mNativeAds.size() + 1;
+                int index = 3;
+                for (UnifiedNativeAd ad: mNativeAds) {
+                    if(index< data_below.size())
+                        data_below.add(index, ad);
+                    if((offset % 2 != 0)) {}
+                    else{offset +=1;}
+                    index = index + offset;
+                }
+                adapter.setMoreTips(data_below);
+                refresh_tips.setRefreshing(false);
+            }else{
+                adapter.setMoreTips(data_below);
+                refresh_tips.setRefreshing(false);
             }
-            adapter.setMoreTips(data_below);
-            refresh_tips.setRefreshing(false);
         }
 
     }
@@ -279,18 +283,22 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
     private void insertAdsInMenuItems(boolean more) {
         mNativeAds.clear();
         mNativeAds.addAll(App.getInstance().getMoreAds());
-        if (mNativeAds.size() <= 0) { return;}
-        int offset = mNativeAds.size() + 1;
-        int index = 3;
-        for (UnifiedNativeAd ad: mNativeAds) {
-            if(index< data.size())
-                data.add(index, ad);
-            if((offset % 2 != 0)) {}
-            else{offset +=1;}
-            index = index + offset;
+        if(mNativeAds.size() >  0) {
+            int offset = mNativeAds.size() + 1;
+            int index = 3;
+            for (UnifiedNativeAd ad: mNativeAds) {
+                if(index< data.size())
+                    data.add(index, ad);
+                if((offset % 2 != 0)) {}
+                else{offset +=1;}
+                index = index + offset;
+            }
+            adapter.setData(data);
+            refresh_tips.setRefreshing(false);
+        }else{
+            adapter.setData(data);
+            refresh_tips.setRefreshing(false);
         }
-        adapter.setData(data);
-        refresh_tips.setRefreshing(false);
     }
 
     @Override
@@ -307,24 +315,28 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
     }
 
     private void interpolateHelps(ArrayList<PostBean> helps) {
-        if (helps.size() <= 0) { return;}
-        int offset = helps.size() + 1;
-        int index = 3;
-        for (PostBean ad: helps) {
-            if(index< data.size())
-                data.add(index, ad);
-            if((offset % 2 != 0)) {}
-            else{offset +=1;}
-            index = index + offset;
+        if (helps.size() > 0) {
+            int offset = helps.size() + 1;
+            int index = 3;
+            for (PostBean ad: helps) {
+                if(index< data.size())
+                    data.add(index, ad);
+                if((offset % 2 != 0)) {}
+                else{offset +=1;}
+                index = index + offset;
+            }
+
+            refresh_tips.setRefreshing(false);
+            root_loading.setVisibility(View.GONE);
+            list_tips.setMediaObjects(data);
+            if(data.size()>0 && App.getInstance().getMoreAds().size()>0)
+                insertAdsInMenuItems(true);
+            else
+                adapter.setData(data);
+        }else{
+            adapter.setData(data);
         }
 
-        refresh_tips.setRefreshing(false);
-        root_loading.setVisibility(View.GONE);
-        list_tips.setMediaObjects(data);
-        if(data.size()>3 && App.getInstance().getMoreAds().size()>0)
-            insertAdsInMenuItems(true);
-        else
-            adapter.setData(data);
     }
 }
 

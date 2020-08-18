@@ -337,7 +337,6 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     }
     // Remove the old player
     private void removeVideoView(PlayerView videoView) {
-        Log.e("RESET_VOODE","REMOVE");
         ViewGroup parent = (ViewGroup) videoView.getParent();
         if (parent == null) {
             return;
@@ -359,7 +358,6 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     }
     private void resetVideoView() {
         if (isVideoViewAdded) {
-            Log.e("RESET_VOODE","SI");
             removeVideoView(videoSurfaceView);
             playPosition = -1;
             videoSurfaceView.setVisibility(INVISIBLE);

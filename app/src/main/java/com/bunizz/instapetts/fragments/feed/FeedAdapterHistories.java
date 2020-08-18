@@ -70,7 +70,6 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
             h.name_pet_item.setText(context.getResources().getString(R.string.you_history));
             if(historiesBeans.get(position)!=null){
                 if(historiesBeans.get(position).getHistorias()!=null){
-                    Log.e("HISTORIAS_COMPANERO","-->:hhhh" );
                     h.profile_background.setOnClickListener(view -> {
                             Intent i = new Intent(context, StoryPlayer.class);
                             i.putExtra("sliders", Parcels.wrap(historiesBeans));
@@ -83,7 +82,6 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
                     Glide.with(context).load(App.getInstance().getBucketUriHistorie(splitSubitems[4])).into(h.profile_background);
                     h.add_story_icon.setVisibility(View.GONE);
                 }else{
-                    Log.e("HISTORIAS_COMPANERO","-->:oooo" );
                     h.add_story_icon.setVisibility(View.VISIBLE);
                     h.image_pet_history.setVisibility(View.GONE);
                     h.image_pet_history.setStroke_separate(false);
@@ -97,18 +95,14 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
 
                 }
             }else{
-                Log.e("HISTORIAS_COMPANERO","-->:qwer" );
                 h.image_pet_history.setVisibility(View.GONE);
-                Log.e("MY_STORIE","null all ");
             }
             Glide.with(context).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID")).placeholder(context.getResources().getDrawable(R.drawable.ic_holder)).into(h.image_pet_history);
         }else{
             h.add_story_icon.setVisibility(View.GONE);
             h.image_pet_history.setVisibility(View.VISIBLE);
-            Log.e("HISTORIAS_COMPANERO","-->:" + historiesBeans.get(position).getHistorias());
             String splitItems[] = historiesBeans.get(position).getHistorias().split(",");
             String splitSubitems[] = splitItems[splitItems.length-1].split(";");
-            Log.e("HISTORIAS_COMPANERO","-->preview:" + App.getInstance().getBucketUriHistorie(splitSubitems[4]));
             Glide.with(context).load(App.getInstance().getBucketUriHistorie(splitSubitems[4])).into(h.profile_background);
             Glide.with(context).load(historiesBeans.get(position).getPhoto_user()).into(h.image_pet_history);
             h.profile_background.setOnClickListener(view -> {
@@ -137,7 +131,6 @@ public class FeedAdapterHistories extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
-        Log.e("TAMAÑO_HISTORIES","-->"+ historiesBeans.size());
         return historiesBeans.size();
     }
 

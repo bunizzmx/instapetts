@@ -60,14 +60,15 @@ public class FragmentPetList extends Fragment implements  PetListContract.View{
 
     public void setData(ArrayList<Object> data) {
         Log.e("REFRESH_DATA_SEARCH","--> data:" + data.size());
-        this.data = data;
+        this.data.clear();
+        this.data.addAll(data);
         if(this.data.size()>0) {
             adapter.isRecent(false);
             list_Search_recents_pets.setVisibility(View.GONE);
             root_no_data.setVisibility(View.GONE);
             list_pets_search_result.setVisibility(View.VISIBLE);
             adapter.setHIDE_LABEL(true);
-            adapter.setData(data);
+            adapter.setData(this.data);
         }else{
             list_Search_recents_pets.setVisibility(View.GONE);
             root_no_data.setVisibility(View.VISIBLE);

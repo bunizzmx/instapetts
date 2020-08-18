@@ -37,6 +37,7 @@ import com.bunizz.instapetts.fragments.search.tabs.pets.FragmentPetList;
 import com.bunizz.instapetts.fragments.search.tabs.users.FragmentPopietaryList;
 import com.bunizz.instapetts.fragments.search.tabs.pets.SearchPetAdapter;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
 import com.bunizz.instapetts.utils.tabs.SlidingFragmentPagerAdapter;
 import com.bunizz.instapetts.utils.tabs.SlidingTabLayout;
 import com.bunizz.instapetts.utils.tabs.TabType;
@@ -54,6 +55,7 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -85,6 +87,14 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
     String QUERY_USERS_SAVED="";
     ViewPagerAdapterx adapter_pager;
 
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.icon_search)
+    void icon_search() {
+       getActivity().onBackPressed();
+    }
+
+
+
     Handler handler = new Handler(Looper.getMainLooper() /*UI thread*/);
     Runnable workRunnable;
  RxPermissions rxPermissions;
@@ -100,8 +110,8 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
         adapter_pager = new ViewPagerAdapterx(getChildFragmentManager());
         adapter_pager.addFragment(new FragmentPopietaryList(), getContext().getString(R.string.users));
         adapter_pager.addFragment(new FragmentPetList(), getContext().getString(R.string.pets));
-        adapter_pager.addFragment(new FragmentPetList(), getContext().getString(R.string.cerca_De_ti));
-        adapter_pager.addFragment(new FragmentPetList(),  getContext().getString(R.string.users_news));
+       // adapter_pager.addFragment(new FragmentPetList(), getContext().getString(R.string.cerca_De_ti));
+        adapter_pager.addFragment(new FragmentPopietaryList(),  getContext().getString(R.string.users_news));
 
     }
 
@@ -123,9 +133,8 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
                 .debounce(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(charSequence -> {
-                   Log.e("CHAR_SEARCH",charSequence.toString());
                     searching_world.setVisibility(View.VISIBLE);
-                    if(charSequence.toString().length()> 3){
+                    if(charSequence.toString().trim().length()> 3){
                         handler.removeCallbacks(workRunnable);
                         workRunnable = () ->{
                             if(POSITION_PAGER == 0)
@@ -134,13 +143,14 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
                                 presenter.searchPets(search_input.getText().toString());
                         };
                         handler.postDelayed(workRunnable, 1000);
-                    }else if(charSequence.toString().length() == 0 ){
-                        Log.e("SHOW_RECENT","SI");
+                    }else if(charSequence.toString().trim().length() == 0 ){
                         Fragment frag = adapter_pager.getItem(POSITION_PAGER);
-                        if(frag instanceof FragmentPetList ){
-                            ((FragmentPetList) frag).showRecent();
-                        }else{
-                            ((FragmentPopietaryList) frag).showRecent();
+                        if(POSITION_PAGER!=2) {
+                            if (frag instanceof FragmentPetList)
+                                ((FragmentPetList) frag).showRecent();
+                            else
+                                ((FragmentPopietaryList) frag).showRecent();
+
                         }
                         searching_world.setVisibility(View.GONE);
                     }
@@ -156,14 +166,15 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
 
             @Override
             public void onPageSelected(int position) {
-                if(position>0){
-                   // QUERY_PETS_SAVED = search_input.getText().toString();
+                if(position>0)
                     search_input.setText("");
-                }else{
-                    //QUERY_USERS_SAVED = search_input.getText().toString();
+                else
                     search_input.setText("");
-                }
+
                 POSITION_PAGER = position;
+                if(position == 2){
+                    presenter.searchNewUsers();
+                }
             }
 
             @Override
@@ -189,7 +200,7 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
     @Override
     public void shoPetsResults(ArrayList<SearchPetBean> pets) {
         searching_world.setVisibility(View.GONE);
-        Fragment frag = adapter_pager.getItem(1);
+        Fragment frag = adapter_pager.getItem(POSITION_PAGER);
         ArrayList<Object> PETS = new ArrayList<>();
         if(pets!=null) {
             if (frag instanceof FragmentPetList) {
@@ -208,7 +219,7 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
     @Override
     public void shoUsersResults(ArrayList<SearchUserBean> users) {
         searching_world.setVisibility(View.GONE);
-        Fragment frag =  adapter_pager.getItem(0);
+        Fragment frag =  adapter_pager.getItem(POSITION_PAGER);
         ArrayList<Object> USERS = new ArrayList<>();
         if (frag instanceof FragmentPopietaryList) {
             Log.e("SHOW_RESULT_USER","USUARIOS");

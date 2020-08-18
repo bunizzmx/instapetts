@@ -41,7 +41,7 @@ private WebServices apiService;
     @Override
     public void searchusers(String word_search) {
         ParameterSearching parameterSearching = new ParameterSearching();
-       String word;
+        String word;
         parameterSearching.setWord(word_search);
         disposable.add(
                 apiService.searchUser(parameterSearching)
@@ -73,6 +73,27 @@ private WebServices apiService;
                             @Override
                             public void onSuccess(SearchPetsResponse response) {
                                 mView.shoPetsResults(response.getList_pets());
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                Log.e("ERROR","--->" + e.getMessage());
+                            }
+                        })
+        );
+    }
+
+    @Override
+    public void searchNewUsers() {
+        ParameterSearching parameterSearching = new ParameterSearching();
+        parameterSearching.setWord("ALL_USERS");
+        disposable.add(
+                apiService.searchUser(parameterSearching)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<SearchUsersResponse>() {
+                            @Override
+                            public void onSuccess(SearchUsersResponse response) {
+                                mView.shoUsersResults(response.getList_users());
                             }
                             @Override
                             public void onError(Throwable e) {
