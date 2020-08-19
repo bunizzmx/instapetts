@@ -275,7 +275,7 @@ public class Main extends AppCompatActivity implements change_instance,
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        ButterKnife.bind(this);
+        ButterKnife.bind(this);Log.e("ID_FROM_WEB","-->" + App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         jobsServices = new JobsServices(this);
         jobsServices.startNotificationsRequest();
         try{

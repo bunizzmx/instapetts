@@ -396,37 +396,43 @@ public class JobsServices {
 
 
     @SuppressLint({"CheckResult", "MissingPermission"})
-    public void obtener_localizacion(){
-        rxPermissions
-                .request(Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION)
-                .subscribe(granted -> {
-                    if (granted) {
-                        Log.e("LOCALIZACION","permitido");
-                        LocationServices.getFusedLocationProviderClient(context).getLastLocation().addOnSuccessListener(location -> {
-                            if(location!=null){
-                                Log.e("LOCALIZACION","-->" + location.getLatitude()  + "/" + location.getLongitude());
-                                if(location.getLatitude() != App.read(PREFERENCES.LAT,0f)){
-                                    Log.e("LOCALIZACION","SOSTITUYO VALOR");
-                                    App.write(PREFERENCES.LOCATION_CHANGED,true);
-                                }
-                                App.write(PREFERENCES.LAT,(float)location.getLatitude());
-                                App.write(PREFERENCES.LON,(float)location.getLongitude());
-                                startIntentService();
-                            }else{
-                                Log.e("LOCALIZACION","ES NULA" );
-                            }
-                        })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.e("LOCALIZACION","fallo : " + e.getMessage());
+    public void obtener_localizacion() {
+        if (rxPermissions != null) {
+            try {
+                rxPermissions
+                        .request(Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION)
+                        .subscribe(granted -> {
+                            if (granted) {
+                                Log.e("LOCALIZACION", "permitido");
+                                LocationServices.getFusedLocationProviderClient(context).getLastLocation().addOnSuccessListener(location -> {
+                                    if (location != null) {
+                                        Log.e("LOCALIZACION", "-->" + location.getLatitude() + "/" + location.getLongitude());
+                                        if (location.getLatitude() != App.read(PREFERENCES.LAT, 0f)) {
+                                            Log.e("LOCALIZACION", "SOSTITUYO VALOR");
+                                            App.write(PREFERENCES.LOCATION_CHANGED, true);
+                                        }
+                                        App.write(PREFERENCES.LAT, (float) location.getLatitude());
+                                        App.write(PREFERENCES.LON, (float) location.getLongitude());
+                                        startIntentService();
+                                    } else {
+                                        Log.e("LOCALIZACION", "ES NULA");
                                     }
-                                });
-                    }else{
-                        Log.e("LOCALIZACION","rechazado");
-                    }
-                });
+                                })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.e("LOCALIZACION", "fallo : " + e.getMessage());
+                                            }
+                                        });
+                            } else {
+                                Log.e("LOCALIZACION", "rechazado");
+                            }
+                        });
+            }catch (Exception e){
+                Log.e("ESXCEPCION", "LOCALIZACION");
+            }
+        }
     }
 
     protected void startIntentService() {
