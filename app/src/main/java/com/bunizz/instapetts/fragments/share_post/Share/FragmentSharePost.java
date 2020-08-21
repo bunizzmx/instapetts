@@ -90,6 +90,12 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     ArrayList<String> paths = new ArrayList<>();
     ArrayList<String> aspects = new ArrayList<>();
 
+
+    @OnClick(R.id.back_to_main)
+    void back_to_main() {
+       getActivity().onBackPressed();
+    }
+
     @OnClick(R.id.share_post_pet)
     void share_post_pet()
     {
@@ -98,7 +104,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             dialogShosePet.setPetBeans(pets_cuerrent,false);
             dialogShosePet.setListener(new chose_pet_listener() {
                 @Override
-                public void chose(String url_foto, int id_pet, String name_pet) {
+                public void chose(String url_foto, int id_pet, String name_pet,int type_pet,String name_raza) {
                     post = new PostBean();
                     post.setName_pet(name_pet);
                     post.setId_pet(id_pet);
@@ -106,6 +112,9 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
                     post.setCp(App.read(PREFERENCES.CP,0));
                     post.setLat(App.read(PREFERENCES.LAT,0f));
                     post.setLon(App.read(PREFERENCES.LON,0f));
+                    post.setType_pet(type_pet);
+                    Log.e("NAME_RAZA_PET","-->" + name_raza);
+                    post.setName_raza(name_raza);
                     if(check_apagar_comments.isChecked())
                         post.setCan_comment(1);
                     else
@@ -170,10 +179,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             DialogNoPets dialogNoPets = new DialogNoPets(getActivity());
             dialogNoPets.setListener(new chose_pet_listener() {
                 @Override
-                public void chose(String url_foto, int id_pet, String name_pet) {
-
-                }
-
+                public void chose(String url_foto, int id_pet, String name_pet, int type_pet,String name_raza) {}
                 @Override
                 public void request_no_pets() {
                     listener.new_pet();

@@ -52,11 +52,17 @@ public class ReportPresenter implements ReportsContract.Presenter {
                         .subscribeWith(new DisposableSingleObserver<ResponseListReports>() {
                             @Override
                             public void onSuccess(ResponseListReports response) {
-                                mView.showListReports(response.getList_reports());
+                                if(response!=null) {
+                                    if(response.getList_reports()!=null)
+                                      mView.showListReports(response.getList_reports());
+                                    else
+                                        mView.errorDonwloadList();
+                                }else
+                                    mView.errorDonwloadList();
                             }
                             @Override
                             public void onError(Throwable e) {
-                                Log.e("ERROR","--->" + e.getMessage());
+                                mView.errorDonwloadList();
                             }
                         })
         );

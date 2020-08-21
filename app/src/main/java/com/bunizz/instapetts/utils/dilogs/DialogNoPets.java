@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -32,6 +33,7 @@ public class DialogNoPets extends BaseAlertDialog{
     Activity context;
     Button new_pet_button;
     chose_pet_listener listener;
+    ImageView close_dialog;
 
     public chose_pet_listener getListener() {
         return listener;
@@ -48,13 +50,12 @@ public class DialogNoPets extends BaseAlertDialog{
         LayoutInflater inflater = LayoutInflater.from(this.context);
         dialogView = inflater.inflate(R.layout.dialog_no_pets, null);
         new_pet_button = dialogView.findViewById(R.id.add_pet_dialog);
-        new_pet_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-                listener.request_no_pets();
-            }
+        close_dialog = dialogView.findViewById(R.id.close_dialog);
+        new_pet_button.setOnClickListener(view -> {
+            dismiss();
+            listener.request_no_pets();
         });
+        close_dialog.setOnClickListener(view -> dismiss());
         dialogBuilder.setView(dialogView);
         dialog = dialogBuilder.create();
         this.dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));

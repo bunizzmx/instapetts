@@ -5,24 +5,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.beans.HistoriesBean;
-import com.bunizz.instapetts.beans.PostBean;
-import com.bunizz.instapetts.beans.RazaBean;
-import com.bunizz.instapetts.constantes.BUNDLES;
-import com.bunizz.instapetts.fragments.feed.FeedAdapter;
-import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.fragments.wizardPets.adapters.TypePetsAdapter;
-import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.change_instance_wizard;
 import com.bunizz.instapetts.listeners.process_save_pet_listener;
 

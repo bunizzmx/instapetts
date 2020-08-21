@@ -42,32 +42,34 @@ public class FragmentFinalConfigPet extends Fragment {
     {
         getActivity().onBackPressed();
     }
-
+    boolean LOADING = false;
 
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.finalice_pet)
-    void finalice_pet()
-    {
-       if(!configure_name_pet.getText().toString().isEmpty() &&  !descripcion_pet.getText().toString().isEmpty() && URL_PET.length() > 5){
-           if(listener!=null){
-               Bundle b = new Bundle();
-               b.putString(BUNDLES.NAME_PET,configure_name_pet.getText().toString());
-               b.putString(BUNDLES.DESCRIPCION_PET,descripcion_pet.getText().toString());
-               b.putString(BUNDLES.URL_PHOTO_PET,URL_PET);
-               listener_pet_config.SaveDataPet(b,4);
-               listener.onpetFinish(true);
-           }
-       }else{
-         if(configure_name_pet.getText().toString().isEmpty())
-             Toast.makeText(getContext(),getContext().getString(R.string.write_name_pet),Toast.LENGTH_LONG).show();
+    void finalice_pet() {
+        if (!LOADING){
+            if (!configure_name_pet.getText().toString().isEmpty() && !descripcion_pet.getText().toString().isEmpty() && URL_PET.length() > 5) {
+                if (listener != null) {
+                    Bundle b = new Bundle();
+                    b.putString(BUNDLES.NAME_PET, configure_name_pet.getText().toString());
+                    b.putString(BUNDLES.DESCRIPCION_PET, descripcion_pet.getText().toString());
+                    b.putString(BUNDLES.URL_PHOTO_PET, URL_PET);
+                    LOADING = true;
+                    listener_pet_config.SaveDataPet(b, 4);
+                    listener.onpetFinish(true);
+                }
+            } else {
+                if (configure_name_pet.getText().toString().isEmpty())
+                    Toast.makeText(getContext(), getContext().getString(R.string.write_name_pet), Toast.LENGTH_LONG).show();
 
-         if(descripcion_pet.getText().toString().isEmpty())
-               Toast.makeText(getContext(),getContext().getString(R.string.gustos_pet),Toast.LENGTH_LONG).show();
+                if (descripcion_pet.getText().toString().isEmpty())
+                    Toast.makeText(getContext(), getContext().getString(R.string.gustos_pet), Toast.LENGTH_LONG).show();
 
-           if(URL_PET.length() < 5)
-               Toast.makeText(getContext(),getContext().getString(R.string.chose_photo),Toast.LENGTH_LONG).show();
-       }
+                if (URL_PET.length() < 5)
+                    Toast.makeText(getContext(), getContext().getString(R.string.chose_photo), Toast.LENGTH_LONG).show();
+            }
+    }
 
     }
 

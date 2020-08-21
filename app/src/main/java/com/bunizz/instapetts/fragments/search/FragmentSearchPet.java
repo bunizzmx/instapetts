@@ -128,6 +128,7 @@ public class FragmentSearchPet extends Fragment implements SearchPetContract.Vie
         ButterKnife.bind(this, view);
         viewpager_search.setAdapter(adapter_pager);
         tabs_search.setViewPager(viewpager_search);
+        viewpager_search.setOffscreenPageLimit(3);
 
         RxTextView.textChanges(search_input)
                 .debounce(500, TimeUnit.MILLISECONDS)

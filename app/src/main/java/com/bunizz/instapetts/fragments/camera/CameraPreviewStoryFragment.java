@@ -10,32 +10,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.bumptech.glide.Glide;
-import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
-import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
-import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.PetHelper;
-import com.bunizz.instapetts.fragments.FragmentElement;
-import com.bunizz.instapetts.fragments.feed.FeedAdapter;
-import com.bunizz.instapetts.fragments.feed.FeedContract;
-import com.bunizz.instapetts.fragments.feed.FeedFragment;
-import com.bunizz.instapetts.fragments.feed.FeedPresenter;
-import com.bunizz.instapetts.listeners.change_instance;
-import com.bunizz.instapetts.listeners.change_instance_wizard;
+import com.bunizz.instapetts.fragments.feed.adapters.FeedAdapter;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.chose_pet_listener;
 import com.bunizz.instapetts.listeners.hisotry_listener;
 import com.bunizz.instapetts.utils.crop2.view.ImageCropView;
 import com.bunizz.instapetts.utils.dilogs.DialogShosePet;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -46,13 +32,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static android.app.Activity.RESULT_OK;
 
 public class CameraPreviewStoryFragment extends Fragment {
 
@@ -125,7 +107,7 @@ public class CameraPreviewStoryFragment extends Fragment {
                 dialogShosePet.setPetBeans(pets_cuerrent,true);
                 dialogShosePet.setListener(new chose_pet_listener() {
                     @Override
-                    public void chose(String url_foto, int id_pet, String name_pet) {
+                    public void chose(String url_foto, int id_pet, String name_pet, int type_pet, String name_raza) {
                         URL_FOTO_PET = url_foto;
                         NAME_PET = name_pet;
                         ID_PET=id_pet;
@@ -210,6 +192,18 @@ public class CameraPreviewStoryFragment extends Fragment {
 
         }
     }
+
+    public void refresh_path(){
+        if(publish_stories!=null && crop_view!=null) {
+            Bundle bundle = getArguments();
+            if (bundle != null) {
+                path = bundle.getStringArrayList("PATH_SELECTED");
+            }
+            crop_view.setImageFilePath(path.get(0));
+        }
+
+    }
+
 
 }
 

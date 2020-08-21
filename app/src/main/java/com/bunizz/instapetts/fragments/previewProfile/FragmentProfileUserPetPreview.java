@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,14 +33,12 @@ import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
-import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
-import com.bunizz.instapetts.fragments.profile.PetsPropietaryAdapter;
+import com.bunizz.instapetts.fragments.profile.adapters.PetsPropietaryAdapter;
 import com.bunizz.instapetts.fragments.profile.ProfileUserContract;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.folowFavoriteListener;
-import com.bunizz.instapetts.listeners.get_current_pager_listener;
 import com.bunizz.instapetts.listeners.open_sheet_listener;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.dilogs.DialogPreviewImage;
@@ -50,7 +47,6 @@ import com.bunizz.instapetts.utils.loadings.SpriteFactory;
 import com.bunizz.instapetts.utils.loadings.Style;
 import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
 import com.bunizz.instapetts.utils.tabs2.SmartTabLayout;
-import com.facebook.places.model.CurrentPlaceRequestParams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +54,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import retrofit2.http.POST;
 
 public class FragmentProfileUserPetPreview extends Fragment implements  ProfileUserContract.View {
 
@@ -113,6 +108,11 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
 
     @BindView(R.id.num_followed)
     TextView num_followed;
+
+    @BindView(R.id.label_lista_mascotas)
+    TextView label_lista_mascotas;
+
+
 
     Style style = Style.values()[12];
     Sprite drawable = SpriteFactory.create(style);
@@ -215,6 +215,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        App.write(PREFERENCES.OPEN_POST_ADVANCED_FROM,2);
         open_saved.setVisibility(View.GONE);
         list_pets_propietary.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
         petsPropietaryAdapter.setListener(new open_sheet_listener() {
@@ -230,7 +231,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         });
         list_pets_propietary.setAdapter(petsPropietaryAdapter);
         viewpager_profile.setAdapter(adapter_pager);
-        viewpager_profile.setOffscreenPageLimit(1);
+        viewpager_profile.setOffscreenPageLimit(3);
         viewpager_profile.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -298,6 +299,8 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
 
     public void refresh_info(){
         if(petHelper!=null && petsPropietaryAdapter!=null && presenter!= null) {
+            label_lista_mascotas.setText(getContext().getString(R.string.pet_list));
+            App.write(PREFERENCES.OPEN_POST_ADVANCED_FROM,2);
             loanding_preview_root.setVisibility(View.VISIBLE);
             root_info_ptofile.setVisibility(View.GONE);
             spinky_loading_profile_info.setIndeterminateDrawable(drawable);
@@ -323,12 +326,12 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
                 presenter.getInfoUser(userBean);
                 presenter.getPostUser(true,userBean.getId(),POSITION_PAGER);
             } else {
+                petsPropietaryAdapter.clear();
                 IS_MISMO_USER = false;
                 userBean.setId(ID_USER_PARAMETER);
                 userBean.setUuid("xxxx");
                 presenter.getInfoUser(userBean);
                 presenter.getPostUser(true,userBean.getId(),POSITION_PAGER);
-
             }
             paint_buttons();
         }
@@ -380,7 +383,15 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         for(int i=0;i <PETS.size();i++){
             ACOMULATIVO_RATE +=PETS.get(i).getRate_pet();
         }
-        RATE_PETS = ACOMULATIVO_RATE / PETS.size();
+        if(PETS.size()>0) {
+            RATE_PETS = ACOMULATIVO_RATE / PETS.size();
+            label_lista_mascotas.setText(getContext().getString(R.string.pet_list));
+        }
+        else {
+            label_lista_mascotas.setText(getContext().getString(R.string.sin_mascotas));
+            RATE_PETS = 0;
+        }
+
         USERBEAN = userBean;
         name_property_pet.setText("@" + USERBEAN.getName_tag());
         descripcion_perfil_user.setText(USERBEAN.getDescripcion());

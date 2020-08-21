@@ -1,4 +1,4 @@
-package com.bunizz.instapetts.fragments.profile;
+package com.bunizz.instapetts.fragments.profile.adapters;
 
 import android.content.Context;
 import android.content.Intent;

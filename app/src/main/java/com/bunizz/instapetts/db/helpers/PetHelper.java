@@ -46,8 +46,8 @@ public class PetHelper extends GenericHelper {
 
 
     public void savePet(PetBean pet) {
+        Log.e("NAME_RAZA_PET","SAVE-->" + pet.getRaza_pet());
         SQLiteDatabase writableDatabase = getWritableDatabase();
-
         String selection = "name_pet =?";
         String[] selectionArgs = {String.valueOf(pet.getName_pet())};
         final Cursor cursor = getReadableDatabase().query(
@@ -56,8 +56,9 @@ public class PetHelper extends GenericHelper {
                 selection,
                 selectionArgs , null, null, null, null);
         try {
-            if (cursor.moveToFirst())
-                Log.e("SI_HALLE_PET","si");
+            if (cursor.moveToFirst()) {
+                Log.e("SI_HALLE_PET", "si");
+            }
            else{
                 try {
                     writableDatabase.insertOrThrow(TABLE_NAME, null, pet.toContentValues());
@@ -75,7 +76,6 @@ public class PetHelper extends GenericHelper {
 
 
     public void deletePet(int id){
-        Log.e("DELETE_NOTIFICATION","--->" + id);
         getWritableDatabase().delete(TABLE_NAME, ID_PET + "=" +id, null) ;
     }
 
@@ -101,19 +101,20 @@ public class PetHelper extends GenericHelper {
                 cursor.close();
             }
         }
+        Log.e("NAME_RAZA_PET","db-->" + pets.get(0).getRaza_pet());
         return pets;
     }
 
     public void updateMyPet(PetBean petBean){
-        Log.e("UPDATE_PET","-->:");
         ContentValues valores = new ContentValues();
+        if(petBean.getRaza_pet()!=null)
         valores.put(RAZA_PET, petBean.getRaza_pet());
+
         valores.put(RATING_PET, petBean.getRate_pet());
         getWritableDatabase().update(TABLE_NAME,valores,"id_pet="+petBean.getId_pet()+"",null);
     }
 
     public PetBean getPetByid(String id) {
-        Log.e("PET_NAME","-->" + id);
        PetBean pet = null;
         String selection = "name_pet =?";
         String[] selectionArgs = {String.valueOf(id)};

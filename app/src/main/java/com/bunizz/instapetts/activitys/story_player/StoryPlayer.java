@@ -1,18 +1,9 @@
 package com.bunizz.instapetts.activitys.story_player;
 
-import android.annotation.SuppressLint;
-import android.app.ActivityOptions;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,14 +12,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
-import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.IdentificadoresHistoriesBean;
 import com.bunizz.instapetts.beans.PostBean;
-import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.fragments.story.FragmentStoriView;
-import com.bunizz.instapetts.fragments.story.FragmentStoriViewAdd;
 import com.bunizz.instapetts.listeners.story_finished_listener;
 import com.bunizz.instapetts.utils.ViewPagerHistory.DepthPageTransformer;
 import com.bunizz.instapetts.utils.tabs.SlidingFragmentPagerAdapter;

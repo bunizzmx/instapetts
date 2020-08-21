@@ -1,4 +1,4 @@
-package com.bunizz.instapetts.fragments.profile;
+package com.bunizz.instapetts.fragments.profile.adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PetBean;
-import com.bunizz.instapetts.fragments.feed.FeedAdapterHistories;
 import com.bunizz.instapetts.listeners.open_sheet_listener;
 import com.bunizz.instapetts.utils.ImagenCircular;
 
@@ -41,12 +40,19 @@ public class PetsPropietaryAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
         }
 
     }
+    public void clear(){
+        this.pets.clear();
+        notifyDataSetChanged();
+    }
     public void setPetsforOtherUser(ArrayList<PetBean> pets) {
         Log.e("OTHER_PET","-->" +pets.size());
         IS_ME = false;
         if (pets.size() > 0) {
             this.pets.clear();
             this.pets.addAll(pets);
+            notifyDataSetChanged();
+        }else{
+            this.pets.clear();;
             notifyDataSetChanged();
         }
     }

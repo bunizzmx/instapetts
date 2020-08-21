@@ -1,5 +1,6 @@
 package com.bunizz.instapetts.fragments.side_menus_activities;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,7 @@ import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class FragmentWebTerms extends Fragment {
 
@@ -34,6 +36,13 @@ public class FragmentWebTerms extends Fragment {
     SpinKitView progres_image;
 
     String SUBDIRECTORY ="";
+
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.back_to_main)
+    void back_to_main() {
+        getActivity().onBackPressed();
+    }
 
 
     public static FragmentWebTerms newInstance() {

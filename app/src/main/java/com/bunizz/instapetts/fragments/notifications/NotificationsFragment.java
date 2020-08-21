@@ -92,6 +92,12 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
         dialogDeletes.show();
     }
 
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.back_to_main)
+    void back_to_main() {
+        getActivity().onBackPressed();
+    }
+
 
 
 

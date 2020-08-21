@@ -164,9 +164,10 @@ public class ImageService extends Service {
             return reference.getDownloadUrl();
         }).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                 notificationManager.notify(notificationId, mBuilder.build());
-                 intent_broadcast.putExtra("COMPLETED", false);
-                 intent_broadcast.setAction(Main.POST_SUCCESFULL);
+                  notificationManager.notify(notificationId, mBuilder.build());
+                  App.write(PREFERENCES.ESTATUS_SUBIDA_VIDEO,true);
+                  intent_broadcast.putExtra("COMPLETED", false);
+                  intent_broadcast.setAction(Main.POST_SUCCESFULL);
                   sendBroadcast(intent_broadcast);
                   make_notification(file.getAbsolutePath());
 

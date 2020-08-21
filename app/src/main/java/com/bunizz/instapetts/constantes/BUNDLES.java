@@ -67,4 +67,5 @@ public interface BUNDLES {
     String POST_NAME="POST_NAME";
     String POST_ASPECT="POST_ASPECT";
     String POST_FOTO_USER="POST_FOTO_USER";
+
 }

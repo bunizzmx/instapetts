@@ -17,5 +17,6 @@ public interface ReportsContract {
     interface View{
        void showListReports(ArrayList<ReportListBean> reportListBeans);
        void reportSended();
+       void errorDonwloadList();
     }
 }

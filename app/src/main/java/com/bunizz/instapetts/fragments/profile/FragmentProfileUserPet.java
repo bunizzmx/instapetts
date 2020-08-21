@@ -34,7 +34,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.activitys.main.Main;
 import com.bunizz.instapetts.activitys.side_menus_activities.SideMenusActivities;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
@@ -43,8 +42,8 @@ import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
-import com.bunizz.instapetts.fragments.feed.FeedAdapter;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
+import com.bunizz.instapetts.fragments.profile.adapters.PetsPropietaryAdapter;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.conexion_listener;
@@ -248,6 +247,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     }
 
     public void reloadMyData(){
+        App.write(PREFERENCES.OPEN_POST_ADVANCED_FROM,1);
         if(adapter_pager!=null && list_pets_propietary!=null)
            presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0),POSITION_PAGER);
     }
@@ -256,6 +256,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        App.write(PREFERENCES.OPEN_POST_ADVANCED_FROM,1);
         title_toolbar.setText(App.read(PREFERENCES.NAME_USER,"USUARIO"));
         icon_toolbar.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_settings));
         list_pets_propietary.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));

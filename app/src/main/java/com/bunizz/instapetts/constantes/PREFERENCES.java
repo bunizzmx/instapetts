@@ -43,4 +43,7 @@ public interface PREFERENCES {
 
     String ADS_ACTIVADOS ="ADS_ACTIVADOS";
 
+
+    String OPEN_POST_ADVANCED_FROM ="OPEN_POST_ADVANCED_FROM";
+
 }

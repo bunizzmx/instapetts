@@ -23,7 +23,7 @@ import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
-import com.bunizz.instapetts.fragments.profile.AdapterGridPostsProfile;
+import com.bunizz.instapetts.fragments.profile.adapters.AdapterGridPostsProfile;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.get_current_pager_listener;
 import com.bunizz.instapetts.listeners.postsListener;

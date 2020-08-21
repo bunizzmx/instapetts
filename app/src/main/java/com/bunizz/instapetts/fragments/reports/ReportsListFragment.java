@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -40,6 +41,20 @@ public class ReportsListFragment extends Fragment implements   ReportsContract.V
 
     @BindView(R.id.spin_kit)
     SpinKitView spin_kit;
+
+    @BindView(R.id.root_no_internet)
+    RelativeLayout root_no_internet;
+
+    @BindView(R.id.title_no_internet)
+    TextView title_no_internet;
+
+    @BindView(R.id.body_no_data)
+    TextView body_no_data;
+
+    @BindView(R.id.refresh_list_reports)
+    SwipeRefreshLayout refresh_list_reports;
+
+
 
     Style style = Style.values()[12];
     Sprite drawable = SpriteFactory.create(style);
@@ -72,6 +87,7 @@ public class ReportsListFragment extends Fragment implements   ReportsContract.V
         list_causas_report.setLayoutManager(new LinearLayoutManager(getContext()));
         list_causas_report.setAdapter(adapter);
         presenter.getList();
+        refresh_list_reports.setOnRefreshListener(() -> presenter.getList());
     }
 
     @Nullable
@@ -82,6 +98,8 @@ public class ReportsListFragment extends Fragment implements   ReportsContract.V
 
     @Override
     public void showListReports(ArrayList<ReportListBean> reportListBeans) {
+        refresh_list_reports.setRefreshing(false);
+        root_no_internet.setVisibility(View.GONE);
         if(reportListBeans!=null){
             if(reportListBeans.size()>0){
                 adapter.setData(reportListBeans);
@@ -98,6 +116,15 @@ public class ReportsListFragment extends Fragment implements   ReportsContract.V
     @Override
     public void reportSended() {
 
+    }
+
+    @Override
+    public void errorDonwloadList() {
+        refresh_list_reports.setRefreshing(false);
+        spin_kit.setVisibility(View.GONE);
+        title_no_internet.setText(getContext().getString(R.string.no_post_title));
+        body_no_data.setText(getContext().getString(R.string.no_post_body));
+        root_no_internet.setVisibility(View.VISIBLE);
     }
 
 

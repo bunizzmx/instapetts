@@ -9,6 +9,11 @@ import java.util.ArrayList;
 
 @Parcel
 public class PostBean {
+
+    @SerializedName("name_raza")
+    @Expose
+    String name_raza;
+
     @SerializedName("url_posts")
     @Expose
     String urls_posts;
@@ -367,6 +372,14 @@ public class PostBean {
 
     public void setCensored(int censored) {
         this.censored = censored;
+    }
+
+    public String getName_raza() {
+        return name_raza;
+    }
+
+    public void setName_raza(String name_raza) {
+        this.name_raza = name_raza;
     }
 }
 

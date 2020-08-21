@@ -206,7 +206,8 @@ public class PetBean {
         contentValues.put(PetHelper.ID_PROPIETARY, getId_propietary());
         contentValues.put(PetHelper.NAME_PROPIETARY, getName_propietary());
         contentValues.put(PetHelper.PESO_PET, getPeso_pet());
-        contentValues.put(PetHelper.RAZA_PET, getRaza_pet());
+        if(getRaza_pet()!=null)
+            contentValues.put(PetHelper.RAZA_PET, getRaza_pet());
         contentValues.put(PetHelper.TYPE_PET, getType_pet());
         contentValues.put(PetHelper.GENERO_PET, getGenero_pet());
         contentValues.put(PetHelper.DESCRIPCION_PET, getDescripcion_pet());

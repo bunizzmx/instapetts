@@ -105,8 +105,6 @@ public class FragmentPopietaryList  extends Fragment implements  UserListContrac
         adapter.setData(data);
         adapter.setListener((type_fragment, data) -> {
             if(listener!=null) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                 listener.change_fragment_parameter(type_fragment, data);
             }
         });

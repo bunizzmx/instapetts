@@ -56,7 +56,6 @@ public class PreviewProfileUserPresenter implements   ProfileUserContract.Presen
 
     @Override
     public void getInfoUser(UserBean user) {
-        Log.e("DATA_FOR_PREVIEW","PRESENTER _ id_usuario : " + user.getId());
     disposable.add(
                 apiService
                         .getInfoUser(user)
@@ -140,9 +139,7 @@ public class PreviewProfileUserPresenter implements   ProfileUserContract.Presen
     }
 
     @Override
-    public void getPostUserPaginate(boolean one_user, int id_one, int filter, int paginador) {
-
-    }
+    public void getPostUserPaginate(boolean one_user, int id_one, int filter, int paginador) {}
 
     @Override
     public void follow(int id_user,boolean follow) {

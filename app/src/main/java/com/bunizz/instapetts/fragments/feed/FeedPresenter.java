@@ -107,8 +107,6 @@ public class FeedPresenter implements FeedContract.Presenter {
                             @Override
                             public void onSuccess(ResponsePost responsePost) {
                                 if(responsePost.getList_posts()!=null) {
-                                    if(responsePost.getList_posts()!=null)
-                                    Log.e("NUMBER_POSTS", "-->" + responsePost.getList_posts().size());
                                     ArrayList<PostBean> post = new ArrayList<>();
                                     for (int i =0;i<responsePost.getList_posts().size();i++){
                                         if(responsePost.getList_posts().get(i).getCensored() == 0){
@@ -143,7 +141,6 @@ public class FeedPresenter implements FeedContract.Presenter {
                                     if(RETRY < 3) {
                                         mView.peticion_error();
                                     }else{
-                                        Log.e("NO_INTERNET","--> tries alcanzados" );
                                         mView.noInternet();
                                     }
                                     }
@@ -209,14 +206,10 @@ public class FeedPresenter implements FeedContract.Presenter {
                                         Log.e("NO_INTERNET","--> SUS AMIGOS AUN NO PUBLICAN" );
                                         mView.show_next_feed(post);
                                     }
-                                }else{
-
                                 }
                             }
                             @Override
-                            public void onError(Throwable e) {
-
-                            }
+                            public void onError(Throwable e) {}
                         })
         );
     }
@@ -237,7 +230,6 @@ public class FeedPresenter implements FeedContract.Presenter {
                 })
                 .addOnFailureListener(e -> { })
                 .addOnCompleteListener(task -> {    Log.e("BORRE_FOLLOW","DE MI");});
-
         idsUsersHelper.deleteId(id_usuario);
 
     }

@@ -24,6 +24,7 @@ import com.bunizz.instapetts.fragments.camera.CameraStoryt;
 import com.bunizz.instapetts.fragments.login.MainLogin;
 import com.bunizz.instapetts.fragments.login.login.FragmentLogin;
 import com.bunizz.instapetts.fragments.login.sigin.FragmentSigin;
+import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
 import com.bunizz.instapetts.fragments.share_post.Picker.image.FragmentPickerGalery;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
@@ -99,6 +100,9 @@ public class CameraHistoryActivity extends AppCompatActivity implements  changue
             mCurrentFragment = fragment;
             mCurrentFragment.getFragment().setArguments(data);
             if(stack_history_foto.size()<=0){stack_history_foto.push(mCurrentFragment);}
+        }
+        if(mCurrentFragment.getFragment() instanceof CameraPreviewStoryFragment ){
+            ((CameraPreviewStoryFragment) mCurrentFragment.getFragment()).refresh_path();
         }
         inflateFragment();
     }

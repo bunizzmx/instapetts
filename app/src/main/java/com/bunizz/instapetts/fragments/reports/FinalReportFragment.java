@@ -5,10 +5,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +56,7 @@ public class FinalReportFragment extends Fragment implements ReportsContract.Vie
     EditText description_report;
 
 
+
     String motivo="";
     int id_recurso=0;
     int typo_recurso=0;
@@ -94,6 +97,7 @@ public class FinalReportFragment extends Fragment implements ReportsContract.Vie
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        Log.e("REFRESH_INFO_FINAL","sixx");
         motivo_denuncia_label.setText(motivo);
         description_report.addTextChangedListener(new TextWatcher() {
             @Override
@@ -115,7 +119,7 @@ public class FinalReportFragment extends Fragment implements ReportsContract.Vie
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView( LayoutInflater inflater,  ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.final_report_fragment, container, false);
     }
 
@@ -129,9 +133,26 @@ public class FinalReportFragment extends Fragment implements ReportsContract.Vie
     }
 
     @Override
+    public void errorDonwloadList() { }
+
+    @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         listener= (changue_fragment_parameters_listener) context;
+    }
+
+    public void refresh_info(){
+        Log.e("REFRESH_INFO_FINAL","si");
+        if(description_report!=null && presenter!=null) {
+            Bundle bundle = getArguments();
+            if (bundle != null) {
+                motivo = bundle.getString("MOTIVO");
+                id_motivo = bundle.getInt("ID_MOTIVO");
+                id_recurso = bundle.getInt("ID_RECURSO");
+                typo_recurso = bundle.getInt("TYPO_RECURSO");
+            }
+            motivo_denuncia_label.setText(motivo);
+        }
     }
 
 }

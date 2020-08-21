@@ -33,6 +33,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ReportActiviy extends AppCompatActivity  implements changue_fragment_parameters_listener {
@@ -45,12 +46,19 @@ public class ReportActiviy extends AppCompatActivity  implements changue_fragmen
     int ID_RECURSO=0;
     int TYPO_RECURSO =0;
 
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.back_to_main)
+    void back_to_main() {
+        onBackPressed();
+    }
+
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.report_activity);
+        ButterKnife.bind(this);
         Intent iin= getIntent();
         Bundle b = iin.getExtras();
         if(b!=null)
@@ -66,10 +74,10 @@ public class ReportActiviy extends AppCompatActivity  implements changue_fragmen
 
     private void setupFirstFragment() {
         Bundle b = new Bundle();
-        changeOfInstance(FragmentElement.INSTANCE_REPORTS_LIST,b);
+        changeOfInstance(FragmentElement.INSTANCE_REPORTS_LIST,b,false);
     }
 
-    private void changue_list_reports(FragmentElement fragment,Bundle data) {
+    private void changue_list_reports(FragmentElement fragment,Bundle data,boolean onback) {
         if (fragment != null) {
             mCurrentFragment = fragment;
             mCurrentFragment.getFragment().setArguments(data);
@@ -78,10 +86,10 @@ public class ReportActiviy extends AppCompatActivity  implements changue_fragmen
             }
         }
         //((FollowsFragment) mCurrentFragment.getFragment()).updateInfo(data);
-        inflateFragment();
+        inflateFragment(onback);
     }
 
-    private void changue_to_final_reports(FragmentElement fragment,Bundle data) {
+    private void changue_to_final_reports(FragmentElement fragment,Bundle data,boolean onback) {
         data.putInt("ID_RECURSO",ID_RECURSO);
         data.putInt("TYPO_RECURSO",TYPO_RECURSO);
         if (fragment != null) {
@@ -91,8 +99,8 @@ public class ReportActiviy extends AppCompatActivity  implements changue_fragmen
                 stack_final_reports.push(mCurrentFragment);
             }
         }
-        //((FollowsFragment) mCurrentFragment.getFragment()).updateInfo(data);
-        inflateFragment();
+        ((FinalReportFragment) mCurrentFragment.getFragment()).refresh_info();
+        inflateFragment(onback);
     }
 
 
@@ -101,19 +109,19 @@ public class ReportActiviy extends AppCompatActivity  implements changue_fragmen
         mOldFragment = mCurrentFragment;
     }
 
-    private synchronized void changeOfInstance(int intanceType,Bundle bundle) {
+    private synchronized void changeOfInstance(int intanceType,Bundle bundle,boolean onback) {
         saveFragment();
         if (intanceType == FragmentElement.INSTANCE_REPORTS_LIST) {
             if (stack_list_reports.size() == 0) {
-                changue_list_reports(new FragmentElement<>("", ReportsListFragment.newInstance(), FragmentElement.INSTANCE_REPORTS_LIST),bundle);
+                changue_list_reports(new FragmentElement<>("", ReportsListFragment.newInstance(), FragmentElement.INSTANCE_REPORTS_LIST),bundle,onback);
             } else {
-                changue_list_reports(stack_list_reports.pop(),bundle);
+                changue_list_reports(stack_list_reports.pop(),bundle,onback);
             }
         } else if (intanceType == FragmentElement.INSTANCE_FINAL_REPORT) {
             if (stack_final_reports.size() == 0) {
-                changue_to_final_reports(new FragmentElement<>("", FinalReportFragment.newInstance(), FragmentElement.INSTANCE_FINAL_REPORT),bundle);
+                changue_to_final_reports(new FragmentElement<>("", FinalReportFragment.newInstance(), FragmentElement.INSTANCE_FINAL_REPORT),bundle,onback);
             } else {
-                changue_to_final_reports(stack_final_reports.pop(),bundle);
+                changue_to_final_reports(stack_final_reports.pop(),bundle,onback);
             }
         }
     }
@@ -121,37 +129,67 @@ public class ReportActiviy extends AppCompatActivity  implements changue_fragmen
 
 
     @SuppressLint("RestrictedApi")
-    private synchronized void inflateFragment() {
+    private synchronized void inflateFragment(boolean is_back) {
+
         try {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if (mOldFragment != null) {
+            if(mOldFragment!=null) {
+                Log.e("LOGINGS_LOGS","1 : " + mOldFragment.getInstanceType() + "/" + mCurrentFragment.getInstanceType());
                 if (mCurrentFragment.getFragment().isAdded()) {
-                    fragmentManager
-                            .beginTransaction()
-                            .addToBackStack(null)
-                            .hide(mOldFragment.getFragment())
-                            .show(mCurrentFragment.getFragment()).commit();
+                    Log.e("LOGINGS_LOGS","1");
+                    if(is_back){
+                        Log.e("LOGINGS_LOGS","2");
+                        fragmentManager
+                                .beginTransaction()
+                                .addToBackStack(null)
+                                .setCustomAnimations(R.anim.enter_left, R.anim.exit_right)
+                                .hide(mOldFragment.getFragment())
+                                .show(mCurrentFragment.getFragment()).commit();
+                    }else{
+                        Log.e("LOGINGS_LOGS","3");
+                        fragmentManager
+                                .beginTransaction()
+                                .addToBackStack(null)
+                                .setCustomAnimations(R.anim.enter_right, R.anim.exit_left)
+                                .hide(mOldFragment.getFragment())
+                                .show(mCurrentFragment.getFragment()).commit();
+                    }
                 } else {
-                    fragmentManager
-                            .beginTransaction()
-                            .addToBackStack(null)
-                            .hide(mOldFragment.getFragment())
-                            .add(R.id.root_reports, mCurrentFragment.getFragment()).commit();
+                    Log.e("LOGINGS_LOGS","4");
+                    if(is_back){
+                        Log.e("LOGINGS_LOGS","5");
+                        fragmentManager
+                                .beginTransaction()
+                                .addToBackStack(null)
+                                .setCustomAnimations(R.anim.enter_left, R.anim.exit_right)
+                                .hide(mOldFragment.getFragment())
+                                .add(R.id.root_reports, mCurrentFragment.getFragment()).commit();
+                    }else{
+                        Log.e("LOGINGS_LOGS","6");
+                        fragmentManager
+                                .beginTransaction()
+                                .addToBackStack(null)
+                                .setCustomAnimations(R.anim.enter_right, R.anim.exit_left)
+                                .hide(mOldFragment.getFragment())
+                                .add(R.id.root_reports, mCurrentFragment.getFragment()).commit();
+
+                    }
                 }
 
-            } else {
+            }else{
+                Log.e("LOGINGS_LOGS","1 : " + mCurrentFragment.getInstanceType());
                 fragmentManager
                         .beginTransaction()
                         .addToBackStack(null)
                         .replace(R.id.root_reports, mCurrentFragment.getFragment()).commit();
             }
-        } catch (IllegalStateException ignored) {
-        }
+        } catch (IllegalStateException ignored) {}
     }
 
     @Override
     public void change_fragment_parameter(int type_fragment, Bundle data) {
-        changeOfInstance(type_fragment,data);
+        Log.e("CAMBIAR_LIST_RWPORT","-->" + type_fragment);
+        changeOfInstance(type_fragment,data,false);
     }
 
     @Override
@@ -160,7 +198,7 @@ public class ReportActiviy extends AppCompatActivity  implements changue_fragmen
         if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_REPORTS_LIST){
             finish();
         }else{
-            changeOfInstance(FragmentElement.INSTANCE_REPORTS_LIST,null);
+            changeOfInstance(FragmentElement.INSTANCE_REPORTS_LIST,null,true);
         }
     }
 

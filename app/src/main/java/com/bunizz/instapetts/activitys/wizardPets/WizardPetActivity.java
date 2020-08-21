@@ -41,6 +41,7 @@ import com.bunizz.instapetts.listeners.process_save_pet_listener;
 import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.services.ImagePostsService;
 import com.bunizz.instapetts.services.ImageService;
+import com.bunizz.instapetts.utils.snackbar.SnackBar;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
@@ -64,6 +65,7 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
     RxPermissions rxPermissions;
     static final int NEW_PHOTO_UPLOADED= 3;
     WizardPetPresenter presenter;
+    View view_root;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +80,7 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
         petHelper = PetHelper.getInstance(this);
         rxPermissions = new RxPermissions(this);
         presenter = new WizardPetPresenter(this,this);
+        view_root = findViewById(R.id.root_wizard);
 
 
     }
@@ -234,7 +237,9 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
         NEW_PET.setUuid(App.read(PREFERENCES.UUID,"INVALID"));
         NEW_PET.setName_propietary(App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"INVALID"));
         NEW_PET.setTarget(WEBCONSTANTS.NEW);
+        SnackBar.info(view_root, "Configurando...", SnackBar.LENGTH_LONG).show();
         presenter.newPet(NEW_PET);
+
     }
 
 
@@ -326,7 +331,6 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
 
     @Override
     public void petSaved(int id_pet_from_web) {
-        Log.e("SAVE_PET_DATABASE","-->" + id_pet_from_web);
         NEW_PET.setId_pet(String.valueOf(id_pet_from_web));
         petHelper.savePet(NEW_PET);
         Intent data = new Intent();

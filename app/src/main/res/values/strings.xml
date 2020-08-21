@@ -405,4 +405,5 @@
     <string name="con_gmail">Continuar con gmail</string>
     <string name="no_pets">No tienes mascotas</string>
     <string name="progress">PROGRESO : </string>
+    <string name="sin_mascotas">Sin mascotas</string>
 </resources>

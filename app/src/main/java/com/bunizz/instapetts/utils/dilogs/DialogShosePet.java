@@ -64,11 +64,12 @@ public class DialogShosePet extends BaseAlertDialog{
         this.dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         if (allowAnimation) dialog.getWindow().getAttributes().windowAnimations = R.style.customDialogAnimation;
         adapter.setListener(new chose_pet_listener() {
+
             @Override
-            public void chose(String url_foto, int id_pet,String name_pet) {
+            public void chose(String url_foto, int id_pet, String name_pet, int type_pet, String name_raza) {
                 if(listener!=null){
                     dismiss();
-                    listener.chose(url_foto,id_pet,name_pet);
+                    listener.chose(url_foto,id_pet,name_pet,type_pet,name_raza);
                 }
             }
 
@@ -196,7 +197,11 @@ public class DialogShosePet extends BaseAlertDialog{
             h.root_chose_pet.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.chose(petBeans.get(position).getUrl_photo_tumbh(),Integer.parseInt(petBeans.get(position).getId_pet()),petBeans.get(position).getName_pet());
+                    listener.chose(petBeans.get(position).getUrl_photo_tumbh(),
+                            Integer.parseInt(petBeans.get(position).getId_pet()),
+                            petBeans.get(position).getName_pet(),
+                            Integer.parseInt(petBeans.get(position).getId_pet()),
+                            petBeans.get(position).getRaza_pet());
                 }
             });
             h.rate_pet_chose_pet.setText(""+ petBeans.get(position).getRate_pet());

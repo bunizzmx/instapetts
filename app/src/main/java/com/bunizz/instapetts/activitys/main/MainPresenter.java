@@ -308,6 +308,7 @@ public class MainPresenter implements MainContract.Presenter {
                         .subscribeWith(new DisposableSingleObserver<PetsResponse>() {
                             @Override
                             public void onSuccess(PetsResponse pets) {
+                                Log.e("PETS_DOWNLOADES","->>" + pets.getList_pets().size());
                                     mView.saveMyPets(pets.getList_pets());
                             }
                             @Override

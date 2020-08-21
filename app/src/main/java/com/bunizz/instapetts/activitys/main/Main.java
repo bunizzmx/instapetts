@@ -281,6 +281,7 @@ public class Main extends AppCompatActivity implements change_instance,
         try{
         presenter = new MainPresenter(this, this);
         presenter.isAdsActive();
+        petHelper = new PetHelper(this);
         i = new Intent(Main.this, SideMenusActivities.class);
         changeStatusBarColor(R.color.white);
         Intent iin = getIntent();
@@ -297,7 +298,7 @@ public class Main extends AppCompatActivity implements change_instance,
             else
                 NEW_USER = false;
             if (res == 1) {
-                petHelper = new PetHelper(this);
+
                 DOWNLOAD_INFO = true;
             }
             if (is_login_again == 1) {
@@ -790,6 +791,7 @@ public class Main extends AppCompatActivity implements change_instance,
 
     @Override
     public void onBackPressed() {
+        Log.e("OLD_NEW","-->" + mCurrentFragment.getInstanceType() + "/" + mOldFragment.getInstanceType());
         if(IS_SHEET_OPEN){
             mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         }
@@ -814,7 +816,14 @@ public class Main extends AppCompatActivity implements change_instance,
                     repaint_nav(R.id.tab_profile_pet);
                     changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null,false);
                 }else{
-                    changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null,false);
+                    if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH){
+                        changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null,true);
+                    }else{
+                        if(App.read(PREFERENCES.OPEN_POST_ADVANCED_FROM,1) == 1)
+                            changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null,true);
+                        else
+                            changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE, null,true);
+                    }
                 }
             }
             else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE && mOldFragment.getInstanceType()== FragmentElement.INSTANCE_GET_POSTS_PUBLICS){
@@ -842,6 +851,9 @@ public class Main extends AppCompatActivity implements change_instance,
                     b.putString(BUNDLES.PHOTO_LOCAL,App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
                     changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET,b,false);
                 }
+            }
+            else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_COMENTARIOS && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED){
+                changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED, null, true);
             }
             else{
                 if(mCurrentFragment.getInstanceType()== FragmentElement.INSTANCE_FEED)
@@ -1090,10 +1102,14 @@ public class Main extends AppCompatActivity implements change_instance,
     @Override
     public void saveMyPets(ArrayList<PetBean> pets) {
         if(petHelper!=null) {
+            Log.e("SAVE_PETSX","-->" + pets.size());
             if (pets != null){
+                Log.e("SAVE_PETSX","2-->" + pets.size());
                 petHelper.cleanTable();
-                for (int i = 0; i < pets.size(); i++)
+                for (int i = 0; i < pets.size(); i++) {
+                    Log.e("SAVE_PETSX","3-->" + pets.size());
                     petHelper.savePet(pets.get(i));
+                }
             }
         }
     }

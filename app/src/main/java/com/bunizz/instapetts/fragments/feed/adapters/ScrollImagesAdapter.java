@@ -1,4 +1,4 @@
-package com.bunizz.instapetts.fragments.feed;
+package com.bunizz.instapetts.fragments.feed.adapters;
 
 import android.content.Context;
 import android.util.Log;

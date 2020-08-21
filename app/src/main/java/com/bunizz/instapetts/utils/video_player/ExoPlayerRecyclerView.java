@@ -230,89 +230,93 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         });
     }
     public void playVideo(boolean isEndOfList) {
-        Log.d(TAG, "RETORNOOOOOOOOOOO  PLAY");
-        int targetPosition;
-        if (!isEndOfList) {
-            Log.d(TAG, "RETORNOOOOOOOOOOO  FIN");
-            int startPosition = ((LinearLayoutManager) Objects.requireNonNull(
-                    getLayoutManager())).findFirstVisibleItemPosition();
-            int endPosition = ((LinearLayoutManager) getLayoutManager()).findLastVisibleItemPosition();
-            // if there is more than 2 list-items on the screen, set the difference to be 1
-            if (endPosition - startPosition > 1) {
-                endPosition = startPosition + 1;
-            }
-            // something is wrong. return.
-            if (startPosition < 0 || endPosition < 0) {
-                Log.d(TAG, "RETORNOOOOOOOOOOO  3333");
-                return;
-            }
-            // if there is more than 1 list-item on the screen
-            if (startPosition != endPosition) {
-                int startPositionVideoHeight = getVisibleVideoSurfaceHeight(startPosition);
-                int endPositionVideoHeight = getVisibleVideoSurfaceHeight(endPosition);
-                targetPosition =
-                        startPositionVideoHeight > endPositionVideoHeight ? startPosition : endPosition;
+        try {
+            Log.d(TAG, "RETORNOOOOOOOOOOO  PLAY");
+            int targetPosition;
+            if (!isEndOfList) {
+                Log.d(TAG, "RETORNOOOOOOOOOOO  FIN");
+                int startPosition = ((LinearLayoutManager) Objects.requireNonNull(
+                        getLayoutManager())).findFirstVisibleItemPosition();
+                int endPosition = ((LinearLayoutManager) getLayoutManager()).findLastVisibleItemPosition();
+                // if there is more than 2 list-items on the screen, set the difference to be 1
+                if (endPosition - startPosition > 1) {
+                    endPosition = startPosition + 1;
+                }
+                // something is wrong. return.
+                if (startPosition < 0 || endPosition < 0) {
+                    Log.d(TAG, "RETORNOOOOOOOOOOO  3333");
+                    return;
+                }
+                // if there is more than 1 list-item on the screen
+                if (startPosition != endPosition) {
+                    int startPositionVideoHeight = getVisibleVideoSurfaceHeight(startPosition);
+                    int endPositionVideoHeight = getVisibleVideoSurfaceHeight(endPosition);
+                    targetPosition =
+                            startPositionVideoHeight > endPositionVideoHeight ? startPosition : endPosition;
+                } else {
+                    targetPosition = startPosition;
+                }
             } else {
-                targetPosition = startPosition;
-            }
-        } else {
                 targetPosition = mediaObjects.size() - 1;
-        }
-        Log.d(TAG, "playVideo: target position: " + targetPosition);
-        // video is already playing so return
-        if (targetPosition == playPosition) {
-            Log.d(TAG, "RETORNOOOOOOOOOOO  1111");
-            return;
-        }
-        // set the position of the list-item that is to be played
-        playPosition = targetPosition;
-        if (videoSurfaceView == null) {
-            Log.d(TAG, "RETORNOOOOOOOOOOO 22");
-            return;
-        }
-        // remove any old surface views from previously playing videos
-        videoSurfaceView.setVisibility(INVISIBLE);
-        removeVideoView(videoSurfaceView);
-
-            currentPosition = targetPosition - ((LinearLayoutManager) Objects.requireNonNull( getLayoutManager())).findFirstVisibleItemPosition();
-
-        View child = getChildAt(currentPosition);
-        if (child == null) {
-            Log.d(TAG, "RETORNOOOOOOOOOOO  6666");
-            return;
-        }
-        if(getChildViewHolder(child) instanceof PlayerViewHolder) {
-            Log.e("REPRODUCER_MOTA","si");
-            PlayerViewHolder holder = (PlayerViewHolder) getChildViewHolder(child);
-            if (holder == null) {
-                playPosition = -1;
+            }
+            Log.d(TAG, "playVideo: target position: " + targetPosition);
+            // video is already playing so return
+            if (targetPosition == playPosition) {
+                Log.d(TAG, "RETORNOOOOOOOOOOO  1111");
                 return;
             }
-            mediaCoverImage = holder.mediaCoverImage;
-            time_video = holder.time_video;
-            blink_text = holder.blink_text;
-            volumeControl = holder.volumeControl;
-            card_view_mute = holder.card_view_mute;
-            viewHolderParent = holder.mediaContainer;
-            requestManager = holder.requestManager;
-            mediaContainer = holder.mediaContainer;
-            videoSurfaceView.setPlayer(videoPlayer);
-            loading_video = holder.loading_video;
-            viewHolderParent.setOnClickListener(videoViewClickListener);
-            DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(
-                    context, Util.getUserAgent(context, AppName));
-            PostBean data_parsed = (PostBean) mediaObjects.get(targetPosition);
-            String mediaUrl = data_parsed.getUrls_posts();
-            if (mediaUrl != null) {
-                HlsMediaSource hlsMediaSource =
-                        new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(mediaUrl));
-
-                videoPlayer.prepare(hlsMediaSource);
-                videoPlayer.setPlayWhenReady(true);
+            // set the position of the list-item that is to be played
+            playPosition = targetPosition;
+            if (videoSurfaceView == null) {
+                Log.d(TAG, "RETORNOOOOOOOOOOO 22");
+                return;
             }
-        }else{
-            Log.d(TAG, "RETORNOOOOOOOOOOO  777");
-            videoPlayer.stop();
+            // remove any old surface views from previously playing videos
+            videoSurfaceView.setVisibility(INVISIBLE);
+            removeVideoView(videoSurfaceView);
+
+            currentPosition = targetPosition - ((LinearLayoutManager) Objects.requireNonNull(getLayoutManager())).findFirstVisibleItemPosition();
+
+            View child = getChildAt(currentPosition);
+            if (child == null) {
+                Log.d(TAG, "RETORNOOOOOOOOOOO  6666");
+                return;
+            }
+            if (getChildViewHolder(child) instanceof PlayerViewHolder) {
+                Log.e("REPRODUCER_MOTA", "si");
+                PlayerViewHolder holder = (PlayerViewHolder) getChildViewHolder(child);
+                if (holder == null) {
+                    playPosition = -1;
+                    return;
+                }
+                mediaCoverImage = holder.mediaCoverImage;
+                time_video = holder.time_video;
+                blink_text = holder.blink_text;
+                volumeControl = holder.volumeControl;
+                card_view_mute = holder.card_view_mute;
+                viewHolderParent = holder.mediaContainer;
+                requestManager = holder.requestManager;
+                mediaContainer = holder.mediaContainer;
+                videoSurfaceView.setPlayer(videoPlayer);
+                loading_video = holder.loading_video;
+                viewHolderParent.setOnClickListener(videoViewClickListener);
+                DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(
+                        context, Util.getUserAgent(context, AppName));
+                PostBean data_parsed = (PostBean) mediaObjects.get(targetPosition);
+                String mediaUrl = data_parsed.getUrls_posts();
+                if (mediaUrl != null) {
+                    HlsMediaSource hlsMediaSource =
+                            new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(mediaUrl));
+
+                    videoPlayer.prepare(hlsMediaSource);
+                    videoPlayer.setPlayWhenReady(true);
+                }
+            } else {
+                Log.d(TAG, "RETORNOOOOOOOOOOO  777");
+                videoPlayer.stop();
+            }
+        }catch (Exception e){
+            Log.d(TAG, "RETORNOOOOOOOOOOO  INDICES DESFAZADOS");
         }
     }
     /**
