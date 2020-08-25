@@ -24,10 +24,14 @@ import com.bunizz.instapetts.db.helpers.SavedPostHelper;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.chose_pet_listener;
 import com.bunizz.instapetts.listeners.postsListener;
+import com.bunizz.instapetts.utils.Dots.DotsIndicator;
 import com.bunizz.instapetts.utils.ImagenCircular;
+import com.bunizz.instapetts.utils.ViewPagerAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
+import androidx.viewpager.widget.ViewPager;
 
 import static com.bunizz.instapetts.fragments.FragmentElement.INSTANCE_PREVIEW_PROFILE;
 
@@ -53,6 +57,11 @@ public class DialogPreviewPost extends BaseAlertDialog{
     postsListener listener_post;
     LikePostHelper likePostHelper;
     SavedPostHelper savedPostHelper;
+    DotsIndicator dots_indicator;
+    TextView label_number_indicator;
+    CardView card_number_indicator;
+
+    ViewPager list_fotos;
 
     public postsListener getListener_post() {
         return listener_post;
@@ -108,11 +117,12 @@ public class DialogPreviewPost extends BaseAlertDialog{
         l_like_post = dialogView.findViewById(R.id.l_like_post);
         l_saved_post = dialogView.findViewById(R.id.l_saved_post);
         icon_like = dialogView.findViewById(R.id.icon_like);
+        list_fotos = dialogView.findViewById(R.id.list_fotos);
+        dots_indicator = dialogView.findViewById(R.id.dots_indicator);
+        label_number_indicator = dialogView.findViewById(R.id.label_number_indicator);
+        card_number_indicator = dialogView.findViewById(R.id.card_number_indicator);
 
-        AspectBean aspect_image = new AspectBean();
-        aspect_image = App.getInstance().getAspect(postBean.getAspect());
-        LinearLayout.LayoutParams tam_img = new LinearLayout.LayoutParams(aspect_image.getWidth(), aspect_image.getHeight());
-        image_preview_dialog.setLayoutParams(tam_img);
+
 
         open_profile_user.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,9 +138,43 @@ public class DialogPreviewPost extends BaseAlertDialog{
         });
 
         if(is_multiple(this.postBean.getUrls_posts())) {
+            list_fotos.setVisibility(View.VISIBLE);
+            dots_indicator.setVisibility(View.VISIBLE);
+            card_number_indicator.setVisibility(View.VISIBLE);
             String splits[]  = this.postBean.getUrls_posts().split(",");
-            Glide.with(this.context).load(splits[0]).placeholder(context.getResources().getDrawable(R.drawable.ic_holder)).into(image_preview_dialog);
+            //Glide.with(this.context).load(splits[0]).placeholder(context.getResources().getDrawable(R.drawable.ic_holder)).into(image_preview_dialog);
+            int splits_number = splits.length;
+            ViewPagerAdapter adapter = new ViewPagerAdapter(context);
+            if (postBean.getUrls_posts() != null)
+                adapter.setUris_not_parsed(postBean.getUrls_posts());
+            list_fotos.setAdapter(adapter);
+            label_number_indicator.setText("1/"+splits_number);
+           list_fotos.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    label_number_indicator.setText((position + 1) + "/"+ splits_number);
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+
+            dots_indicator.setViewPager(list_fotos);
         }else{
+            card_number_indicator.setVisibility(View.GONE);
+            list_fotos.setVisibility(View.GONE);
+            dots_indicator.setVisibility(View.GONE);
+            AspectBean aspect_image = new AspectBean();
+            aspect_image = App.getInstance().getAspect(postBean.getAspect());
+            RelativeLayout.LayoutParams tam_img = new RelativeLayout.LayoutParams(aspect_image.getWidth(), aspect_image.getHeight());
+            image_preview_dialog.setLayoutParams(tam_img);
             Glide.with(this.context).load(this.postBean.getUrls_posts()).placeholder(context.getResources().getDrawable(R.drawable.ic_holder)).into(image_preview_dialog);
         }
         name_pet_post_dialog.setText(this.postBean.getName_pet());

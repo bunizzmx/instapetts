@@ -57,12 +57,68 @@
                 </LinearLayout>
 
             </LinearLayout>
-          <ImageView
-              android:id="@+id/image_preview_dialog"
-              android:scaleType="centerCrop"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"/>
             <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="450dp">
+            <RelativeLayout
+                android:layout_above="@+id/bottom_layoutt"
+                android:id="@+id/root_multiple_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/image_preview_dialog"
+                    android:scaleType="centerCrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/list_fotos"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+                <com.bunizz.instapetts.utils.Dots.DotsIndicator
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:id="@+id/dots_indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:paddingBottom="20dp"
+                    app:dotsColor="#fff"
+                    app:dotsCornerRadius="8dp"
+                    app:dotsSize="7dp"
+                    app:dotsSpacing="4dp"
+                    app:dotsWidthFactor="2"
+                    app:progressMode="false"
+                    app:selectedDotColor="@color/primary"
+                    />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_number_indicator"
+                    app:cardElevation="1dp"
+                    app:contentPaddingLeft="4dp"
+                    app:contentPaddingRight="4dp"
+                    app:contentPaddingTop="2dp"
+                    app:contentPaddingBottom="2dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
+                    app:cardBackgroundColor="@color/primary"
+                    app:cardCornerRadius="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/label_number_indicator"
+                        android:textStyle="bold"
+                        android:textSize="12dp"
+                        android:textColor="@color/white"
+                        android:text="1/1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/bottom_layoutt"
+                android:layout_alignParentBottom="true"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
                 android:paddingLeft="10dp"
@@ -112,11 +168,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </RelativeLayout>
-
+            </RelativeLayout>
         </LinearLayout>
-
-
-
     </RelativeLayout>
 
 

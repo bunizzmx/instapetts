@@ -791,85 +791,85 @@ public class Main extends AppCompatActivity implements change_instance,
 
     @Override
     public void onBackPressed() {
-        Log.e("OLD_NEW","-->" + mCurrentFragment.getInstanceType() + "/" + mOldFragment.getInstanceType());
-        if(IS_SHEET_OPEN){
-            mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-        }
-        if(FROM_PUSH == 1){
-            repaint_nav(R.id.tab_feed);
-            changeOfInstance(FragmentElement.INSTANCE_FEED, null, false);
-        }else{
-            if(mOldFragment!=null) {
-                if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS)
-                    ((FragmentTips) mOldFragment.getFragment()).stop_player();
-            }
-
-            if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_TIP_DETAIL){
-                repaint_nav(R.id.tap_tips);
-                changeOfInstance(FragmentElement.INSTANCE_TIPS,null,false);
-            }
-            else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH || mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED){
-                if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED){
-                    ((FragmentListOfPosts) mCurrentFragment.getFragment()).stop_player();
-                }
-                if(mOldFragment.getInstanceType()==FragmentElement.INSTANCE_PROFILE_PET) {
-                    repaint_nav(R.id.tab_profile_pet);
-                    changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null,false);
-                }else{
-                    if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH){
-                        changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null,true);
-                    }else{
-                        if(App.read(PREFERENCES.OPEN_POST_ADVANCED_FROM,1) == 1)
-                            changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null,true);
-                        else
-                            changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE, null,true);
-                    }
-                }
-            }
-            else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE && mOldFragment.getInstanceType()== FragmentElement.INSTANCE_GET_POSTS_PUBLICS){
-                changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null,false);
-            }else if(mCurrentFragment.getInstanceType()  == FragmentElement.INSTANCE_PREVIEW_PROFILE && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH){
-                changeOfInstance(FragmentElement.INSTANCE_SEARCH,null,false);
-            }
-            else if(IS_SHEET_OPEN || SIDE_OPEN){
-                IS_SHEET_OPEN= false;
-                SIDE_OPEN =false;
+        try {
+            Log.e("OLD_NEW", "-->" + mCurrentFragment.getInstanceType() + "/" + mOldFragment.getInstanceType());
+            if (IS_SHEET_OPEN) {
                 mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-                if(mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET)
-                    changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null,true);
-
             }
-            else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_EDIT_PROFILE_USER){
-                Bundle b = new Bundle();
-                b.putString(BUNDLES.PHOTO_LOCAL,App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
-                changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET,b,false);
-            }else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_FOLLOWS_USER){
-                if(mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE){
-                    changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE,null,true);
-                }else if(mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET){
-                    Bundle b = new Bundle();
-                    b.putString(BUNDLES.PHOTO_LOCAL,App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
-                    changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET,b,false);
+            if (FROM_PUSH == 1) {
+                repaint_nav(R.id.tab_feed);
+                changeOfInstance(FragmentElement.INSTANCE_FEED, null, false);
+            } else {
+                if (mOldFragment != null) {
+                    if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS)
+                        ((FragmentTips) mOldFragment.getFragment()).stop_player();
                 }
-            }
-            else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_COMENTARIOS && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED){
-                changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED, null, true);
-            }
-            else{
-                if(mCurrentFragment.getInstanceType()== FragmentElement.INSTANCE_FEED)
-                    finish();
-                else {
-                    if(mOldFragment.getInstanceType()== FragmentElement.INSTANCE_TIPS){
-                        repaint_nav(R.id.tap_tips);
-                        changeOfInstance(FragmentElement.INSTANCE_TIPS, null, false);
-                    }else{
-                        repaint_nav(R.id.tab_feed);
-                        changeOfInstance(FragmentElement.INSTANCE_FEED, null, false);
+
+                if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_TIP_DETAIL) {
+                    repaint_nav(R.id.tap_tips);
+                    changeOfInstance(FragmentElement.INSTANCE_TIPS, null, false);
+                } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH || mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED) {
+                    if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED) {
+                        ((FragmentListOfPosts) mCurrentFragment.getFragment()).stop_player();
                     }
+                    if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET) {
+                        repaint_nav(R.id.tab_profile_pet);
+                        changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, false);
+                    } else {
+                        if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH) {
+                            changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null, true);
+                        } else {
+                            if (App.read(PREFERENCES.OPEN_POST_ADVANCED_FROM, 1) == 1)
+                                changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, true);
+                            else
+                                changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE, null, true);
+                        }
+                    }
+                } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS) {
+                    changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null, false);
+                } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH) {
+                    changeOfInstance(FragmentElement.INSTANCE_SEARCH, null, false);
+                } else if (IS_SHEET_OPEN || SIDE_OPEN) {
+                    IS_SHEET_OPEN = false;
+                    SIDE_OPEN = false;
+                    mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                    if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET)
+                        changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, true);
 
+                } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_EDIT_PROFILE_USER) {
+                    Bundle b = new Bundle();
+                    b.putString(BUNDLES.PHOTO_LOCAL, App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH, "INVALID"));
+                    changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, b, false);
+                } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_FOLLOWS_USER) {
+                    if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE) {
+                        changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE, null, true);
+                    } else if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET) {
+                        Bundle b = new Bundle();
+                        b.putString(BUNDLES.PHOTO_LOCAL, App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH, "INVALID"));
+                        changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, b, false);
+                    }
+                } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_COMENTARIOS && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED) {
+                    changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED, null, true);
+                } else {
+                    if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_FEED)
+                        finish();
+                    else {
+                        if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS) {
+                            repaint_nav(R.id.tap_tips);
+                            changeOfInstance(FragmentElement.INSTANCE_TIPS, null, false);
+                        } else {
+                            repaint_nav(R.id.tab_feed);
+                            changeOfInstance(FragmentElement.INSTANCE_FEED, null, false);
+                        }
+
+                    }
                 }
-            }
 
+            }
+        }catch (Exception e)
+        {
+            mCurrentFragment = new FragmentElement<>(null, FeedFragment.newInstance(), FragmentElement.INSTANCE_FEED, true);
+            change_main(mCurrentFragment);
         }
 
     }

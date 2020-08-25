@@ -195,11 +195,8 @@ public class ReportActiviy extends AppCompatActivity  implements changue_fragmen
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_REPORTS_LIST){
-            finish();
-        }else{
-            changeOfInstance(FragmentElement.INSTANCE_REPORTS_LIST,null,true);
-        }
+         finish();
+
     }
 
     public void changeStatusBarColor(int color) {

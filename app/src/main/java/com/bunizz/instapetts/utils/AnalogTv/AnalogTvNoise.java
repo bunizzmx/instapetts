@@ -16,8 +16,8 @@ import androidx.annotation.Nullable;
 public class AnalogTvNoise extends View {
 
 
-    private static final int DIVIDER_WIDTH = 3;
-    private static final int DIVIDER_HEIGHT = 3;
+    private static final int DIVIDER_WIDTH = 2;
+    private static final int DIVIDER_HEIGHT = 2;
     private static final int DIVIDER_WIDTH_SCALLED = 2;
     private static final int ANIM_INTERVAL = 50;
 
