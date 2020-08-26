@@ -61,7 +61,7 @@ public class FragmentListOfPosts extends Fragment implements FeedContract.View {
     FeedListPresenter mPresenter;
 
     ArrayList<Object> data = new ArrayList<>();
-
+    static final int PLAY_VIDEO_RESULT= 6;
     @SuppressLint("MissingPermission")
     @OnClick(R.id.back_to_main)
     void back_to_main() {
@@ -176,7 +176,7 @@ public class FragmentListOfPosts extends Fragment implements FeedContract.View {
                     Log.e("CLICK_PARSED", "-->2yyyyy");
                 }
                 Log.e("CLICK_PARSED", "-->2");
-                getContext().startActivity(i);
+                getActivity().startActivityForResult(i,PLAY_VIDEO_RESULT);
 
             }
         });

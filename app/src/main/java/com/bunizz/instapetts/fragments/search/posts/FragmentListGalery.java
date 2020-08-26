@@ -49,7 +49,7 @@ import butterknife.ButterKnife;
 public class FragmentListGalery extends Fragment implements  ListGaleryContract.View{
     @BindView(R.id.list_posts_publics)
     RecyclerView list_posts_publics;
-
+    static final int PLAY_VIDEO_RESULT= 6;
     @BindView(R.id.root_no_internet)
     RelativeLayout root_no_internet;
 
@@ -201,7 +201,7 @@ public class FragmentListGalery extends Fragment implements  ListGaleryContract.
                     Log.e("CLICK_PARSED", "-->2yyyyy");
                 }
                 Log.e("CLICK_PARSED", "-->2");
-                getContext().startActivity(i);
+                getActivity().startActivityForResult(i,PLAY_VIDEO_RESULT);
             }
         });
         presenter = new ListGaleryPresenter(this,getContext());

@@ -1,7 +1,6 @@
 package com.bunizz.instapetts.fragments.search;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,21 +10,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity;
-import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity2;
 import com.bunizz.instapetts.beans.PostBean;
-import com.bunizz.instapetts.beans.TipsBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.UnifiedAddHolder;
-import com.bunizz.instapetts.fragments.tips.adapters.TipsAdapter;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.postsListener;
 import com.bunizz.instapetts.utils.ImagenCircular;
@@ -34,15 +28,11 @@ import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 
-import org.parceler.Parcels;
-
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-import dagger.multibindings.ElementsIntoSet;
-import retrofit2.http.POST;
 
 public class AdapterGridPosts extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 

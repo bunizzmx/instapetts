@@ -109,8 +109,6 @@ public class PlayVideoPresenter implements PlayVideoContract.Presenter {
                                     RETRY++;
                                     if (RETRY < 3) {
                                        // mView.LikeEror();
-                                    } else {
-                                        Log.e("NUMBER_POSTS", "-->EROR : " + e.getMessage());
                                     }
 
                                 }

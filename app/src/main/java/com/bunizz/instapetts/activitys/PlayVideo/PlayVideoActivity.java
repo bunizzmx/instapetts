@@ -111,6 +111,17 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
     @BindView(R.id.layout_descripcion)
     LinearLayout layout_descripcion;
 
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.info_video)
+    void info_video() {
+        Log.e("FRAGMENT_HISTORY","chose completed");
+        if(TYPE_PLAYER ==1 && (POST_BEAN.getId_usuario() != App.read(PREFERENCES.ID_USER_FROM_WEB,0)) ) {
+            Intent data = new Intent();
+            data.putExtra(BUNDLES.ID_USUARIO,POST_BEAN.getId_usuario() );
+            setResult(RESULT_OK, data);
+            finish();
+        }
+    }
 
 
     @SuppressLint("MissingPermission")

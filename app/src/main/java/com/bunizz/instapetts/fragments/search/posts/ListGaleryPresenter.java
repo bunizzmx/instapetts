@@ -84,8 +84,6 @@ public class ListGaleryPresenter implements   ListGaleryContract.Presenter {
                             @Override
                             public void onSuccess(ResponsePost responsePost) {
                                 if(responsePost.getList_posts()!=null) {
-                                    if(responsePost.getList_posts()!=null)
-                                        Log.e("NUMBER_POSTS", "-->" + responsePost.getList_posts().size());
                                     ArrayList<PostBean> post = new ArrayList<>();
                                     for (int i =0;i<responsePost.getList_posts().size();i++){
                                         if(responsePost.getList_posts().get(i).getCensored() == 0){

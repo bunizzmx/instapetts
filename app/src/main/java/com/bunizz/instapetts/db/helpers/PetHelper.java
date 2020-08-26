@@ -101,7 +101,6 @@ public class PetHelper extends GenericHelper {
                 cursor.close();
             }
         }
-        Log.e("NAME_RAZA_PET","db-->" + pets.get(0).getRaza_pet());
         return pets;
     }
 

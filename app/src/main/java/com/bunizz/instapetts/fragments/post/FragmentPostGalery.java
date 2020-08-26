@@ -49,7 +49,7 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
 
     @BindView(R.id.body_no_data)
     TextView body_no_data;
-
+    static final int PLAY_VIDEO_RESULT= 6;
     PostGaleryPresenter presenter;
 
     changue_fragment_parameters_listener listener;
@@ -137,7 +137,6 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        Log.e("ONVIEW_CREATED","galeryxxxxxxx");
         list_galery.setLayoutManager(new GridLayoutManager(getContext(),3));
         list_galery.setHasFixedSize(true);
         list_galery.setItemViewCacheSize(20);
@@ -221,7 +220,7 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
                     Log.e("CLICK_PARSED", "-->2yyyyy");
                 }
                 Log.e("CLICK_PARSED", "-->2");
-                getContext().startActivity(i);
+                getActivity().startActivityForResult(i,PLAY_VIDEO_RESULT);
             }
         });
         title_no_data.setText(getContext().getString(R.string.no_post_title));

@@ -232,7 +232,6 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
                 PETS.addAll(my_pets_database);
             }
            PETS.add(new PetBean());
-        Log.e("REFRESH_MY_PETS","-->3"  +PETS.size());
             petsPropietaryAdapter.setPets(PETS);
         adapter_pager = new ViewPagerAdapter(getChildFragmentManager());
         adapter_pager.addFragment(new FragmentPostGalery(), getContext().getString(R.string.post));
@@ -376,7 +375,6 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         ArrayList<PetBean> my_pets_database = new ArrayList<>();
         my_pets_database.addAll(petHelper.getMyPets());
         my_pets_database.add(new PetBean());
-        Log.e("REFRESH_MY_PETS","-->1" + my_pets_database.size());
         petsPropietaryAdapter.setPets(my_pets_database);
         if(listener_open_side!=null){
             if(my_pets_database.size() < 1)
@@ -421,7 +419,6 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
                 .skipMemoryCache(true)
                 .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
                 .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
-        Log.e("REFRESH_MY_PETS","-->2" + PETS.size());
         petsPropietaryAdapter.setPets(PETS);
         num_posts.setText(String.valueOf(USERBEAN.getPosts()));
         if(RATE_PETS > 0) {
@@ -531,7 +528,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     void fist_pet(){
         final SpannableString spannedDesc = new SpannableString(getContext().getResources().getString(R.string.config_pet_step));
         TapTargetView.showFor(getActivity(), TapTarget.forView(getView().findViewById(R.id.list_pets_propietary), getContext().getResources().getString(R.string.add_pet), spannedDesc)
-                .cancelable(false)
+                .cancelable(true)
                 .drawShadow(true)
                 .tintTarget(false), new TapTargetView.Listener() {
             @SuppressLint("CheckResult")

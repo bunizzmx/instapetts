@@ -102,10 +102,12 @@ import butterknife.OnClick;
 
 public class Main extends AppCompatActivity implements change_instance,
         changue_fragment_parameters_listener,
-        uploads,MainContract.View ,
+        uploads,
+        MainContract.View ,
         open_camera_histories_listener,
         conexion_listener,
-        folowFavoriteListener, open_side_menu {
+        folowFavoriteListener,
+        open_side_menu {
 
     public static final String POST_SUCCESFULL = "com.bunizz.instapetts.activitys.main.Main.POST_SUCCESFULL";
     public static final String POST_SENDEND_START = "com.bunizz.instapetts.activitys.main.Main.POST_SENDEND_START";
@@ -131,6 +133,7 @@ public class Main extends AppCompatActivity implements change_instance,
     static final int NEW_POST_REQUEST = 2;
     static final int NEW_PHOTO_UPLOADED= 3;
     static final int NEW_PHOTO_FOR_HISTORY= 4;
+    static final int PLAY_VIDEO_RESULT= 6;
     static final int NEW_PHOTO_QR_SCAN= 5;
 
     @BindView(R.id.icon_tips)
@@ -939,6 +942,15 @@ public class Main extends AppCompatActivity implements change_instance,
                 changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE,b,false);
             }
         }
+        else if(requestCode == PLAY_VIDEO_RESULT){
+            if(data!=null) {
+                int id_user = data.getIntExtra(BUNDLES.ID_USUARIO, 0);
+                Bundle b = new Bundle();
+                b.putInt(BUNDLES.ID_USUARIO,id_user);
+                changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE,b,false);
+            }
+           Log.e("PLAY_VIDEO_RESULT","-->");
+        }
 
     }
 
@@ -1228,6 +1240,11 @@ public class Main extends AppCompatActivity implements change_instance,
     public void open_pet_code() {
         Intent i = new Intent(this , QrSearchActivity.class);
         startActivityForResult( i,NEW_PHOTO_QR_SCAN);
+    }
+
+    @Override
+    public void openPlayVideo(Bundle b) {
+
     }
 
     @Override

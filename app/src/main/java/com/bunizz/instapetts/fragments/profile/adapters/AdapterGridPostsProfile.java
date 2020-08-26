@@ -1,23 +1,18 @@
 package com.bunizz.instapetts.fragments.profile.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity;
-import com.bunizz.instapetts.activitys.PlayVideo.PlayVideoActivity2;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.fragments.FragmentElement;
@@ -25,8 +20,6 @@ import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.listener_change_posts;
 import com.bunizz.instapetts.listeners.postsListener;
 import com.bunizz.instapetts.utils.dilogs.DialogPreviewPost;
-
-import org.parceler.Parcels;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,7 @@
 package com.bunizz.instapetts.fragments.feed.adapters;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -65,7 +66,7 @@ import static com.bunizz.instapetts.fragments.FragmentElement.INSTANCE_PREVIEW_P
 
 public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    Context context;
+    Activity context;
     ArrayList<String> current_images = new ArrayList<>();
     ArrayList<Object> data = new ArrayList<>();
     ArrayList<Object> data_recomended = new ArrayList<>();
@@ -118,7 +119,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void setData_recomended(ArrayList<Object> data_recomended,ArrayList<Object> data_news_users) {
         this.data_recomended = data_recomended;
         this.data_news_users = data_news_users;
-        Log.e("DATATATATA","-->"+ this.data_news_users.size());
         notifyDataSetChanged();
     }
 
@@ -128,7 +128,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_HISTORI = 2;
     private static final int TYPE_EMPTY = 3;
     private static final int TYPE_ADD = 5;
-    public FeedAdapter(Context context,ArrayList<Object> data) {
+    public FeedAdapter(Activity context, ArrayList<Object> data) {
         this.context = context;
         this.data.addAll(data);
 
@@ -337,7 +337,7 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     Intent i = new Intent(context, PlayVideoActivity.class);
                     i.putExtra("TYPE_PLAYER", 1);
                     i.putExtra("BEAN", Parcels.wrap(mo));
-                    context.startActivity(i);
+                    context.startActivityForResult(i,6);
                 });
 
 

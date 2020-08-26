@@ -136,7 +136,7 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         else
             HAS_FRIENDS=false;
 
-        feedAdapter = new FeedAdapter(getContext(), data_feed);
+        feedAdapter = new FeedAdapter(getActivity(), data_feed);
         feedAdapter.setListener(new changue_fragment_parameters_listener() {
             @Override
             public void change_fragment_parameter(int type_fragment, Bundle data) {
@@ -393,7 +393,6 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         users_object.addAll(users);
         feedAdapter.setHistoriesBeans(historiesBeans);
         feedAdapter.addData(data_object);
-        Log.e("DATATATATA","-->"+ users_object.size());
         feedAdapter.setData_recomended(data_recomended,users_object);
 
     }
