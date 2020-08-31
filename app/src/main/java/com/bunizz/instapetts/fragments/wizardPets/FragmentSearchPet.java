@@ -63,6 +63,7 @@ public class FragmentSearchPet extends Fragment  implements SearchPetContract.Vi
     {
         if(listener!=null){
             Bundle b = new Bundle();
+            b.putString(BUNDLES.RAZA_PET,"DESCONOCIDA");
             listener.onchange(FragmentElement.INSTANCE_DATA_PET,b);
         }
         //changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET);

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,7 @@ public class DialogOtherPet extends BaseAlertDialog{
     String title_permision;
     change_instance_wizard listener;
     EditText otra_mascota;
+    ImageView close_dialog;
 
     public change_instance_wizard getListener() {
         return listener;
@@ -46,12 +48,19 @@ public class DialogOtherPet extends BaseAlertDialog{
         dialogView = inflater.inflate(R.layout.dialog_other_pet, null);
         otra_mascota = dialogView.findViewById(R.id.otra_mascota);
         add_other_pet = dialogView.findViewById(R.id.add_other_pet);
+        close_dialog = dialogView.findViewById(R.id.close_dialog);
         add_other_pet.setOnClickListener(view -> {
             if(listener!=null){
                 Bundle b = new Bundle();
                 b.putInt(BUNDLES.TYPE_PET,7);
                 b.putString("OTHER_PET_NAME",otra_mascota.getText().toString());
                 listener.onchange(0,b);
+            }
+        });
+        close_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
             }
         });
         dialogBuilder.setView(dialogView);

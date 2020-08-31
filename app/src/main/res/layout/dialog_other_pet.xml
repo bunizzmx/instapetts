@@ -27,7 +27,7 @@
             android:tint="@color/black"
             android:src="@drawable/ic_cross"
             android:layout_width="15dp"
-            android:layout_height="15dp"></ImageView>
+            android:layout_height="15dp"/>
         <LinearLayout
             android:layout_marginTop="10dp"
             android:layout_below="@+id/close_dialog"
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
-                android:text="De quien es esta foto.."
+                android:text="@string/raza_not_found"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="20dp" />
@@ -62,7 +62,7 @@
                 android:id="@+id/add_other_pet"
                 android:layout_marginBottom="20dp"
                 android:textAllCaps="false"
-                android:text="confirma"
+                android:text="@string/solicitar_categoria"
                 android:textColor="@color/white"
                 android:background="@drawable/button_follow"
                 android:layout_width="match_parent"

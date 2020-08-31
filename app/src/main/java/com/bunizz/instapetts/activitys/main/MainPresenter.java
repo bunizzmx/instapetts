@@ -581,12 +581,12 @@ public class MainPresenter implements MainContract.Presenter {
                 .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
                     @Override
                     public void onSuccess(SimpleResponse response) {
-                        Log.e("POST","SUCCESS");
+                        tempPostVideoHelper.cleanTable();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        tempPostVideoHelper.cleanTable();
                     }
                 });
 

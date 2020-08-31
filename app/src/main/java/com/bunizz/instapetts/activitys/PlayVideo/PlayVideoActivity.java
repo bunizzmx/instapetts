@@ -124,6 +124,7 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
     }
 
 
+
     @SuppressLint("MissingPermission")
     @OnClick(R.id.like_video_post)
     void like_video_post() {

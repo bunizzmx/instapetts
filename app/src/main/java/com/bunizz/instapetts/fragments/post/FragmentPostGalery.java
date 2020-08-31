@@ -40,7 +40,7 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
     @BindView(R.id.list_galery)
     RecyclerView list_galery;
 
-
+    static final int PLAY_VIDEO_RESULT= 6;
     @BindView(R.id.root_no_data)
     RelativeLayout root_no_data;
 

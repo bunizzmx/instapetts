@@ -197,10 +197,11 @@ public class DialogShosePet extends BaseAlertDialog{
             h.root_chose_pet.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.chose(petBeans.get(position).getUrl_photo_tumbh(),
+                    listener.chose(
+                            petBeans.get(position).getUrl_photo_tumbh(),
                             Integer.parseInt(petBeans.get(position).getId_pet()),
                             petBeans.get(position).getName_pet(),
-                            Integer.parseInt(petBeans.get(position).getId_pet()),
+                            petBeans.get(position).getType_pet(),
                             petBeans.get(position).getRaza_pet());
                 }
             });

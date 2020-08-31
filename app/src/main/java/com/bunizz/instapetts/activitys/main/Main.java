@@ -224,10 +224,10 @@ public class Main extends AppCompatActivity implements change_instance,
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tap_tips)
     void tap_tips() {
-     if(mCurrentFragment.getInstanceType() != FragmentElement.INSTANCE_TIPS) {
-         changeOfInstance(FragmentElement.INSTANCE_TIPS, null,false);
-         repaint_nav(R.id.tap_tips);
-     }
+        if(mCurrentFragment.getInstanceType() != FragmentElement.INSTANCE_TIPS) {
+            changeOfInstance(FragmentElement.INSTANCE_TIPS, null,false);
+            repaint_nav(R.id.tap_tips);
+        }
     }
 
 
@@ -282,105 +282,105 @@ public class Main extends AppCompatActivity implements change_instance,
         jobsServices = new JobsServices(this);
         jobsServices.startNotificationsRequest();
         try{
-        presenter = new MainPresenter(this, this);
-        presenter.isAdsActive();
-        petHelper = new PetHelper(this);
-        i = new Intent(Main.this, SideMenusActivities.class);
-        changeStatusBarColor(R.color.white);
-        Intent iin = getIntent();
-        Bundle b = iin.getExtras();
-        IntentFilter server_connected = new IntentFilter(POST_SUCCESFULL);
-        registerReceiver(mainPagerReceiver, server_connected);
-        if (b != null) {
-            FROM_PUSH = b.getInt("FROM_PUSH");
-            int res = b.getInt(BUNDLES.DOWNLOADS_INFO);
-            int is_login_again = b.getInt("LOGIN_AGAIN");
-            int new_u = b.getInt("NEW_USER");
-            if (new_u == 1)
-                NEW_USER = true;
-            else
-                NEW_USER = false;
-            if (res == 1) {
+            presenter = new MainPresenter(this, this);
+            presenter.isAdsActive();
+            petHelper = new PetHelper(this);
+            i = new Intent(Main.this, SideMenusActivities.class);
+            changeStatusBarColor(R.color.white);
+            Intent iin = getIntent();
+            Bundle b = iin.getExtras();
+            IntentFilter server_connected = new IntentFilter(POST_SUCCESFULL);
+            registerReceiver(mainPagerReceiver, server_connected);
+            if (b != null) {
+                FROM_PUSH = b.getInt("FROM_PUSH");
+                int res = b.getInt(BUNDLES.DOWNLOADS_INFO);
+                int is_login_again = b.getInt("LOGIN_AGAIN");
+                int new_u = b.getInt("NEW_USER");
+                if (new_u == 1)
+                    NEW_USER = true;
+                else
+                    NEW_USER = false;
+                if (res == 1) {
 
-                DOWNLOAD_INFO = true;
-            }
-            if (is_login_again == 1) {
-                presenter.getFileBackup();
-            }
-            if (FROM_PUSH == 1) {
-                int ID_RESOURCE = 0;
-                TYPE_FRAGMENT_PUSH = b.getInt("TYPE_FRAGMENT");
-                ID_RESOURCE = b.getInt("ID_RESOURCE");
-                if (TYPE_FRAGMENT_PUSH == FragmentElement.INSTANCE_PREVIEW_PROFILE) {
-                    b_from_push.putInt(BUNDLES.ID_USUARIO, ID_RESOURCE);
-                } else if (TYPE_FRAGMENT_PUSH == FragmentElement.INSTANCE_COMENTARIOS) {
-                    b_from_push.putInt(BUNDLES.ID_POST, ID_RESOURCE);
-                    b_from_push.putBoolean(BUNDLES.CAN_COMMENT, true);
+                    DOWNLOAD_INFO = true;
+                }
+                if (is_login_again == 1) {
+                    presenter.getFileBackup();
+                }
+                if (FROM_PUSH == 1) {
+                    int ID_RESOURCE = 0;
+                    TYPE_FRAGMENT_PUSH = b.getInt("TYPE_FRAGMENT");
+                    ID_RESOURCE = b.getInt("ID_RESOURCE");
+                    if (TYPE_FRAGMENT_PUSH == FragmentElement.INSTANCE_PREVIEW_PROFILE) {
+                        b_from_push.putInt(BUNDLES.ID_USUARIO, ID_RESOURCE);
+                    } else if (TYPE_FRAGMENT_PUSH == FragmentElement.INSTANCE_COMENTARIOS) {
+                        b_from_push.putInt(BUNDLES.ID_POST, ID_RESOURCE);
+                        b_from_push.putBoolean(BUNDLES.CAN_COMMENT, true);
+                    }
                 }
             }
-        }
 
-        rxPermissions = new RxPermissions(this);
-        stack_feed = new Stack<>();
-        stack_profile_pet = new Stack<>();
-        stack_tips = new Stack<>();
-        stack_serch_pet = new Stack<>();
-        stack_notifications = new Stack<>();
-        stack_tip_detail = new Stack<>();
-        stack_edit_profile = new Stack<>();
-        stack_preview_perfil = new Stack<>();
-        stack_posts_publics_search = new Stack<>();
-        stack_posts_search_advanced = new Stack<>();
-        stack_follows = new Stack<>();
-        stack_comentarios = new Stack<>();
-        stack_side_menu = new Stack<>();
-        setupFirstFragment();
-        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-        mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
-            @Override
-            public void onPanelSlide(View panel, float slideOffset) {
-            }
-
-            @Override
-            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
-                if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-                    mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-                } else if (newState == SlidingUpPanelLayout.PanelState.HIDDEN) {
-
-
-                } else if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
-
+            rxPermissions = new RxPermissions(this);
+            stack_feed = new Stack<>();
+            stack_profile_pet = new Stack<>();
+            stack_tips = new Stack<>();
+            stack_serch_pet = new Stack<>();
+            stack_notifications = new Stack<>();
+            stack_tip_detail = new Stack<>();
+            stack_edit_profile = new Stack<>();
+            stack_preview_perfil = new Stack<>();
+            stack_posts_publics_search = new Stack<>();
+            stack_posts_search_advanced = new Stack<>();
+            stack_follows = new Stack<>();
+            stack_comentarios = new Stack<>();
+            stack_side_menu = new Stack<>();
+            setupFirstFragment();
+            mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+            mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+                @Override
+                public void onPanelSlide(View panel, float slideOffset) {
                 }
+
+                @Override
+                public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                    if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                    } else if (newState == SlidingUpPanelLayout.PanelState.HIDDEN) {
+
+
+                    } else if (newState == SlidingUpPanelLayout.PanelState.EXPANDED) {
+
+                    }
+                }
+            });
+
+            download_pets();
+            presenter.have_pets();
+            getLocation();
+            resultReceiver = new AddressResultReceiver(new Handler());
+            if (!Geocoder.isPresent()) {
+                Toast.makeText(Main.this,
+                        R.string.no_geocoder_available,
+                        Toast.LENGTH_LONG).show();
+                return;
             }
-        });
+            Log.e("LAT_LON", "-->" + App.read(PREFERENCES.LAT, 0f) + "/" + App.read(PREFERENCES.LON, 0f));
+            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
+                String token = instanceIdResult.getToken();
+                UserBean U_TOK = new UserBean();
+                U_TOK.setToken(token);
+                U_TOK.setTarget(WEBCONSTANTS.TOKEN);
+                U_TOK.setId(App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
+                presenter.update_token(U_TOK);
+            });
 
-        download_pets();
-        presenter.have_pets();
-        getLocation();
-        resultReceiver = new AddressResultReceiver(new Handler());
-        if (!Geocoder.isPresent()) {
-            Toast.makeText(Main.this,
-                    R.string.no_geocoder_available,
-                    Toast.LENGTH_LONG).show();
-            return;
-        }
-        Log.e("LAT_LON", "-->" + App.read(PREFERENCES.LAT, 0f) + "/" + App.read(PREFERENCES.LON, 0f));
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
-            String token = instanceIdResult.getToken();
-            UserBean U_TOK = new UserBean();
-            U_TOK.setToken(token);
-            U_TOK.setTarget(WEBCONSTANTS.TOKEN);
-            U_TOK.setId(App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
-            presenter.update_token(U_TOK);
-        });
-
-        Glide.with(Main.this).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH, "INVALID"))
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .placeholder(getResources().getDrawable(R.drawable.ic_holder)).into(icon_profile_pet);
-        presenter.getIdentificadoresHistories();
-    }catch (Exception e){
-                Log.e("EXCEPCION_MAIN","MAIN" + e.getMessage());
+            Glide.with(Main.this).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH, "INVALID"))
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(getResources().getDrawable(R.drawable.ic_holder)).into(icon_profile_pet);
+            presenter.getIdentificadoresHistories();
+        }catch (Exception e){
+            Log.e("EXCEPCION_MAIN","MAIN" + e.getMessage());
         }
         presenter.updateConexion();
         if(App.read(PREFERENCES.LOCATION_CHANGED,false)){
@@ -411,19 +411,19 @@ public class Main extends AppCompatActivity implements change_instance,
             mCurrentFragment = new FragmentElement<>(null, FeedFragment.newInstance(), FragmentElement.INSTANCE_FEED, true);
             change_main(mCurrentFragment);
         }else{
-                changeOfInstance(TYPE_FRAGMENT_PUSH,b_from_push,false);
+            changeOfInstance(TYPE_FRAGMENT_PUSH,b_from_push,false);
         }
     }
 
 
     private void change_main(FragmentElement fragment) {
-            if (fragment != null) {
-                mCurrentFragment = fragment;
-                if (stack_feed.size() <= 0) {
-                    stack_feed.push(mCurrentFragment);
-                }
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            if (stack_feed.size() <= 0) {
+                stack_feed.push(mCurrentFragment);
             }
-            inflateFragment(false);
+        }
+        inflateFragment(false);
     }
 
     private void change_detail_tip(FragmentElement fragment,Bundle data) {
@@ -519,9 +519,9 @@ public class Main extends AppCompatActivity implements change_instance,
                 stack_preview_perfil.push(mCurrentFragment);
             }
         }
-         inflateFragment(false);
+        inflateFragment(false);
         if(!back)
-        ((FragmentProfileUserPetPreview) mCurrentFragment.getFragment()).refresh_info();
+            ((FragmentProfileUserPetPreview) mCurrentFragment.getFragment()).refresh_info();
     }
 
     private void change_list_of_posts_advanced(FragmentElement fragment,Bundle data) {
@@ -556,7 +556,7 @@ public class Main extends AppCompatActivity implements change_instance,
                 stack_comentarios.push(mCurrentFragment);
             }
         }
-       ((ComentariosFragment) mCurrentFragment.getFragment()).refresh_coments();
+        ((ComentariosFragment) mCurrentFragment.getFragment()).refresh_coments();
         inflateFragment(false);
     }
 
@@ -883,7 +883,7 @@ public class Main extends AppCompatActivity implements change_instance,
         if (requestCode == NEW_PET_REQUEST) {
             if (resultCode == RESULT_OK) {
                 if (mCurrentFragment.getFragment() instanceof FragmentProfileUserPet) {
-                            ((FragmentProfileUserPet) mCurrentFragment.getFragment()).refresh_list_pets();
+                    ((FragmentProfileUserPet) mCurrentFragment.getFragment()).refresh_list_pets();
                 }
             }
         }else if(requestCode == NEW_POST_REQUEST){
@@ -908,11 +908,11 @@ public class Main extends AppCompatActivity implements change_instance,
 
         else if(requestCode == NEW_PHOTO_UPLOADED){
             if(data!=null) {
-               String url =  data.getStringExtra(BUNDLES.URI_FOTO);
-                   if (mCurrentFragment.getFragment() instanceof FragmentEditProfileUser)
-                       ((FragmentEditProfileUser) mCurrentFragment.getFragment()).change_image_profile(url);
-                    else
-                       ((InfoPetFragment) mCurrenSheet.getFragment()).refresh_data_on_pet(url);
+                String url =  data.getStringExtra(BUNDLES.URI_FOTO);
+                if (mCurrentFragment.getFragment() instanceof FragmentEditProfileUser)
+                    ((FragmentEditProfileUser) mCurrentFragment.getFragment()).change_image_profile(url);
+                else
+                    ((InfoPetFragment) mCurrenSheet.getFragment()).refresh_data_on_pet(url);
             }
         }
         else if(requestCode == NEW_PHOTO_FOR_HISTORY){
@@ -949,7 +949,7 @@ public class Main extends AppCompatActivity implements change_instance,
                 b.putInt(BUNDLES.ID_USUARIO,id_user);
                 changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE,b,false);
             }
-           Log.e("PLAY_VIDEO_RESULT","-->");
+            Log.e("PLAY_VIDEO_RESULT","-->");
         }
 
     }
@@ -1003,10 +1003,10 @@ public class Main extends AppCompatActivity implements change_instance,
     private synchronized void inflate_sheet() {
         try {
             FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager
-                        .beginTransaction()
-                        .addToBackStack(null)
-                        .replace(R.id.root_scrool, mCurrenSheet.getFragment()).commit();
+            fragmentManager
+                    .beginTransaction()
+                    .addToBackStack(null)
+                    .replace(R.id.root_scrool, mCurrenSheet.getFragment()).commit();
 
         } catch (IllegalStateException ignored) {
         }
@@ -1018,7 +1018,7 @@ public class Main extends AppCompatActivity implements change_instance,
             Intent i = new Intent(this , QrSearchActivity.class);
             startActivityForResult( i,NEW_PHOTO_QR_SCAN);
         }else
-        changeOfInstance(type_fragment,data,false);
+            changeOfInstance(type_fragment,data,false);
     }
 
 
@@ -1104,7 +1104,7 @@ public class Main extends AppCompatActivity implements change_instance,
         if (mCurrentFragment.getFragment() instanceof FragmentProfileUserPet) {
             ((FragmentProfileUserPet) mCurrentFragment.getFragment()).change_descripcion_profile();
         }
-         Toast.makeText(Main.this,getString(R.string.profile_updated),Toast.LENGTH_LONG).show();
+        Toast.makeText(Main.this,getString(R.string.profile_updated),Toast.LENGTH_LONG).show();
         Glide.with(Main.this).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
@@ -1224,7 +1224,7 @@ public class Main extends AppCompatActivity implements change_instance,
     @Override
     public void open_side() {
         SIDE_OPEN = true;
-            changeOfInstance(FragmentElement.INSTANCE_SIDE_MENU,null,false);
+        changeOfInstance(FragmentElement.INSTANCE_SIDE_MENU,null,false);
     }
 
 
@@ -1242,10 +1242,6 @@ public class Main extends AppCompatActivity implements change_instance,
         startActivityForResult( i,NEW_PHOTO_QR_SCAN);
     }
 
-    @Override
-    public void openPlayVideo(Bundle b) {
-
-    }
 
     @Override
     public void open_post_saved() {
@@ -1254,7 +1250,7 @@ public class Main extends AppCompatActivity implements change_instance,
 
     @Override
     public void logout() {
-         DialogLogout dialogLogout = new DialogLogout(this);
+        DialogLogout dialogLogout = new DialogLogout(this);
         dialogLogout.setListener(() -> {
             FirebaseAuth.getInstance().signOut();
             presenter.logout();
@@ -1269,40 +1265,40 @@ public class Main extends AppCompatActivity implements change_instance,
 
 
     @Override
-   public void open_target_post(){
-       final SpannableString spannedDesc = new SpannableString(getApplicationContext().getResources().getString(R.string.config_fist_foto));
-       TapTargetView.showFor(this, TapTarget.forView(findViewById(R.id.tab_add_image), getApplicationContext().getResources().getString(R.string.add_first_photo), spannedDesc)
-               .cancelable(false)
-               .drawShadow(true)
-               .tintTarget(false), new TapTargetView.Listener() {
-           @SuppressLint("CheckResult")
-           @Override
-           public void onTargetClick(TapTargetView view) {
-               super.onTargetClick(view);
-               rxPermissions
-                       .request(Manifest.permission.READ_EXTERNAL_STORAGE,
-                               Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                               Manifest.permission.CAMERA)
-                       .subscribe(granted -> {
-                           if (granted) {
-                               App.write(PREFERENCES.FROM_PICKER,"POST");
-                               Intent i = new Intent(Main.this, ShareActivity.class);
-                               startActivityForResult(i,NEW_POST_REQUEST);
-                           } else {
-                               App.getInstance().show_dialog_permision(Main.this,getResources().getString(R.string.permision_storage),
-                                       getResources().getString(R.string.permision_storage_body),0);
-                           }
-                       });
-           }
+    public void open_target_post(){
+        final SpannableString spannedDesc = new SpannableString(getApplicationContext().getResources().getString(R.string.config_fist_foto));
+        TapTargetView.showFor(this, TapTarget.forView(findViewById(R.id.tab_add_image), getApplicationContext().getResources().getString(R.string.add_first_photo), spannedDesc)
+                .cancelable(false)
+                .drawShadow(true)
+                .tintTarget(false), new TapTargetView.Listener() {
+            @SuppressLint("CheckResult")
+            @Override
+            public void onTargetClick(TapTargetView view) {
+                super.onTargetClick(view);
+                rxPermissions
+                        .request(Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA)
+                        .subscribe(granted -> {
+                            if (granted) {
+                                App.write(PREFERENCES.FROM_PICKER,"POST");
+                                Intent i = new Intent(Main.this, ShareActivity.class);
+                                startActivityForResult(i,NEW_POST_REQUEST);
+                            } else {
+                                App.getInstance().show_dialog_permision(Main.this,getResources().getString(R.string.permision_storage),
+                                        getResources().getString(R.string.permision_storage_body),0);
+                            }
+                        });
+            }
 
-           @Override
-           public void onOuterCircleClick(TapTargetView view) {
-               super.onOuterCircleClick(view);
-           }
+            @Override
+            public void onOuterCircleClick(TapTargetView view) {
+                super.onOuterCircleClick(view);
+            }
 
-           @Override
-           public void onTargetDismissed(TapTargetView view, boolean userInitiated) { }
-       });
+            @Override
+            public void onTargetDismissed(TapTargetView view, boolean userInitiated) { }
+        });
     }
 
     @Override
@@ -1347,7 +1343,7 @@ public class Main extends AppCompatActivity implements change_instance,
 
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
-           String DOM_CUT="";
+            String DOM_CUT="";
             if (resultData == null) {
                 return;
             }
@@ -1387,7 +1383,7 @@ public class Main extends AppCompatActivity implements change_instance,
             Log.e("ADDRES","OUTPUT: " + addressOutput);
             Log.e("ADDRES","CUT: " + DOM_CUT);
             if(!DOM_CUT.equals(R.string.no_address_found))
-             App.write(PREFERENCES.ADDRESS_USER,DOM_CUT);
+                App.write(PREFERENCES.ADDRESS_USER,DOM_CUT);
             // Show a toast message if an address was found.
             if (resultCode == CONST.SUCCESS_RESULT) {
                 Log.e("ADDRES","ENCONTRADO");

@@ -406,4 +406,7 @@
     <string name="no_pets">No tienes mascotas</string>
     <string name="progress">PROGRESO : </string>
     <string name="sin_mascotas">Sin mascotas</string>
+
+    <string name="raza_not_found">No esta tu tipo de  mascota?</string>
+    <string name="solicitar_categoria">Solicitar</string>
 </resources>

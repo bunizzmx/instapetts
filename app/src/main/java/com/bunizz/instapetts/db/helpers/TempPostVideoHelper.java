@@ -47,6 +47,7 @@ public class TempPostVideoHelper  extends GenericHelper {
 
 
     public void savePostVideo(PostBean postBean) {
+        cleanTable();
         Cursor cursor=null;
         ContentValues contentValues = new ContentValues();
         contentValues.put(CAN_COMMENT, postBean.getCan_comment());

@@ -288,8 +288,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
                         Log.e("DATOS_ADDEDS","POST_PROFILES : " + POSITION_PAGER);
                         presenter.getPostUser(true, App.read(PREFERENCES.ID_USER_FROM_WEB, 0), POSITION_PAGER);
                     }
-                    else
-                        Log.e("DATOS_ADDEDS","POST_PROFILES");
+
 
                 }
 

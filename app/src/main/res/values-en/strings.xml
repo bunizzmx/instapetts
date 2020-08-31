@@ -418,4 +418,6 @@
     <string name="no_pets">You don\'t have pets</string>
     <string name="progress">PROGRESS : </string>
     <string name="sin_mascotas">No pets</string>
+    <string name="raza_not_found">Not your kind of pet?</string>
+    <string name="solicitar_categoria">Solicitar</string>
 </resources>
