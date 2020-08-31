@@ -8,7 +8,5 @@ public interface open_side_menu {
     void share_my_profile();
     void open_url(String url);
     void open_pet_code();
-    void openPlayVideo(Bundle b);
-    void open_post_saved();
     void logout();
 }

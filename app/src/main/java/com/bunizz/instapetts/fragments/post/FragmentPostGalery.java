@@ -49,7 +49,6 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
 
     @BindView(R.id.body_no_data)
     TextView body_no_data;
-    static final int PLAY_VIDEO_RESULT= 6;
     PostGaleryPresenter presenter;
 
     changue_fragment_parameters_listener listener;

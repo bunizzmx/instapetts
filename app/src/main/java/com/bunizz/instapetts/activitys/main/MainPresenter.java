@@ -13,7 +13,6 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.IdentificadoresHistoriesBean;
 import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
-import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean$$Parcelable;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;

@@ -1244,11 +1244,6 @@ public class Main extends AppCompatActivity implements change_instance,
 
 
     @Override
-    public void open_post_saved() {
-
-    }
-
-    @Override
     public void logout() {
         DialogLogout dialogLogout = new DialogLogout(this);
         dialogLogout.setListener(() -> {
