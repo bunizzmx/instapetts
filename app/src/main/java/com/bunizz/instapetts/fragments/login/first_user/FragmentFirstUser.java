@@ -95,7 +95,7 @@ public class FragmentFirstUser extends Fragment implements  FirstUserContract.Vi
             App.write("NAME_TAG_INSTAPETTS",user_instapetts.getText().toString().trim());
             listener_uploads.UpdateProfile(b);
         }else{
-            if(descripcion_user.getText().toString().length() < 5){
+            if(descripcion_user.getText().toString().length() < 2){
                 Toast.makeText(getContext(),getContext().getString(R.string.name_invalid),Toast.LENGTH_LONG).show();
             }
             if(URL_LOCAL.equals("INVALID")){

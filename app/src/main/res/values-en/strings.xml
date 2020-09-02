@@ -420,4 +420,5 @@
     <string name="sin_mascotas">No pets</string>
     <string name="raza_not_found">Not your kind of pet?</string>
     <string name="solicitar_categoria">Solicitar</string>
+    <string name="descripcion_invalid">Write a description</string>
 </resources>

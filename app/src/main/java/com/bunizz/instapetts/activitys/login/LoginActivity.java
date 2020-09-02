@@ -238,7 +238,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                                 .addToBackStack(null)
                                 .setCustomAnimations(R.anim.enter_left, R.anim.exit_right)
                                 .hide(mOldFragment.getFragment())
-                                .add(R.id.root_main, mCurrentFragment.getFragment()).commit();
+                                .add(R.id.root_login, mCurrentFragment.getFragment()).commit();
                     }else{
                         Log.e("LOGINGS_LOGS","6");
                         fragmentManager
@@ -339,13 +339,19 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                                     String token = instanceIdResult.getToken();
                                     App.write(PREFERENCES.TOKEN, token);
                                     generate_user_bean();
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        generate_user_bean();
+                                    }
                                 });
                             } else {
                                 View v = findViewById(R.id.root_login);
                                 SnackBar.info(v, R.string.verify_email, SnackBar.LENGTH_LONG).show();
                             }
                         } else {
-
+                            View v = findViewById(R.id.root_login);
+                            SnackBar.error(v, "Error", SnackBar.LENGTH_LONG).show();
                         }
                     })
                     .addOnFailureListener(e -> {
@@ -357,6 +363,13 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                             SnackBar.error(v, R.string.user_no_existe, SnackBar.LENGTH_LONG).show();
                         } else if (e.getMessage().contains("The password is invalid")) {
                             SnackBar.error(v, R.string.error_credenciales, SnackBar.LENGTH_LONG).show();
+                        }else{
+                            try{
+                                SnackBar.error(v, e.getMessage(), SnackBar.LENGTH_LONG).show();
+                            }catch (Exception error){
+                                SnackBar.error(v, "Error", SnackBar.LENGTH_LONG).show();
+                            }
+
                         }
 
                     });
@@ -395,7 +408,8 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                                     }
                                 });
                     } else {
-
+                        View v = findViewById(R.id.root_login);
+                        SnackBar.error(v, "Error", SnackBar.LENGTH_LONG).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -523,10 +537,10 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     }
 
 
+    @SuppressLint("MissingPermission")
     void getLocation(){
         LocationServices.getFusedLocationProviderClient(LoginActivity.this).getLastLocation().addOnSuccessListener(location -> {
             if(location!=null){
-                Log.e("LOCALIZACION","-->" + location.getLatitude()  + "/" + location.getLongitude());
                 if(location!=null){
                     App.write(PREFERENCES.LAT,(float)location.getLatitude());
                     App.write(PREFERENCES.LON,(float)location.getLongitude());

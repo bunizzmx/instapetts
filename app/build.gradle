@@ -52,16 +52,16 @@ android {
     flavorDimensions "instance"
     productFlavors {
         produccion {
-            versionName "1.0.0.4"
-            versionCode 19
+            versionName "1.0.0.5"
+            versionCode 20
             dimension "instance"
             buildConfigField 'String', 'ADS_NATIVO', '"ca-app-pub-1460003590771124/7976202603"'
             buildConfigField 'Boolean', 'DEVELOPMENT', 'false'
             signingConfig signingConfigs.release
         }
         development {
-            versionName "1.0.0.4(DEBUG)"
-            versionCode 19
+            versionName "1.0.0.5(DEBUG)"
+            versionCode 20
             dimension "instance"
             buildConfigField 'String', 'ADS_NATIVO', '"ca-app-pub-3940256099942544/2247696110"'
             buildConfigField 'String', 'ADS_BANNERS', '"ca-app-pub-3940256099942544/6300978111"'

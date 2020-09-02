@@ -377,6 +377,7 @@
     <string name="correo_enviado">SE ENVIO UN CORREO DE VERIFICACION</string>
     <string name="no_qr_valid">No es un QR de Instapetts</string>
     <string name="name_invalid">Nombre invalido</string>
+    <string name="descripcion_invalid">Escribe una descripción</string>
     <string name="pet_updated">Mascota Actualizada</string>
     <string name="report_sended">Reporte Enviado</string>
     <string name="revisa_credenciales">Revisa correo o contraseña</string>
