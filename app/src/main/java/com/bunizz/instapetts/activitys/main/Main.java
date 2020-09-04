@@ -236,22 +236,26 @@ public class Main extends AppCompatActivity implements change_instance,
     @SuppressLint({"MissingPermission", "CheckResult"})
     @OnClick(R.id.tab_add_image)
     void tab_add_image() {
-        rxPermissions
-                .request(Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.CAMERA)
-                .subscribe(granted -> {
-                    if (granted) {
-                        App.write(PREFERENCES.FROM_PICKER,"POST");
-                        Intent i = new Intent(Main.this, ShareActivity.class);
-                        startActivityForResult(i,NEW_POST_REQUEST);
-                    } else {
-                        App.getInstance().show_dialog_permision(Main.this,getResources().getString(R.string.permision_storage),
-                                getResources().getString(R.string.permision_storage_body),0);
-                    }
-                });
+        if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+            rxPermissions
+                    .request(Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.CAMERA)
+                    .subscribe(granted -> {
+                        if (granted) {
+                            App.write(PREFERENCES.FROM_PICKER, "POST");
+                            Intent i = new Intent(Main.this, ShareActivity.class);
+                            startActivityForResult(i, NEW_POST_REQUEST);
+                        } else {
+                            App.getInstance().show_dialog_permision(Main.this, getResources().getString(R.string.permision_storage),
+                                    getResources().getString(R.string.permision_storage_body), 0);
+                        }
+                    });
 
-
+        }else{
+            View v = findViewById(R.id.root_main);
+            SnackBar.info(v, R.string.no_post_invitado, SnackBar.LENGTH_LONG).show();
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -279,8 +283,10 @@ public class Main extends AppCompatActivity implements change_instance,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ButterKnife.bind(this);Log.e("ID_FROM_WEB","-->" + App.read(PREFERENCES.ID_USER_FROM_WEB,0));
-        jobsServices = new JobsServices(this);
-        jobsServices.startNotificationsRequest();
+        if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+            jobsServices = new JobsServices(this);
+            jobsServices.startNotificationsRequest();
+        }
         try{
             presenter = new MainPresenter(this, this);
             presenter.isAdsActive();
@@ -354,8 +360,6 @@ public class Main extends AppCompatActivity implements change_instance,
                 }
             });
 
-            download_pets();
-            presenter.have_pets();
             getLocation();
             resultReceiver = new AddressResultReceiver(new Handler());
             if (!Geocoder.isPresent()) {
@@ -365,31 +369,34 @@ public class Main extends AppCompatActivity implements change_instance,
                 return;
             }
             Log.e("LAT_LON", "-->" + App.read(PREFERENCES.LAT, 0f) + "/" + App.read(PREFERENCES.LON, 0f));
-            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
-                String token = instanceIdResult.getToken();
-                UserBean U_TOK = new UserBean();
-                U_TOK.setToken(token);
-                U_TOK.setTarget(WEBCONSTANTS.TOKEN);
-                U_TOK.setId(App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
-                presenter.update_token(U_TOK);
-            });
 
-            Glide.with(Main.this).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH, "INVALID"))
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true)
-                    .placeholder(getResources().getDrawable(R.drawable.ic_holder)).into(icon_profile_pet);
-            presenter.getIdentificadoresHistories();
+            if(!App.read(PREFERENCES.MODO_INVITADO,false)){
+                download_pets();
+                presenter.have_pets();
+                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
+                    String token = instanceIdResult.getToken();
+                    UserBean U_TOK = new UserBean();
+                    U_TOK.setToken(token);
+                    U_TOK.setTarget(WEBCONSTANTS.TOKEN);
+                    U_TOK.setId(App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
+                    presenter.update_token(U_TOK);
+                });
+                Glide.with(Main.this).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH, "INVALID"))
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .placeholder(getResources().getDrawable(R.drawable.ic_holder)).into(icon_profile_pet);
+                presenter.getIdentificadoresHistories();
+                presenter.updateConexion();
+                if(App.read(PREFERENCES.LOCATION_CHANGED,false)){
+                    Log.e("CAMBIO_LOCALIZACION","SI");
+                    presenter.updateLocations();
+                }else{
+                    Log.e("CAMBIO_LOCALIZACION","NO");
+                }
+            }
         }catch (Exception e){
             Log.e("EXCEPCION_MAIN","MAIN" + e.getMessage());
         }
-        presenter.updateConexion();
-        if(App.read(PREFERENCES.LOCATION_CHANGED,false)){
-            Log.e("CAMBIO_LOCALIZACION","SI");
-            presenter.updateLocations();
-        }else{
-            Log.e("CAMBIO_LOCALIZACION","NO");
-        }
-
     }
 
     @Override

@@ -19,6 +19,7 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.AspectBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.LikePostHelper;
 import com.bunizz.instapetts.db.helpers.SavedPostHelper;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
@@ -28,6 +29,8 @@ import com.bunizz.instapetts.utils.Dots.DotsIndicator;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.ViewPagerAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.parceler.ParcelerRuntimeException;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
@@ -196,7 +199,8 @@ public class DialogPreviewPost extends BaseAlertDialog{
         l_like_post.setOnClickListener(view -> {
             if(!this.postBean.isLiked()) {
                 this.postBean.setLiked(true);
-                icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
+                 if(!App.read(PREFERENCES.MODO_INVITADO,false))
+                  icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
                 if(is_multiple(this.postBean.getUrls_posts())) {
                     String s[]= this.postBean.getUrls_posts().split(",");
                     listener_post.onLike(this.postBean.getId_post_from_web(), true, this.postBean.getId_usuario(),this.postBean.getThumb_video());
@@ -205,7 +209,8 @@ public class DialogPreviewPost extends BaseAlertDialog{
                 }
             }else{
                 this.postBean.setLiked(false);
-                icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
+                if(!App.read(PREFERENCES.MODO_INVITADO,false))
+                 icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
             }
         });
 
@@ -217,20 +222,24 @@ public class DialogPreviewPost extends BaseAlertDialog{
             }
             else {
                 this.postBean.setSaved(true);
-                save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite_fill));
+                if(!App.read(PREFERENCES.MODO_INVITADO,false))
+                  save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite_fill));
                 listener_post.onFavorite(this.postBean.getId_post_from_web(), this.postBean);
             }
         });
         if(this.postBean.isSaved()){
-            save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite_fill));
+            if(!App.read(PREFERENCES.MODO_INVITADO,false))
+              save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite_fill));
         }else{
             save_posts.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_favorite));
         }
 
         if(this.postBean.isLiked()){
-            icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
+            if(!App.read(PREFERENCES.MODO_INVITADO,false))
+              icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
         }else{
-            icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
+            if(!App.read(PREFERENCES.MODO_INVITADO,false))
+              icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon));
         }
 
 

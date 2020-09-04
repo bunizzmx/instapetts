@@ -46,4 +46,6 @@ public interface PREFERENCES {
 
     String OPEN_POST_ADVANCED_FROM ="OPEN_POST_ADVANCED_FROM";
 
+    String MODO_INVITADO ="MODO_INVITADO";
+
 }

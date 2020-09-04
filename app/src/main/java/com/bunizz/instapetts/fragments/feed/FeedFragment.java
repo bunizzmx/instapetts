@@ -152,27 +152,36 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
         feedAdapter.setListener_post(new postsListener() {
             @Override
             public void onLike(int id_post,boolean type_like,int id_usuario,String url_image) {
-                PostActions postActions = new PostActions();
-                postActions.setId_post(id_post);
-                if(type_like)
-                postActions.setAcccion("1");
-                else
-                postActions.setAcccion("2");
-                postActions.setId_usuario(id_usuario);
-                postActions.setValor("1");
-                postActions.setExtra(url_image);
-                if(id_usuario != App.read(PREFERENCES.ID_USER_FROM_WEB,0))
-                mPresenter.likePost(postActions);
+                if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+                    PostActions postActions = new PostActions();
+                    postActions.setId_post(id_post);
+                    if (type_like)
+                        postActions.setAcccion("1");
+                    else
+                        postActions.setAcccion("2");
+                    postActions.setId_usuario(id_usuario);
+                    postActions.setValor("1");
+                    postActions.setExtra(url_image);
+                    if (id_usuario != App.read(PREFERENCES.ID_USER_FROM_WEB, 0))
+                        mPresenter.likePost(postActions);
+                }else{
+                    listener_wifi.message(getContext().getString(R.string.no_action_invitado));
+                }
             }
 
             @Override
             public void onFavorite(int id_post,PostBean postBean) {
-                PostActions postActions = new PostActions();
-                postActions.setId_post(id_post);
-                postActions.setAcccion("FAVORITE");
-                postActions.setId_usuario(postBean.getId_usuario());
-                postActions.setValor("1");
-                mPresenter.saveFavorite(postActions,postBean);
+                if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+                    PostActions postActions = new PostActions();
+                    postActions.setId_post(id_post);
+                    postActions.setAcccion("FAVORITE");
+                    postActions.setId_usuario(postBean.getId_usuario());
+                    postActions.setValor("1");
+                    mPresenter.saveFavorite(postActions, postBean);
+                }
+                else{
+                    listener_wifi.message(getContext().getString(R.string.no_action_invitado));
+                }
             }
 
             @Override

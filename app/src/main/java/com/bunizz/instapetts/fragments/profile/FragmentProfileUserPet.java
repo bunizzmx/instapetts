@@ -139,6 +139,10 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     @BindView(R.id.toolbar_prfile)
     Toolbar toolbar_prfile;
 
+    @BindView(R.id.root_invitado_profile)
+    LinearLayout root_invitado_profile;
+
+
     @BindView(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsing_toolbar;
 
@@ -270,75 +274,76 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
                 listener.open_wizard_pet();
             }
         });
-        list_pets_propietary.setAdapter(petsPropietaryAdapter);
-        viewpager_profile.setOffscreenPageLimit(3);
-        viewpager_profile.setAdapter(adapter_pager);
-        viewpager_profile.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                POSITION_PAGER = position;
-                Fragment frag = adapter_pager.getItem(POSITION_PAGER);
-                if (frag instanceof FragmentPostGalery) {
-                    if(!((FragmentPostGalery) frag).isDataAdded()) {
-                        Log.e("DATOS_ADDEDS","POST_PROFILES : " + POSITION_PAGER);
-                        presenter.getPostUser(true, App.read(PREFERENCES.ID_USER_FROM_WEB, 0), POSITION_PAGER);
-                    }
-
+        if(!App.read(PREFERENCES.MODO_INVITADO,false)){
+            list_pets_propietary.setAdapter(petsPropietaryAdapter);
+            viewpager_profile.setOffscreenPageLimit(3);
+            viewpager_profile.setAdapter(adapter_pager);
+            viewpager_profile.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
                 }
 
-            }
+                @Override
+                public void onPageSelected(int position) {
+                    POSITION_PAGER = position;
+                    Fragment frag = adapter_pager.getItem(POSITION_PAGER);
+                    if (frag instanceof FragmentPostGalery) {
+                        if(!((FragmentPostGalery) frag).isDataAdded())
+                            presenter.getPostUser(true, App.read(PREFERENCES.ID_USER_FROM_WEB, 0), POSITION_PAGER);
+                    }
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
+                }
 
-            }
-        });
-        tabs_profile_propietary.setViewPager(viewpager_profile);
-        spinky_loading_profile_info.setIndeterminateDrawable(drawable);
-        spinky_loading_profile_info.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
-        loanding_preview_root.setVisibility(View.VISIBLE);
-        title_toolbar.setText(App.read(PREFERENCES.NAME_USER,"USUARIO"));
-        name_property_pet.setText("@" + App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"USUARIO"));
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
+            tabs_profile_propietary.setViewPager(viewpager_profile);
+            spinky_loading_profile_info.setIndeterminateDrawable(drawable);
+            spinky_loading_profile_info.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
+            loanding_preview_root.setVisibility(View.VISIBLE);
+            title_toolbar.setText(App.read(PREFERENCES.NAME_USER,"USUARIO"));
+            name_property_pet.setText("@" + App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"USUARIO"));
             follow_edit.setText(R.string.edit_profile);
             follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_edit_profile));
             follow_edit.setTextColor(Color.BLACK);
             follow_edit.setOnClickListener(view1 -> listener.change(FragmentElement.INSTANCE_EDIT_PROFILE_USER));
-        descripcion_perfil_user.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
-        URL_UPDATED = App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID");
-        Glide.with(getContext()).load(URL_UPDATED)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
-                .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
+            descripcion_perfil_user.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
+            URL_UPDATED = App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID");
+            Glide.with(getContext()).load(URL_UPDATED)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
+                    .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
 
-        presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0),POSITION_PAGER);
+            presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0),POSITION_PAGER);
 
-       refresh_profile.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                UserBean userBean = new UserBean();
-                userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
-                presenter.getInfoUser(userBean);
-                presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0),POSITION_PAGER);
-            }
-        });
-        UserBean userBean = new UserBean();
-        userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
-        presenter.getInfoUser(userBean);
-        image_profile_property_pet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogPreviewImage dialogPreviewImage = new DialogPreviewImage(getContext(),USERBEAN.getPhoto_user());
-                dialogPreviewImage.show();
-            }
-        });
-
+            refresh_profile.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    UserBean userBean = new UserBean();
+                    userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+                    presenter.getInfoUser(userBean);
+                    presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0),POSITION_PAGER);
+                }
+            });
+            UserBean userBean = new UserBean();
+            userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+            presenter.getInfoUser(userBean);
+            image_profile_property_pet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DialogPreviewImage dialogPreviewImage = new DialogPreviewImage(getContext(),USERBEAN.getPhoto_user());
+                    dialogPreviewImage.show();
+                }
+            });
+        }else{
+            appbar.setVisibility(View.GONE);
+            refresh_profile.setVisibility(View.GONE);
+            root_invitado_profile.setVisibility(View.VISIBLE);
+        }
     }
 
 

@@ -76,6 +76,17 @@ public class MainLogin extends Fragment implements  MainLoginContract.View{
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
        listener_login.loginWithEmail(mail_user.getText().toString(),password_email.getText().toString());
     }
+
+
+    @OnClick(R.id.modo_invitado)
+    void modo_invitado()
+    {
+        listener_login.modoInvitado();
+    }
+
+
+
+
     CallbackManager mCallbackManager;
     private AccessTokenTracker accessTokenTracker;
     @OnClick(R.id.change_to_create_account)

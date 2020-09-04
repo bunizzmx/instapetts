@@ -34,6 +34,7 @@ import com.bunizz.instapetts.utils.AnalogTv.AnalogTvNoise;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.dilogs.DialogOptionsPosts;
 import com.bunizz.instapetts.utils.slidemenu.SlideMenuLayout;
+import com.bunizz.instapetts.utils.snackbar.SnackBar;
 import com.bunizz.instapetts.utils.videoCrop.player.VideoPlayer;
 import com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerView;
 import com.bunizz.instapetts.utils.video_player.PreviewTimeBar;
@@ -128,55 +129,65 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
     @SuppressLint("MissingPermission")
     @OnClick(R.id.like_video_post)
     void like_video_post() {
-        PostActions postActions = new PostActions();
-        postActions.setId_post(POST_BEAN.getId_post_from_web());
-        if(!POST_BEAN.isLiked()){
-            POST_BEAN.setLiked(true);
-            postActions.setAcccion("1");
-        }
-        else {
-            POST_BEAN.setLiked(false);
-            postActions.setAcccion("2");
-        }
-        postActions.setId_usuario(POST_BEAN.getId_usuario());
-        postActions.setValor("1");
-        postActions.setExtra(POST_BEAN.getThumb_video());
+        if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+            PostActions postActions = new PostActions();
+            postActions.setId_post(POST_BEAN.getId_post_from_web());
+            if (!POST_BEAN.isLiked()) {
+                POST_BEAN.setLiked(true);
+                postActions.setAcccion("1");
+            } else {
+                POST_BEAN.setLiked(false);
+                postActions.setAcccion("2");
+            }
+            postActions.setId_usuario(POST_BEAN.getId_usuario());
+            postActions.setValor("1");
+            postActions.setExtra(POST_BEAN.getThumb_video());
 
-        if(POST_BEAN.isLiked())
-            icon_like_video.setImageDrawable(getResources().getDrawable(R.drawable.ic_corazon_w));
-        else
-            icon_like_video.setImageDrawable(getResources().getDrawable(R.drawable.ic_corazon_black));
+            if (POST_BEAN.isLiked())
+                icon_like_video.setImageDrawable(getResources().getDrawable(R.drawable.ic_corazon_w));
+            else
+                icon_like_video.setImageDrawable(getResources().getDrawable(R.drawable.ic_corazon_black));
 
-        presenter.likeVideo(postActions);
+            presenter.likeVideo(postActions);
+        } else {
+            View v = findViewById(R.id.root_play);
+            SnackBar.info(v, R.string.no_action_invitado, SnackBar.LENGTH_LONG).show();
+        }
     }
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.open_dialog_options)
     void open_dialog_options() {
-        DialogOptionsPosts optionsPosts = new DialogOptionsPosts(this,POST_BEAN.getId_post_from_web(),POST_BEAN.getId_usuario(),POST_BEAN.getUuid());
-        optionsPosts.setListener(new actions_dialog_profile() {
-            @Override
-            public void delete_post(int id_post) {
-                PostBean postBean = new PostBean();
-                postBean.setId_post_from_web(id_post);
-                postBean.setId_usuario(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
-                postBean.setTarget(WEBCONSTANTS.DELETE);
-                presenter.deleteVideo(postBean);
-            }
+        if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+            DialogOptionsPosts optionsPosts = new DialogOptionsPosts(this, POST_BEAN.getId_post_from_web(), POST_BEAN.getId_usuario(), POST_BEAN.getUuid());
+            optionsPosts.setListener(new actions_dialog_profile() {
+                @Override
+                public void delete_post(int id_post) {
+                    PostBean postBean = new PostBean();
+                    postBean.setId_post_from_web(id_post);
+                    postBean.setId_usuario(App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
+                    postBean.setTarget(WEBCONSTANTS.DELETE);
+                    presenter.deleteVideo(postBean);
+                }
 
-            @Override
-            public void reportPost(int id_post) {
-                Intent reportIntent = new Intent(PlayVideoActivity.this, ReportActiviy.class);
-                reportIntent.putExtra("ID_RECURSO",id_post);
-                reportIntent.putExtra("TYPO_RECURSO",1);
-                startActivity(reportIntent);
-            }
-            @Override
-            public void unfollowUser(int id_user,String uuid) {
-                presenter.unfollowUser(uuid,id_user);
-            }
-        });
-        optionsPosts.show();
+                @Override
+                public void reportPost(int id_post) {
+                    Intent reportIntent = new Intent(PlayVideoActivity.this, ReportActiviy.class);
+                    reportIntent.putExtra("ID_RECURSO", id_post);
+                    reportIntent.putExtra("TYPO_RECURSO", 1);
+                    startActivity(reportIntent);
+                }
+
+                @Override
+                public void unfollowUser(int id_user, String uuid) {
+                    presenter.unfollowUser(uuid, id_user);
+                }
+            });
+            optionsPosts.show();
+        } else {
+            View v = findViewById(R.id.root_play);
+            SnackBar.info(v, R.string.no_action_invitado, SnackBar.LENGTH_LONG).show();
+        }
     }
 
 
@@ -186,30 +197,34 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
     @SuppressLint("MissingPermission")
     @OnClick(R.id.save_on_favorites)
     void save_on_favorites() {
-        PostActions postActions = new PostActions();
-        postActions.setId_post(POST_BEAN.getId_post_from_web());
-        if(!POST_BEAN.isSaved()){
-            POST_BEAN.setSaved(true);
-            postActions.setAcccion("1");
+        if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+            PostActions postActions = new PostActions();
+            postActions.setId_post(POST_BEAN.getId_post_from_web());
+            if (!POST_BEAN.isSaved()) {
+                POST_BEAN.setSaved(true);
+                postActions.setAcccion("1");
+            } else {
+                POST_BEAN.setSaved(false);
+                postActions.setAcccion("2");
+            }
+
+            postActions.setId_usuario(POST_BEAN.getId_usuario());
+            postActions.setValor("1");
+            postActions.setExtra(POST_BEAN.getThumb_video());
+
+            if (presenter.isSaved(POST_BEAN.getId_post_from_web()))
+                icon_save_on_favorites.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_w));
+            else
+                icon_save_on_favorites.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_fill));
+
+            if (POST_BEAN.isSaved())
+                presenter.saveFavorite(postActions, POST_BEAN);
+            else
+                presenter.deleteFavorite(POST_BEAN.getId_post_from_web());
+        } else {
+            View v = findViewById(R.id.root_play);
+            SnackBar.info(v, R.string.no_action_invitado, SnackBar.LENGTH_LONG).show();
         }
-        else {
-            POST_BEAN.setSaved(false);
-            postActions.setAcccion("2");
-        }
-
-        postActions.setId_usuario(POST_BEAN.getId_usuario());
-        postActions.setValor("1");
-        postActions.setExtra(POST_BEAN.getThumb_video());
-
-        if(presenter.isSaved(POST_BEAN.getId_post_from_web()))
-            icon_save_on_favorites.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_w));
-        else
-            icon_save_on_favorites.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_fill));
-
-        if(POST_BEAN.isSaved())
-            presenter.saveFavorite(postActions, POST_BEAN);
-        else
-            presenter.deleteFavorite(POST_BEAN.getId_post_from_web());
     }
 
 

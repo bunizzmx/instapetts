@@ -8,4 +8,5 @@ public interface login_listener {
     void loginWithFacebook(AccessToken currentAccessToken);
     void loginWithEmail(String correo,String password);
     void sigInWithEmail(String correo,String password);
+    void modoInvitado();
 }

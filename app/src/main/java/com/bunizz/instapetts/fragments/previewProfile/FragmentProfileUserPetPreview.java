@@ -38,6 +38,7 @@ import com.bunizz.instapetts.fragments.profile.adapters.PetsPropietaryAdapter;
 import com.bunizz.instapetts.fragments.profile.ProfileUserContract;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.conexion_listener;
 import com.bunizz.instapetts.listeners.folowFavoriteListener;
 import com.bunizz.instapetts.listeners.open_sheet_listener;
 import com.bunizz.instapetts.utils.ImagenCircular;
@@ -113,7 +114,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     TextView label_lista_mascotas;
 
 
-
+    conexion_listener listener_wifi ;
     Style style = Style.values()[12];
     Sprite drawable = SpriteFactory.create(style);
     folowFavoriteListener listener_follow;
@@ -289,6 +290,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         listener= (change_instance) context;
         listener_follow =(folowFavoriteListener)context;
         listener_instance= (changue_fragment_parameters_listener) context;
+        listener_wifi =(conexion_listener) context;
     }
 
 
@@ -349,22 +351,30 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
                 follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_gmail_white));
                 follow_edit.setTextColor(Color.BLACK);
                 follow_edit.setOnClickListener(view -> {
-                    follow_edit.setText(getContext().getString(R.string.follow_user));
-                    follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_follow));
-                    follow_edit.setTextColor(Color.WHITE);
-                    listener_follow.followUser(USERBEAN,false);
-                    presenter.follow(USERBEAN.getId(),false);
+                    if(!App.read(PREFERENCES.MODO_INVITADO,false)){
+                        follow_edit.setText(getContext().getString(R.string.follow_user));
+                        follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_follow));
+                        follow_edit.setTextColor(Color.WHITE);
+                        listener_follow.followUser(USERBEAN,false);
+                        presenter.follow(USERBEAN.getId(),false);
+                    }else{
+                        listener_wifi.message(getContext().getString(R.string.no_action_invitado));
+                    }
                 });
             }else{
                 follow_edit.setText(getContext().getString(R.string.follow_user));
                 follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_follow));
                 follow_edit.setTextColor(Color.WHITE);
                 follow_edit.setOnClickListener(view -> {
-                    follow_edit.setText(getContext().getString(R.string.unfollow_user));
-                    follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_gmail_white));
-                    follow_edit.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
-                    listener_follow.followUser(USERBEAN,true);
-                    presenter.follow(USERBEAN.getId(),true);
+                    if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+                        follow_edit.setText(getContext().getString(R.string.unfollow_user));
+                        follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_gmail_white));
+                        follow_edit.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
+                        listener_follow.followUser(USERBEAN, true);
+                        presenter.follow(USERBEAN.getId(), true);
+                    }else{
+                        listener_wifi.message(getContext().getString(R.string.no_action_invitado));
+                    }
                 });
             }
 

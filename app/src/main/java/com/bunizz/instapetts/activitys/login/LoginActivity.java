@@ -431,6 +431,19 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
         });
     }
 
+    @Override
+    public void modoInvitado() {
+        App.write(PREFERENCES.MODO_INVITADO,true);
+        App.write(IS_LOGUEDD,true);
+        Intent i ;
+        i = new Intent(LoginActivity.this, Main.class);
+        i.putExtra("LOGIN_AGAIN",1);
+        i.putExtra("NEW_USER",1);
+        i.putExtra("FROM_PUSH",0);
+        startActivity(i);
+        finish();
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -551,6 +564,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     @Override
     public void registerCompleted() {
+            App.write(PREFERENCES.MODO_INVITADO,false);
             App.write(IS_LOGUEDD,true);
             Intent i ;
             i = new Intent(LoginActivity.this, Main.class);
@@ -564,6 +578,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     @Override
     public void HistoriesSaved() {
+        App.write(PREFERENCES.MODO_INVITADO,false);
         Intent i ;
         i = new Intent(LoginActivity.this, Main.class);
         i.putExtra("LOGIN_AGAIN",1);
@@ -609,6 +624,7 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
             dialogLoanding.dismiss();
         }catch (Exception e){}
         App.write(IS_LOGUEDD,true);
+        App.write(PREFERENCES.MODO_INVITADO,false);
         Intent i ;
         i = new Intent(LoginActivity.this, Main.class);
         i.putExtra("LOGIN_AGAIN",1);

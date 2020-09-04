@@ -410,4 +410,7 @@
 
     <string name="raza_not_found">No esta tu tipo de  mascota?</string>
     <string name="solicitar_categoria">Solicitar</string>
+
+    <string name="no_post_invitado">Debes tener un usuario para publicar</string>
+    <string name="no_action_invitado">Solo usuarios registrados pueden realizar esta acción</string>
 </resources>

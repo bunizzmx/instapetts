@@ -22,6 +22,7 @@ import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.search.AdapterGridPosts;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.conexion_listener;
 import com.bunizz.instapetts.listeners.postsListener;
 import com.bunizz.instapetts.utils.ProgressCircle;
 import com.bunizz.instapetts.utils.loadings.SpinKitView;
@@ -67,6 +68,8 @@ public class FragmentListGalery extends Fragment implements  ListGaleryContract.
 
     @BindView(R.id.cirlce_progress)
     ProgressCircle cirlce_progress;
+
+    conexion_listener listener_wifi;
 
     final ValueAnimator valueAnimator = ValueAnimator.ofInt(1,360);
 
@@ -136,27 +139,36 @@ public class FragmentListGalery extends Fragment implements  ListGaleryContract.
         adapter.setListener_post(new postsListener() {
             @Override
             public void onLike(int id_post, boolean type_like, int id_usuario, String url_image) {
-                PostActions postActions = new PostActions();
-                postActions.setId_post(id_post);
-                if(type_like)
-                    postActions.setAcccion("1");
-                else
-                    postActions.setAcccion("2");
-                postActions.setId_usuario(id_usuario);
-                postActions.setValor("1");
-                postActions.setExtra(url_image);
-                if(id_usuario != App.read(PREFERENCES.ID_USER_FROM_WEB,0))
-                presenter.likePost(postActions);
+                if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+                    PostActions postActions = new PostActions();
+                    postActions.setId_post(id_post);
+                    if (type_like)
+                        postActions.setAcccion("1");
+                    else
+                        postActions.setAcccion("2");
+                    postActions.setId_usuario(id_usuario);
+                    postActions.setValor("1");
+                    postActions.setExtra(url_image);
+                    if (id_usuario != App.read(PREFERENCES.ID_USER_FROM_WEB, 0))
+                        presenter.likePost(postActions);
+                }else{
+                    listener_wifi.message(getContext().getString(R.string.no_action_invitado));
+                }
             }
 
             @Override
             public void onFavorite(int id_post, PostBean postBean) {
-                PostActions postActions = new PostActions();
-                postActions.setId_post(id_post);
-                postActions.setAcccion("FAVORITE");
-                postActions.setId_usuario(postBean.getId_usuario());
-                postActions.setValor("1");
-                presenter.saveFavorite(postActions,postBean);
+                if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+                    PostActions postActions = new PostActions();
+                    postActions.setId_post(id_post);
+                    postActions.setAcccion("FAVORITE");
+                    postActions.setId_usuario(postBean.getId_usuario());
+                    postActions.setValor("1");
+                    presenter.saveFavorite(postActions, postBean);
+                }
+                else{
+                    listener_wifi.message(getContext().getString(R.string.no_action_invitado));
+                }
             }
 
             @Override
@@ -277,7 +289,7 @@ public class FragmentListGalery extends Fragment implements  ListGaleryContract.
     public void onAttach(Context context) {
         super.onAttach(context);
         listener= (changue_fragment_parameters_listener) context;
-
+        listener_wifi =(conexion_listener) context;
     }
 
 
