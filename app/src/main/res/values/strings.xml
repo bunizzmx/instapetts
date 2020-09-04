@@ -413,4 +413,6 @@
 
     <string name="no_post_invitado">Debes tener un usuario para publicar</string>
     <string name="no_action_invitado">Solo usuarios registrados pueden realizar esta acción</string>
+    <string name="settingss">Configurando...</string>
+    <string name="hellow_again">Bienvenido de nuevo </string>
 </resources>

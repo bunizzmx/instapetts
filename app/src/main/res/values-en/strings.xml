@@ -421,4 +421,10 @@
     <string name="raza_not_found">Not your kind of pet?</string>
     <string name="solicitar_categoria">Solicitar</string>
     <string name="descripcion_invalid">Write a description</string>
+
+
+    <string name="no_post_invitado">You must have a user to publish</string>
+    <string name="no_action_invitado">Only registered users can perform this action</string>
+    <string name="settingss">Configuring...</string>
+    <string name="hellow_again">Welcome back</string>
 </resources>

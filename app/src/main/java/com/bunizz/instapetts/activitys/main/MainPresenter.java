@@ -1,15 +1,19 @@
 package com.bunizz.instapetts.activitys.main;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.login.LoginActivity;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.IdentificadoresHistoriesBean;
 import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
@@ -19,6 +23,7 @@ import com.bunizz.instapetts.beans.UserBean;
 import com.bunizz.instapetts.constantes.FIRESTORE;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.constantes.WEBCONSTANTS;
+import com.bunizz.instapetts.db.Utilities;
 import com.bunizz.instapetts.db.helpers.FollowsHelper;
 import com.bunizz.instapetts.db.helpers.IdentificadoresHistoriesHelper;
 import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
@@ -27,22 +32,39 @@ import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.db.helpers.SearchResentHelper;
 import com.bunizz.instapetts.db.helpers.TempPostVideoHelper;
 import com.bunizz.instapetts.fragments.share_post.Share.SharePostContract;
+import com.bunizz.instapetts.utils.AndroidIdentifier;
+import com.bunizz.instapetts.utils.snackbar.SnackBar;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.CONST;
 import com.bunizz.instapetts.web.WebServices;
 import com.bunizz.instapetts.web.parameters.FollowParameter;
 import com.bunizz.instapetts.web.parameters.IdentificadorHistoryParameter;
+import com.bunizz.instapetts.web.parameters.ParameterAvailableNames;
 import com.bunizz.instapetts.web.responses.IdentificadoresHistoriesResponse;
 import com.bunizz.instapetts.web.responses.PetsResponse;
+import com.bunizz.instapetts.web.responses.ResponseNamesAvailables;
 import com.bunizz.instapetts.web.responses.SimpleResponse;
 import com.bunizz.instapetts.web.responses.SimpleResponseLogin;
+import com.facebook.AccessToken;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -62,7 +84,7 @@ import io.reactivex.schedulers.Schedulers;
 public class MainPresenter implements MainContract.Presenter {
 
     private MainContract.View mView;
-    private Context mContext;
+    private Activity mContext;
     WebServices apiService;
     MyStoryHelper myStoryHelper;
     FirebaseFirestore db;
@@ -75,7 +97,11 @@ public class MainPresenter implements MainContract.Presenter {
     private CompositeDisposable disposable = new CompositeDisposable();
     StorageMetadata metadata;
     TempPostVideoHelper tempPostVideoHelper;
-    MainPresenter(MainContract.View view, Context context) {
+    private GoogleSignInClient mGoogleSignInClient;
+    private FirebaseAuth mAuth;
+    private static final int RC_SIGN_IN = 9001;
+
+    MainPresenter(MainContract.View view, Activity context) {
         this.mView = view;
         this.mContext = context;
         apiService = ApiClient.getClient(context)
@@ -88,6 +114,12 @@ public class MainPresenter implements MainContract.Presenter {
         storageReference = FirebaseStorage.getInstance(CONST.BUCKET_FILES_BACKUP).getReference();
         tempPostVideoHelper = new TempPostVideoHelper(mContext);
         searchResentHelper = new SearchResentHelper(mContext);
+        mAuth = FirebaseAuth.getInstance();
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken(mContext.getString(R.string.default_web_client_id))
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(mContext, gso);
     }
 
     @Override
@@ -624,5 +656,174 @@ public class MainPresenter implements MainContract.Presenter {
                         })
         );
     }
+
+     public void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(mContext, task -> {
+                            if (task.isSuccessful()) {
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                App.write(PREFERENCES.UUID,user.getUid());
+                                App.write(PREFERENCES.NAME_USER,user.getDisplayName());
+                                App.write(PREFERENCES.FOTO_PROFILE_USER_THUMBH,String.valueOf(user.getPhotoUrl()));
+                                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(mContext, instanceIdResult -> {
+                                    String token = instanceIdResult.getToken();
+                                    App.write(PREFERENCES.TOKEN,token);
+                                    generate_user_bean();
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        mView.messageLogin("Error desconocido");
+                                    }
+                                });
+                            } else {
+                                mView.messageLogin("Error desconocido");
+                            }
+                        }
+                )
+                .addOnFailureListener(e -> {
+                    if (e.getMessage().contains("network error")){
+                        mView.messageLogin(mContext.getString(R.string.no_wifi));
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                mView.messageLogin(mContext.getString(R.string.completed));
+            }
+        })
+                .addOnCanceledListener(new OnCanceledListener() {
+                    @Override
+                    public void onCanceled() {
+                        mView.messageLogin("Cancelaste esta accion");
+                    }
+                });
+    }
+
+    @Override
+    public void startGoggleSignin() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        mContext.startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    public void handleFacebookAccessToken(AccessToken token) {
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(mContext, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            App.write(PREFERENCES.UUID, user.getUid());
+                            App.write(PREFERENCES.NAME_USER,user.getDisplayName());
+                            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(mContext, instanceIdResult -> {
+                                String token = instanceIdResult.getToken();
+                                App.write(PREFERENCES.TOKEN,token);
+                                Log.e("ERROR_LOGIN","-->TODO BIEN" +token);
+                                generate_user_bean();
+                            });
+                        } else {
+                            Log.e("ERROR_LOGIN","-->TODO MAL" + task.getException().getMessage());
+                            Toast.makeText(mContext, mContext.getString(R.string.try_again), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
+
+    void generate_user_bean(){
+        UserBean userBean = new UserBean();
+        userBean.setDescripcion("-");
+        userBean.setIds_pets("-");
+        userBean.setName_user("-");
+        userBean.setLat(App.read(PREFERENCES.LAT,(float)0));
+        userBean.setLon(App.read(PREFERENCES.LON,(float)0));
+        userBean.setToken(App.read(PREFERENCES.TOKEN,"INVALID"));
+        userBean.setTarget("LOGIN");
+        userBean.setUuid(App.read(PREFERENCES.UUID,"INVALID"));
+        userBean.setAndroid_id(Utilities.Md5Hash(new AndroidIdentifier(mContext).generateCombinationID()));
+        userBean.setPhone_user("0000000");
+        userBean.setPhoto_user(App.read(PREFERENCES.FOTO_PROFILE_USER,"INVALID"));
+        RegisterUser(userBean);
+    }
+
+    public void RegisterUser(UserBean userBean) {
+        disposable.add(
+                apiService
+                        .newUser(userBean)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<SimpleResponseLogin>() {
+                            @Override
+                            public void onSuccess(SimpleResponseLogin user) {
+                                if(user.getData_user()!=null) {
+                                    if (user.getCode_response() == 200)
+                                        mView.loginInvitadoCompleted(user.getData_user());
+                                    else
+                                        mView.loginFirstUserInvitado(user.getData_user().getId());
+                                }else{
+                                 //   mView.registerError();
+                                }
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                mView.noWifi();
+                                //mView.registerError();
+                            }
+                        }));
+    }
+
+
+    @Override
+    public void getNameAvailable(String name) {
+        ParameterAvailableNames parameterAvailableNames = new ParameterAvailableNames();
+        parameterAvailableNames.setName(name);
+        parameterAvailableNames.setTarget("GET");
+        disposable.add(
+                apiService.getNamesAvailables(parameterAvailableNames)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<ResponseNamesAvailables>() {
+                            @Override
+                            public void onSuccess(ResponseNamesAvailables responsePost) {
+                                if(responsePost.getCode_response() == 200) {
+                                    if(responsePost.getAvailable() == 1){
+                                        mView.showUsersAvailables(true);
+                                    }else
+                                        mView.showUsersAvailables(false);
+                                }
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+                        })
+        );
+    }
+
+    @Override
+    public void updateUser(UserBean userBean) {
+        disposable.add(
+                apiService
+                        .newUser(userBean)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<SimpleResponseLogin>() {
+                            @Override
+                            public void onSuccess(SimpleResponseLogin user) {
+                                if(user!=null) {
+                                    if (user.getCode_response() == 200)
+                                        mView.completeInfoInvitado();
+                                    else
+                                        mView.completeInfoInvitado();
+                                }else{
+
+                                }
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+                        }));
+    }
+
 
 }

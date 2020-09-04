@@ -153,24 +153,6 @@ public class FragmentFirstUser extends Fragment implements  FirstUserContract.Vi
                         label_tag_instapets.setText(getContext().getString(R.string.more_caracteres));
                     }
                 });
-
-
-        user_instapetts.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.e("TEXT_CAMBIADO","-->:" + s + "/" + start + "/" + before +"/" + count);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
     }
 
 

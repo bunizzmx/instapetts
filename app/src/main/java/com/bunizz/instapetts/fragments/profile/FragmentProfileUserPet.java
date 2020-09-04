@@ -48,6 +48,7 @@ import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.conexion_listener;
 import com.bunizz.instapetts.listeners.folowFavoriteListener;
+import com.bunizz.instapetts.listeners.login_invitado_listener;
 import com.bunizz.instapetts.listeners.open_sheet_listener;
 import com.bunizz.instapetts.listeners.open_side_menu;
 import com.bunizz.instapetts.utils.ImagenCircular;
@@ -59,6 +60,13 @@ import com.bunizz.instapetts.utils.loadings.sprite.Sprite;
 import com.bunizz.instapetts.utils.tabs2.SmartTabLayout;
 import com.bunizz.instapetts.utils.target.TapTarget;
 import com.bunizz.instapetts.utils.target.TapTargetView;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.Profile;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
@@ -140,7 +148,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     Toolbar toolbar_prfile;
 
     @BindView(R.id.root_invitado_profile)
-    LinearLayout root_invitado_profile;
+    RelativeLayout root_invitado_profile;
 
 
     @BindView(R.id.collapsing_toolbar)
@@ -151,9 +159,9 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
 
     Style style = Style.values()[12];
     Sprite drawable = SpriteFactory.create(style);
-
+    login_invitado_listener login_listener;
     boolean IS_REFRESHING_REQUEST = false;
-
+    CallbackManager mCallbackManager;
     @SuppressLint("MissingPermission")
     @OnClick(R.id.open_side_menu)
     void open_side_menu() {
@@ -170,6 +178,20 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         startActivity(i);
     }
 
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.login_with_gmail)
+    void login_with_gmail() {
+       login_listener.loginGmail();
+    }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.login_with_facebook)
+    void login_with_facebook() {
+
+    }
+
+    @BindView(R.id.login_with_facebook)
+    LoginButton login_with_facebook;
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.open_followers)
@@ -227,6 +249,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mCallbackManager = CallbackManager.Factory.create();
         petsPropietaryAdapter = new PetsPropietaryAdapter(getContext());
         petHelper = new PetHelper(getContext());
         presenter = new ProfileUserPresenter(this,getContext());
@@ -251,8 +274,16 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
 
     public void reloadMyData(){
         App.write(PREFERENCES.OPEN_POST_ADVANCED_FROM,1);
-        if(adapter_pager!=null && list_pets_propietary!=null)
-           presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0),POSITION_PAGER);
+        if(adapter_pager!=null && list_pets_propietary!=null) {
+            loanding_preview_root.setVisibility(View.GONE);
+            root_invitado_profile.setVisibility(View.GONE);
+            appbar.setVisibility(View.VISIBLE);
+            refresh_profile.setVisibility(View.VISIBLE);
+            UserBean userBean = new UserBean();
+            userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+            presenter.getInfoUser(userBean);
+            presenter.getPostUser(true, App.read(PREFERENCES.ID_USER_FROM_WEB, 0), POSITION_PAGER);
+        }
     }
 
     @Override
@@ -260,7 +291,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         App.write(PREFERENCES.OPEN_POST_ADVANCED_FROM,1);
-        title_toolbar.setText(App.read(PREFERENCES.NAME_USER,"USUARIO"));
+        title_toolbar.setText(App.read(PREFERENCES.NAME_USER,"-"));
         icon_toolbar.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_settings));
         list_pets_propietary.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
         petsPropietaryAdapter.setListener(new open_sheet_listener() {
@@ -274,75 +305,36 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
                 listener.open_wizard_pet();
             }
         });
+        create_items();
         if(!App.read(PREFERENCES.MODO_INVITADO,false)){
-            list_pets_propietary.setAdapter(petsPropietaryAdapter);
-            viewpager_profile.setOffscreenPageLimit(3);
-            viewpager_profile.setAdapter(adapter_pager);
-            viewpager_profile.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                }
-
-                @Override
-                public void onPageSelected(int position) {
-                    POSITION_PAGER = position;
-                    Fragment frag = adapter_pager.getItem(POSITION_PAGER);
-                    if (frag instanceof FragmentPostGalery) {
-                        if(!((FragmentPostGalery) frag).isDataAdded())
-                            presenter.getPostUser(true, App.read(PREFERENCES.ID_USER_FROM_WEB, 0), POSITION_PAGER);
-                    }
-
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {
-
-                }
-            });
-            tabs_profile_propietary.setViewPager(viewpager_profile);
-            spinky_loading_profile_info.setIndeterminateDrawable(drawable);
-            spinky_loading_profile_info.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
-            loanding_preview_root.setVisibility(View.VISIBLE);
-            title_toolbar.setText(App.read(PREFERENCES.NAME_USER,"USUARIO"));
-            name_property_pet.setText("@" + App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"USUARIO"));
-            follow_edit.setText(R.string.edit_profile);
-            follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_edit_profile));
-            follow_edit.setTextColor(Color.BLACK);
-            follow_edit.setOnClickListener(view1 -> listener.change(FragmentElement.INSTANCE_EDIT_PROFILE_USER));
-            descripcion_perfil_user.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
-            URL_UPDATED = App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID");
-            Glide.with(getContext()).load(URL_UPDATED)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true)
-                    .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
-                    .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
-
             presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0),POSITION_PAGER);
-
-            refresh_profile.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    UserBean userBean = new UserBean();
-                    userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
-                    presenter.getInfoUser(userBean);
-                    presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0),POSITION_PAGER);
-                }
-            });
             UserBean userBean = new UserBean();
             userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
             presenter.getInfoUser(userBean);
-            image_profile_property_pet.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DialogPreviewImage dialogPreviewImage = new DialogPreviewImage(getContext(),USERBEAN.getPhoto_user());
-                    dialogPreviewImage.show();
-                }
-            });
         }else{
             appbar.setVisibility(View.GONE);
             refresh_profile.setVisibility(View.GONE);
             root_invitado_profile.setVisibility(View.VISIBLE);
+            login_with_facebook.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(LoginResult loginResult) {
+                    Log.e("ACCES_TOKENN","-->EXECUTE CALBACK");
+                    AccessToken accessToken = loginResult.getAccessToken();
+                    Profile profile = Profile.getCurrentProfile();
+                    App.write(PREFERENCES.FOTO_PROFILE_USER_THUMBH, String.valueOf(profile.getProfilePictureUri(128,128)));
+                    login_listener.loginFacebook(accessToken);
+                }
+
+                @Override
+                public void onCancel() {
+                    Log.e("ACCES_TOKENN","-->CANCELADO:");
+                }
+
+                @Override
+                public void onError(FacebookException exception) {
+                    Log.e("ACCES_TOKENN","-->ERROR:"+ exception.getMessage());
+                }
+            });
         }
     }
 
@@ -355,6 +347,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         listener_follow =(folowFavoriteListener)context;
         listener_open_side =(open_side_menu)context;
         listener_conexion =(conexion_listener)context;
+       login_listener = (login_invitado_listener) context;
     }
 
 
@@ -370,8 +363,15 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     }
 
     public void change_descripcion_profile(){
-        if(descripcion_perfil_user!=null)
-          descripcion_perfil_user.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
+        if(descripcion_perfil_user!=null){
+            if(!App.read(PREFERENCES.DESCRIPCCION,"INVALID").equals("INVALID")){
+                descripcion_perfil_user.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
+            }else{
+                descripcion_perfil_user.setText("-");
+            }
+
+        }
+
     }
 
     public void refresh_list_pets(){
@@ -417,7 +417,8 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         else
             name_property_pet.setText("@" + App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"INVALID"));
 
-        descripcion_perfil_user.setText(USERBEAN.getDescripcion());
+        if(!USERBEAN.getDescripcion().equals("INVALID"))
+          descripcion_perfil_user.setText(USERBEAN.getDescripcion());
         Glide.with(getContext()).load(USERBEAN.getPhoto_user())
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
@@ -557,6 +558,73 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     public void onResume() {
         super.onResume();
         refresh_list_pets();
+    }
+
+    public void create_items(){
+        list_pets_propietary.setAdapter(petsPropietaryAdapter);
+        viewpager_profile.setOffscreenPageLimit(3);
+        viewpager_profile.setAdapter(adapter_pager);
+        viewpager_profile.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                POSITION_PAGER = position;
+                Fragment frag = adapter_pager.getItem(POSITION_PAGER);
+                if (frag instanceof FragmentPostGalery) {
+                    if(!((FragmentPostGalery) frag).isDataAdded()) {
+                        if(!App.read(PREFERENCES.MODO_INVITADO,false))
+                          presenter.getPostUser(true, App.read(PREFERENCES.ID_USER_FROM_WEB, 0), POSITION_PAGER);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        tabs_profile_propietary.setViewPager(viewpager_profile);
+        spinky_loading_profile_info.setIndeterminateDrawable(drawable);
+        spinky_loading_profile_info.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
+        loanding_preview_root.setVisibility(View.VISIBLE);
+        title_toolbar.setText(App.read(PREFERENCES.NAME_USER,"USUARIO"));
+        name_property_pet.setText("@" + App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"USUARIO"));
+        follow_edit.setText(R.string.edit_profile);
+        follow_edit.setBackground(getContext().getResources().getDrawable(R.drawable.button_edit_profile));
+        follow_edit.setTextColor(Color.BLACK);
+        follow_edit.setOnClickListener(view1 -> listener.change(FragmentElement.INSTANCE_EDIT_PROFILE_USER));
+        if(!App.read(PREFERENCES.DESCRIPCCION,"INVALID").equals("INVALID")){
+            descripcion_perfil_user.setText(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
+        }else{
+            descripcion_perfil_user.setText("-");
+        }
+        URL_UPDATED = App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID");
+        Glide.with(getContext()).load(URL_UPDATED)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
+                .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
+        refresh_profile.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                UserBean userBean = new UserBean();
+                userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+                presenter.getInfoUser(userBean);
+                presenter.getPostUser(true,App.read(PREFERENCES.ID_USER_FROM_WEB,0),POSITION_PAGER);
+            }
+        });
+        image_profile_property_pet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogPreviewImage dialogPreviewImage = new DialogPreviewImage(getContext(),USERBEAN.getPhoto_user());
+                dialogPreviewImage.show();
+            }
+        });
     }
 }
 

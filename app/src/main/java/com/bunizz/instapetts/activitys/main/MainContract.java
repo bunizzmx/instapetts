@@ -6,6 +6,7 @@ import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.UserBean;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import java.util.ArrayList;
 
@@ -30,6 +31,10 @@ public interface MainContract {
         void sendPostVideo(PostBean postBean);
         void getPostVideo();
         void updateLocations();
+        void firebaseAuthWithGoogle(GoogleSignInAccount acct);
+        void startGoggleSignin();
+        void getNameAvailable(String name);
+        void updateUser(UserBean userBean);
     }
 
     interface View{
@@ -41,5 +46,10 @@ public interface MainContract {
        void setActivateAds(boolean activated);
        void sendPostVideoView(PostBean postBean);
        void login_invalid();
+       void messageLogin(String message);
+       void loginInvitadoCompleted(UserBean userBean);
+       void loginFirstUserInvitado(int id_from_web);
+        void showUsersAvailables(boolean available);
+        void completeInfoInvitado();
     }
 }

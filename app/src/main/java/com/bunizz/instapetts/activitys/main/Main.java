@@ -64,10 +64,13 @@ import com.bunizz.instapetts.fragments.search.posts.FragmentPostPublics;
 import com.bunizz.instapetts.fragments.side.SideFragment;
 import com.bunizz.instapetts.fragments.tips.detail.FragmentTipDetail;
 import com.bunizz.instapetts.fragments.tips.FragmentTips;
+import com.bunizz.instapetts.listeners.available_name_listener;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.conexion_listener;
 import com.bunizz.instapetts.listeners.folowFavoriteListener;
+import com.bunizz.instapetts.listeners.login_invitado_listener;
+import com.bunizz.instapetts.listeners.login_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.open_side_menu;
 import com.bunizz.instapetts.listeners.uploads;
@@ -76,13 +79,21 @@ import com.bunizz.instapetts.services.ImageService;
 import com.bunizz.instapetts.services.JobsServices;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
+import com.bunizz.instapetts.utils.dilogs.DialogFirstUser;
 import com.bunizz.instapetts.utils.dilogs.DialogLogout;
 import com.bunizz.instapetts.utils.smoot.SmoothProgressBar;
 import com.bunizz.instapetts.utils.snackbar.SnackBar;
 import com.bunizz.instapetts.utils.target.TapTarget;
 import com.bunizz.instapetts.utils.target.TapTargetView;
 import com.bunizz.instapetts.web.CONST;
+import com.facebook.AccessToken;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -100,14 +111,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class Main extends AppCompatActivity implements change_instance,
+import static com.bunizz.instapetts.constantes.PREFERENCES.IS_LOGUEDD;
+
+public class Main extends AppCompatActivity implements
+        change_instance,
         changue_fragment_parameters_listener,
         uploads,
         MainContract.View ,
         open_camera_histories_listener,
         conexion_listener,
         folowFavoriteListener,
-        open_side_menu {
+        open_side_menu,
+        login_invitado_listener {
 
     public static final String POST_SUCCESFULL = "com.bunizz.instapetts.activitys.main.Main.POST_SUCCESFULL";
     public static final String POST_SENDEND_START = "com.bunizz.instapetts.activitys.main.Main.POST_SENDEND_START";
@@ -135,7 +150,7 @@ public class Main extends AppCompatActivity implements change_instance,
     static final int NEW_PHOTO_FOR_HISTORY= 4;
     static final int PLAY_VIDEO_RESULT= 6;
     static final int NEW_PHOTO_QR_SCAN= 5;
-
+    DialogFirstUser dialogFirstUser ;
     @BindView(R.id.icon_tips)
     ImageView icon_tips;
     @BindView(R.id.icon_feed_pet)
@@ -200,7 +215,7 @@ public class Main extends AppCompatActivity implements change_instance,
     JobsServices jobsServices;
     private AddressResultReceiver resultReceiver;
 
-
+    private static final int RC_SIGN_IN = 9001;
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tab_profile_pet)
     void tab_profile_pet() {
@@ -371,6 +386,9 @@ public class Main extends AppCompatActivity implements change_instance,
             Log.e("LAT_LON", "-->" + App.read(PREFERENCES.LAT, 0f) + "/" + App.read(PREFERENCES.LON, 0f));
 
             if(!App.read(PREFERENCES.MODO_INVITADO,false)){
+                if(App.read(PREFERENCES.PRIMER_USUARIO_INVITADO,false)){
+
+                }
                 download_pets();
                 presenter.have_pets();
                 FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
@@ -393,9 +411,16 @@ public class Main extends AppCompatActivity implements change_instance,
                 }else{
                     Log.e("CAMBIO_LOCALIZACION","NO");
                 }
+            }else{
+
             }
+
         }catch (Exception e){
             Log.e("EXCEPCION_MAIN","MAIN" + e.getMessage());
+        }
+
+        if(App.read(PREFERENCES.PRIMER_USUARIO_INVITADO,false)){
+            show_dialog_first_user();
         }
     }
 
@@ -958,6 +983,10 @@ public class Main extends AppCompatActivity implements change_instance,
             }
             Log.e("PLAY_VIDEO_RESULT","-->");
         }
+        else if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
 
     }
 
@@ -1338,6 +1367,18 @@ public class Main extends AppCompatActivity implements change_instance,
         SnackBar.info(v, message, SnackBar.LENGTH_LONG).show();
     }
 
+    @Override
+    public void loginGmail() {
+      presenter.startGoggleSignin();
+    }
+
+    @Override
+    public void loginFacebook(AccessToken accessToken) {
+        presenter.handleFacebookAccessToken(accessToken);
+    }
+
+
+
     class AddressResultReceiver extends ResultReceiver {
         public AddressResultReceiver(Handler handler) {
             super(handler);
@@ -1480,12 +1521,95 @@ public class Main extends AppCompatActivity implements change_instance,
 
     @Override
     public void login_invalid() {
-        FirebaseAuth.getInstance().signOut();
-        presenter.logout();
-        presenter.delete_data();
-        App.getInstance().clear_preferences();
-        Intent i = new Intent(Main.this, LoginActivity.class);
-        startActivity(i);
-        finish();
+        if(!App.read(PREFERENCES.PRIMER_USUARIO_INVITADO,false)) {
+            FirebaseAuth.getInstance().signOut();
+            presenter.logout();
+            presenter.delete_data();
+            App.getInstance().clear_preferences();
+            Intent i = new Intent(Main.this, LoginActivity.class);
+            startActivity(i);
+            finish();
+        }
+    }
+
+    @Override
+    public void messageLogin(String message) {
+        View v = findViewById(R.id.root_main);
+        SnackBar.info(v,message, SnackBar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void loginInvitadoCompleted(UserBean userBean) {
+        App.write(PREFERENCES.FOTO_PROFILE_USER,userBean.getPhoto_user());
+        App.write(PREFERENCES.FOTO_PROFILE_USER_THUMBH,userBean.getPhoto_user_thumbh());
+        App.write(PREFERENCES.DESCRIPCCION,userBean.getDescripcion());
+        App.write(PREFERENCES.NAME_USER,userBean.getName_user());
+        App.write(PREFERENCES.ID_USER_FROM_WEB,userBean.getId());
+        App.write(PREFERENCES.NAME_TAG_INSTAPETTS,userBean.getName_tag());
+        App.write(IS_LOGUEDD,true);
+        View v = findViewById(R.id.root_main);
+        SnackBar.success(v,getString(R.string.hellow_again), SnackBar.LENGTH_LONG).show();
+        App.write(PREFERENCES.MODO_INVITADO,false);
+        changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, false);
+        repaint_nav(R.id.tab_profile_pet);
+    }
+
+    @Override
+    public void loginFirstUserInvitado(int id_from_web) {
+        App.write(IS_LOGUEDD,true);
+        App.write(PREFERENCES.MODO_INVITADO,false);
+        App.write(PREFERENCES.PRIMER_USUARIO_INVITADO,true);
+        View v = findViewById(R.id.root_main);
+        show_dialog_first_user();
+
+    }
+
+    void show_dialog_first_user(){
+        dialogFirstUser= new DialogFirstUser(this);
+        dialogFirstUser.setListener(new available_name_listener() {
+            @Override
+            public void name(String name) {
+                presenter.getNameAvailable(name);
+            }
+
+            @Override
+            public void saveInfo(Bundle bundle) {
+                UserBean userBean = new UserBean();
+                userBean.setDescripcion(App.read(PREFERENCES.DESCRIPCCION,"INVALID"));
+                userBean.setName_user(App.read(PREFERENCES.NAME_USER,"INVALID"));
+                userBean.setPhoto_user(App.read(PREFERENCES.FOTO_PROFILE_USER,"INVALID"));
+                userBean.setPhoto_user_thumbh(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
+                userBean.setUuid(App.read(PREFERENCES.UUID,"INVALID"));
+                userBean.setName_tag(App.read("NAME_TAG_INSTAPETTS","INVALID"));
+                userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+                userBean.setTarget("COMPLETE_INFO");
+                message(getString(R.string.settingss));
+                presenter.updateUser(userBean);
+            }
+        });
+        dialogFirstUser.show();
+    }
+
+    @Override
+    public void showUsersAvailables(boolean available) {
+        if(dialogFirstUser!=null){
+            dialogFirstUser.is_name_valid(available);
+        }
+    }
+
+    @Override
+    public void completeInfoInvitado() {
+
+        changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, false);
+        repaint_nav(R.id.tab_profile_pet);
+    }
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            presenter.firebaseAuthWithGoogle(account);
+        } catch (ApiException e) {
+            Log.e("ERROR_LOGIN","-->" + e.getMessage());
+        }
     }
 }
