@@ -121,8 +121,13 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     @OnClick(R.id.new_story)
     void new_story()
     {
-        if(listener_open_camera_h!=null){
-            listener_open_camera_h.open();
+        if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+            if (listener_open_camera_h != null) {
+                listener_open_camera_h.open();
+            }
+        }else
+        {
+            listener_wifi.message(getActivity().getString(R.string.no_action_invitado));
         }
     }
 
@@ -144,10 +149,11 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
             }
         });
         feedAdapter.setListener_open_h(() -> {
-            if(listener_open_camera_h!=null){
-                listener_open_camera_h.open();
-            }
-
+            if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+                if (listener_open_camera_h != null)
+                    listener_open_camera_h.open();
+            }else
+                listener_wifi.message(getActivity().getString(R.string.no_action_invitado));
         });
         feedAdapter.setListener_post(new postsListener() {
             @Override
@@ -296,12 +302,10 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
                             if (loading) {
                                 loading = false;
                                 if (IS_ALL == false) {
-                                    Log.e("GENT_MORE_FEED", "SI");
                                     smoot_progress.setVisibility(View.VISIBLE);
                                     mPresenter.get_next_feed(false, 0, PAGINADOR);
                                 } else {
                                     smoot_progress.setVisibility(View.GONE);
-                                    Log.e("GENT_MORE_FEED", "NO");
                                 }
                             }
                     }
@@ -414,12 +418,10 @@ public class FeedFragment extends Fragment implements  FeedContract.View{
     @Override
     public void deletePostError(boolean deleted) {
         if(deleted) {
-            Log.e("DELETED_POST","TRUE");
             getActivity().onBackPressed();
             Toast.makeText(getContext(), getContext().getString(R.string.delete_post_succes), Toast.LENGTH_LONG).show();
         }
         else {
-            Log.e("DELETED_POST","FALSE");
             Toast.makeText(getContext(), getContext().getString(R.string.delete_post_error), Toast.LENGTH_LONG).show();
         }
     }

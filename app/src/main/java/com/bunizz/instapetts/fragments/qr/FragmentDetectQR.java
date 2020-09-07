@@ -92,7 +92,6 @@ public class FragmentDetectQR extends Fragment implements Callback {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.e("CONTENT_INSTAPETTS","-->" + result.getText().toString());
                         if(result.getText().toString().contains("instapets")) {
                             String splits[] = result.getText().toString().split("/");
                             if (splits.length == 3) {

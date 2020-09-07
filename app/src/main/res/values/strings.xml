@@ -415,4 +415,6 @@
     <string name="no_action_invitado">Solo usuarios registrados pueden realizar esta acción</string>
     <string name="settingss">Configurando...</string>
     <string name="hellow_again">Bienvenido de nuevo </string>
+    <string name="invited_mode">Modo Invitado</string>
+    <string name="complete_info">Completa tu informacion</string>
 </resources>

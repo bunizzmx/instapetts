@@ -145,7 +145,6 @@ public class DialogPreviewPost extends BaseAlertDialog{
             dots_indicator.setVisibility(View.VISIBLE);
             card_number_indicator.setVisibility(View.VISIBLE);
             String splits[]  = this.postBean.getUrls_posts().split(",");
-            //Glide.with(this.context).load(splits[0]).placeholder(context.getResources().getDrawable(R.drawable.ic_holder)).into(image_preview_dialog);
             int splits_number = splits.length;
             ViewPagerAdapter adapter = new ViewPagerAdapter(context);
             if (postBean.getUrls_posts() != null)

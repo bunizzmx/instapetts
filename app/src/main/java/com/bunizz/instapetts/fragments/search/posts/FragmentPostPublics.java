@@ -25,6 +25,7 @@ import com.bunizz.instapetts.fragments.previewProfile.FragmentProfileUserPetPrev
 import com.bunizz.instapetts.fragments.search.AdapterGridPosts;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.conexion_listener;
 import com.bunizz.instapetts.utils.tabs2.SmartTabLayout;
 import com.bunizz.instapetts.web.CONST;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -67,6 +68,7 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
     SwipeRefreshLayout refresh_search;
 
     ViewPagerAdapter adapter_pager;
+   conexion_listener listener_conexion ;
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.root_search_pets_users)
@@ -192,6 +194,7 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
 
     @Override
     public void noInternet() {
+        listener_conexion.noWifiRequest();
       refresh_search.setRefreshing(false);
     }
 
@@ -205,6 +208,7 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        listener_conexion =(conexion_listener)context;
         listener= (changue_fragment_parameters_listener) context;
     }
 

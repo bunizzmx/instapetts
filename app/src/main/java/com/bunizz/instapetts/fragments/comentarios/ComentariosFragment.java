@@ -86,6 +86,8 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
     @BindView(R.id.layout_loanding_comments)
     RelativeLayout layout_loanding_comments;
 
+    @BindView(R.id.can_comment_label)
+    TextView can_comment_label;
 
 
     CommentsAdapter adapter;
@@ -186,7 +188,10 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                     .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder))
                     .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
                     .into(image_user_comment);
-            if(!CAN_COMMENT){
+            if(!CAN_COMMENT || App.read(PREFERENCES.MODO_INVITADO,false)){
+                if(App.read(PREFERENCES.MODO_INVITADO,false)){
+                    can_comment_label.setText(getActivity().getString(R.string.no_action_invitado));
+                }
                 comment_now.setVisibility(View.GONE);
                 input_commentarios.setVisibility(View.GONE);
                 desactivate_comments.setVisibility(View.VISIBLE);
@@ -229,7 +234,10 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                 .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
                 .into(image_user_comment);
 
-        if(!CAN_COMMENT){
+        if(!CAN_COMMENT || App.read(PREFERENCES.MODO_INVITADO,false)){
+            if(App.read(PREFERENCES.MODO_INVITADO,false)){
+                can_comment_label.setText(getActivity().getString(R.string.no_action_invitado));
+            }
             comment_now.setVisibility(View.GONE);
             input_commentarios.setVisibility(View.GONE);
             desactivate_comments.setVisibility(View.VISIBLE);

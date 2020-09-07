@@ -96,7 +96,6 @@ public class NotificationHelper extends GenericHelper {
         try {
             if(cursor.moveToFirst()){
                 NotificationBean n = new NotificationBean();
-                Log.e("ONCREATE_APP","SERVICE SAVE ON DB : " + cursor.getInt(cursor.getColumnIndex(ID)));
                 n.setId_database(cursor.getInt(cursor.getColumnIndex(ID)));
                 n.setTitle(cursor.getString(cursor.getColumnIndex(TITLE)));
                 n.setBody(cursor.getString(cursor.getColumnIndex(BODY)));
@@ -127,7 +126,6 @@ public class NotificationHelper extends GenericHelper {
               null, null, null, null, null);
       try {
           while (cursor.moveToNext()) {
-              Log.e("ONCREATE_APP","SERVICE SAVE ON DB : " + cursor.getString(cursor.getColumnIndex(ID_DOCUMENTO_NOTIFICATION)));
               ids.add(cursor.getString(cursor.getColumnIndex(ID_DOCUMENTO_NOTIFICATION)));
               updateViews();
           }

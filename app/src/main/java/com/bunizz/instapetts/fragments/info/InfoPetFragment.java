@@ -131,41 +131,45 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
     @SuppressLint("MissingPermission")
     @OnClick(R.id.rate_pet_card)
     void rate_pet_card() {
-        if(petBean.getId_propietary() ==  App.read(PREFERENCES.ID_USER_FROM_WEB,0)){
-            if(IN_EDICION == false) {
-                IN_EDICION = true;
-                icon_star_rated.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_available));
-            } else{
-                icon_star_rated.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_editar));
-                IN_EDICION = false;
-            }
-            if(IN_EDICION) {
-                peso_pet_profile.setVisibility(View.GONE);
-                descripcion_pet_profile.setVisibility(View.GONE);
-                new_peso_pet.setVisibility(View.VISIBLE);
-                new_descripcion_pet.setVisibility(View.VISIBLE);
-                new_peso_pet.setText("" + petBean.getPeso_pet());
-                new_descripcion_pet.setText("" + petBean.getDescripcion_pet());
-            }else{
-                petBean.setPeso_pet(new_peso_pet.getText().toString());
-                petBean.setDescripcion_pet(new_descripcion_pet.getText().toString());
-                peso_pet_profile.setText(new_peso_pet.getText().toString() + " kg");
-                descripcion_pet_profile.setText(new_descripcion_pet.getText().toString());
-                peso_pet_profile.setVisibility(View.VISIBLE);
-                descripcion_pet_profile.setVisibility(View.VISIBLE);
-                new_peso_pet.setVisibility(View.GONE);
-                new_descripcion_pet.setVisibility(View.GONE);
-                presenter.updatePet(petBean);
+        if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+            if (petBean.getId_propietary() == App.read(PREFERENCES.ID_USER_FROM_WEB, 0)) {
+                if (IN_EDICION == false) {
+                    IN_EDICION = true;
+                    icon_star_rated.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_available));
+                } else {
+                    icon_star_rated.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_editar));
+                    IN_EDICION = false;
+                }
+                if (IN_EDICION) {
+                    peso_pet_profile.setVisibility(View.GONE);
+                    descripcion_pet_profile.setVisibility(View.GONE);
+                    new_peso_pet.setVisibility(View.VISIBLE);
+                    new_descripcion_pet.setVisibility(View.VISIBLE);
+                    new_peso_pet.setText("" + petBean.getPeso_pet());
+                    new_descripcion_pet.setText("" + petBean.getDescripcion_pet());
+                } else {
+                    petBean.setPeso_pet(new_peso_pet.getText().toString());
+                    petBean.setDescripcion_pet(new_descripcion_pet.getText().toString());
+                    peso_pet_profile.setText(new_peso_pet.getText().toString() + " kg");
+                    descripcion_pet_profile.setText(new_descripcion_pet.getText().toString());
+                    peso_pet_profile.setVisibility(View.VISIBLE);
+                    descripcion_pet_profile.setVisibility(View.VISIBLE);
+                    new_peso_pet.setVisibility(View.GONE);
+                    new_descripcion_pet.setVisibility(View.GONE);
+                    presenter.updatePet(petBean);
+                }
+            } else {
+                DialogRatePet dialogRatePet = new DialogRatePet(getContext(), petBean);
+                dialogRatePet.setListener((rate, comment, id_pet, id_usuario, uuid) -> {
+                    icon_star_rated.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_estrella_black));
+                    presenter.ratePet(Integer.valueOf(petBean.getId_pet()), (int) rate);
+                    listener_conexion.refreshedComplete();
+                });
+                dialogRatePet.show();
+
             }
         }else{
-            DialogRatePet dialogRatePet = new DialogRatePet(getContext(),petBean);
-            dialogRatePet.setListener((rate, comment, id_pet, id_usuario, uuid) -> {
-                icon_star_rated.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_estrella_black));
-                presenter.ratePet(Integer.valueOf(petBean.getId_pet()),(int)rate);
-                listener_conexion.refreshedComplete();
-            });
-            dialogRatePet.show();
-
+            listener_conexion.message(getActivity().getString(R.string.no_action_invitado));
         }
 
     }

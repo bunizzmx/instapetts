@@ -273,16 +273,18 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     }
 
     public void reloadMyData(){
-        App.write(PREFERENCES.OPEN_POST_ADVANCED_FROM,1);
-        if(adapter_pager!=null && list_pets_propietary!=null) {
-            loanding_preview_root.setVisibility(View.GONE);
-            root_invitado_profile.setVisibility(View.GONE);
-            appbar.setVisibility(View.VISIBLE);
-            refresh_profile.setVisibility(View.VISIBLE);
-            UserBean userBean = new UserBean();
-            userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
-            presenter.getInfoUser(userBean);
-            presenter.getPostUser(true, App.read(PREFERENCES.ID_USER_FROM_WEB, 0), POSITION_PAGER);
+        if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+            App.write(PREFERENCES.OPEN_POST_ADVANCED_FROM, 1);
+            if (adapter_pager != null && list_pets_propietary != null) {
+                loanding_preview_root.setVisibility(View.GONE);
+                root_invitado_profile.setVisibility(View.GONE);
+                appbar.setVisibility(View.VISIBLE);
+                refresh_profile.setVisibility(View.VISIBLE);
+                UserBean userBean = new UserBean();
+                userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
+                presenter.getInfoUser(userBean);
+                presenter.getPostUser(true, App.read(PREFERENCES.ID_USER_FROM_WEB, 0), POSITION_PAGER);
+            }
         }
     }
 
@@ -321,7 +323,8 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
                     Log.e("ACCES_TOKENN","-->EXECUTE CALBACK");
                     AccessToken accessToken = loginResult.getAccessToken();
                     Profile profile = Profile.getCurrentProfile();
-                    App.write(PREFERENCES.FOTO_PROFILE_USER_THUMBH, String.valueOf(profile.getProfilePictureUri(128,128)));
+                    App.write(PREFERENCES.FOTO_PROFILE_USER_THUMBH, String.valueOf(profile.getProfilePictureUri(500,500)));
+                    App.write(PREFERENCES.FOTO_PROFILE_USER,String.valueOf(profile.getProfilePictureUri(500,500)));
                     login_listener.loginFacebook(accessToken);
                 }
 
@@ -360,6 +363,10 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
                     .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
                     .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
         }
+    }
+
+    public void setData(int requestCode, int resultCode, Intent data){
+        mCallbackManager.onActivityResult(requestCode,resultCode,data);
     }
 
     public void change_descripcion_profile(){
@@ -557,7 +564,8 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     @Override
     public void onResume() {
         super.onResume();
-        refresh_list_pets();
+        if(!App.read(PREFERENCES.MODO_INVITADO,false))
+          refresh_list_pets();
     }
 
     public void create_items(){

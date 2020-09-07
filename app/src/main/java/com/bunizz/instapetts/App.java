@@ -98,10 +98,7 @@ public class App extends Application {
     }
 
     public void inicializar_ads(){
-        Log.e("INICIO_ADS","six");
-
             generateItemsForAds();
-
     }
 
    public  void clear_preferences(){

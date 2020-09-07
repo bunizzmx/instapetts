@@ -142,12 +142,16 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     @SuppressLint("MissingPermission")
     @OnClick(R.id.open_followers)
     void open_followers() {
-        Bundle b = new Bundle();
-        b.putString(BUNDLES.NAME_USUARIO,USERBEAN.getName_user());
-        b.putInt(BUNDLES.ID_USUARIO,USERBEAN.getId());
-        b.putString(BUNDLES.UUID,USERBEAN.getUuid());
-        b.putInt(BUNDLES.TIPO_DESCARGA,2);
-        listener_instance.change_fragment_parameter(FragmentElement.INSTANCE_FOLLOWS_USER,b);
+        if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+            Bundle b = new Bundle();
+            b.putString(BUNDLES.NAME_USUARIO, USERBEAN.getName_user());
+            b.putInt(BUNDLES.ID_USUARIO, USERBEAN.getId());
+            b.putString(BUNDLES.UUID, USERBEAN.getUuid());
+            b.putInt(BUNDLES.TIPO_DESCARGA, 2);
+            listener_instance.change_fragment_parameter(FragmentElement.INSTANCE_FOLLOWS_USER, b);
+        }else
+            listener_wifi.message(getActivity().getString(R.string.no_action_invitado));
+
     }
 
     @SuppressLint("MissingPermission")
@@ -161,12 +165,16 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
     @SuppressLint("MissingPermission")
     @OnClick(R.id.open_followiongs)
     void open_followiongs() {
-        Bundle b = new Bundle();
-        b.putString(BUNDLES.NAME_USUARIO,USERBEAN.getName_user());
-        b.putInt(BUNDLES.ID_USUARIO,USERBEAN.getId());
-        b.putString(BUNDLES.UUID,USERBEAN.getUuid());
-        b.putInt(BUNDLES.TIPO_DESCARGA,1);
-        listener_instance.change_fragment_parameter(FragmentElement.INSTANCE_FOLLOWS_USER,b);
+        if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+            Bundle b = new Bundle();
+            b.putString(BUNDLES.NAME_USUARIO, USERBEAN.getName_user());
+            b.putInt(BUNDLES.ID_USUARIO, USERBEAN.getId());
+            b.putString(BUNDLES.UUID, USERBEAN.getUuid());
+            b.putInt(BUNDLES.TIPO_DESCARGA, 1);
+            listener_instance.change_fragment_parameter(FragmentElement.INSTANCE_FOLLOWS_USER, b);
+        }else
+            listener_wifi.message(getActivity().getString(R.string.no_action_invitado));
+
     }
 
 

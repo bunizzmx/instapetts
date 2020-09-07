@@ -666,6 +666,7 @@ public class MainPresenter implements MainContract.Presenter {
                                 App.write(PREFERENCES.UUID,user.getUid());
                                 App.write(PREFERENCES.NAME_USER,user.getDisplayName());
                                 App.write(PREFERENCES.FOTO_PROFILE_USER_THUMBH,String.valueOf(user.getPhotoUrl()));
+                                App.write(PREFERENCES.FOTO_PROFILE_USER, String.valueOf(user.getPhotoUrl()));
                                 FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(mContext, instanceIdResult -> {
                                     String token = instanceIdResult.getToken();
                                     App.write(PREFERENCES.TOKEN,token);
@@ -718,11 +719,9 @@ public class MainPresenter implements MainContract.Presenter {
                             FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(mContext, instanceIdResult -> {
                                 String token = instanceIdResult.getToken();
                                 App.write(PREFERENCES.TOKEN,token);
-                                Log.e("ERROR_LOGIN","-->TODO BIEN" +token);
                                 generate_user_bean();
                             });
                         } else {
-                            Log.e("ERROR_LOGIN","-->TODO MAL" + task.getException().getMessage());
                             Toast.makeText(mContext, mContext.getString(R.string.try_again), Toast.LENGTH_LONG).show();
                         }
                     }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:visibility="visible"
+    android:visibility="gone"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root_invitado_profile"
@@ -16,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
     <LinearLayout
+        android:id="@+id/layout_label_invitado"
         android:padding="30dp"
         android:orientation="vertical"
         android:layout_width="wrap_content"
@@ -30,8 +31,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:textColor="#303030"
-            android:textStyle="bold"
+            android:textColor="#4E4E4E"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
             android:textAlignment="center"
@@ -43,11 +43,20 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_below="@+id/layout_label_invitado"
+        android:layout_above="@+id/layout_button_invitado"
+        android:src="@drawable/mascotas_portada"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
 
     <LinearLayout
+        android:id="@+id/layout_button_invitado"
         android:padding="30dp"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/login_or_register"
         android:orientation="vertical"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"

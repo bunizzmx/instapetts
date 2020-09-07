@@ -250,7 +250,6 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
 
     private void change_share(FragmentElement fragment,Bundle bundle) {
-        Log.e("CONTAINS_A_PETssCO","-->" + bundle.getInt("CONTAINS_A_PET"));
         if (fragment != null) {
             mCurrentFragment = fragment;
             paths_themp.clear();
@@ -300,7 +299,6 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
         if (fragment != null) {
             if(is_from_profile){
                 bundle.putInt("FROM_PROFILE",1);
-                Log.e("FROM_PROFILE","--->uuuuuuuuuu" + is_from_profile);
             }
             mCurrentFragment = fragment;
             mCurrentFragment.getFragment().setArguments(bundle);

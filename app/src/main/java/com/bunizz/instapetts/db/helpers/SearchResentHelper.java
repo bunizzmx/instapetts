@@ -76,7 +76,6 @@ public class SearchResentHelper extends GenericHelper {
             if(cursor.moveToFirst()){
                Log.e("YA_ESTA_LA_BUSQUEDA","SI");
             }else{
-                Log.e("YA_ESTA_LA_BUSQUEDA","NO");
                 getWritableDatabase().insertOrThrow(TABLE_NAME, null,contentValues);
             }
         } catch (SQLiteConstraintException | IllegalStateException e) {
@@ -119,7 +118,6 @@ public class SearchResentHelper extends GenericHelper {
                 cursor.close();
             }
         }
-        Log.e("GETSEARCH_RECENTS",":)" +seacrhs.size());
         return seacrhs;
     }
 

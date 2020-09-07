@@ -33,6 +33,7 @@ import com.bunizz.instapetts.fragments.search.posts.more_post;
 import com.bunizz.instapetts.listeners.actions_dialog_profile;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
+import com.bunizz.instapetts.listeners.conexion_listener;
 import com.bunizz.instapetts.listeners.postsListener;
 import com.bunizz.instapetts.utils.dilogs.DialogOptionsPosts;
 import com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerView;
@@ -59,7 +60,7 @@ public class FragmentListOfPosts extends Fragment implements FeedContract.View {
     changue_fragment_parameters_listener listener;
     PostsAdapter feedAdapter;
     FeedListPresenter mPresenter;
-
+    conexion_listener listener_wifi;
     ArrayList<Object> data = new ArrayList<>();
     static final int PLAY_VIDEO_RESULT= 6;
     @SuppressLint("MissingPermission")
@@ -80,27 +81,35 @@ public class FragmentListOfPosts extends Fragment implements FeedContract.View {
         feedAdapter.setListener_post(new postsListener() {
             @Override
             public void onLike(int id_post,boolean type_like,int id_usuario,String url_image) {
-                PostActions postActions = new PostActions();
-                postActions.setId_post(id_post);
-                if(type_like)
-                    postActions.setAcccion("1");
-                else
-                    postActions.setAcccion("2");
-                postActions.setId_usuario(id_usuario);
-                postActions.setValor("1");
-                postActions.setExtra(url_image);
-                if(id_usuario != App.read(PREFERENCES.ID_USER_FROM_WEB,0))
-                mPresenter.likePost(postActions);
+                if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+                    PostActions postActions = new PostActions();
+                    postActions.setId_post(id_post);
+                    if (type_like)
+                        postActions.setAcccion("1");
+                    else
+                        postActions.setAcccion("2");
+                    postActions.setId_usuario(id_usuario);
+                    postActions.setValor("1");
+                    postActions.setExtra(url_image);
+                    if (id_usuario != App.read(PREFERENCES.ID_USER_FROM_WEB, 0))
+                        mPresenter.likePost(postActions);
+                }else{
+                    listener_wifi.message(getContext().getString(R.string.no_action_invitado));
+                }
             }
 
             @Override
             public void onFavorite(int id_post,PostBean postBean) {
-                PostActions postActions = new PostActions();
-                postActions.setId_post(id_post);
-                postActions.setAcccion("FAVORITE");
-                postActions.setId_usuario(postBean.getId_usuario());
-                postActions.setValor("1");
-                mPresenter.saveFavorite(postActions,postBean);
+                if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+                    PostActions postActions = new PostActions();
+                    postActions.setId_post(id_post);
+                    postActions.setAcccion("FAVORITE");
+                    postActions.setId_usuario(postBean.getId_usuario());
+                    postActions.setValor("1");
+                    mPresenter.saveFavorite(postActions, postBean);
+                }else{
+                    listener_wifi.message(getContext().getString(R.string.no_action_invitado));
+                }
             }
 
             @Override
@@ -110,33 +119,37 @@ public class FragmentListOfPosts extends Fragment implements FeedContract.View {
 
             @Override
             public void openMenuOptions(int id_post,int id_usuario,String uuid) {
-                DialogOptionsPosts optionsPosts = new DialogOptionsPosts(getContext(),id_post,id_usuario,uuid);
-                optionsPosts.setListener(new actions_dialog_profile() {
-                    @Override
-                    public void delete_post(int id_post) {
-                        PostBean postBean = new PostBean();
-                        postBean.setId_post_from_web(id_post);
-                        postBean.setId_usuario(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
-                        postBean.setTarget(WEBCONSTANTS.DELETE);
-                        mPresenter.deletePost(postBean);
-                    }
+                if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+                    DialogOptionsPosts optionsPosts = new DialogOptionsPosts(getContext(), id_post, id_usuario, uuid);
+                    optionsPosts.setListener(new actions_dialog_profile() {
+                        @Override
+                        public void delete_post(int id_post) {
+                            PostBean postBean = new PostBean();
+                            postBean.setId_post_from_web(id_post);
+                            postBean.setId_usuario(App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
+                            postBean.setTarget(WEBCONSTANTS.DELETE);
+                            mPresenter.deletePost(postBean);
+                        }
 
-                    @Override
-                    public void reportPost(int id_post) {
-                        Intent reportIntent = new Intent(getActivity(), ReportActiviy.class);
-                        reportIntent.putExtra("ID_RECURSO",id_post);
-                        reportIntent.putExtra("TYPO_RECURSO",1);
-                        startActivity(reportIntent);
-                    }
-                    @Override
-                    public void unfollowUser(int id_user,String uuid) {
-                        mPresenter.unfollowUser(uuid,id_user);
-                    }
-                });
+                        @Override
+                        public void reportPost(int id_post) {
+                            Intent reportIntent = new Intent(getActivity(), ReportActiviy.class);
+                            reportIntent.putExtra("ID_RECURSO", id_post);
+                            reportIntent.putExtra("TYPO_RECURSO", 1);
+                            startActivity(reportIntent);
+                        }
+
+                        @Override
+                        public void unfollowUser(int id_user, String uuid) {
+                            mPresenter.unfollowUser(uuid, id_user);
+                        }
+                    });
 
 
-
-                optionsPosts.show();
+                    optionsPosts.show();
+                }else{
+                    listener_wifi.message(getContext().getString(R.string.no_action_invitado));
+                }
             }
 
             @Override
@@ -228,6 +241,7 @@ public class FragmentListOfPosts extends Fragment implements FeedContract.View {
     public void onAttach(Context context) {
         super.onAttach(context);
         listener= (changue_fragment_parameters_listener) context;
+        listener_wifi =(conexion_listener) context;
     }
 
     private RequestManager initGlide() {

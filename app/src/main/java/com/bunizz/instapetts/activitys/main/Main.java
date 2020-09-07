@@ -54,6 +54,7 @@ import com.bunizz.instapetts.fragments.comentarios.ComentariosFragment;
 import com.bunizz.instapetts.fragments.feed.FeedFragment;
 import com.bunizz.instapetts.fragments.follows.FollowsFragment;
 import com.bunizz.instapetts.fragments.info.InfoPetFragment;
+import com.bunizz.instapetts.fragments.login.MainLogin;
 import com.bunizz.instapetts.fragments.notifications.NotificationsFragment;
 import com.bunizz.instapetts.fragments.post.FragmentListOfPosts;
 import com.bunizz.instapetts.fragments.previewProfile.FragmentProfileUserPetPreview;
@@ -988,6 +989,15 @@ public class Main extends AppCompatActivity implements
             handleSignInResult(task);
         }
 
+
+        if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET)
+        {
+            Log.e("ACTIVITY_RESULT","SET DATA LOGIN");
+            ((FragmentProfileUserPet) mCurrentFragment.getFragment()).setData(requestCode,resultCode,data);
+        }else{
+            Log.e("ACTIVITY_RESULT","NO ES INSTANCIA DE SET DATA LOGIN");
+        }
+
     }
 
     private void repaint_nav(int id ){
@@ -1557,9 +1567,9 @@ public class Main extends AppCompatActivity implements
     @Override
     public void loginFirstUserInvitado(int id_from_web) {
         App.write(IS_LOGUEDD,true);
+        App.write(PREFERENCES.ID_USER_FROM_WEB,id_from_web);
         App.write(PREFERENCES.MODO_INVITADO,false);
         App.write(PREFERENCES.PRIMER_USUARIO_INVITADO,true);
-        View v = findViewById(R.id.root_main);
         show_dialog_first_user();
 
     }
@@ -1599,7 +1609,10 @@ public class Main extends AppCompatActivity implements
 
     @Override
     public void completeInfoInvitado() {
-
+        if(dialogFirstUser!=null){
+            dialogFirstUser.dismiss();
+        }
+        App.write(PREFERENCES.PRIMER_USUARIO_INVITADO,false);
         changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, false);
         repaint_nav(R.id.tab_profile_pet);
     }
@@ -1609,6 +1622,7 @@ public class Main extends AppCompatActivity implements
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             presenter.firebaseAuthWithGoogle(account);
         } catch (ApiException e) {
+            noWifiRequest();
             Log.e("ERROR_LOGIN","-->" + e.getMessage());
         }
     }

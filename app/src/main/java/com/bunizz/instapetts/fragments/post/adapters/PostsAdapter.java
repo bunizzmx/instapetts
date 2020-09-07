@@ -255,7 +255,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                 if(mo.getNum_comentarios() > 0){
                     vid_h.num_comments_layout.setVisibility(View.VISIBLE);
-                    vid_h.num_coments.setText(context.getString(R.string.ver) + mo.getNum_comentarios() + context.getString(R.string.comentarios));
+                    vid_h.num_coments.setText(context.getString(R.string.ver) + " " +  mo.getNum_comentarios() + " "  + context.getString(R.string.comentarios));
                     vid_h.num_comments_layout.setOnClickListener(v -> {
                         if(mo.getCan_comment()==1)
                             listener_post.commentPost(mo.getId_post_from_web(),false,mo.getId_usuario());
@@ -302,7 +302,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                 if(data_parsed.getNum_comentarios() > 0){
                     f.num_comments_layout.setVisibility(View.VISIBLE);
-                    f.num_coments.setText(context.getString(R.string.ver) + data_parsed.getNum_comentarios() + context.getString(R.string.comentarios));
+                    f.num_coments.setText(context.getString(R.string.ver) + " "  + data_parsed.getNum_comentarios() +  " "  +  context.getString(R.string.comentarios));
                     f.num_comments_layout.setOnClickListener(v -> {
                         if(data_parsed.getCan_comment()==1)
                             listener_post.commentPost(data_parsed.getId_post_from_web(),false,data_parsed.getId_usuario());
@@ -311,6 +311,13 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     });
                 }else{
                     f.num_comments_layout.setVisibility(View.GONE);
+                }
+
+                if(data_parsed.getDescription().trim().isEmpty()){
+                    f.layout_descripcion.setVisibility(View.GONE);
+                }else{
+                    f.layout_descripcion.setVisibility(View.VISIBLE);
+                    f.description_posts.setText(data_parsed.getDescription());
                 }
 
                 if(is_multiple(data_parsed.getUrls_posts())) {
@@ -400,7 +407,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 f.name_pet.setText(data_parsed.getName_pet());
                 f.name_user_posts.setText(data_parsed.getName_user());
                 if(data_parsed.getLikes()>0)
-                    f.num_likes_posts.setText("a " + data_parsed.getLikes() + context.getString(R.string.people_like_this));
+                    f.num_likes_posts.setText("a " + data_parsed.getLikes() + " "  +  context.getString(R.string.people_like_this));
                 else
                     f.num_likes_posts.setText(context.getResources().getString(R.string.first_like));
                 if(data_parsed.getDescription().isEmpty()){
@@ -478,9 +485,11 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         TextView label_number_indicator;
         ImageView icon_commentar;
         TextView num_coments;
+        public LinearLayout layout_descripcion;
         LinearLayout num_comments_layout;
         public FeedHolder(@NonNull View itemView) {
             super(itemView);
+            layout_descripcion = itemView.findViewById(R.id.layout_descripcion);
             card_number_indicator = itemView.findViewById(R.id.card_number_indicator);
             label_number_indicator = itemView.findViewById(R.id.label_number_indicator);
             root_preview_perfil_click = itemView.findViewById(R.id.root_preview_perfil_click);

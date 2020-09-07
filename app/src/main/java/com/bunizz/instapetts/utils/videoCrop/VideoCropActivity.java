@@ -133,16 +133,29 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
         }
         switch (rotation){
             case 0:
-                ASPECT = "4_3_ROTATION_0";
+                if(heightData < widthData)
+                    ASPECT ="16_9_ROTATION_0";
+                else
+                    ASPECT =" 4_3_ROTATION_0";
+
                 break;
             case 90:
-                ASPECT = "4_3_ROTATION_90";
+                if(heightData < widthData)
+                    ASPECT ="16_9_ROTATION_90";
+                else
+                    ASPECT =" 4_3_ROTATION_90";
                 break;
             case 180:
-                ASPECT = "4_3_ROTATION_180";
+                if(heightData < widthData)
+                    ASPECT ="16_9_ROTATION_180";
+                else
+                    ASPECT =" 4_3_ROTATION_180";
                 break;
             case 270:
-                ASPECT = "4_3_ROTATION_270";
+                if(heightData < widthData)
+                    ASPECT ="16_9_ROTATION_270";
+                else
+                    ASPECT =" 4_3_ROTATION_270";
                 break;
         }
 

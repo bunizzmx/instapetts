@@ -91,15 +91,11 @@ public class DialogFirstUser extends BaseAlertDialog{
             @Override
             public void onClick(View view) {
                 if(!descripcion_user.getText().toString().isEmpty() && !configure_name.getText().toString().isEmpty() && user_instapetts.getText().toString().trim().length() > 3) {
-                    String URI_FINAL = App.getInstance().make_uri_bucket_profile();
-                    String URI_FINAL_THUMBH = App.getInstance().make_uri_bucket_profile_tumbh();
                     App.write(PREFERENCES.DESCRIPCCION, descripcion_user.getText().toString());
-                    App.write(PREFERENCES.FOTO_PROFILE_USER, URI_FINAL);
-                    App.write(PREFERENCES.FOTO_PROFILE_USER_THUMBH, URI_FINAL_THUMBH);
                     App.write(PREFERENCES.NAME_USER, configure_name.getText().toString());
                     Bundle b = new Bundle();
                     b.putString("DESCRIPCION", descripcion_user.getText().toString());
-                    b.putString("PHOTO", URI_FINAL);
+                    b.putString("PHOTO", "-");
                     b.putString("PHOTO_LOCAL", App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
                     App.write("NAME_TAG_INSTAPETTS",user_instapetts.getText().toString().trim());
                     listener.saveInfo(b);

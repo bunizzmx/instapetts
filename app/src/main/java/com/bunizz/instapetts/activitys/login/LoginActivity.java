@@ -49,6 +49,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -88,11 +89,12 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
     RxPermissions rxPermissions ;
     DialogLoanding dialogLoanding ;
     FirebaseUser user ;
-
+    private FirebaseAnalytics mFirebaseAnalytics;
     @SuppressLint("CheckResult")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         setContentView(R.layout.login);
         changeStatusBarColor(R.color.white);
         dialogLoanding = new DialogLoanding(this);
@@ -300,7 +302,6 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     @Override
     public void loginWithGmail() {
-
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -374,18 +375,11 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
                     });
             permision_location();
-
-       /* FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        user.updateEmail(correo)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d("LOG_IDENTITY", "User email address updated.");
-                        }
-                    }
-                });
-        */
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "02");
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "GOOGLE");
+            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "text");
+            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
         }else{
             Toast.makeText(LoginActivity.this,getString(R.string.error_credenciales),Toast.LENGTH_LONG).show();
         }
@@ -433,6 +427,11 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     @Override
     public void modoInvitado() {
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "01");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "INVITADO");
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "text");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
         App.write(PREFERENCES.MODO_INVITADO,true);
         App.write(IS_LOGUEDD,true);
         Intent i ;
@@ -479,10 +478,8 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
             permision_location();
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             firebaseAuthWithGoogle(account);
-            Log.e("ERROR_LOGIN","-->TODO BIEN"  );
         } catch (ApiException e) {
-            Log.e("ERROR_LOGIN","-->" + e.getMessage());
-            // updateUI(null);
+            noWifi();
         }
     }
 

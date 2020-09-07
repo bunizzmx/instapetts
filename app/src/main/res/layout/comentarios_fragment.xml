@@ -121,12 +121,15 @@
                 android:layout_height="wrap_content"/>
         </RelativeLayout>
         <RelativeLayout
+            android:layout_toRightOf="@+id/image_user_comment"
             android:layout_centerVertical="true"
             android:visibility="gone"
             android:id="@+id/desactivate_comments"
             android:layout_width="match_parent"
             android:layout_height="60dp">
             <TextView
+                android:textAlignment="center"
+                android:id="@+id/can_comment_label"
                 android:text="@string/coments_desactivated"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"

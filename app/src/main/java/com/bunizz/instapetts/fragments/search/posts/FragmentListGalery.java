@@ -339,7 +339,6 @@ public class FragmentListGalery extends Fragment implements  ListGaleryContract.
         progressBar.setVisibility(View.GONE);
         if(posts.size()>0) {
             this.data_posts.addAll(posts);
-            Log.e("SETIE_DATA_POST", "--> " + posts.size());
             if (adapter != null) {
                     loading = true;
                     ArrayList<Object> data = new ArrayList<>();
