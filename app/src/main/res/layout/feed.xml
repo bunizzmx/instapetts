@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_below="@+id/root_toolbar"
+        android:layout_above="@+id/smoot_progress"
+        android:id="@+id/refresh_feed"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerView
+            android:background="@color/white"
+            android:id="@+id/exoPlayerRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:dividerHeight="8dp"
+            />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <com.bunizz.instapetts.utils.smoot.SmoothProgressBar
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/smoot_progress"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        style="@style/GNowProgressBar"
+        android:indeterminate="true"/>
+    <include layout="@layout/no_internet"></include>
+    <com.bunizz.instapetts.utils.ProgressCircle
+        android:id="@+id/cirlce_progress"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_width="40dp"
+        android:layout_height="40dp"/>
+</RelativeLayout>

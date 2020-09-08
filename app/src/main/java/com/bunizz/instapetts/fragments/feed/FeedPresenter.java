@@ -72,7 +72,7 @@ public class FeedPresenter implements FeedContract.Presenter {
     NotificationHelper notificationHelper;
     IdsUsersHelper idsUsersHelper;
 
-    FeedPresenter(FeedContract.View view, Context context) {
+   public FeedPresenter(FeedContract.View view, Context context) {
         this.mView = view;
         this.mContext = context;
         apiService = ApiClient.getClient(context)
@@ -260,6 +260,37 @@ public class FeedPresenter implements FeedContract.Presenter {
                                     }
 
                                     mView.show_feed_recomended(post,users);
+                                }
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                mView.noInternet();
+                            }
+                        })
+        );
+    }
+
+    @Override
+    public void getFeedParaTi() {
+        PostFriendsBean postFriendsBean = new PostFriendsBean();
+        postFriendsBean.setId_one(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        postFriendsBean.setTarget(WEBCONSTANTS.DISCOVER);
+        disposable.add(
+                apiService.getPosts(postFriendsBean)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<ResponsePost>() {
+                            @Override
+                            public void onSuccess(ResponsePost responsePost) {
+                                if(responsePost.getList_posts()!=null) {
+                                    ArrayList<PostBean> post = new ArrayList<>();
+                                    post.addAll(responsePost.getList_posts());
+                                    mView.show_feed(post,null);
+                                }  else{
+                                    RETRY ++;
+                                    if(RETRY < 3) {
+                                        mView.peticion_error();
+                                    }
                                 }
                             }
                             @Override

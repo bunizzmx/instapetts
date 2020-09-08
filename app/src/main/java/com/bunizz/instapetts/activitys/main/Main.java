@@ -6,9 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.graphics.Color;
 import android.location.Geocoder;
 import android.os.Build;
@@ -16,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.text.SpannableString;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -51,10 +47,9 @@ import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.comentarios.ComentariosFragment;
-import com.bunizz.instapetts.fragments.feed.FeedFragment;
+import com.bunizz.instapetts.fragments.feed.FeedViewPager;
 import com.bunizz.instapetts.fragments.follows.FollowsFragment;
 import com.bunizz.instapetts.fragments.info.InfoPetFragment;
-import com.bunizz.instapetts.fragments.login.MainLogin;
 import com.bunizz.instapetts.fragments.notifications.NotificationsFragment;
 import com.bunizz.instapetts.fragments.post.FragmentListOfPosts;
 import com.bunizz.instapetts.fragments.previewProfile.FragmentProfileUserPetPreview;
@@ -63,15 +58,14 @@ import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.fragments.search.FragmentSearchPet;
 import com.bunizz.instapetts.fragments.search.posts.FragmentPostPublics;
 import com.bunizz.instapetts.fragments.side.SideFragment;
+import com.bunizz.instapetts.fragments.tips.FragmentTipsViewpager;
 import com.bunizz.instapetts.fragments.tips.detail.FragmentTipDetail;
-import com.bunizz.instapetts.fragments.tips.FragmentTips;
 import com.bunizz.instapetts.listeners.available_name_listener;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.conexion_listener;
 import com.bunizz.instapetts.listeners.folowFavoriteListener;
 import com.bunizz.instapetts.listeners.login_invitado_listener;
-import com.bunizz.instapetts.listeners.login_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.open_side_menu;
 import com.bunizz.instapetts.listeners.uploads;
@@ -90,8 +84,6 @@ import com.bunizz.instapetts.web.CONST;
 import com.facebook.AccessToken;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Task;
@@ -102,8 +94,6 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 import org.parceler.Parcels;
 
 import java.io.File;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Stack;
@@ -441,7 +431,7 @@ public class Main extends AppCompatActivity implements
     private void setupFirstFragment() {
         if(FROM_PUSH == 0){
             repaint_nav(R.id.tab_feed);
-            mCurrentFragment = new FragmentElement<>(null, FeedFragment.newInstance(), FragmentElement.INSTANCE_FEED, true);
+            mCurrentFragment = new FragmentElement<>(null, FeedViewPager.newInstance(), FragmentElement.INSTANCE_FEED, true);
             change_main(mCurrentFragment);
         }else{
             changeOfInstance(TYPE_FRAGMENT_PUSH,b_from_push,false);
@@ -624,17 +614,17 @@ public class Main extends AppCompatActivity implements
         if(mOldFragment!=null) {
 
             if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_FEED) {
-                ((FeedFragment) mOldFragment.getFragment()).stop_player();
+                ((FeedViewPager) mOldFragment.getFragment()).stop_player();
             }
 
             if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS)
-                ((FragmentTips) mOldFragment.getFragment()).stop_player();
+                ((FragmentTipsViewpager) mOldFragment.getFragment()).stop_player();
         }
 
 
         if (intanceType == FragmentElement.INSTANCE_FEED) {
             if (stack_feed.size() == 0) {
-                change_main(new FragmentElement<>("", FeedFragment.newInstance(), FragmentElement.INSTANCE_LOGIN));
+                change_main(new FragmentElement<>("", FeedViewPager.newInstance(), FragmentElement.INSTANCE_LOGIN));
             } else {
                 change_main(stack_feed.pop());
             }
@@ -647,7 +637,7 @@ public class Main extends AppCompatActivity implements
         }
         else if (intanceType == FragmentElement.INSTANCE_TIPS) {
             if (stack_tips.size() == 0) {
-                change_tips(new FragmentElement<>("", FragmentTips.newInstance(), FragmentElement.INSTANCE_TIPS));
+                change_tips(new FragmentElement<>("", FragmentTipsViewpager.newInstance(), FragmentElement.INSTANCE_TIPS));
             } else {
                 change_tips(stack_tips.pop());
             }
@@ -838,7 +828,7 @@ public class Main extends AppCompatActivity implements
             } else {
                 if (mOldFragment != null) {
                     if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS)
-                        ((FragmentTips) mOldFragment.getFragment()).stop_player();
+                        ((FragmentTipsViewpager) mOldFragment.getFragment()).stop_player();
                 }
 
                 if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_TIP_DETAIL) {
@@ -904,7 +894,7 @@ public class Main extends AppCompatActivity implements
             }
         }catch (Exception e)
         {
-            mCurrentFragment = new FragmentElement<>(null, FeedFragment.newInstance(), FragmentElement.INSTANCE_FEED, true);
+            mCurrentFragment = new FragmentElement<>(null, FeedViewPager.newInstance(), FragmentElement.INSTANCE_FEED, true);
             change_main(mCurrentFragment);
         }
 

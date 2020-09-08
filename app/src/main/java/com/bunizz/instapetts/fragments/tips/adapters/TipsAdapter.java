@@ -180,7 +180,15 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case TYPE_TIP_TOP:
                 TipsTopHolder h = (TipsTopHolder)holder;
                 TipsBean data_parsed = (TipsBean) data.get(position);
-                h.boty_tip_top.setText(data_parsed.getBody_tip().substring(0,250) + "...");
+                if(data_parsed.getBody_tip()!=null) {
+                    if (data_parsed.getBody_tip().length() > 250)
+                        h.boty_tip_top.setText(data_parsed.getBody_tip().substring(0, 250) + "...");
+                    else
+                        h.boty_tip_top.setText("-");
+                }else{
+                    h.boty_tip_top.setText("-");
+                }
+
                 h.title_tip_top.setText(data_parsed.getTitle_tip());
                 h.fecha_tip.setText(App.getInstance().fecha_lenguaje_humano(data_parsed.getFecha_tip().replace("Z","").replace("T"," ")));
                 h.num_views.setText("" + data_parsed.getViews_tip());
@@ -417,10 +425,14 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 f.fecha_tip.setText(App.getInstance().fecha_lenguaje_humano(data_parsed_n.getFecha_tip().replace("Z","").replace("T"," ")));
                 f.num_views.setText("" + data_parsed_n.getViews_tip());
                 f.num_likes.setText(""+ data_parsed_n.getLikes_tip());
-                if(data_parsed_n.getBody_tip().length() > 200)
-                    f.body_tip_short.setText(data_parsed_n.getBody_tip().substring(0,150) + "...");
-                else
-                    f.body_tip_short.setText(data_parsed_n.getBody_tip());
+                if(data_parsed_n.getBody_tip()!=null) {
+                    if (data_parsed_n.getBody_tip().length() > 200)
+                        f.body_tip_short.setText(data_parsed_n.getBody_tip().substring(0, 150) + "...");
+                    else
+                        f.body_tip_short.setText(data_parsed_n.getBody_tip());
+                }else{
+                    f.body_tip_short.setText("-");
+                }
                 f.title_tip_short.setText(data_parsed_n.getTitle_tip());
                 break;
             case TYPE_ADD:

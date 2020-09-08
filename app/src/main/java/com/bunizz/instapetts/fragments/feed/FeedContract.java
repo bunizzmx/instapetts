@@ -15,6 +15,7 @@ public interface FeedContract {
         void get_next_feed(boolean one_user,int id_one,int dias_pasados);
         void unfollowUser(String uuid_usuario,int id_usuario);
         void geet_feed_recomended(boolean one_user,int id_one);
+        void getFeedParaTi();
         void likePost(PostActions postActions);
         void saveFavorite(PostActions postActions,PostBean postBean);
         void deleteFavorite(int id_post);

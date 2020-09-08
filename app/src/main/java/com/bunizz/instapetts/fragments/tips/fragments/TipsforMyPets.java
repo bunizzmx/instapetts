@@ -1,20 +1,15 @@
-package com.bunizz.instapetts.fragments.tips;
+package com.bunizz.instapetts.fragments.tips.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
@@ -23,12 +18,14 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.TipsBean;
+import com.bunizz.instapetts.fragments.FragmentElement;
+import com.bunizz.instapetts.fragments.tips.TipsContract;
+import com.bunizz.instapetts.fragments.tips.TipsPresenter;
 import com.bunizz.instapetts.fragments.tips.adapters.TipsAdapter;
 import com.bunizz.instapetts.listeners.PlayStopVideoListener;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.conexion_listener;
-import com.bunizz.instapetts.utils.AnimatedTextViews.TyperTextView;
 import com.bunizz.instapetts.utils.loadings.SpinKitView;
 import com.bunizz.instapetts.utils.loadings.SpriteFactory;
 import com.bunizz.instapetts.utils.loadings.Style;
@@ -40,10 +37,17 @@ import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class FragmentTips extends Fragment implements  TipsContract.View {
+public class TipsforMyPets extends Fragment implements  TipsContract.View {
     @BindView(R.id.list_tips)
     ExoPlayerRecyclerViewTips list_tips;
 
@@ -60,24 +64,29 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
     @BindView(R.id.spin_kit)
     SpinKitView spin_kit;
 
-    @BindView(R.id.label_toolbar)
-    TextView label_toolbar;
+    @BindView(R.id.title_no_internet)
+    TextView title_no_internet;
 
-    @BindView(R.id.new_story)
-    RelativeLayout new_story;
+    @BindView(R.id.body_no_data)
+    TextView body_no_data;
 
     @BindView(R.id.smoot_progress)
     SmoothProgressBar smoot_progress;
 
-
     @BindView(R.id.root_no_internet)
     RelativeLayout root_no_internet;
 
-    @BindView(R.id.animated_title)
-    TyperTextView animated_title;
+    @BindView(R.id.icon_no_internet)
+    ImageView icon_no_internet;
 
-    @BindView(R.id.open_notifications)
-    RelativeLayout open_notifications;
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.icon_no_internet)
+    void icon_no_internet() {
+
+    }
+
+
     private boolean loading =true;
     private boolean IS_ALL = false;
     int PAGINADOR = -999;
@@ -85,8 +94,8 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
     @BindView(R.id.refresh_tips)
     SwipeRefreshLayout refresh_tips;
     private List<UnifiedNativeAd> mNativeAds = new ArrayList<>();
-    public static FragmentTips newInstance() {
-        return new FragmentTips();
+    public static TipsforMyPets newInstance() {
+        return new TipsforMyPets();
     }
 
     @Override
@@ -100,7 +109,7 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_tips, container, false);
+        return inflater.inflate(R.layout.tips, container, false);
     }
 
     @Override
@@ -121,28 +130,17 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
             }
         });
         adapter.setRequestManager(initGlide());
-        presenter.getTips();
         refresh_tips.setOnRefreshListener(() ->{
             IS_ALL = false;
             smoot_progress.setVisibility(View.GONE);
             root_no_internet.setVisibility(View.GONE);
-            presenter.getTips();
+            presenter.getTipsForMyPets();
         });
-        open_notifications.setVisibility(View.GONE);
+
         Style style = Style.values()[12];
         Sprite drawable = SpriteFactory.create(style);
         spin_kit.setIndeterminateDrawable(drawable);
         spin_kit.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
-        label_toolbar.setText(getActivity().getResources().getString(R.string.tips_notice));
-        animated_title.animateText(getActivity().getResources().getString(R.string.tips_notice));
-        animated_title.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                animated_title.animateText(getActivity().getResources().getString(R.string.tips_notice));
-            }
-        });
-
-        new_story.setVisibility(View.GONE);
         list_tips.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -172,6 +170,7 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
                 }
             }
         });
+        presenter.havePets();
     }
 
 
@@ -184,28 +183,28 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
     }
 
     @Override
-    public void showTips(ArrayList<TipsBean> tips_list,ArrayList<PostBean> helps) {
+    public void showTips(ArrayList<TipsBean> tips_list, ArrayList<PostBean> helps) {
         loading = true;
         if(tips_list!=null) {
             if (tips_list.size() > 0){
                 data.clear();
-            PAGINADOR = tips_list.get(tips_list.size() - 1).getId();
-            data.addAll(tips_list);
-            if (helps != null) {
-                if (helps.size() > 0)
-                    interpolateHelps(helps);
-                else {
+                PAGINADOR = tips_list.get(tips_list.size() - 1).getId();
+                data.addAll(tips_list);
+                if (helps != null) {
+                    if (helps.size() > 0)
+                        interpolateHelps(helps);
+                    else {
+                        refresh_tips.setRefreshing(false);
+                        root_loading.setVisibility(View.GONE);
+                        root_loading.setVisibility(View.GONE);
+                        adapter.setData(data);
+                    }
+                } else {
                     refresh_tips.setRefreshing(false);
-                    root_loading.setVisibility(View.GONE);
                     root_loading.setVisibility(View.GONE);
                     adapter.setData(data);
                 }
-            } else {
-                refresh_tips.setRefreshing(false);
-                root_loading.setVisibility(View.GONE);
-                adapter.setData(data);
             }
-        }
         }
     }
 
@@ -219,7 +218,12 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
         }else{
             IS_ALL = true;
         }
-           loading = true;
+        loading = true;
+    }
+
+    @Override
+    public void showTipsForMyPets(ArrayList<TipsBean> tips_list) {
+
     }
 
     @Override
@@ -237,7 +241,20 @@ public class FragmentTips extends Fragment implements  TipsContract.View {
     }
     @Override
     public void peticionError() {
-       presenter.getTips();
+        presenter.getTips();
+    }
+
+    @Override
+    public void have_pets(boolean have) {
+        if(have)
+          presenter.getTipsForMyPets();
+        else{
+            spin_kit.setVisibility(View.GONE);
+            icon_no_internet.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.logoapp));
+            root_no_internet.setVisibility(View.VISIBLE);
+            title_no_internet.setText("NO TIENES MASCOTAS");
+            body_no_data.setText("Para poder ver informacion reelevante de todas tus mascotas, debes agregar primero una.");
+        }
     }
 
 

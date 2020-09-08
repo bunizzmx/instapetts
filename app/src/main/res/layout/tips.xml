@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent">
+  <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+      android:layout_above="@+id/smoot_progress"
+      android:id="@+id/refresh_tips"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+  <com.bunizz.instapetts.utils.video_player.ExoPlayerRecyclerViewTips
+      android:id="@+id/list_tips"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"/>
+  </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+  <com.bunizz.instapetts.utils.smoot.SmoothProgressBar
+      android:visibility="gone"
+      android:layout_alignParentBottom="true"
+      android:id="@+id/smoot_progress"
+      android:layout_width="match_parent"
+      android:layout_height="10dp"
+      style="@style/GNowProgressBar"
+      android:indeterminate="true"/>
+  <include layout="@layout/no_internet"></include>
+  <RelativeLayout
+      android:id="@+id/root_loading"
+      android:layout_centerHorizontal="true"
+      android:layout_centerVertical="true"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content">
+    <com.bunizz.instapetts.utils.loadings.SpinKitView
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView"
+        android:background="?selectableItemBackgroundBorderless"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:padding="10dp" />
+  </RelativeLayout>
+</RelativeLayout>

@@ -11,20 +11,8 @@ import android.view.WindowManager;
 
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.fragments.FragmentElement;
-import com.bunizz.instapetts.fragments.comentarios.ComentariosFragment;
-import com.bunizz.instapetts.fragments.feed.FeedFragment;
-import com.bunizz.instapetts.fragments.follows.FollowsFragment;
-import com.bunizz.instapetts.fragments.notifications.NotificationsFragment;
-import com.bunizz.instapetts.fragments.post.FragmentListOfPosts;
-import com.bunizz.instapetts.fragments.previewProfile.FragmentProfileUserPetPreview;
-import com.bunizz.instapetts.fragments.profile.FragmentEditProfileUser;
-import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.fragments.reports.FinalReportFragment;
 import com.bunizz.instapetts.fragments.reports.ReportsListFragment;
-import com.bunizz.instapetts.fragments.search.FragmentSearchPet;
-import com.bunizz.instapetts.fragments.search.posts.FragmentPostPublics;
-import com.bunizz.instapetts.fragments.tips.FragmentTips;
-import com.bunizz.instapetts.fragments.tips.detail.FragmentTipDetail;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 
 import java.util.Stack;

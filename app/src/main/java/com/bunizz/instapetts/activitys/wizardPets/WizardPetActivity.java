@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -17,29 +16,20 @@ import androidx.fragment.app.FragmentManager;
 
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.activitys.main.Main;
 import com.bunizz.instapetts.activitys.share_post.ShareActivity;
-import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
-import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
-import com.bunizz.instapetts.fragments.camera.CameraFragment;
-import com.bunizz.instapetts.fragments.feed.FeedFragment;
-import com.bunizz.instapetts.fragments.profile.FragmentEditProfileUser;
-import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
 import com.bunizz.instapetts.fragments.wizardPets.FragmentDataPet;
 import com.bunizz.instapetts.fragments.wizardPets.FragmentFinalConfigPet;
 import com.bunizz.instapetts.fragments.wizardPets.FragmentSearchPet;
 import com.bunizz.instapetts.fragments.wizardPets.FragmentTypePet;
-import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.change_instance_wizard;
 import com.bunizz.instapetts.listeners.process_save_pet_listener;
 import com.bunizz.instapetts.listeners.uploads;
-import com.bunizz.instapetts.services.ImagePostsService;
 import com.bunizz.instapetts.services.ImageService;
 import com.bunizz.instapetts.utils.snackbar.SnackBar;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -48,8 +38,6 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 import butterknife.ButterKnife;
-
-import static com.bunizz.instapetts.web.CONST.BASE_URL_BUCKET;
 
 public class WizardPetActivity extends AppCompatActivity implements change_instance_wizard, process_save_pet_listener, uploads ,WizardPetContract.View{
 

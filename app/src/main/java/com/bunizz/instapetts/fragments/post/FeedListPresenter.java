@@ -269,6 +269,11 @@ public class FeedListPresenter implements FeedContract.Presenter {
     }
 
     @Override
+    public void getFeedParaTi() {
+
+    }
+
+    @Override
     public void likePost(PostActions postActions) {
         boolean existsin_db = likePostHelper.saveLikePost(postActions.getId_post());
         if(!existsin_db) {
