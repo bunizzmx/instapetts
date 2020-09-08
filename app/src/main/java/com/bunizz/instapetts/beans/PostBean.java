@@ -113,6 +113,10 @@ public class PostBean {
     @Expose
     int num_comentarios;
 
+    @SerializedName("pixeles")
+    @Expose
+    String pixeles;
+
     boolean saved;
     boolean liked;
 
@@ -380,6 +384,14 @@ public class PostBean {
 
     public void setName_raza(String name_raza) {
         this.name_raza = name_raza;
+    }
+
+    public String getPixeles() {
+        return pixeles;
+    }
+
+    public void setPixeles(String pixeles) {
+        this.pixeles = pixeles;
     }
 }
 

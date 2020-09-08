@@ -345,9 +345,8 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
             Glide.with(PlayVideoActivity.this).load(POST_BEAN.getUrl_photo_user()).into(image_video_tumbh);
             exoPlayerManager = new ExoPlayerManager(this,videoSurfaceView, previewTimeBar,
                     (ImageView) findViewById(R.id.imageView), POST_BEAN.getThumb_video(),noise);
-            Log.e("CLICK_PARSED","-->no es post" +POST_BEAN.getUrls_posts());
             exoPlayerManager.play(Uri.parse(POST_BEAN.getUrls_posts()));
-            if(POST_BEAN.getAspect().equals("16_9") || POST_BEAN.getAspect().equals("4_3"))
+            if(POST_BEAN.getAspect().equals("16_9"))
                 videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
             else
                 videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_ZOOM);

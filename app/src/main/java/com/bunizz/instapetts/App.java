@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import androidx.annotation.RequiresApi;
 
@@ -253,6 +254,7 @@ public class App extends Application {
         if (date != null) {
             @SuppressLint("SimpleDateFormat") SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_SIMPLE);
 //            formatter.setTimeZone(TimeZone.getDefault());
+            formatter.setTimeZone(TimeZone.getTimeZone("gmt"));
             return formatter.format(date);
         } else {
             return "default";
@@ -476,7 +478,7 @@ public class App extends Application {
                 "?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
     }
     public String  make_uri_video_hls(String URI,String  aspect){
-        return CONST.BASE_URL_HLS_VIDEO  + App.read(PREFERENCES.UUID,"INVALID") + "/" +  URI.replace(".mp4","") + "video_640_640.m3u8";
+        return CONST.BASE_URL_HLS_VIDEO  + App.read(PREFERENCES.UUID,"INVALID") + "/" + formatDateSimple(new Date()) + "/" +  URI.replace(".mp4","") + "1280x720x6500.m3u8";
     }
 
     public String  make_uri_bucket_history(String URI){
@@ -518,7 +520,7 @@ public class App extends Application {
         }
         else if(aspect.equals("4_4")){
             width=metrics.widthPixels;
-            height = width;
+            height = width +( width/3);
         }
         else if(aspect.equals("4_5")){
             width=metrics.widthPixels;

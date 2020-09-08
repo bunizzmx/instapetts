@@ -123,41 +123,37 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
         int heightData = Integer.parseInt(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
         int widthData = Integer.parseInt(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
         int rotation = Integer.parseInt(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));
-        Log.e("ROROROR","-->" + rotation);
 
-        if(heightData < widthData){
-            ASPECT ="16_9";
-        }else
-        {
-            ASPECT =" 4_3 ";
-        }
+
         switch (rotation){
             case 0:
                 if(heightData < widthData)
                     ASPECT ="16_9_ROTATION_0";
                 else
-                    ASPECT =" 4_3_ROTATION_0";
+                    ASPECT =" 4_4_ROTATION_0";
 
                 break;
             case 90:
                 if(heightData < widthData)
-                    ASPECT ="16_9_ROTATION_90";
+                    ASPECT ="4_4_ROTATION_90";
                 else
-                    ASPECT =" 4_3_ROTATION_90";
+                    ASPECT ="16_9_ROTATION_90";
                 break;
             case 180:
                 if(heightData < widthData)
                     ASPECT ="16_9_ROTATION_180";
                 else
-                    ASPECT =" 4_3_ROTATION_180";
+                    ASPECT =" 4_4_ROTATION_180";
                 break;
             case 270:
                 if(heightData < widthData)
                     ASPECT ="16_9_ROTATION_270";
                 else
-                    ASPECT =" 4_3_ROTATION_270";
+                    ASPECT =" 4_4_ROTATION_270";
                 break;
         }
+
+
 
         new Handler().postDelayed(() ->play(), 500);
     }
