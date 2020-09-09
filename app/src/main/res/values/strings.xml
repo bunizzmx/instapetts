@@ -417,4 +417,7 @@
     <string name="hellow_again">Bienvenido de nuevo </string>
     <string name="invited_mode">Modo Invitado</string>
     <string name="complete_info">Completa tu informacion</string>
+
+    <string name="tab_your_pet">Tus mascotas</string>
+    <string name="tab_tips_notice">Tips y noticias</string>
 </resources>

@@ -109,6 +109,7 @@ public class TipsPresenter implements TipsContract.Presenter {
         autenticateBean.setName_user(App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"INVALID"));
         autenticateBean.setToken("xxxx");
         autenticateBean.setPaginador(-999);
+        autenticateBean.setId_usuario(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         autenticateBean.setTarget("FOR_MY_PETS");
         autenticateBean.setIdioma(App.read(PREFERENCES.IDIOMA,"es"));
         disposable.add(

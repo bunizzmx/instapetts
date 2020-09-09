@@ -429,4 +429,7 @@
     <string name="hellow_again">Welcome back</string>
     <string name="invited_mode">Guest mode</string>
     <string name="complete_info">Fill in your information</string>
+
+    <string name="tab_your_pet">Your pets</string>
+    <string name="tab_tips_notice">Tips and news</string>
 </resources>

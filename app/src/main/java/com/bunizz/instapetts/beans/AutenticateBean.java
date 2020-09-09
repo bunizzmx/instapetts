@@ -10,6 +10,7 @@ public class AutenticateBean {
     String target;
     int paginador;
     String idioma;
+    int id_usuario;
 
     public AutenticateBean() {
     }
@@ -63,5 +64,13 @@ public class AutenticateBean {
 
     public void setPaginador(int paginador) {
         this.paginador = paginador;
+    }
+
+    public int getId_usuario() {
+        return id_usuario;
+    }
+
+    public void setId_usuario(int id_usuario) {
+        this.id_usuario = id_usuario;
     }
 }
