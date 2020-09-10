@@ -77,6 +77,7 @@ public class FragmentTipsViewpager extends Fragment implements  TipsContract.Vie
     int PAGINADOR = -999;
 
 
+
     @OnClick(R.id.tab_para_ti)
     void tab_para_ti()
     {

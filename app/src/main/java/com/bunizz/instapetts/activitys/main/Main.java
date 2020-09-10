@@ -60,6 +60,7 @@ import com.bunizz.instapetts.fragments.search.posts.FragmentPostPublics;
 import com.bunizz.instapetts.fragments.side.SideFragment;
 import com.bunizz.instapetts.fragments.tips.FragmentTipsViewpager;
 import com.bunizz.instapetts.fragments.tips.detail.FragmentTipDetail;
+import com.bunizz.instapetts.fragments.vertical_videos.playVideoFragment;
 import com.bunizz.instapetts.listeners.available_name_listener;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
@@ -230,9 +231,11 @@ public class Main extends AppCompatActivity implements
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tap_tips)
     void tap_tips() {
+        changeStatusBarColor(R.color.shadow_color);
+        repaint_icons_and_tab();
         if(mCurrentFragment.getInstanceType() != FragmentElement.INSTANCE_TIPS) {
             changeOfInstance(FragmentElement.INSTANCE_TIPS, null,false);
-            repaint_nav(R.id.tap_tips);
+            //repaint_nav(R.id.tap_tips);
         }
     }
 
@@ -637,7 +640,7 @@ public class Main extends AppCompatActivity implements
         }
         else if (intanceType == FragmentElement.INSTANCE_TIPS) {
             if (stack_tips.size() == 0) {
-                change_tips(new FragmentElement<>("", FragmentTipsViewpager.newInstance(), FragmentElement.INSTANCE_TIPS));
+                change_tips(new FragmentElement<>("", playVideoFragment.newInstance(), FragmentElement.INSTANCE_TIPS));
             } else {
                 change_tips(stack_tips.pop());
             }
@@ -1615,5 +1618,15 @@ public class Main extends AppCompatActivity implements
             noWifiRequest();
             Log.e("ERROR_LOGIN","-->" + e.getMessage());
         }
+    }
+
+
+    public void repaint_icons_and_tab(){
+        root_bottom_nav.setBackgroundColor(Color.BLACK);
+        icon_tips.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_food_pet_w));
+        icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_hand_pet_stroke_w));
+        icon_feed_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_home_pet_w));
+        icon_search_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_search_w));
+        icon_profile_pet.setBorderColor(getResources().getColor(R.color.white));
     }
 }
