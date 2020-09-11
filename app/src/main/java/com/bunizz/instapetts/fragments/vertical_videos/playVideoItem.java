@@ -14,6 +14,8 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.tips.FragmentTipsViewpager;
 import com.bunizz.instapetts.utils.AnalogTv.AnalogTvNoise;
+import com.bunizz.instapetts.utils.HistoryView.StoryPlayerProgressView;
+import com.bunizz.instapetts.utils.line_progressbar.LineProgress;
 import com.bunizz.instapetts.utils.video_player.PreviewLoader;
 import com.bunizz.instapetts.utils.video_player.PreviewTumbh.ExoPlayerMediaSourceBuilder;
 import com.bunizz.instapetts.utils.video_player.PreviewTumbh.GlideThumbnailTransformation;
@@ -64,6 +66,8 @@ public class playVideoItem extends Fragment implements PreviewLoader {
     @BindView(R.id.noise)
     AnalogTvNoise tv_noise;
 
+
+
     public static playVideoItem newInstancex(PostBean postBean) {
         arguments = new Bundle();
         arguments.putParcelable("POSTS", Parcels.wrap(postBean));
@@ -91,7 +95,6 @@ public class playVideoItem extends Fragment implements PreviewLoader {
         }
         thumbnailsUrl ="https://firebasestorage.googleapis.com/v0/b/bucket_tumbh_video/o/8ydEk7oUpybyZ844a2GroD0Jp0J3%2FINSTAPETS_22264ae0-759a-4c9e-bb7c-0283d9394fcc.jpg?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
         this.mediaSourceBuilder = new ExoPlayerMediaSourceBuilder(videoSurfaceView.getContext());
-
     }
 
     @Override
@@ -127,21 +130,21 @@ public class playVideoItem extends Fragment implements PreviewLoader {
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 switch (playbackState) {
                     case Player.STATE_BUFFERING:
-                        // Log.e(TAG, "onPlayerStateChanged: Buffering video.");
-                       /* if (progressBar != null) {
-                            progressBar.setVisibility(VISIBLE);
-                        }*/
+                        Log.e("ESTATUS_VIDEO","STATE_BUFFERING");
                         break;
                     case Player.STATE_ENDED:
+                        Log.e("ESTATUS_VIDEO","STATE_ENDED");
                         // Log.d(TAG, "onPlayerStateChanged: Video ended.");
                         player.seekTo(0);
                         break;
                     case Player.STATE_IDLE:
                         break;
                     case Player.STATE_READY:
+                        Log.e("ESTATUS_VIDEO","STATE_READY");
                         tv_noise.setVisibility(View.GONE);
                         break;
                     default:
+                        Log.e("ESTATUS_VIDEO","default");
                         break;
                 }
             }
@@ -231,6 +234,7 @@ public class playVideoItem extends Fragment implements PreviewLoader {
                 .transform(new GlideThumbnailTransformation(currentPosition))
                 .into(preview_video);
     }
+
 
 
 }
