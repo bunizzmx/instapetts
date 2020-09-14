@@ -87,6 +87,7 @@ public class SearchRazaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         h.root_raza_select.setOnClickListener(view -> {
             Bundle b = new Bundle();
             b.putString(BUNDLES.RAZA_PET,data.get(position).getName_raza_esp());
+            b.putInt(BUNDLES.RAZA_PET_ID,data.get(position).getId_type_raza());
             listener.onchange(FragmentElement.INSTANCE_DATA_PET,b);
         });
         if(data.get(position).getUrl_photo()!=null)

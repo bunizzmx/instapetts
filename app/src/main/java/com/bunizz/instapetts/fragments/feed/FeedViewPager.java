@@ -277,9 +277,9 @@ public class FeedViewPager extends Fragment implements  FeedContract.View{
             @Override
             public void onPageSelected(int position) {
                if(position == 0){
-                   change_tab_para_ti();
-               }else{
                    change_tab_seguidos();
+               }else{
+                   change_tab_para_ti();
                }
             }
 

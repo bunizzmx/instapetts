@@ -42,6 +42,7 @@ public class PetHelper extends GenericHelper {
     public static final String RATING_PET = "rating";
     public static final String URL_PHOTO = "url_foto";
     public static final String URL_PHOTO_THUMBH = "url_photo_tumbh";
+    public static final String ID_TYPE_RAZA = "id_type_raza";
     Cursor cursor;
 
 

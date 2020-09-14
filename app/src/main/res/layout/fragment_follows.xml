@@ -32,7 +32,7 @@
     <TextView
         android:layout_marginLeft="10dp"
         android:textSize="18dp"
-        android:text="Usuarios Seguidos"
+        android:text="@string/Followed"
         android:id="@+id/name_user_folowers"
         android:textColor="@color/black"
         android:fontFamily="@font/avenir_b"

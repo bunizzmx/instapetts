@@ -323,9 +323,11 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
                     Log.e("ACCES_TOKENN","-->EXECUTE CALBACK");
                     AccessToken accessToken = loginResult.getAccessToken();
                     Profile profile = Profile.getCurrentProfile();
-                    App.write(PREFERENCES.FOTO_PROFILE_USER_THUMBH, String.valueOf(profile.getProfilePictureUri(500,500)));
-                    App.write(PREFERENCES.FOTO_PROFILE_USER,String.valueOf(profile.getProfilePictureUri(500,500)));
-                    login_listener.loginFacebook(accessToken);
+                    if(profile!=null) {
+                        App.write(PREFERENCES.FOTO_PROFILE_USER_THUMBH, String.valueOf(profile.getProfilePictureUri(500, 500)));
+                        App.write(PREFERENCES.FOTO_PROFILE_USER, String.valueOf(profile.getProfilePictureUri(500, 500)));
+                        login_listener.loginFacebook(accessToken);
+                    }
                 }
 
                 @Override
@@ -397,6 +399,9 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     public void showInfoUser(UserBean userBean, ArrayList<PetBean> pets) {
         loanding_preview_root.setVisibility(View.GONE);
         root_info_ptofile.setVisibility(View.VISIBLE);
+        if(pets.size()>0)
+            petHelper.cleanTable();
+
         for (int i =0;i<pets.size();i++){
             petHelper.savePet(pets.get(i));
         }

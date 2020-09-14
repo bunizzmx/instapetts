@@ -120,26 +120,14 @@ public class TipsPresenter implements TipsContract.Presenter {
                             @Override
                             public void onSuccess(ResponseTips responsePost) {
                                 if(responsePost.getCode_response()==200) {
-                                    mView.showTips(responsePost.getList_tips(),responsePost.getHelps());
+                                    mView.showTipsForMyPets(responsePost.getList_tips());
                                 }else{
-                                    RETRY ++;
-                                    if(RETRY < 3) {
-                                        mView.peticionError();
-                                    }else{
-                                        Log.e("NO_INTERNET","-->request" );
-                                        mView.noInternet();
-                                    }
+                                    mView.showTipsForMyPets(responsePost.getList_tips());
                                 }
                             }
                             @Override
                             public void onError(Throwable e) {
-                                RETRY ++;
-                                if(RETRY < 3) {
-                                    mView.peticionError();
-                                }else{
-                                    Log.e("NO_INTERNET","-->error" );
-                                    mView.noInternet();
-                                }
+                                 mView.noInternet();
                             }
                         })
         );

@@ -159,6 +159,8 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
                         App.getInstance().show_dialog_permision(ShareActivity.this,getResources().getString(R.string.permision_storage),
                                 getResources().getString(R.string.permision_storage_body),0);
                     }
+                },error->{
+                    Log.e("ERROR","ERROR");
                 });
 
         if(is_from_profile){

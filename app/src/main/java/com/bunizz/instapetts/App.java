@@ -23,7 +23,6 @@ import com.bunizz.instapetts.activitys.login.LoginActivity;
 import com.bunizz.instapetts.beans.AspectBean;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.Utilities;
-import com.bunizz.instapetts.services.JobsServices;
 import com.bunizz.instapetts.utils.AndroidIdentifier;
 import com.bunizz.instapetts.utils.dilogs.DialogPermision;
 import com.bunizz.instapetts.web.CONST;
@@ -554,7 +553,7 @@ public class App extends Application {
         AdLoader.Builder builder = new AdLoader.Builder(this,AD_UNIT_ID );
         adLoader = builder.forUnifiedNativeAd(
                 unifiedNativeAd -> {
-                    if(ads.size() > 10)
+                    if(ads.size() > 5)
                         ads.clear();
                     ads.add(unifiedNativeAd);
                     if (!adLoader.isLoading()) {}
@@ -565,7 +564,7 @@ public class App extends Application {
                         if (!adLoader.isLoading()) {}
                     }
                 }).build();
-        adLoader.loadAds(new AdRequest.Builder().build(), 3);
+        adLoader.loadAds(new AdRequest.Builder().build(), 2);
     }
 
     public ArrayList<UnifiedNativeAd> getMoreAds() {

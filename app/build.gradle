@@ -52,16 +52,16 @@ android {
     flavorDimensions "instance"
     productFlavors {
         produccion {
-            versionName "1.0.0.7"
-            versionCode 23
+            versionName "1.0.0.8"
+            versionCode 24
             dimension "instance"
             buildConfigField 'String', 'ADS_NATIVO', '"ca-app-pub-1460003590771124/7976202603"'
             buildConfigField 'Boolean', 'DEVELOPMENT', 'false'
             signingConfig signingConfigs.release
         }
         development {
-            versionName "1.0.0.7(DEBUG)"
-            versionCode 23
+            versionName "1.0.0.8(DEBUG)"
+            versionCode 24
             dimension "instance"
             buildConfigField 'String', 'ADS_NATIVO', '"ca-app-pub-3940256099942544/2247696110"'
             buildConfigField 'String', 'ADS_BANNERS', '"ca-app-pub-3940256099942544/6300978111"'
@@ -94,8 +94,8 @@ android {
 dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     testImplementation 'junit:junit:4.13'
     //noinspection GradleCompatible
 
@@ -107,17 +107,17 @@ dependencies {
 
     implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:3.1.0'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    implementation 'com.google.firebase:firebase-auth:19.3.2'
+    implementation 'com.google.firebase:firebase-auth:19.4.0'
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
-    implementation 'com.google.firebase:firebase-analytics:17.4.4'
-    implementation 'com.google.android.gms:play-services-ads:19.3.0'
+    implementation 'com.google.firebase:firebase-analytics:17.5.0'
+    implementation 'com.google.android.gms:play-services-ads:19.4.0'
     implementation 'com.google.firebase:firebase-messaging:20.2.4'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
-    implementation 'com.google.firebase:firebase-firestore:21.5.0'
-    implementation 'com.google.firebase:firebase-storage:19.1.1'
+    implementation 'com.google.firebase:firebase-firestore:21.6.0'
+    implementation 'com.google.firebase:firebase-storage:19.2.0'
 
 
     implementation "com.github.bumptech.glide:glide:4.11.0"

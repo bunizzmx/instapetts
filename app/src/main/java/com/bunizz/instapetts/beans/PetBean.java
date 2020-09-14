@@ -66,6 +66,10 @@ public class PetBean {
     @Expose
     int type_pet;
 
+    @SerializedName("id_type_raza")
+    @Expose
+    int id_type_raza;
+
     @SerializedName("uuid")
     @Expose
     String uuid;
@@ -215,6 +219,7 @@ public class PetBean {
         contentValues.put(PetHelper.RATING_PET, getRaza_pet());
         contentValues.put(PetHelper.URL_PHOTO, getUrl_photo());
         contentValues.put(PetHelper.URL_PHOTO_THUMBH, getUrl_photo_tumbh());
+        contentValues.put(PetHelper.ID_TYPE_RAZA, getId_type_raza());
         return contentValues;
     }
 
@@ -247,6 +252,10 @@ public class PetBean {
 
         if (cursor.getColumnIndex(PetHelper.DESCRIPCION_PET) != -1)
             this.descripcion_pet = cursor.getString(cursor.getColumnIndex(PetHelper.DESCRIPCION_PET));
+
+        if (cursor.getColumnIndex(PetHelper.ID_TYPE_RAZA) != -1)
+            this.id_type_raza = cursor.getInt(cursor.getColumnIndex(PetHelper.ID_TYPE_RAZA));
+
 
         if (cursor.getColumnIndex(PetHelper.EDAD_PET) != -1)
             this.edad_pet = cursor.getString(cursor.getColumnIndex(PetHelper.EDAD_PET));
@@ -283,4 +292,11 @@ public class PetBean {
         this.uuid = uuid;
     }
 
+    public int getId_type_raza() {
+        return id_type_raza;
+    }
+
+    public void setId_type_raza(int id_type_raza) {
+        this.id_type_raza = id_type_raza;
+    }
 }

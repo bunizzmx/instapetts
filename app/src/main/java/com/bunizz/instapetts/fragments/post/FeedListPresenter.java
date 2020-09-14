@@ -456,4 +456,9 @@ public class FeedListPresenter implements FeedContract.Presenter {
     public void haveNotificatiosn() {
 
     }
+
+    @Override
+    public void getMoreFeedParaTi(int paginador, int filter) {
+
+    }
 }

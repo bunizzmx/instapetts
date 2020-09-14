@@ -302,6 +302,51 @@ public class FeedPresenter implements FeedContract.Presenter {
     }
 
     @Override
+    public void getMoreFeedParaTi( int paginador,int filter) {
+        PostFriendsBean postFriendsBean = new PostFriendsBean();
+        postFriendsBean.setPaginador(paginador);
+        postFriendsBean.setId_one(App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        postFriendsBean.setFilter(filter);
+        postFriendsBean.setTarget(WEBCONSTANTS.DISCOVER);
+        disposable.add(
+                apiService.getPosts(postFriendsBean)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<ResponsePost>() {
+                            @Override
+                            public void onSuccess(ResponsePost responsePost) {
+                                if(responsePost.getList_posts()!=null) {
+                                    ArrayList<PostBean> post = new ArrayList<>();
+                                    for (int i =0;i<responsePost.getList_posts().size();i++){
+                                        if(responsePost.getList_posts().get(i).getCensored() == 0){
+                                            post.add(responsePost.getList_posts().get(i));
+                                        }
+                                    }
+                                    mView.show_next_feed(post);
+                                }  else{
+                                    RETRY ++;
+                                    if(RETRY < 3) {
+                                        //mView.peticionError();
+                                    }else{
+                                        // mView.noInternet();
+                                    }
+
+                                }
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                                RETRY ++;
+                                if(RETRY < 3) {
+                                    // mView.peticionError();
+                                }else{
+                                    // mView.noInternet();
+                                }
+                            }
+                        })
+        );
+    }
+
+    @Override
     public void likePost(PostActions postActions) {
         boolean existsin_db = likePostHelper.saveLikePost(postActions.getId_post());
         if(!existsin_db) {

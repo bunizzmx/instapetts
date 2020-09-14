@@ -26,7 +26,7 @@
             android:textStyle="bold"
             android:layout_gravity="center_horizontal"
             android:textSize="28dp"
-            android:text="Estas en modo \ninvitado"
+            android:text="@string/mode_invited"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

@@ -231,11 +231,11 @@ public class Main extends AppCompatActivity implements
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tap_tips)
     void tap_tips() {
-        changeStatusBarColor(R.color.shadow_color);
-        repaint_icons_and_tab();
+        //changeStatusBarColor(R.color.shadow_color);
+       // repaint_icons_and_tab();
         if(mCurrentFragment.getInstanceType() != FragmentElement.INSTANCE_TIPS) {
             changeOfInstance(FragmentElement.INSTANCE_TIPS, null,false);
-            //repaint_nav(R.id.tap_tips);
+            repaint_nav(R.id.tap_tips);
         }
     }
 
@@ -259,6 +259,8 @@ public class Main extends AppCompatActivity implements
                             App.getInstance().show_dialog_permision(Main.this, getResources().getString(R.string.permision_storage),
                                     getResources().getString(R.string.permision_storage_body), 0);
                         }
+                    },error->{
+                        Log.e("ERROR","ERROR");
                     });
 
         }else{
@@ -640,7 +642,7 @@ public class Main extends AppCompatActivity implements
         }
         else if (intanceType == FragmentElement.INSTANCE_TIPS) {
             if (stack_tips.size() == 0) {
-                change_tips(new FragmentElement<>("", playVideoFragment.newInstance(), FragmentElement.INSTANCE_TIPS));
+                change_tips(new FragmentElement<>("", FragmentTipsViewpager.newInstance(), FragmentElement.INSTANCE_TIPS));
             } else {
                 change_tips(stack_tips.pop());
             }
@@ -1077,6 +1079,8 @@ public class Main extends AppCompatActivity implements
                         App.getInstance().show_dialog_permision(Main.this,getResources().getString(R.string.permision_storage),
                                 getResources().getString(R.string.permision_storage_body),0);
                     }
+                },error->{
+                    Log.e("ERROR","ERROR");
                 });
     }
 
@@ -1224,6 +1228,8 @@ public class Main extends AppCompatActivity implements
                         App.getInstance().show_dialog_permision(Main.this,getResources().getString(R.string.permision_storage),
                                 getResources().getString(R.string.permision_storage_body),0);
                     }
+                },error->{
+                    Log.e("ERROR","ERROR");
                 });
 
     }
@@ -1322,6 +1328,8 @@ public class Main extends AppCompatActivity implements
                                 App.getInstance().show_dialog_permision(Main.this,getResources().getString(R.string.permision_storage),
                                         getResources().getString(R.string.permision_storage_body),0);
                             }
+                        },error->{
+                            Log.e("ERROR","ERROR");
                         });
             }
 
@@ -1462,6 +1470,8 @@ public class Main extends AppCompatActivity implements
                             }
                         });
                     }
+                },error->{
+                    Log.e("ERROR","ERROR");
                 });
     }
 

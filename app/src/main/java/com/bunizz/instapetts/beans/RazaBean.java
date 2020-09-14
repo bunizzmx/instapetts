@@ -20,6 +20,10 @@ public class RazaBean {
     @Expose
     int id_type_pet;
 
+    @SerializedName("id_type_raza")
+    @Expose
+    int id_type_raza;
+
     @SerializedName("url_photo")
     @Expose
     String url_photo;
@@ -64,5 +68,13 @@ public class RazaBean {
 
     public void setUrl_photo(String url_photo) {
         this.url_photo = url_photo;
+    }
+
+    public int getId_type_raza() {
+        return id_type_raza;
+    }
+
+    public void setId_type_raza(int id_type_raza) {
+        this.id_type_raza = id_type_raza;
     }
 }

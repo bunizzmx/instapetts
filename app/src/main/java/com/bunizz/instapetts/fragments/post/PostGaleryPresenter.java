@@ -79,8 +79,6 @@ public class PostGaleryPresenter implements  PostGaleryContract.Presenter{
             default:break;
         }
 
-        Log.e("PAGINADOR_MORE","-->" + paginador + "/" + type_Search);
-
         disposable.add(
                 apiService.getPosts(postFriendsBean)
                         .subscribeOn(Schedulers.io())

@@ -22,6 +22,7 @@ public interface FeedContract {
         void deletePost(PostBean postBean);
         HistoriesBean getMyStories();
         void haveNotificatiosn();
+       void  getMoreFeedParaTi( int paginador,int filter);
 
     }
 

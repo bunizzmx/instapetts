@@ -22,4 +22,7 @@
     <string name="table_temp_video_post">CREATE TABLE IF NOT EXISTS temp_video_post(id INTEGER PRIMARY KEY AUTOINCREMENT, can_comment INTEGER,duracion INTEGER,aspect TEXT,type_pet INTEGER,type_post INTEGER, id_pet INTEGER,date_post TEXT,description TEXT,url_photo_pet TEXT,name_pet TEXT,thumb_video TEXT,urls_posts TEXT);</string>
 
 
+
+    <string name="update_pets_v1">ALTER TABLE pets ADD id_type_raza INTEGER</string>
+
 </resources>

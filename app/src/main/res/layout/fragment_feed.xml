@@ -39,7 +39,7 @@
                 android:textSize="12dp"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
-                android:text="Seguidos"
+                android:text="@string/Followed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
             <TextView
@@ -56,7 +56,7 @@
                 android:textSize="12dp"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
-                android:text="Para ti"
+                android:text="@string/for_you"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>

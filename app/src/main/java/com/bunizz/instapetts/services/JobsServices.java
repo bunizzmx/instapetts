@@ -428,6 +428,8 @@ public class JobsServices {
                             } else {
                                 Log.e("LOCALIZACION", "rechazado");
                             }
+                        },error->{
+                            Log.e("ESXCEPCION", "LOCALIZACION");
                         });
             }catch (Exception e){
                 Log.e("ESXCEPCION", "LOCALIZACION");

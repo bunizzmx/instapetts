@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -225,7 +226,7 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
         NEW_PET.setUuid(App.read(PREFERENCES.UUID,"INVALID"));
         NEW_PET.setName_propietary(App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"INVALID"));
         NEW_PET.setTarget(WEBCONSTANTS.NEW);
-        SnackBar.info(view_root, "Configurando...", SnackBar.LENGTH_LONG).show();
+        SnackBar.info(view_root, getString(R.string.settingss), SnackBar.LENGTH_LONG).show();
         presenter.newPet(NEW_PET);
 
     }
@@ -238,7 +239,8 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
                 NEW_PET.setType_pet(b.getInt(BUNDLES.TYPE_PET));
                 break;
             case 2:
-                NEW_PET.setRaza_pet(b.getString(BUNDLES.RAZA_PET));
+                NEW_PET.setId_type_raza(b.getInt(BUNDLES.RAZA_PET_ID,0));
+                NEW_PET.setRaza_pet(b.getString(BUNDLES.RAZA_PET,"INVALID"));
                 break;
             case 3:
                 NEW_PET.setEdad_pet(b.getString(BUNDLES.EDAD_PET));
@@ -273,6 +275,8 @@ public class WizardPetActivity extends AppCompatActivity implements change_insta
                         App.getInstance().show_dialog_permision(WizardPetActivity.this,getResources().getString(R.string.permision_storage),
                                 getResources().getString(R.string.permision_storage_body),0);
                     }
+                },error->{
+                    Log.e("ERROR","ERROR");
                 });
     }
 

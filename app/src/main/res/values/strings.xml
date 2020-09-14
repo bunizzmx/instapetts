@@ -420,4 +420,12 @@
 
     <string name="tab_your_pet">Tus mascotas</string>
     <string name="tab_tips_notice">Tips y noticias</string>
+
+    <string name="no_tips_mascota">No hay tips para tus mascotas</string>
+    <string name="no_tips_mascota_body">Pronto tendremos disponibles tips y noticias exclusivas para tu tipo de mascotas!</string>
+
+    <string name="for_you">Para ti</string>
+
+    <string name="mode_invited">Estas en modo \ninvitado</string>
+    <string name="mode_invited_body">Crea una cuenta o incia sesiòn para poder encontrar tips de tus mascotas.</string>
 </resources>

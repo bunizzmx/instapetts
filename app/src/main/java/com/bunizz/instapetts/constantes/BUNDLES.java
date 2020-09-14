@@ -28,6 +28,7 @@ public interface BUNDLES {
     // PET BUNDLES WIZZARD
     String TYPE_PET = "TYPE_PET";
     String RAZA_PET = "RAZA_PET";
+    String RAZA_PET_ID = "RAZA_PET_ID";
     String EDAD_PET = "EDAD_PET";
     String GENERO_PET = "GENERO_PET";
     String NAME_PET = "NAME_PET";

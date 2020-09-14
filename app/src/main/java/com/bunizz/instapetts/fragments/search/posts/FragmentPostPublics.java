@@ -136,6 +136,8 @@ public class FragmentPostPublics  extends Fragment implements  PostPublicsContra
                             App.getInstance().show_dialog_permision(getActivity(),getActivity().getResources().getString(R.string.permision_storage),
                                     getResources().getString(R.string.permision_storage_body),0);
                         }
+                    },error->{
+                        Log.e("ERROR","ERROR");
                     });
 
         });

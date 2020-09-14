@@ -74,30 +74,35 @@ public class FragmentPostGalery extends Fragment implements PostGaleryContract.V
         IS_ALL = false;
         PAGINADOR = 0;
         loading = true;
-        if(data_posts.size()>0) {
-            PostBean ID_POST = (PostBean)data_posts.get(data_posts.size() - 1);
-            PAGINADOR = ID_POST.getId_post_from_web();
-        }else{
-            IS_ALL = true;
-        }
-        if(data_posts !=null){
-            if(data_posts.size()>0){
-                this.data_posts.clear();
-                this.data_posts.addAll(data_posts);
-                if(feedAdapter!=null)
-                    feedAdapter.setPosts(this.data_posts);
-                if(root_no_data!=null)
-                root_no_data.setVisibility(View.GONE);
-            }else{
-                this.data_posts.clear();
-                feedAdapter.clear();
-                feedAdapter.refresh();
-                if(root_no_data!=null)
-                root_no_data.setVisibility(View.VISIBLE);
+        if(data_posts!=null) {
+            if (data_posts.size() > 0) {
+                PostBean ID_POST = (PostBean) data_posts.get(data_posts.size() - 1);
+                PAGINADOR = ID_POST.getId_post_from_web();
+            } else {
+                IS_ALL = true;
+            }
+            if (data_posts != null) {
+                if (data_posts.size() > 0) {
+                    this.data_posts.clear();
+                    this.data_posts.addAll(data_posts);
+                    if (feedAdapter != null)
+                        feedAdapter.setPosts(this.data_posts);
+                    if (root_no_data != null)
+                        root_no_data.setVisibility(View.GONE);
+                } else {
+                    this.data_posts.clear();
+                    feedAdapter.clear();
+                    feedAdapter.refresh();
+                    if (root_no_data != null)
+                        root_no_data.setVisibility(View.VISIBLE);
+                }
+            } else {
+                if (root_no_data != null)
+                    root_no_data.setVisibility(View.VISIBLE);
             }
         }else{
-            if(root_no_data!=null)
-               root_no_data.setVisibility(View.VISIBLE);
+            if (root_no_data != null)
+                root_no_data.setVisibility(View.VISIBLE);
         }
 
     }

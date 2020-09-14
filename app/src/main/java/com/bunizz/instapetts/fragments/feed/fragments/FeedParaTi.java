@@ -251,7 +251,7 @@ public class FeedParaTi  extends Fragment implements  FeedContract.View{
                                 loading = false;
                                 if (IS_ALL == false) {
                                     smoot_progress.setVisibility(View.VISIBLE);
-                                    mPresenter.get_next_feed(false, 0, PAGINADOR);
+                                    mPresenter.getMoreFeedParaTi(PAGINADOR,0 );
                                 } else {
                                     smoot_progress.setVisibility(View.GONE);
                                 }
@@ -262,6 +262,7 @@ public class FeedParaTi  extends Fragment implements  FeedContract.View{
             }
         });
 
+        refresh_feed.setOnRefreshListener(() -> mPresenter.getFeedParaTi());
 
     }
     private RequestManager initGlide() {

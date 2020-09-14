@@ -18,6 +18,7 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.TipsBean;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.tips.TipsContract;
 import com.bunizz.instapetts.fragments.tips.TipsPresenter;
@@ -170,7 +171,17 @@ public class TipsforMyPets extends Fragment implements  TipsContract.View {
                 }
             }
         });
-        presenter.havePets();
+        if(!App.read(PREFERENCES.MODO_INVITADO,false))
+          presenter.havePets();
+        else{
+            refresh_tips.setRefreshing(false);
+            root_loading.setVisibility(View.GONE);
+            root_no_internet.setVisibility(View.VISIBLE);
+            title_no_internet.setText(getActivity().getString(R.string.mode_invited));
+            body_no_data.setText(getActivity().getString(R.string.mode_invited_body));
+            icon_no_internet.setImageDrawable(getActivity().getDrawable(R.drawable.logoapp));
+        }
+
     }
 
 
@@ -223,7 +234,26 @@ public class TipsforMyPets extends Fragment implements  TipsContract.View {
 
     @Override
     public void showTipsForMyPets(ArrayList<TipsBean> tips_list) {
+        loading = true;
+        if(tips_list!=null) {
+            if (tips_list.size() > 0){
+                data.clear();
+                PAGINADOR = tips_list.get(tips_list.size() - 1).getId();
+                data.addAll(tips_list);
+                        refresh_tips.setRefreshing(false);
+                        root_loading.setVisibility(View.GONE);
+                        root_loading.setVisibility(View.GONE);
+                        adapter.setData(data);
+                } else {
+                refresh_tips.setRefreshing(false);
+                root_loading.setVisibility(View.GONE);
+                root_no_internet.setVisibility(View.VISIBLE);
+                title_no_internet.setText(getActivity().getString(R.string.no_tips_mascota));
+                body_no_data.setText(getActivity().getString(R.string.no_tips_mascota_body));
+                icon_no_internet.setImageDrawable(getActivity().getDrawable(R.drawable.logoapp));
+                }
 
+        }
     }
 
     @Override

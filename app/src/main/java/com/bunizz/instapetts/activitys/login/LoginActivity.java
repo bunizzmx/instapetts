@@ -323,6 +323,8 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                     if (granted) {
                         getLocation();
                     }
+                },error->{
+                    Log.e("ERROR","ERROR");
                 });
     }
     @Override
@@ -654,6 +656,8 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
                         App.getInstance().show_dialog_permision(LoginActivity.this,getResources().getString(R.string.permision_storage),
                                 getResources().getString(R.string.permision_storage_body),0);
                     }
+                },error->{
+                    Log.e("ERROR","ERROR");
                 });
     }
 
