@@ -100,6 +100,24 @@
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"/>
         </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_gravity="center_vertical"
+            android:padding="10dp"
+            android:id="@+id/tab_instapetts_tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:background="?attr/selectableItemBackground">
+            <ImageView
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:id="@+id/icon_instapetts_tv"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_instapetts_tv"
+                tools:ignore="ContentDescription" />
+        </RelativeLayout>
         <RelativeLayout
 
             android:padding="10dp"
@@ -131,25 +149,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </RelativeLayout>
-        <RelativeLayout
-            android:padding="5dp"
-            android:background="?attr/selectableItemBackground"
-            android:id="@+id/tab_add_image"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            >
-                        <ImageView
-                            android:tint="@color/black"
-                            android:layout_centerVertical="true"
-                            android:layout_centerHorizontal="true"
-                            android:id="@+id/icon_add_image_pet"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_hand_pet_stroke"
-                            tools:ignore="ContentDescription" />
-        </RelativeLayout>
-
         <RelativeLayout
             android:layout_gravity="center_vertical"
             android:padding="10dp"

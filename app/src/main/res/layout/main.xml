@@ -21,6 +21,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
             <include layout="@layout/bottom_nav"/>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/tab_add_image"
+                sothree:backgroundTint="@color/colorPrimaryDark"
+                android:tint="@color/primary"
+                sothree:elevation="3dp"
+                sothree:fabSize="auto"
+                android:layout_marginBottom="60dp"
+                android:layout_marginEnd="10dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_hand_pet_stroke_w"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </RelativeLayout>
     <RelativeLayout
         android:background="@color/white"
@@ -43,10 +56,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageView
-                android:tint="@color/primary"
                 android:src="@drawable/ic_arrow_back"
                 android:layout_width="15dp"
-                android:layout_height="15dp"/>
+                android:layout_height="15dp"
+                sothree:tint="@color/primary" />
         </androidx.cardview.widget.CardView>
     </RelativeLayout>
 </com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout>

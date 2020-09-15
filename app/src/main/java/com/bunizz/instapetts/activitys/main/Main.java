@@ -131,6 +131,7 @@ public class Main extends AppCompatActivity implements
     private Stack<FragmentElement> stack_posts_search_advanced;
     private Stack<FragmentElement> stack_comentarios;
     private Stack<FragmentElement> stack_side_menu;
+    private Stack<FragmentElement> stack_play_videos;
 
     private FragmentElement mCurrentFragment;
 
@@ -147,8 +148,7 @@ public class Main extends AppCompatActivity implements
     ImageView icon_tips;
     @BindView(R.id.icon_feed_pet)
     ImageView icon_feed_pet;
-    @BindView(R.id.icon_add_image_pet)
-    ImageView icon_add_image_pet;
+
     @BindView(R.id.icon_search_pet)
     ImageView icon_search_pet;
     @BindView(R.id.icon_profile_pet)
@@ -351,6 +351,7 @@ public class Main extends AppCompatActivity implements
             stack_follows = new Stack<>();
             stack_comentarios = new Stack<>();
             stack_side_menu = new Stack<>();
+            stack_play_videos = new Stack<>();
             setupFirstFragment();
             mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
             mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
@@ -600,6 +601,20 @@ public class Main extends AppCompatActivity implements
     }
 
 
+    private void changue_to_play_videos(FragmentElement fragment,Bundle data,boolean is_back) {
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            mCurrentFragment.getFragment().setArguments(data);
+            if (stack_play_videos.size() <= 0) {
+                stack_play_videos.push(mCurrentFragment);
+            }
+        }
+        inflateFragment(is_back);
+    }
+
+
+
+
 
 
 
@@ -721,6 +736,13 @@ public class Main extends AppCompatActivity implements
                 changue_to_side(new FragmentElement<>("", SideFragment.newInstance(), FragmentElement.INSTANCE_SIDE_MENU),bundle,back);
             } else {
                 changue_to_side(stack_side_menu.pop(),bundle,back);
+            }
+        }
+        else if(intanceType == FragmentElement.INSTANCE_PLAY_VIDEOS){
+            if (stack_play_videos.size() == 0) {
+                changue_to_play_videos(new FragmentElement<>("", playVideoFragment.newInstance(), FragmentElement.INSTANCE_PLAY_VIDEOS),bundle,back);
+            } else {
+                changue_to_play_videos(stack_play_videos.pop(),bundle,back);
             }
         }
 
@@ -997,7 +1019,6 @@ public class Main extends AppCompatActivity implements
 
     private void repaint_nav(int id ){
         icon_tips.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_food_pet));
-        icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_hand_pet_stroke));
         icon_feed_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_home_pet));
         icon_search_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_search));
         icon_profile_pet.setBorderColor(getResources().getColor(R.color.white));
@@ -1021,9 +1042,6 @@ public class Main extends AppCompatActivity implements
         else if(id == R.id.tab_search_pet) {
             text_search_pet.setTextColor(this.getResources().getColor(R.color.primary));
             icon_search_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_search_black));
-        }
-        else if(id == R.id.tab_add_image) {
-            icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_hand_pet_stroke));
         }
     }
 
@@ -1634,7 +1652,6 @@ public class Main extends AppCompatActivity implements
     public void repaint_icons_and_tab(){
         root_bottom_nav.setBackgroundColor(Color.BLACK);
         icon_tips.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_food_pet_w));
-        icon_add_image_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_hand_pet_stroke_w));
         icon_feed_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_home_pet_w));
         icon_search_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_search_w));
         icon_profile_pet.setBorderColor(getResources().getColor(R.color.white));
