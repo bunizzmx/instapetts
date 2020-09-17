@@ -11,10 +11,13 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.beans.PlayVideos;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.tips.FragmentTipsViewpager;
 import com.bunizz.instapetts.utils.AnalogTv.AnalogTvNoise;
 import com.bunizz.instapetts.utils.HistoryView.StoryPlayerProgressView;
+import com.bunizz.instapetts.utils.hearts.HeartView;
+import com.bunizz.instapetts.utils.hearts.PeriscopeLayout;
 import com.bunizz.instapetts.utils.line_progressbar.LineProgress;
 import com.bunizz.instapetts.utils.video_player.PreviewLoader;
 import com.bunizz.instapetts.utils.video_player.PreviewTumbh.ExoPlayerMediaSourceBuilder;
@@ -40,6 +43,8 @@ import com.google.android.exoplayer2.util.Util;
 
 import org.parceler.Parcels;
 
+import java.util.Random;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -47,7 +52,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class playVideoItem extends Fragment implements PreviewLoader {
+public class playVideoItem extends Fragment implements PreviewLoader,View.OnClickListener {
 
    public static  Bundle arguments;
 
@@ -55,7 +60,7 @@ public class playVideoItem extends Fragment implements PreviewLoader {
     private SimpleExoPlayer player;
     private String thumbnailsUrl;
     private ImageView imageView;
-    PostBean postBean;
+    PlayVideos postBean;
 
     @BindView(R.id.exoplayer_play_video)
     PlayerView videoSurfaceView;
@@ -66,9 +71,12 @@ public class playVideoItem extends Fragment implements PreviewLoader {
     @BindView(R.id.noise)
     AnalogTvNoise tv_noise;
 
+    @BindView(R.id.periscope)
+    PeriscopeLayout periscope;
 
 
-    public static playVideoItem newInstancex(PostBean postBean) {
+
+    public static playVideoItem newInstancex(PlayVideos postBean) {
         arguments = new Bundle();
         arguments.putParcelable("POSTS", Parcels.wrap(postBean));
         return new playVideoItem();
@@ -93,8 +101,11 @@ public class playVideoItem extends Fragment implements PreviewLoader {
             if (arguments.getParcelable("POSTS") != null)
                 postBean = Parcels.unwrap(arguments.getParcelable("POSTS"));
         }
-        thumbnailsUrl ="https://firebasestorage.googleapis.com/v0/b/bucket_tumbh_video/o/8ydEk7oUpybyZ844a2GroD0Jp0J3%2FINSTAPETS_22264ae0-759a-4c9e-bb7c-0283d9394fcc.jpg?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
+        Log.e("play_videos_url","-->" +  postBean.getUrl_video());
+        thumbnailsUrl = postBean.getUrl_video();
         this.mediaSourceBuilder = new ExoPlayerMediaSourceBuilder(videoSurfaceView.getContext());
+        periscope.setOnClickListener(this);
+
     }
 
     @Override
@@ -107,7 +118,7 @@ public class playVideoItem extends Fragment implements PreviewLoader {
     }
 
     private void createPlayers() {
-        play(Uri.parse("https://doxooth01rgx0.cloudfront.net/Cat+-+39009960x540x3500.m3u8"));
+        play(Uri.parse(thumbnailsUrl));
         if (player != null) {
             player.release();
         }
@@ -236,5 +247,8 @@ public class playVideoItem extends Fragment implements PreviewLoader {
     }
 
 
-
+    @Override
+    public void onClick(View v) {
+        periscope.addHeart();
+    }
 }

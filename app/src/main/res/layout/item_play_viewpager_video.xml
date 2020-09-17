@@ -97,4 +97,11 @@
 
     </LinearLayout>
 
+    <com.bunizz.instapetts.utils.hearts.PeriscopeLayout
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/periscope"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        />
 </RelativeLayout>

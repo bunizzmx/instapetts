@@ -60,7 +60,7 @@ import com.bunizz.instapetts.fragments.search.posts.FragmentPostPublics;
 import com.bunizz.instapetts.fragments.side.SideFragment;
 import com.bunizz.instapetts.fragments.tips.FragmentTipsViewpager;
 import com.bunizz.instapetts.fragments.tips.detail.FragmentTipDetail;
-import com.bunizz.instapetts.fragments.vertical_videos.playVideoFragment;
+import com.bunizz.instapetts.fragments.vertical_videos.ViewPagerVideoFragment;
 import com.bunizz.instapetts.listeners.available_name_listener;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
@@ -88,6 +88,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -172,7 +173,8 @@ public class Main extends AppCompatActivity implements
     @BindView(R.id.smoot_progress)
     SmoothProgressBar smoot_progress;
 
-
+    @BindView(R.id.icon_instapetts_tv)
+    ImageView icon_instapetts_tv;
 
 
     @BindView(R.id.text_smoot)
@@ -180,6 +182,10 @@ public class Main extends AppCompatActivity implements
 
     @BindView(R.id.close_smoot)
     RelativeLayout close_smoot;
+
+    @BindView(R.id.tab_add_image)
+    FloatingActionButton tab_add_image;
+
 
 
     @BindView(R.id.root_bottom_nav)
@@ -222,6 +228,16 @@ public class Main extends AppCompatActivity implements
     @OnClick(R.id.back_to_main_sliding)
     void back_to_main_sliding() {
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+    }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.tab_instapetts_tv)
+    void tab_instapetts_tv() {
+        repaint_icons_and_tab();
+        tab_add_image.hide();
+        if(mCurrentFragment.getInstanceType() != FragmentElement.INSTANCE_PLAY_VIDEOS) {
+            changeOfInstance(FragmentElement.INSTANCE_PLAY_VIDEOS, null, false);
+        }
     }
 
 
@@ -740,7 +756,7 @@ public class Main extends AppCompatActivity implements
         }
         else if(intanceType == FragmentElement.INSTANCE_PLAY_VIDEOS){
             if (stack_play_videos.size() == 0) {
-                changue_to_play_videos(new FragmentElement<>("", playVideoFragment.newInstance(), FragmentElement.INSTANCE_PLAY_VIDEOS),bundle,back);
+                changue_to_play_videos(new FragmentElement<>("", ViewPagerVideoFragment.newInstance(), FragmentElement.INSTANCE_PLAY_VIDEOS),bundle,back);
             } else {
                 changue_to_play_videos(stack_play_videos.pop(),bundle,back);
             }
@@ -844,6 +860,8 @@ public class Main extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
+        changeStatusBarColor(R.color.white);
+        root_bottom_nav.setBackgroundColor(Color.WHITE);
         try {
             Log.e("OLD_NEW", "-->" + mCurrentFragment.getInstanceType() + "/" + mOldFragment.getInstanceType());
             if (IS_SHEET_OPEN) {
@@ -1021,6 +1039,7 @@ public class Main extends AppCompatActivity implements
         icon_tips.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_food_pet));
         icon_feed_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_home_pet));
         icon_search_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_search));
+        icon_instapetts_tv.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_instapetts_tv));
         icon_profile_pet.setBorderColor(getResources().getColor(R.color.white));
         text_profile_pet.setTextColor(Color.BLACK);
         text_tips.setTextColor(Color.BLACK);
@@ -1650,10 +1669,12 @@ public class Main extends AppCompatActivity implements
 
 
     public void repaint_icons_and_tab(){
+        changeStatusBarColor(R.color.shadow_color);
         root_bottom_nav.setBackgroundColor(Color.BLACK);
         icon_tips.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_food_pet_w));
         icon_feed_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_home_pet_w));
         icon_search_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_search_w));
         icon_profile_pet.setBorderColor(getResources().getColor(R.color.white));
+        icon_instapetts_tv.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_instapetts_tv_w));
     }
 }
