@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
@@ -16,6 +17,7 @@ import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.fragments.tips.FragmentTipsViewpager;
 import com.bunizz.instapetts.utils.AnalogTv.AnalogTvNoise;
 import com.bunizz.instapetts.utils.HistoryView.StoryPlayerProgressView;
+import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.hearts.HeartView;
 import com.bunizz.instapetts.utils.hearts.PeriscopeLayout;
 import com.bunizz.instapetts.utils.line_progressbar.LineProgress;
@@ -74,6 +76,15 @@ public class playVideoItem extends Fragment implements PreviewLoader,View.OnClic
     @BindView(R.id.periscope)
     PeriscopeLayout periscope;
 
+    @BindView(R.id.title_player)
+    TextView title_player;
+
+    @BindView(R.id.descripcion_video)
+    TextView descripcion_video;
+
+    @BindView(R.id.image_video_tumbh)
+    ImagenCircular image_video_tumbh;
+
 
 
     public static playVideoItem newInstancex(PlayVideos postBean) {
@@ -105,6 +116,9 @@ public class playVideoItem extends Fragment implements PreviewLoader,View.OnClic
         thumbnailsUrl = postBean.getUrl_video();
         this.mediaSourceBuilder = new ExoPlayerMediaSourceBuilder(videoSurfaceView.getContext());
         periscope.setOnClickListener(this);
+        title_player.setText(postBean.getTitulo());
+        descripcion_video.setText(postBean.getDescripcion());
+        Glide.with(getContext()).load(R.drawable.logoapp).into(image_video_tumbh);
 
     }
 
