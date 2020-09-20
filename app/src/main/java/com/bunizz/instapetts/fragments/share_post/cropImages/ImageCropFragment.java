@@ -214,11 +214,6 @@ public class ImageCropFragment extends Fragment {
         }else{
             fileex = filename + UUID.randomUUID();
         }
-        if(is_from_profile == 1){
-            fileex = fileex + App.read(PREFERENCES.UUID,"INVALID");
-        }else{
-            fileex = fileex + UUID.randomUUID();
-        }
 
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + folderName);
         if (!file.exists()) {
