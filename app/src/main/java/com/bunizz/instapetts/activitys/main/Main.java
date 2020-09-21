@@ -77,6 +77,7 @@ import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
 import com.bunizz.instapetts.utils.dilogs.DialogFirstUser;
 import com.bunizz.instapetts.utils.dilogs.DialogLogout;
+import com.bunizz.instapetts.utils.dilogs.DialogUpdateAvailable;
 import com.bunizz.instapetts.utils.smoot.SmoothProgressBar;
 import com.bunizz.instapetts.utils.snackbar.SnackBar;
 import com.bunizz.instapetts.utils.target.TapTarget;
@@ -418,6 +419,8 @@ public class Main extends AppCompatActivity implements
         if(App.read(PREFERENCES.PRIMER_USUARIO_INVITADO,false)){
             show_dialog_first_user();
         }
+
+
     }
 
     @Override
@@ -1618,6 +1621,12 @@ public class Main extends AppCompatActivity implements
         App.write(PREFERENCES.PRIMER_USUARIO_INVITADO,false);
         changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, false);
         repaint_nav(R.id.tab_profile_pet);
+    }
+
+    @Override
+    public void UpdateAvailable(String version) {
+        DialogUpdateAvailable dialogUpdateAvailable = new DialogUpdateAvailable(this,version);
+        dialogUpdateAvailable.show();
     }
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {

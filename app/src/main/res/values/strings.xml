@@ -428,4 +428,10 @@
 
     <string name="mode_invited">Estas en modo \ninvitado</string>
     <string name="mode_invited_body">Crea una cuenta o incia sesiòn para poder encontrar tips de tus mascotas.</string>
+
+    <string name="update_app">Actualizar</string>
+    <string name="update_app_description">Disponible version : </string>
+    <string name="despues">Despues</string>
+
+    <string name="comented_your_post">comento tu publicacion</string>
 </resources>

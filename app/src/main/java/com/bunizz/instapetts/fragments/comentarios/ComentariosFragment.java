@@ -22,7 +22,9 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.CommentariosBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.listeners.delete;
 import com.bunizz.instapetts.utils.ImagenCircular;
+import com.bunizz.instapetts.utils.dilogs.DialogDeletes;
 import com.bunizz.instapetts.utils.loadings.SpinKitView;
 import com.bunizz.instapetts.utils.loadings.SpriteFactory;
 import com.bunizz.instapetts.utils.loadings.Style;
@@ -125,6 +127,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
             commentariosBean.setCommentario(input_commentarios.getText().toString());
             commentariosBean.setName_user(App.read(PREFERENCES.NAME_USER, "INVALID"));
             commentariosBean.setLikes(0);
+            commentariosBean.setId_destinatario(IDUSER_POST);
             if(TYPE_PET < 0)
                 commentariosBean.setHelps_post(1);
             else
@@ -156,6 +159,12 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                   presenter.likeComment(post,document);
                 else
                     Log.e("DOCUMENTO_NULO","no se envia el like");
+            }
+
+            @Override
+            public void onDeleteComment(String document) {
+                Log.e("DELETES_COMMENTS","-->" + ID_POST + "/" + document);
+                presenter.deleteComment(ID_POST,document);
             }
         });
         presenter = new ComentariosPresenter(this,getContext());
@@ -423,6 +432,35 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                     }
                 }
             });
+            if(data.get(position).getId_user() == App.read(PREFERENCES.ID_USER_FROM_WEB,0)){
+                h.like_comment.setVisibility(View.GONE);
+                h.delete_comment.setVisibility(View.VISIBLE);
+                h.delete_comment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        DialogDeletes dialogDeletes = new DialogDeletes(getContext(),0,0);
+                        dialogDeletes.setDocument_firestore(data.get(position).getId_document());
+                        dialogDeletes.setIs_delete_firestore(true);
+                        dialogDeletes.setListener(new delete() {
+                            @Override
+                            public void delete(boolean delete) {}
+                            @Override
+                            public void deleteOne(int id) {}
+                            @Override
+                            public void deleteDocument(String document) {
+                                data.remove(position);
+                                notifyItemRemoved(position);
+                               listener.onDeleteComment(document);
+                            }
+                        });
+                        dialogDeletes.show();
+                    }
+                });
+            }else{
+                h.like_comment.setVisibility(View.VISIBLE);
+                h.delete_comment.setVisibility(View.GONE);
+            }
+
             if(data.get(position).getLikes() == 0)
                h.n_likes_comment.setText(" "+ getString(R.string.me_gusta));
             else
@@ -441,6 +479,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
              RelativeLayout like_comment;
              ImageView icon_like_comment;
              TextView n_likes_comment,item_comentarios_autor;
+             RelativeLayout delete_comment;
             public CommentsHolder(@NonNull View itemView) {
                 super(itemView);
                 item_comentarios_name = itemView.findViewById(R.id.item_comentarios_name);
@@ -451,12 +490,14 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                 icon_like_comment = itemView.findViewById(R.id.icon_like_comment);
                 n_likes_comment = itemView.findViewById(R.id.n_likes_comment);
                 item_comentarios_autor = itemView.findViewById(R.id.item_comentarios_autor);
+                delete_comment = itemView.findViewById(R.id.delete_comment);
             }
         }
     }
 
     public interface ListenerComments{
         void onLike(int post,String document);
+        void onDeleteComment(String document);
     }
 
     private void scrolbottom(){

@@ -14,6 +14,7 @@ public interface ComentariosContract {
        void getComentarios(int id_post);
        void likeComment(int id_post,String id_document);
        void loadNextComments(int id_post);
+       void deleteComment(int id_post,String document);
 
     }
 

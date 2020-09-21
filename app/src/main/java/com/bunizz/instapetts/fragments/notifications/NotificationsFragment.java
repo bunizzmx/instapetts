@@ -88,6 +88,9 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
             public void deleteOne(int id) {
 
             }
+            public void deleteDocument(String document) {
+
+            }
         });
         dialogDeletes.show();
     }
@@ -122,6 +125,11 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
             public void deleteOne(int id) {
                presenter.deleteNotification(id);
             }
+
+            @Override
+            public void deleteDocument(String document) {
+
+            }
         });
         notificationsAdapter.setListener(new notifications_events() {
             @Override
@@ -140,6 +148,9 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
                     @Override
                     public void deleteOne(int id) {
                         presenter.deleteNotification(id);
+                    }
+                    public void deleteDocument(String document) {
+
                     }
                 });
 
@@ -351,6 +362,9 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
 
                             @Override
                             public void deleteOne(int id) {
+
+                            }
+                            public void deleteDocument(String document) {
 
                             }
                         });

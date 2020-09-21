@@ -44,6 +44,9 @@ public class NotificationHelper extends GenericHelper {
                 if(App.read(PREFERENCES.PUSH_ME_GUSTAS,true))
                     save(notificationBean);
                 break;
+            case 3:
+                    save(notificationBean);
+                break;
         }
 
     }
@@ -92,7 +95,7 @@ public class NotificationHelper extends GenericHelper {
                 TABLE_NAME,
                 null,
                 null,
-                null, null, null, null, "2");
+                null, null, null, "id DESC", "2");
         try {
             if(cursor.moveToFirst()){
                 NotificationBean n = new NotificationBean();

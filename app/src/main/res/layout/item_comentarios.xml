@@ -74,4 +74,18 @@
             android:layout_width="15dp"
             android:layout_height="15dp"/>
     </RelativeLayout>
+    <RelativeLayout
+        android:background="?attr/selectableItemBackground"
+        android:layout_below="@+id/like_comment"
+        android:id="@+id/delete_comment"
+        android:layout_alignParentRight="true"
+        android:layout_width="40dp"
+        android:layout_height="40dp">
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_trash"
+            android:layout_width="15dp"
+            android:layout_height="15dp"/>
+    </RelativeLayout>
 </RelativeLayout>

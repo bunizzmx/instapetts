@@ -72,7 +72,7 @@ public class JobsServices {
     FirebaseFirestore db;
     NotificationHelper notificationHelper;
     IdsUsersHelper idsUsersHelper;
-    ArrayList<String> ids = new ArrayList<>();
+   // ArrayList<String> ids = new ArrayList<>();
     int index_sync =0;
     MyStoryHelper myStoryHelper;
     StorageMetadata metadata;
@@ -82,6 +82,7 @@ public class JobsServices {
     RxPermissions rxPermissions ;
     private AddressResultReceiver resultReceiver;
     String addressOutput="";
+    ArrayList<String> notificaciones = new ArrayList<>();
 
 
     public JobsServices(Activity context) {
@@ -97,6 +98,7 @@ public class JobsServices {
 
 
     public void startNotificationsRequest() {
+        notificaciones.clear();
         scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleWithFixedDelay(() -> {
             try {
@@ -108,33 +110,36 @@ public class JobsServices {
 
                            }
                        })
-                       .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                           @Override
-                           public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                               for (QueryDocumentSnapshot document : task.getResult()) {
-                                   NotificationBeanFirestore notification = document.toObject(NotificationBeanFirestore.class);
-                                   NotificationBean NOTIFICACION = new NotificationBean(
-                                           getTitleForNotification(notification.getTYPE_NOTIFICATION(),notification.getNAME_REMITENTE()),
-                                           getBodyForNotification(notification.getTYPE_NOTIFICATION(),notification.getNAME_REMITENTE()),
-                                           notification.getFOTO_REMITENTE(),
-                                           notification.getTYPE_NOTIFICATION(),
-                                           notification.getID_REMITENTE(),
-                                           notification.getURL_EXTRA(),
-                                           notification.getFECHA()
-                                   );
-                                   NOTIFICACION.setId_recurso(notification.getID_RECURSO());
-                                   NOTIFICACION.setId_document_notification(""+document.getId());
-                                   notificationHelper.saveNotification(NOTIFICACION);
-                               }
-                               ids =  notificationHelper.getNotificationForSincronized();
-                               synchronizedNotifications("-");
-                       }
-                       })
-                       .addOnFailureListener(new OnFailureListener() {
-                           @Override
-                           public void onFailure(@NonNull Exception e) {
+                       .addOnCompleteListener(task -> {
+                           for (QueryDocumentSnapshot document : task.getResult()) {
+                               NotificationBeanFirestore notification = document.toObject(NotificationBeanFirestore.class);
+                               String boddy = "";
+                               if(notification.getTYPE_NOTIFICATION() == 3)
+                                   boddy = getBodyForNotification(notification.getTYPE_NOTIFICATION(),notification.getNAME_REMITENTE(),"");
+                               else
+                                   boddy = getBodyForNotification(notification.getTYPE_NOTIFICATION(),notification.getNAME_REMITENTE(),notification.getURL_EXTRA());
 
+                               NotificationBean NOTIFICACION = new NotificationBean(
+                                       getTitleForNotification(notification.getTYPE_NOTIFICATION(),notification.getNAME_REMITENTE()),
+                                       boddy,
+                                       notification.getFOTO_REMITENTE(),
+                                       notification.getTYPE_NOTIFICATION(),
+                                       notification.getID_REMITENTE(),
+                                       notification.getURL_EXTRA(),
+                                       notification.getFECHA()
+                               );
+                               NOTIFICACION.setId_recurso(notification.getID_RECURSO());
+                               NOTIFICACION.setId_document_notification(""+document.getId());
+                               notificaciones.add(""+document.getId());
+                               notificationHelper.saveNotification(NOTIFICACION);
                            }
+                          // ids =  notificationHelper.getNotificationForSincronized();
+                            index_sync = notificaciones.size();
+                           if(notificaciones.size()>0)
+                             synchronizedNotifications(0);
+                   })
+                       .addOnFailureListener(e -> {
+
                        });
             } catch (Exception ex) {
                 Log.e(TAG, "Error en la ejecución de peticion de tramas", ex);
@@ -151,7 +156,6 @@ public class JobsServices {
 
             try {
                 list_ids = idsUsersHelper.getMyFriendsForPost();
-                Log.e("CURRENT_FRIEND","-->:" + list_ids.size() + "/" + App.read(PREFERENCES.CURRENTS_FRIENDS,0));
                 if(list_ids.size() == App.read(PREFERENCES.CURRENTS_FRIENDS,0) && list_ids.size() > 0){
                   Log.e("CURRENT_FRIEND","TENGO LOS MISMOS AMIGOS NO HAGO NADA");
                 }else{
@@ -185,7 +189,6 @@ public class JobsServices {
                 histories.addAll(myStoryHelper.getMyStories());
                 for(int i =0;i<histories.size();i++){
                     int horas = App.horas_restantes_top(histories.get(i).getDate_story());
-                    Log.e("DELETE_MY_HISTORY","horas:" + horas);
                     if(horas > 25){
                         Log.e("DELETE_MY_HISTORY","si");
                         myStoryHelper.deleteHistory(histories.get(i).getIdentificador());
@@ -200,44 +203,38 @@ public class JobsServices {
     }
 
 
-   public void  synchronizedNotifications(String id_document){
-        if(ids.size() > 0) {
-            String ID_DOCUMENT = "";
-            if (id_document.equals("-")) {
-                ID_DOCUMENT = ids.get(0);
-            } else {
-                ID_DOCUMENT = ids.get(index_sync);
-            }
+   public void  synchronizedNotifications(int posicion){
+        if(posicion == notificaciones.size()) {
+            Log.e("NOTIFICACION_SYN", "RETURN");
+            notificaciones.clear();
+            index_sync = 0;
+            if (notificaciones.size() > 0){
+                NotificationBean NOTIFICACION;
+            NOTIFICACION = notificationHelper.getLastNotifications();
+            if (NOTIFICACION != null)
+                makeLocalNotification(NOTIFICACION);
+              }
+            return;
+        }
             db.collection(FIRESTORE.COLLECTION_NOTIFICATIONS).document("" + App.read(PREFERENCES.ID_USER_FROM_WEB, 0))
-                    .collection(FIRESTORE.COLLECTION_NOTIFICATIONS).document(ID_DOCUMENT)
+                    .collection(FIRESTORE.COLLECTION_NOTIFICATIONS).document(notificaciones.get(posicion))
                     .delete()
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Log.e("NOTIFICACION_SYN", "->" + ids.get(index_sync));
-                            notificationHelper.updateSync(ids.get(index_sync));
-                            if(ids.size() -1 < index_sync){
-                                index_sync ++ ;
-                                Log.e("NOTIFICACION_SYN", "-> HAY MAS" );
-                                synchronizedNotifications(ids.get(index_sync));
-                            }else{
-                                NotificationBean NOTIFICACION ;
-                                NOTIFICACION = notificationHelper.getLastNotifications();
-                                Log.e("DATA_NOTIFICATIOON","->" + NOTIFICACION.getId_recurso() + "/" + NOTIFICACION.getId_usuario());
-                                if(NOTIFICACION!=null)
-                                 makeLocalNotification(NOTIFICACION);
-                                Log.e("NOTIFICACION_SYN", "-> YA SINCRONICE TODO" );
-                            }
-                        }
-                    }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    Log.e("NOTIFICACION_SYN", "1");
+                    notificationHelper.updateSync(notificaciones.get(posicion));
+                    if(posicion > 0){
+                        index_sync -=1;
+                        synchronizedNotifications(posicion +1);
+                    }else{
+                        NotificationBean NOTIFICACION ;
+                        NOTIFICACION = notificationHelper.getLastNotifications();
+                        if(NOTIFICACION!=null)
+                            makeLocalNotification(NOTIFICACION);
+                    }
                 }
             });
-        }else{
-            Log.e("NOTIFICACION_SYN", "NO HAY MAS QUE SINCRONIZAR");
-        }
+
     }
 
     String getTitleForNotification(int type_notification,String name){
@@ -249,13 +246,16 @@ public class JobsServices {
             case 1:
                 title = name  + " a  "  + context.getResources().getString(R.string.title_comment);
                 break;
+            case 3:
+                title = name  + " " + context.getResources().getString(R.string.comented_your_post);
+                break;
         }
 
         return title;
     }
 
 
-    String getBodyForNotification(int type_notification,String name){
+    String getBodyForNotification(int type_notification,String name,String texto_extra){
         String body="";
         switch (type_notification){
             case 0:
@@ -263,6 +263,9 @@ public class JobsServices {
                 break;
             case 1:
                 body = name  + " "  + context.getResources().getString(R.string.body_comment);
+                break;
+            case 3:
+                body = "" + texto_extra;
                 break;
         }
         return body;

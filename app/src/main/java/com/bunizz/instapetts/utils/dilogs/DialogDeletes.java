@@ -31,6 +31,8 @@ public class DialogDeletes extends BaseAlertDialog{
     TextView description_deletes;
     TextView confirm_deletes;
     TextView confirm_decline;
+    String document_firestore="";
+    boolean is_delete_firestore =false;
     boolean is_cancelable =true;
 
     public delete getListener() {
@@ -41,7 +43,23 @@ public class DialogDeletes extends BaseAlertDialog{
         this.listener = listener;
     }
 
-    public DialogDeletes(Context context,int id,int type_dialog){
+    public String getDocument_firestore() {
+        return document_firestore;
+    }
+
+    public void setDocument_firestore(String document_firestore) {
+        this.document_firestore = document_firestore;
+    }
+
+    public boolean isIs_delete_firestore() {
+        return is_delete_firestore;
+    }
+
+    public void setIs_delete_firestore(boolean is_delete_firestore) {
+        this.is_delete_firestore = is_delete_firestore;
+    }
+
+    public DialogDeletes(Context context, int id, int type_dialog){
         this.context = context;
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this.context);
         LayoutInflater inflater = LayoutInflater.from(this.context);
@@ -59,9 +77,15 @@ public class DialogDeletes extends BaseAlertDialog{
             delete_now_layout.setOnClickListener(v -> {
                 if(listener!=null) {
                     if(type_dialog == 0) {
-                        listener.delete(true);
+                        if(is_delete_firestore)
+                            listener.deleteDocument(document_firestore);
+                        else
+                             listener.delete(true);
                     }else{
-                        listener.deleteOne(id);
+                        if(is_delete_firestore)
+                            listener.deleteDocument(document_firestore);
+                        else
+                            listener.deleteOne(id);
                     }
                     dismiss();
                 }

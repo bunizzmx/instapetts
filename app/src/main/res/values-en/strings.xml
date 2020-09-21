@@ -440,4 +440,9 @@
 
     <string name="mode_invited">You are in \n invited mode</string>
     <string name="mode_invited_body">Create an account or log in to find tips for your pets..</string>
+
+    <string name="update_app">update</string>
+    <string name="update_app_description">Available version: </string>
+    <string name="despues">After</string>
+    <string name="comented_your_post">comento tu publicacion</string>
 </resources>
