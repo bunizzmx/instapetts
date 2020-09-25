@@ -1255,7 +1255,7 @@ public class Main extends AppCompatActivity implements
                     }
                 });
             }else{
-                if(App.read(BUNDLES.NO_MOSTRAR_DIALOGO_PET,0)!=2) {
+               /* if(App.read(BUNDLES.NO_MOSTRAR_DIALOGO_PET,0)!=2) {
                     DialogCreatePostPet dialogCreatePostPet = new DialogCreatePostPet(this);
                     dialogCreatePostPet.setListener(new open_sheet_listener() {
                         @Override
@@ -1267,7 +1267,7 @@ public class Main extends AppCompatActivity implements
                         }
                     });
                     dialogCreatePostPet.show();
-                }
+                }*/
             }
         }
     }
