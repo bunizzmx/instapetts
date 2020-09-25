@@ -40,8 +40,20 @@ public class GenericHelper {
 
     public SQLiteDatabase getReadableDatabase() {
 
+        try {
             return mHelper.getReadableDatabase(secret);
+        } catch (SQLiteException readableDatabase) {
 
+            context.deleteDatabase(DataSQLite.DATABASE_NAME);
+            App.getInstance().clear_preferences();
+            Intent homeIntent = new Intent(context, Splash.class);
+            try {
+                context.startActivity(homeIntent);
+            } catch (AndroidRuntimeException ignore) {}
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(homeIntent);
+            return null;
+        }
     }
 
 }
