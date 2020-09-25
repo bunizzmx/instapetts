@@ -77,7 +77,9 @@ public class ComentariosPresenter implements ComentariosContract.Presenter {
                 .document(App.formatDateComments(new Date()))
                 .set(data)
                 .addOnSuccessListener(aVoid -> {})
-                .addOnCompleteListener(task -> { })
+               .addOnCompleteListener(new OnCompleteListener<Void>() {
+                   @Override
+                   public void onComplete(@NonNull Task<Void> task) { } })
                 .addOnFailureListener(e -> {});
             PostLikeBean postLikeBean = new PostLikeBean();
             postLikeBean.setId_post(commentariosBean.getId_post());
@@ -108,6 +110,7 @@ public class ComentariosPresenter implements ComentariosContract.Presenter {
                                             data_notification.put("ID_REMITENTE",App.read(PREFERENCES.ID_USER_FROM_WEB,0));
                                             data_notification.put("URL_EXTRA",commentariosBean.getCommentario());
                                             data_notification.put("FOTO_REMITENTE",App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
+                                            data_notification.put("FECHA",App.formatDateGMT(new Date()));
                                             App.getInstance().sendNotification(data_notification,commentariosBean.getId_destinatario());
                                             }
                                         } else {
@@ -177,40 +180,46 @@ public class ComentariosPresenter implements ComentariosContract.Presenter {
 
     @Override
     public void deleteComment(int id_post,String document) {
-        db.collection(FIRESTORE.COLLECTION_COMENTARIOS).document("-"+id_post+"-").collection(FIRESTORE.COLLECTION_COMENTARIOS_SUBCOLECCION)
-                .document(document)
-                .delete()
-                .addOnSuccessListener(aVoid -> { })
-                .addOnSuccessListener(aVoid -> {
-                    PostLikeBean postLikeBean = new PostLikeBean();
-                    postLikeBean.setId_post(id_post);
-                    postLikeBean.setTarget("DELETE_COMMENT");
-                    disposable.add(
-                            apiService.like_posts(postLikeBean)
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
-                                        @Override
-                                        public void onSuccess(SimpleResponse responsePost) {
-                                            if (responsePost != null) {
-                                                if (responsePost.getCode_response() == 200) {
-                                                    Log.e("DESCONTAR_COMENTARIO", "COMENTARIO DESCONTADO ");
+        if((""+id_post)!=null && document!=null) {
+            db.collection(FIRESTORE.COLLECTION_COMENTARIOS).document("-" + id_post + "-").collection(FIRESTORE.COLLECTION_COMENTARIOS_SUBCOLECCION)
+                    .document(document)
+                    .delete()
+                    .addOnSuccessListener(aVoid -> {
+                    })
+                    .addOnSuccessListener(aVoid -> {
+                        PostLikeBean postLikeBean = new PostLikeBean();
+                        postLikeBean.setId_post(id_post);
+                        postLikeBean.setTarget("DELETE_COMMENT");
+                        disposable.add(
+                                apiService.like_posts(postLikeBean)
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                                            @Override
+                                            public void onSuccess(SimpleResponse responsePost) {
+                                                if (responsePost != null) {
+                                                    if (responsePost.getCode_response() == 200) {
+                                                        Log.e("DESCONTAR_COMENTARIO", "COMENTARIO DESCONTADO ");
+                                                    }
                                                 }
                                             }
-                                        }
-                                        @Override
-                                        public void onError(Throwable e) {
-                                             Log.e("NUMBER_POSTS", "-->EROR : " + e.getMessage());
-                                        }
-                                    })
-                    );
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
 
-                    }
-                });
+                                            @Override
+                                            public void onError(Throwable e) {
+                                                Log.e("NUMBER_POSTS", "-->EROR : " + e.getMessage());
+                                            }
+                                        })
+                        );
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+        }else{
+            Log.e("ID_DOCUM,ENT","NULO");
+        }
     }
 
     @Override

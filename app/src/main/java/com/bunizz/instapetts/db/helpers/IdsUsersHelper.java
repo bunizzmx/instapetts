@@ -68,8 +68,9 @@ public class IdsUsersHelper extends GenericHelper {
     }
     public ArrayList<Integer> getMyFriendsForPost() {
         ArrayList<Integer> ids_users = new ArrayList<>();
-        final Cursor cursor = getReadableDatabase().rawQuery("SELECT * FROM "  +TABLE_NAME + " ORDER  BY RANDOM() LIMIT 10",null);
+        Cursor cursor=null;
         try {
+            cursor = getReadableDatabase().rawQuery("SELECT * FROM "  +TABLE_NAME + " ORDER  BY RANDOM() LIMIT 10",null);
             while (cursor.moveToNext()) {
                 ids_users.add(cursor.getInt(cursor.getColumnIndex(ID_USER)));
             }

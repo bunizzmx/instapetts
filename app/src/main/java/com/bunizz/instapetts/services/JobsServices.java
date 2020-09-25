@@ -115,9 +115,9 @@ public class JobsServices {
                                NotificationBeanFirestore notification = document.toObject(NotificationBeanFirestore.class);
                                String boddy = "";
                                if(notification.getTYPE_NOTIFICATION() == 3)
-                                   boddy = getBodyForNotification(notification.getTYPE_NOTIFICATION(),notification.getNAME_REMITENTE(),"");
-                               else
                                    boddy = getBodyForNotification(notification.getTYPE_NOTIFICATION(),notification.getNAME_REMITENTE(),notification.getURL_EXTRA());
+                               else
+                                   boddy = getBodyForNotification(notification.getTYPE_NOTIFICATION(),notification.getNAME_REMITENTE(),"");
 
                                NotificationBean NOTIFICACION = new NotificationBean(
                                        getTitleForNotification(notification.getTYPE_NOTIFICATION(),notification.getNAME_REMITENTE()),
@@ -274,25 +274,32 @@ public class JobsServices {
 
 
     void makeLocalNotification(NotificationBean notificationBean){
-        final Bitmap[] bitmap = {null};
-        Glide.with(context)
-                .asBitmap()
-                .load(notificationBean.getUrl_resource())
-                .into(new CustomTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+        try {
+            final Bitmap[] bitmap = {null};
+            if (context != null) {
+                Glide.with(context)
+                        .asBitmap()
+                        .load(notificationBean.getUrl_resource())
+                        .into(new CustomTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
 
-                        bitmap[0] = resource;
-                        // TODO Do some work: pass this bitmap
-                        buildNotification(notificationBean.getTitle().replace("<b>","").replace("</b>",""),
-                                notificationBean.getBody().replace("<b>","").replace("</b>","")
-                                ,notificationBean,bitmap[0]);
-                    }
+                                bitmap[0] = resource;
+                                // TODO Do some work: pass this bitmap
+                                buildNotification(notificationBean.getTitle().replace("<b>", "").replace("</b>", ""),
+                                        notificationBean.getBody().replace("<b>", "").replace("</b>", "")
+                                        , notificationBean, bitmap[0]);
+                            }
 
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-                    }
-                });
+                            @Override
+                            public void onLoadCleared(@Nullable Drawable placeholder) {
+                            }
+                        });
+            }
+        }catch (Exception E){
+            Log.e("NOTIFICACION","NO SE PUDO CREAR");
+        }
+
     }
 
 
@@ -313,7 +320,8 @@ public class JobsServices {
             intent.putExtra("TYPE_FRAGMENT", FragmentElement.INSTANCE_PREVIEW_PROFILE);
         }
         else if(notificationBean.getType_notification() == 3){
-            intent.putExtra("TYPE_FRAGMENT", FragmentElement.INSTANCE_FEED);
+            intent.putExtra("ID_RESOURCE",notificationBean.getId_recurso());
+            intent.putExtra("TYPE_FRAGMENT", FragmentElement.INSTANCE_COMENTARIOS);
         }
         else if(notificationBean.getType_notification() == 4){
             intent.putExtra("TYPE_FRAGMENT", FragmentElement.INSTANCE_TIPS);

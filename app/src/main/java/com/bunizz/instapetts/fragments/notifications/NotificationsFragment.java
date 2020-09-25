@@ -31,6 +31,7 @@ import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.NotificationBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
+import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
@@ -309,8 +310,12 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
                     h.delete_notification.setVisibility(View.VISIBLE);
                     h.image_extra.setVisibility(View.GONE);
                 }
-                if(notificationBeans.get(position).getType_notification() >=3){
-                   h.ic_notification.setImageDrawable(context.getResources().getDrawable(R.drawable.logo));
+                if(notificationBeans.get(position).getType_notification() ==3){
+                    h.title_notification.setVisibility(View.VISIBLE);
+                    Log.e("TTITIFJF","-->" +notificationBeans.get(position).getTitle());
+                    h.title_notification.setText(notificationBeans.get(position).getTitle());
+                  // h.ic_notification.setImageDrawable(context.getResources().getDrawable(R.drawable.logo));
+                    Glide.with(context).load(notificationBeans.get(position).getUrl_resource()).into(h.ic_notification);
                 }else{
                     Glide.with(context).load(notificationBeans.get(position).getUrl_resource()).into(h.ic_notification);
                 }
@@ -337,7 +342,12 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
                             break;
                         case 3:
                             // ABRE EL FEED
-                            listener_changue_instance.change_fragment_parameter(FragmentElement.INSTANCE_FEED,b);
+                            Log.e("ID_COPOS","-->" +notificationBeans.get(position).getId_recurso());
+                            b.putInt(BUNDLES.ID_POST,notificationBeans.get(position).getId_recurso());
+                            b.putBoolean(BUNDLES.CAN_COMMENT,true);
+                            b.putInt(BUNDLES.TYPE_PET,0);
+                            b.putInt(BUNDLES.ID_USUARIO,App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+                            listener_changue_instance.change_fragment_parameter(FragmentElement.INSTANCE_COMENTARIOS,b);
                             break;
                         case 4:
                             //ABRE EL FRAGMENT DE LOS TIPS

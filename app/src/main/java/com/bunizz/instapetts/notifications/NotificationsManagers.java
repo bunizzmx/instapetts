@@ -44,7 +44,6 @@ public class NotificationsManagers extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        Log.e("ONCREATE_APP","SERVICE NOTIF");
         notificationHelper = new NotificationHelper(this);
         notificationBean = new NotificationBean();
         String id_resource="";
@@ -54,10 +53,14 @@ public class NotificationsManagers extends FirebaseMessagingService {
         String url_resource = remoteMessage.getData().get("url_foto");
         String id_usuario = remoteMessage.getData().get("id_usuario");
         String url_extra = remoteMessage.getData().get("url_extra");
-        if(Integer.parseInt(type_notification) <=2){
-           id_resource = remoteMessage.getData().get("id_resource");
-           //notificationBean.setId_recurso(Integer.parseInt(id_resource));
+        switch (Integer.parseInt(type_notification)){
+            case 3:
+                id_resource = remoteMessage.getData().get("id_resource");
+                break;
+            default:
+                id_resource="0";
         }
+        notificationBean.setId_recurso(Integer.parseInt(id_resource));
         notificationBean.setBody(body);
         notificationBean.setTitle(title);
         notificationBean.setType_notification( Integer.parseInt(type_notification));
@@ -128,7 +131,8 @@ public class NotificationsManagers extends FirebaseMessagingService {
             intent.putExtra("TYPE_FRAGMENT", FragmentElement.INSTANCE_PREVIEW_PROFILE);
         }
         else if(notificationBean.getType_notification() == 3){
-            intent.putExtra("TYPE_FRAGMENT", FragmentElement.INSTANCE_FEED);
+            intent.putExtra("ID_RESOURCE",notificationBean.getId_recurso());
+            intent.putExtra("TYPE_FRAGMENT", FragmentElement.INSTANCE_COMENTARIOS);
         }
         else if(notificationBean.getType_notification() == 4){
             intent.putExtra("TYPE_FRAGMENT", FragmentElement.INSTANCE_TIPS);

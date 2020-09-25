@@ -57,6 +57,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"/>
         <androidx.cardview.widget.CardView
+            android:visibility="gone"
             android:id="@+id/badge_notification"
             app:cardCornerRadius="5dp"
             android:layout_marginTop="13dp"

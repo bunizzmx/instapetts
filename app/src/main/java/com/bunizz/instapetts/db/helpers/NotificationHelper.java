@@ -23,6 +23,7 @@ public class NotificationHelper extends GenericHelper {
     public static final String BODY = "body";
     public static final String TYPE_NOTIFICACION = "type_notification";
     public static final String ID_USUARIO = "id_usuario";
+    public static final String ID_RECURSO = "id_recurso";
     public static final String URL_RESOURCE = "url_resource";
     public static final String URL_EXTRA_IMAGE = "url_image_extra";
     public static final String NOTIFICATION_VIEW = "vista";
@@ -71,6 +72,9 @@ public class NotificationHelper extends GenericHelper {
                     contentValues.put(FECHA,notificationBean.getFecha());
                     contentValues.put(NOTIFICATION_SYNC,0);
                     contentValues.put(NOTIFICATION_VIEW,0);
+                    try {
+                        contentValues.put(ID_RECURSO, notificationBean.getId_recurso());
+                    }catch (Exception e){}
 
                     try {
                         getWritableDatabase().insertOrThrow(TABLE_NAME, null,contentValues);
@@ -94,7 +98,7 @@ public class NotificationHelper extends GenericHelper {
         final Cursor cursor = getReadableDatabase().query(
                 TABLE_NAME,
                 null,
-                null,
+                   "vista =0",
                 null, null, null, "id DESC", "2");
         try {
             if(cursor.moveToFirst()){
@@ -104,6 +108,7 @@ public class NotificationHelper extends GenericHelper {
                 n.setBody(cursor.getString(cursor.getColumnIndex(BODY)));
                 n.setId_usuario(cursor.getInt(cursor.getColumnIndex(ID_USUARIO)));
                 n.setType_notification(cursor.getInt(cursor.getColumnIndex(TYPE_NOTIFICACION)));
+                n.setId_recurso(cursor.getInt(cursor.getColumnIndex(ID_RECURSO)));
                 n.setUrl_resource(cursor.getString(cursor.getColumnIndex(URL_RESOURCE)));
                 n.setUrl_image_extra(cursor.getString(cursor.getColumnIndex(URL_EXTRA_IMAGE)));
                 n.setId_document_notification(cursor.getString(cursor.getColumnIndex(ID_DOCUMENTO_NOTIFICATION)));
@@ -149,35 +154,33 @@ public class NotificationHelper extends GenericHelper {
     }
 
     public void deleteNotificacion(int id){
-        Log.e("DELETE_NOTIFICATION","--->" + id);
         getWritableDatabase().delete(TABLE_NAME, ID + "=" +id, null) ;
     }
 
     public void deleteAll(){
-        Log.e("DELETE_NOTIFICATION","---> All");
         getWritableDatabase().delete(TABLE_NAME, null, null) ;
     }
 
     public void updateViews(){
-        Log.e("UPDATEALL","---> All");
         getWritableDatabase().execSQL("UPDATE "+TABLE_NAME+"  SET vista=1");
     }
 
-    public boolean getNoViewsNotifications(){
-        Log.e("UPDATEALL","---> All");
-        final Cursor cursor = getReadableDatabase().query(
-                TABLE_NAME,
-                new String[] { NOTIFICATION_VIEW},
-                NOTIFICATION_VIEW + "=0",
-                null, null, null, null, null);
-       if(cursor.moveToFirst())
-           return  true;
-       else
-           return  false;
+    public int getNoViewsNotifications(){
+        int count =0;
+        try {
+            Cursor mCount = getReadableDatabase().rawQuery("select count(*) from " + TABLE_NAME + "  where " + NOTIFICATION_VIEW + "=0", null);
+            mCount.moveToFirst();
+            count = mCount.getInt(0);
+            mCount.close();
+            return count;
+        }catch (Exception e){
+            return count;
+        }
     }
 
 
     public ArrayList<NotificationBean> getAllNotifications() {
+        updateViews();
         ArrayList<NotificationBean> notifications = new ArrayList<>();
         final Cursor cursor = getReadableDatabase().query(
                 TABLE_NAME,
@@ -197,8 +200,8 @@ public class NotificationHelper extends GenericHelper {
                 n.setUrl_image_extra(cursor.getString(cursor.getColumnIndex(URL_EXTRA_IMAGE)));
                 n.setId_document_notification(cursor.getString(cursor.getColumnIndex(ID_DOCUMENTO_NOTIFICATION)));
                 n.setFecha(cursor.getString(cursor.getColumnIndex(FECHA)));
+                n.setId_recurso(cursor.getInt(cursor.getColumnIndex(ID_RECURSO)));
                 notifications.add(n);
-                updateViews();
             }
         } catch (SQLiteConstraintException | IllegalStateException e) {
             e.printStackTrace();

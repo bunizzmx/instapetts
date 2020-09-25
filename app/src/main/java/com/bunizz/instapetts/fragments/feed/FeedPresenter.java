@@ -540,10 +540,10 @@ public class FeedPresenter implements FeedContract.Presenter {
 
     @Override
     public void haveNotificatiosn() {
-        if(notificationHelper.getNoViewsNotifications()){
-            mView.showBadge(true);
+        if(notificationHelper.getNoViewsNotifications() > 0){
+            mView.showBadge(true,notificationHelper.getNoViewsNotifications());
         }
         else
-            mView.showBadge(false);
+            mView.showBadge(false,notificationHelper.getNoViewsNotifications());
     }
 }

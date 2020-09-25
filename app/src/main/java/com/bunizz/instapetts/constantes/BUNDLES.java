@@ -69,4 +69,6 @@ public interface BUNDLES {
     String POST_ASPECT="POST_ASPECT";
     String POST_FOTO_USER="POST_FOTO_USER";
 
+    String NO_MOSTRAR_DIALOGO_PET ="NO_MOSTRAR_DIALOGO_PET";
+
 }
