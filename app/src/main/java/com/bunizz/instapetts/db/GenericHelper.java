@@ -39,19 +39,9 @@ public class GenericHelper {
     }
 
     public SQLiteDatabase getReadableDatabase() {
-        try {
+
             return mHelper.getReadableDatabase(secret);
-        } catch (Exception readableDatabase) {
-            Log.e("EXCEPTIOCN","-->" + readableDatabase.getMessage()) ;
-            context.deleteDatabase(DataSQLite.DATABASE_NAME);
-            Intent homeIntent = new Intent(context, Splash.class);
-            try {
-                context.startActivity(homeIntent);
-            } catch (AndroidRuntimeException ignore) {}
-            homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(homeIntent);
-            return null;
-        }
+
     }
 
 }
