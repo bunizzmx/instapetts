@@ -50,7 +50,7 @@
         android:layout_marginTop="10dp"
         android:id="@+id/label_news_users"
         android:textStyle="bold"
-        android:text="Mejores Usuarios"
+        android:text="@string/news_users"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <androidx.recyclerview.widget.RecyclerView

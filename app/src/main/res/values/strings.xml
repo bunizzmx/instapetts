@@ -428,4 +428,21 @@
 
     <string name="mode_invited">Estas en modo \ninvitado</string>
     <string name="mode_invited_body">Crea una cuenta o incia sesiòn para poder encontrar tips de tus mascotas.</string>
+
+    <string name="update_app">Actualizar</string>
+    <string name="update_app_description">Disponible version : </string>
+    <string name="despues">Despues</string>
+
+    <string name="comented_your_post">comento tu publicacion</string>
+    <string name="news_users">Nuevos Usuarios</string>
+
+    <string name="dialog_create_pet_1">1:Recibe noticias exclusivas para tus mascotas\n</string>
+    <string name="dialog_create_pet_2">2:Encuentra contenido interesante segun tus gustos\n</string>
+    <string name="dialog_create_pet_3">3:Permite guardar recuerdos de tus mascotas\n</string>
+    <string name="dialog_create_pet_4">4: Guarda cualquier tipo de animal en instapetts no hay limites</string>
+    <string name="crear">Crear</string>
+    <string name="crear_pet">Crear mascota</string>
+    <string name="ventajas">Ventajas</string>
+    <string name="no_mostrar">No volver a mostrar</string>
+
 </resources>

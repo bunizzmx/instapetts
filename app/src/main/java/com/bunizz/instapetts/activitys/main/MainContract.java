@@ -51,5 +51,6 @@ public interface MainContract {
        void loginFirstUserInvitado(int id_from_web);
         void showUsersAvailables(boolean available);
         void completeInfoInvitado();
+        void UpdateAvailable(String version);
     }
 }

@@ -76,6 +76,9 @@ public class FeedViewPager extends Fragment implements  FeedContract.View{
     @BindView(R.id.badge_notification)
     CardView badge_notification;
 
+    @BindView(R.id.num_badge)
+    TextView num_badge;
+
     changue_fragment_parameters_listener listener;
     FeedAdapter feedAdapter;
 
@@ -290,6 +293,7 @@ public class FeedViewPager extends Fragment implements  FeedContract.View{
         });
      view_pager_feed.setCurrentItem(1);
      change_tab_para_ti();
+        mPresenter.haveNotificatiosn();
     }
     private RequestManager initGlide() {
         RequestOptions options = new RequestOptions();
@@ -353,11 +357,13 @@ public class FeedViewPager extends Fragment implements  FeedContract.View{
     }
 
     @Override
-    public void showBadge(boolean show) {
+    public void showBadge(boolean show,int num) {
         if(show)
             badge_notification.setVisibility(View.VISIBLE);
         else
             badge_notification.setVisibility(View.GONE);
+
+        num_badge.setText(""+num);
     }
 
 

@@ -52,16 +52,16 @@ android {
     flavorDimensions "instance"
     productFlavors {
         produccion {
-            versionName "1.0.0.10"
-            versionCode 26
+            versionName "1.0.0.11"
+            versionCode 29
             dimension "instance"
             buildConfigField 'String', 'ADS_NATIVO', '"ca-app-pub-1460003590771124/7976202603"'
             buildConfigField 'Boolean', 'DEVELOPMENT', 'false'
             signingConfig signingConfigs.release
         }
         development {
-            versionName "1.0.0.10(DEBUG)"
-            versionCode 26
+            versionName "1.0.0.11(DEBUG)"
+            versionCode 29
             dimension "instance"
             buildConfigField 'String', 'ADS_NATIVO', '"ca-app-pub-3940256099942544/2247696110"'
             buildConfigField 'String', 'ADS_BANNERS', '"ca-app-pub-3940256099942544/6300978111"'
@@ -100,8 +100,8 @@ dependencies {
     //noinspection GradleCompatible
 
 
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.3'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.6'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
 
 
@@ -115,7 +115,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.5.0'
     implementation 'com.google.android.gms:play-services-ads:19.4.0'
     implementation 'com.google.firebase:firebase-messaging:20.2.4'
-    implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:17.1.0'
     implementation 'com.google.firebase:firebase-firestore:21.6.0'
     implementation 'com.google.firebase:firebase-storage:19.2.0'
 
@@ -155,13 +155,13 @@ dependencies {
 
     // CameraX View class
     implementation "androidx.camera:camera-view:1.0.0-alpha08"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.4'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0'
     def nav_version = "2.3.0"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation 'com.google.zxing:core:3.4.0'
-    implementation 'com.google.android.exoplayer:exoplayer:2.10.1'
+    implementation 'com.google.android.exoplayer:exoplayer:2.10.4'
 
     implementation "com.amazonaws:aws-android-sdk-s3:2.16.8"
     implementation("com.amazonaws:aws-android-sdk-mobile-client:2.16.8")
@@ -175,10 +175,11 @@ dependencies {
 
 
     // Add the Firebase Crashlytics SDK.
-
+    implementation 'com.google.firebase:firebase-crashlytics:17.2.1'
     implementation  'com.jakewharton.rxbinding2:rxbinding:2.0.0'
     implementation "androidx.viewpager2:viewpager2:1.1.0-alpha01"
     implementation 'com.github.yangjie10930:EpMedia:v1.0.1'
+    implementation 'com.google.android.play:core:1.8.0'
 
 
 }

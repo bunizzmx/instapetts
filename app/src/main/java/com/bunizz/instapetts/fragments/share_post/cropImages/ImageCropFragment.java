@@ -209,32 +209,13 @@ public class ImageCropFragment extends Fragment {
 
 
     public  void saveImage(Bitmap bitmap, String folderName, String filename, Bitmap.CompressFormat compressFormat) {
-        if(is_from_profile == 1){
-            fileex = filename + App.read(PREFERENCES.UUID,"INVALID");
-        }else{
-            fileex = filename + UUID.randomUUID();
-        }
 
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + folderName);
-        if (!file.exists()) {
-            file.mkdir();
-        }
-        file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + folderName + File.separator + fileex + ".jpg");
         try {
-            FileOutputStream out = new FileOutputStream(file);
-            bitmap.compress(compressFormat, 90, out);
-            out.flush();
-            out.close();
-            PATH_TEMP = file.getPath();
+            PATH_TEMP = App.getInstance().saveImage(bitmap,folderName,filename,compressFormat,is_from_profile);
             Log.e("PATH_CROPED","-->" + PATH_TEMP);
             array_list_cropes.add(PATH_TEMP);
             array_aspect.add(ASPECT);
             try {
-                Intent mediaScannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                Uri fileContentUri = Uri.fromFile(file);
-                mediaScannerIntent.setData(fileContentUri);
-                getContext().sendBroadcast(mediaScannerIntent);
-
                 if(CURRENT_INDEX < paths.size()-1){
                     if(CURRENT_INDEX==paths.size()-1){
                         Bundle b = new Bundle();

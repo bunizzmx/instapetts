@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.bunizz.instapetts.App;
+import com.bunizz.instapetts.BuildConfig;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.login.LoginActivity;
 import com.bunizz.instapetts.beans.HistoriesBean;
@@ -536,14 +537,27 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void isAdsActive() {
-        DocumentReference docRef = db.collection("ADS").document("ADS");
+        DocumentReference docRef = db.collection("INFO_APP").document("INFO");
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        mView.setActivateAds(document.getBoolean("ACTIVATED"));
+                        try {
+                            if(BuildConfig.BUILD_TYPE.equals("debug")){
+                                if (!document.getString("VERSION_DEBUG").equals(BuildConfig.VERSION_NAME)) {
+                                    mView.UpdateAvailable(document.getString("VERSION_DEBUG"));
+                                }
+                            }else{
+                                if (!document.getString("VERSION").equals(BuildConfig.VERSION_NAME)) {
+                                    mView.UpdateAvailable(document.getString("VERSION"));
+                                }
+                            }
+                            mView.setActivateAds(document.getBoolean("ADS"));
+                        }catch (Exception nulo){
+                            Log.e("DATOS_NULOS","si");
+                        }
                     } else {
                      mView.setActivateAds(false);
                     }

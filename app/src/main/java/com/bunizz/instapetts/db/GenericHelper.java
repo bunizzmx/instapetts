@@ -39,10 +39,11 @@ public class GenericHelper {
     }
 
     public SQLiteDatabase getReadableDatabase() {
+
         try {
             return mHelper.getReadableDatabase(secret);
         } catch (SQLiteException readableDatabase) {
-            Log.e("EXCEPTIOCN","-->" + readableDatabase.getMessage()) ;
+
             context.deleteDatabase(DataSQLite.DATABASE_NAME);
             App.getInstance().clear_preferences();
             Intent homeIntent = new Intent(context, Splash.class);

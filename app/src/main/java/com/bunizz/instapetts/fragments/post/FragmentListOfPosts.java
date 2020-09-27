@@ -308,7 +308,7 @@ public class FragmentListOfPosts extends Fragment implements FeedContract.View {
     }
 
     @Override
-    public void showBadge(boolean show) {
+    public void showBadge(boolean show,int num) {
         
     }
 

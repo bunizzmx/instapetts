@@ -122,6 +122,11 @@ public class FragmentStoriView extends Fragment implements  StoryPlayerProgressV
             public void deleteOne(int id) {
 
             }
+
+            @Override
+            public void deleteDocument(String document) {
+
+            }
         });
         delete_pet.show();
     }

@@ -440,4 +440,19 @@
 
     <string name="mode_invited">You are in \n invited mode</string>
     <string name="mode_invited_body">Create an account or log in to find tips for your pets..</string>
+
+    <string name="update_app">update</string>
+    <string name="update_app_description">Available version: </string>
+    <string name="despues">After</string>
+    <string name="comented_your_post">commented your post</string>
+    <string name="news_users">New users</string>
+
+    <string name="dialog_create_pet_1">1:Receive exclusive news for your pets\n</string>
+    <string name="dialog_create_pet_2">2:Find interesting content according to your tastes\n</string>
+    <string name="dialog_create_pet_3">3:Allows you to save memories of your pets\n</string>
+    <string name="dialog_create_pet_4">4:You can save any type of animal in instapets there are no limits</string>
+    <string name="crear">Create</string>
+    <string name="crear_pet">Create Pet</string>
+    <string name="ventajas">Advantage</string>
+    <string name="no_mostrar">Do not show again</string>
 </resources>

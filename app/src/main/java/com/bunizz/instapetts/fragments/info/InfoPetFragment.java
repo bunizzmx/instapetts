@@ -188,6 +188,11 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
             public void deleteOne(int id) {
 
             }
+
+            @Override
+            public void deleteDocument(String document) {
+
+            }
         });
         delete_pet.show();
     }

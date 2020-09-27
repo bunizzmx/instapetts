@@ -1,5 +1,6 @@
 package com.bunizz.instapetts.fragments.comentarios;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -22,7 +24,10 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.CommentariosBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.listeners.delete;
 import com.bunizz.instapetts.utils.ImagenCircular;
+import com.bunizz.instapetts.utils.ProgressCircle;
+import com.bunizz.instapetts.utils.dilogs.DialogDeletes;
 import com.bunizz.instapetts.utils.loadings.SpinKitView;
 import com.bunizz.instapetts.utils.loadings.SpriteFactory;
 import com.bunizz.instapetts.utils.loadings.Style;
@@ -84,7 +89,8 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
 
     @BindView(R.id.can_comment_label)
     TextView can_comment_label;
-
+    @BindView(R.id.cirlce_progress)
+    ProgressCircle cirlce_progress;
 
     CommentsAdapter adapter;
 
@@ -94,15 +100,12 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
     Sprite drawable = SpriteFactory.create(style);
 
 
-    @BindView(R.id.spin_kit)
-    SpinKitView spin_kit;
-
     int ID_POST=0;
     boolean CAN_COMMENT =true;
     int TYPE_PET = 0;
 
     int IDUSER_POST =0;
-
+    final ValueAnimator valueAnimator = ValueAnimator.ofInt(1,360);
     private boolean loading =true;
     private boolean IS_ALL = false;
     @SuppressLint("MissingPermission")
@@ -125,6 +128,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
             commentariosBean.setCommentario(input_commentarios.getText().toString());
             commentariosBean.setName_user(App.read(PREFERENCES.NAME_USER, "INVALID"));
             commentariosBean.setLikes(0);
+            commentariosBean.setId_destinatario(IDUSER_POST);
             if(TYPE_PET < 0)
                 commentariosBean.setHelps_post(1);
             else
@@ -157,13 +161,19 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                 else
                     Log.e("DOCUMENTO_NULO","no se envia el like");
             }
+
+            @Override
+            public void onDeleteComment(String document) {
+                Log.e("DELETES_COMMENTS","-->" + ID_POST + "/" + document);
+                presenter.deleteComment(ID_POST,document);
+            }
         });
         presenter = new ComentariosPresenter(this,getContext());
         Bundle bundle=getArguments();
         if(bundle!=null){
-           ID_POST = bundle.getInt(BUNDLES.ID_POST);
-           CAN_COMMENT = bundle.getBoolean(BUNDLES.CAN_COMMENT);
-           TYPE_PET  = bundle.getInt(BUNDLES.TYPE_PET);
+            ID_POST = bundle.getInt(BUNDLES.ID_POST);
+            CAN_COMMENT = bundle.getBoolean(BUNDLES.CAN_COMMENT);
+            TYPE_PET  = bundle.getInt(BUNDLES.TYPE_PET);
             IDUSER_POST = bundle.getInt(BUNDLES.ID_USUARIO);
         }
     }
@@ -213,8 +223,6 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this,view);
-        spin_kit.setIndeterminateDrawable(drawable);
-        spin_kit.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         list_comentarios.setLayoutManager(new LinearLayoutManager(getContext()));
         list_comentarios.setAdapter(adapter);
         presenter.getComentarios(ID_POST);
@@ -293,11 +301,19 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                 }
             }
         });
+        valueAnimator.setInterpolator(new LinearInterpolator());
+        valueAnimator.setDuration(2000);
+        valueAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        valueAnimator.addUpdateListener(animation -> {
+            cirlce_progress.setValue((Integer) animation.getAnimatedValue());
+        });
+        valueAnimator.start();
     }
 
     @Override
     public void showComments(ArrayList<CommentariosBean> commentariosBeans) {
-        spin_kit.setVisibility(View.GONE);
+        cirlce_progress.setVisibility(View.GONE);
+        valueAnimator.cancel();
         refresh_commentarios.setRefreshing(false);
         if(commentariosBeans.size()>0){
             root_no_data.setVisibility(View.GONE);
@@ -315,7 +331,8 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
 
     @Override
     public void showNextComments(ArrayList<CommentariosBean> commentariosBeans) {
-        spin_kit.setVisibility(View.GONE);
+        cirlce_progress.setVisibility(View.GONE);
+        valueAnimator.cancel();
         loading =true;
         refresh_commentarios.setRefreshing(false);
         layout_loanding_comments.setVisibility(View.GONE);
@@ -346,12 +363,12 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
         }
 
         public void setData(ArrayList<CommentariosBean> data) {
-            this.data = data;
+            this.data.clear();
+            this.data.addAll(data);
             notifyDataSetChanged();
         }
 
         public void setDataBelow(ArrayList<CommentariosBean> data) {
-            Log.e("INSERT_DATA_BELOW","TRUE: " + data.size());
             this.data.addAll(data);
             notifyDataSetChanged();
         }
@@ -423,6 +440,57 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                     }
                 }
             });
+
+            h.n_likes_comment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(data.get(position).isIs_liked()) {
+                        data.get(position).setIs_liked(false);
+                        h.icon_like_comment.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_like_comment_off));
+                        if(data.get(position).getLikes() - 1 > 0)
+                            h.n_likes_comment.setText((data.get(position).getLikes() - 1) + " Me gusta");
+                        else
+                            h.n_likes_comment.setText(" " + getString(R.string.me_gusta));
+                    }
+                    else {
+                        data.get(position).setIs_liked(true);
+                        h.icon_like_comment.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_like_comment_on));
+                        h.n_likes_comment.setText((data.get(position).getLikes() + 1) + " Me gusta");
+                        listener.onLike(data.get(position).getId_post(),data.get(position).getId_document());
+                    }
+                }
+            });
+
+
+            if(data.get(position).getId_user() == App.read(PREFERENCES.ID_USER_FROM_WEB,0)){
+                h.like_comment.setVisibility(View.GONE);
+                h.delete_comment.setVisibility(View.VISIBLE);
+                h.delete_comment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        DialogDeletes dialogDeletes = new DialogDeletes(getContext(),0,0);
+                        dialogDeletes.setDocument_firestore(data.get(position).getId_document());
+                        dialogDeletes.setIs_delete_firestore(true);
+                        dialogDeletes.setListener(new delete() {
+                            @Override
+                            public void delete(boolean delete) {}
+                            @Override
+                            public void deleteOne(int id) {}
+                            @Override
+                            public void deleteDocument(String document) {
+                                data.remove(position);
+                                notifyItemRemoved(position);
+                               listener.onDeleteComment(document);
+                            }
+                        });
+                        dialogDeletes.show();
+                    }
+                });
+            }else{
+                h.like_comment.setVisibility(View.VISIBLE);
+                h.delete_comment.setVisibility(View.GONE);
+            }
+
             if(data.get(position).getLikes() == 0)
                h.n_likes_comment.setText(" "+ getString(R.string.me_gusta));
             else
@@ -441,6 +509,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
              RelativeLayout like_comment;
              ImageView icon_like_comment;
              TextView n_likes_comment,item_comentarios_autor;
+             RelativeLayout delete_comment;
             public CommentsHolder(@NonNull View itemView) {
                 super(itemView);
                 item_comentarios_name = itemView.findViewById(R.id.item_comentarios_name);
@@ -451,12 +520,14 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                 icon_like_comment = itemView.findViewById(R.id.icon_like_comment);
                 n_likes_comment = itemView.findViewById(R.id.n_likes_comment);
                 item_comentarios_autor = itemView.findViewById(R.id.item_comentarios_autor);
+                delete_comment = itemView.findViewById(R.id.delete_comment);
             }
         }
     }
 
     public interface ListenerComments{
         void onLike(int post,String document);
+        void onDeleteComment(String document);
     }
 
     private void scrolbottom(){
