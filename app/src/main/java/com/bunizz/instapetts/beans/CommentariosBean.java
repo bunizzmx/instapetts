@@ -18,6 +18,7 @@ public class CommentariosBean {
     public int likes;
     public String id_document;
     public int helps_post;
+    public int id_destinatario;
 
     public CommentariosBean() {
     }
@@ -108,5 +109,13 @@ public class CommentariosBean {
 
     public void setHelps_post(int helps_post) {
         this.helps_post = helps_post;
+    }
+
+    public int getId_destinatario() {
+        return id_destinatario;
+    }
+
+    public void setId_destinatario(int id_destinatario) {
+        this.id_destinatario = id_destinatario;
     }
 }

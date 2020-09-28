@@ -2,6 +2,7 @@ package com.bunizz.instapetts.activitys.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -68,6 +69,7 @@ import com.bunizz.instapetts.listeners.conexion_listener;
 import com.bunizz.instapetts.listeners.folowFavoriteListener;
 import com.bunizz.instapetts.listeners.login_invitado_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
+import com.bunizz.instapetts.listeners.open_sheet_listener;
 import com.bunizz.instapetts.listeners.open_side_menu;
 import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.services.FetchAddressIntentService;
@@ -75,8 +77,10 @@ import com.bunizz.instapetts.services.ImageService;
 import com.bunizz.instapetts.services.JobsServices;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.bottom_sheet.SlidingUpPanelLayout;
+import com.bunizz.instapetts.utils.dilogs.DialogCreatePostPet;
 import com.bunizz.instapetts.utils.dilogs.DialogFirstUser;
 import com.bunizz.instapetts.utils.dilogs.DialogLogout;
+import com.bunizz.instapetts.utils.dilogs.DialogUpdateAvailable;
 import com.bunizz.instapetts.utils.smoot.SmoothProgressBar;
 import com.bunizz.instapetts.utils.snackbar.SnackBar;
 import com.bunizz.instapetts.utils.target.TapTarget;
@@ -88,6 +92,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Task;
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+import com.google.android.play.core.tasks.OnFailureListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -212,8 +220,9 @@ public class Main extends AppCompatActivity implements
     Bundle b_from_push = new Bundle();
     JobsServices jobsServices;
     private AddressResultReceiver resultReceiver;
-
+    ReviewManager manager_rate ;
     private static final int RC_SIGN_IN = 9001;
+    Activity activity;
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tab_profile_pet)
     void tab_profile_pet() {
@@ -310,6 +319,7 @@ public class Main extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ButterKnife.bind(this);Log.e("ID_FROM_WEB","-->" + App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        activity = this;
         if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
             jobsServices = new JobsServices(this);
             jobsServices.startNotificationsRequest();
@@ -349,6 +359,7 @@ public class Main extends AppCompatActivity implements
                     } else if (TYPE_FRAGMENT_PUSH == FragmentElement.INSTANCE_COMENTARIOS) {
                         b_from_push.putInt(BUNDLES.ID_POST, ID_RESOURCE);
                         b_from_push.putBoolean(BUNDLES.CAN_COMMENT, true);
+                        b_from_push.putInt(BUNDLES.ID_USUARIO,App.read(PREFERENCES.ID_USER_FROM_WEB,0));
                     }
                 }
             }
@@ -435,6 +446,43 @@ public class Main extends AppCompatActivity implements
         if(App.read(PREFERENCES.PRIMER_USUARIO_INVITADO,false)){
             show_dialog_first_user();
         }
+
+        if(!App.read(PREFERENCES.DATE_OF_USE,App.formatDateSimple(new Date())).equals(App.formatDateSimple(new Date()))){
+            int num_opens = App.read(PREFERENCES.COUNTER_OPEN_APP,0);
+            App.write(PREFERENCES.COUNTER_OPEN_APP,num_opens +1);
+        }
+        if(App.read(PREFERENCES.COUNTER_OPEN_APP,0) >=3 && App.read(PREFERENCES.RATE_APP,false)== false){
+            Log.e("ESTATUS_RATE","lainch rate");
+            ReviewManager manager = ReviewManagerFactory.create(this);
+            com.google.android.play.core.tasks.Task<ReviewInfo> request = manager.requestReviewFlow();
+            request.addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Log.e("ESTATUS_RATE","successful");
+                    // We can get the ReviewInfo object
+                    ReviewInfo reviewInfo = task.getResult();
+                    com.google.android.play.core.tasks.Task<Void> flow = manager.launchReviewFlow(activity, reviewInfo);
+                    flow.addOnCompleteListener(taskx -> {
+                        App.write(PREFERENCES.RATE_APP,true);
+                        Log.e("ESTATUS_RATE","CALIFICACION EXITOSA" );
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(Exception e) {
+                            App.write(PREFERENCES.RATE_APP,true);
+                            Log.e("ESTATUS_RATE","CALIFICACION ERRONIA" + e.getMessage() );
+                        }
+                    });
+                } else {
+                    Log.e("ESTATUS_RATE","errorx: " + task.getException().getMessage());
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(Exception e) {
+                    Log.e("ESTATUS_RATE","falla : " + e.getMessage());
+                }
+            });
+        }
+
     }
 
     @Override
@@ -921,7 +969,11 @@ public class Main extends AppCompatActivity implements
                     }
                 } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_COMENTARIOS && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED) {
                     changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED, null, true);
-                } else {
+                }
+                else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_COMENTARIOS && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_NOTIFICATIONS) {
+                    changeOfInstance(FragmentElement.INSTANCE_NOTIFICATIONS, null, true);
+                }
+                else {
                     if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_FEED)
                         finish();
                     else {
@@ -1136,8 +1188,6 @@ public class Main extends AppCompatActivity implements
             intent.putExtra(BUNDLES.NOTIFICATION_TIPE,1);
             intent.putExtra(ImageService.INTENT_TRANSFER_OPERATION, ImageService.TRANSFER_OPERATION_UPLOAD);
             startService(intent);
-        }else{
-            Log.e("NO_MODIFICO_FOTO","xxxx");
         }
         UserBean userBean = new UserBean();
         userBean.setDescripcion(bundle.getString(BUNDLES.DESCRIPCION));
@@ -1217,7 +1267,6 @@ public class Main extends AppCompatActivity implements
     public void havePetsResult(boolean result) {
         if(!result) {
             if (NEW_USER) {
-                Log.e("ES_NUEVO","LO MUESTRO");
                 final SpannableString spannedDesc = new SpannableString("Que tal una primera publicacion de tu mascota?");
                 TapTargetView.showFor(this, TapTarget.forView(findViewById(R.id.tab_profile_pet), "Hey que tal!!", spannedDesc)
                         .cancelable(false)
@@ -1243,7 +1292,19 @@ public class Main extends AppCompatActivity implements
                     }
                 });
             }else{
-                Log.e("ES_NUEVO","NO LO MUESTRO PORQUE YA ES USUARIO");
+               /* if(App.read(BUNDLES.NO_MOSTRAR_DIALOGO_PET,0)!=2) {
+                    DialogCreatePostPet dialogCreatePostPet = new DialogCreatePostPet(this);
+                    dialogCreatePostPet.setListener(new open_sheet_listener() {
+                        @Override
+                        public void open(PetBean petBean, int is_me) {}
+
+                        @Override
+                        public void open_wizard_pet() {
+                             Main.this.open_wizard_pet();
+                        }
+                    });
+                    dialogCreatePostPet.show();
+                }*/
             }
         }
     }
@@ -1655,6 +1716,12 @@ public class Main extends AppCompatActivity implements
         App.write(PREFERENCES.PRIMER_USUARIO_INVITADO,false);
         changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, false);
         repaint_nav(R.id.tab_profile_pet);
+    }
+
+    @Override
+    public void UpdateAvailable(String version) {
+        DialogUpdateAvailable dialogUpdateAvailable = new DialogUpdateAvailable(this,version);
+        dialogUpdateAvailable.show();
     }
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {

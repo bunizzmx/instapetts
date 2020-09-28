@@ -34,7 +34,7 @@ public class DataSQLite extends SQLiteOpenHelper {
     }
 
     private DataSQLite(Context context) {
-        super(context, DATABASE_NAME, null, 2);
+        super(context, DATABASE_NAME, null, 3);
         this.context = context;
     }
 
@@ -64,7 +64,10 @@ public class DataSQLite extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onCreate(db);
+        if(oldVersion < 2)
         db.execSQL(context.getString(R.string.update_pets_v1));
+        if(oldVersion < 3)
+        db.execSQL(context.getString(R.string.update_notificaciones_v1));
 
     }
 }

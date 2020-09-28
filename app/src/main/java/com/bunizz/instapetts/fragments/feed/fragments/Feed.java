@@ -260,7 +260,7 @@ public class Feed extends Fragment implements  FeedContract.View{
             mPresenter.get_feed(false, App.read(PREFERENCES.ID_USER_FROM_WEB,0));
         else
             mPresenter.geet_feed_recomended(false, App.read(PREFERENCES.ID_USER_FROM_WEB,0));
-        mPresenter.haveNotificatiosn();
+
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -419,7 +419,7 @@ public class Feed extends Fragment implements  FeedContract.View{
     }
 
     @Override
-    public void showBadge(boolean show) {}
+    public void showBadge(boolean show,int num) {}
 
 
     @Override

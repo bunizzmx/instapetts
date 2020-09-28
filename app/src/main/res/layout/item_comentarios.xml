@@ -10,7 +10,7 @@
        android:layout_width="25dp"
        android:layout_height="25dp"/>
     <LinearLayout
-        android:layout_toLeftOf="@+id/like_comment"
+        android:layout_toLeftOf="@+id/layout_functions"
         android:orientation="vertical"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/imagen_user_comment"
@@ -61,17 +61,36 @@
                 android:layout_height="wrap_content"/>
         </LinearLayout>
     </LinearLayout>
-    <RelativeLayout
-        android:id="@+id/like_comment"
+    <LinearLayout
+        android:id="@+id/layout_functions"
         android:layout_alignParentRight="true"
-        android:layout_width="40dp"
-        android:layout_height="40dp">
-        <ImageView
-            android:id="@+id/icon_like_comment"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_like_comment_off"
-            android:layout_width="15dp"
-            android:layout_height="15dp"/>
-    </RelativeLayout>
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/like_comment"
+            android:layout_width="40dp"
+            android:layout_height="40dp">
+            <ImageView
+                android:id="@+id/icon_like_comment"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_like_comment_off"
+                android:layout_width="15dp"
+                android:layout_height="15dp"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:background="?attr/selectableItemBackground"
+            android:id="@+id/delete_comment"
+            android:layout_width="40dp"
+            android:layout_height="40dp">
+            <ImageView
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_trash"
+                android:layout_width="15dp"
+                android:layout_height="15dp"/>
+        </RelativeLayout>
+    </LinearLayout>
+
 </RelativeLayout>

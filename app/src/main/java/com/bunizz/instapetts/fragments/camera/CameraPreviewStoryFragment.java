@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
@@ -157,24 +158,10 @@ public class CameraPreviewStoryFragment extends Fragment {
 
     public  boolean saveImage(Bitmap bitmap, String folderName, String filename, Bitmap.CompressFormat compressFormat) {
         String PATH_TEMP ="";
-        filename = filename + UUID.randomUUID();
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + folderName);
-        if (!file.exists()) {
-            file.mkdir();
-        }
-        file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + folderName + File.separator + filename + ".jpg");
         try {
-            FileOutputStream out = new FileOutputStream(file);
-            bitmap.compress(compressFormat, 90, out);
-            out.flush();
-            out.close();
-            PATH_TEMP = file.getPath();
+            PATH_TEMP = App.getInstance().saveImage(bitmap,folderName,filename,compressFormat,0);
             Log.e("PATH_CROPED","-->" + PATH_TEMP);
             try {
-                Intent mediaScannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                Uri fileContentUri = Uri.fromFile(file);
-                mediaScannerIntent.setData(fileContentUri);
-                getContext().sendBroadcast(mediaScannerIntent);
                 Bundle b = new Bundle();
                 b.putInt(BUNDLES.ID_PET,ID_PET);
                 b.putString(BUNDLES.PATH_SELECTED,PATH_TEMP.replace("file:",""));

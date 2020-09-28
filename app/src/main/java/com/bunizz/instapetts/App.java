@@ -4,9 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.media.SoundPool;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,8 +24,10 @@ import android.view.WindowManager;
 import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.activitys.login.LoginActivity;
 import com.bunizz.instapetts.beans.AspectBean;
+import com.bunizz.instapetts.constantes.FIRESTORE;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.Utilities;
+import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.utils.AndroidIdentifier;
 import com.bunizz.instapetts.utils.dilogs.DialogPermision;
 import com.bunizz.instapetts.web.CONST;
@@ -40,6 +45,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,7 +53,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import androidx.annotation.RequiresApi;
 
@@ -331,7 +339,6 @@ public class App extends Application {
     }
 
     public static int horas_restantes_top(String fecha){
-        Log.e("FECHA_TOP","-->" + fecha);
         if(fecha.equals("null")){return 999;}else {
             try {
                 Date fechaInicial = StringToDate(fecha, "-", 0);
@@ -574,4 +581,87 @@ public class App extends Application {
     public void setAds(ArrayList<UnifiedNativeAd> ads) {
         this.ads = ads;
     }
+
+
+    public  String  saveImage(Bitmap bitmap, String folderName, String filename, Bitmap.CompressFormat compressFormat,int from) {
+        File file =null;
+        String fileex="";
+        String ruta_final ="error";
+        if(from == 1){
+            fileex = filename + App.read(PREFERENCES.UUID,"INVALID");
+        }else{
+            fileex = filename + UUID.randomUUID();
+        }
+        if(isExternalStorageWritable()){
+            Log.e("MEMORIA_EXTERNA","si");
+            file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + folderName);
+            if (!file.exists()) {
+                file.mkdir();
+            }
+            file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + folderName + File.separator + fileex + ".jpg");
+
+            if(!file.exists()) {
+                Log.e("MEMORIA_EXTERNA","el archivo no se creo");
+                file = new File(this.getFilesDir() + File.separator + folderName);
+                if (!file.exists()) {
+                    file.mkdir();
+                }
+                file = new File(this.getFilesDir() + File.separator + folderName + File.separator + fileex + ".jpg");
+            }
+
+        }else{
+            Log.e("MEMORIA_EXTERNA","no");
+            file = new File(this.getFilesDir() + File.separator + folderName);
+            if (!file.exists()) {
+                file.mkdir();
+            }
+            file = new File(this.getFilesDir() + File.separator + folderName + File.separator + fileex + ".jpg");
+        }
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            bitmap.compress(compressFormat, 90, out);
+            out.flush();
+            out.close();
+            ruta_final = file.getPath();
+            try {
+                Intent mediaScannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                Uri fileContentUri = Uri.fromFile(file);
+                mediaScannerIntent.setData(fileContentUri);
+                this.sendBroadcast(mediaScannerIntent);
+                return ruta_final;
+            }catch (Exception e){
+                Log.e("ERROR_BROADCAST",":)");
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            Log.e("ImageViewZoom", exception.getMessage());
+
+        }
+        return  ruta_final;
+    }
+
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    public void sendNotification(Map<String, Object> data_notification,int id_user){
+        db.collection(FIRESTORE.COLLECTION_NOTIFICATIONS).document(""+id_user)
+                .collection(FIRESTORE.COLLECTION_NOTIFICATIONS)
+                .document()
+                .set(data_notification)
+                .addOnFailureListener(e -> {
+                    Log.e("ESTATUS_NOTIFICACION","FALLA EN NOTIFICACION");
+                })
+                .addOnCompleteListener(task -> {
+                    Log.e("ESTATUS_NOTIFICACION","COMPLETADO");
+                })
+                .addOnSuccessListener(aVoid -> {
+                    Log.e("ESTATUS_NOTIFICACION","VOID");
+                });
+    }
+
 }

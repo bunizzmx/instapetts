@@ -138,13 +138,10 @@
         </RelativeLayout>
     </RelativeLayout>
 
-    <com.bunizz.instapetts.utils.loadings.SpinKitView
-        android:id="@+id/spin_kit"
-        style="@style/SpinKitView"
-        android:background="?selectableItemBackgroundBorderless"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+    <com.bunizz.instapetts.utils.ProgressCircle
+        android:id="@+id/cirlce_progress"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:padding="10dp" />
+        android:layout_width="40dp"
+        android:layout_height="40dp"/>
 </RelativeLayout>

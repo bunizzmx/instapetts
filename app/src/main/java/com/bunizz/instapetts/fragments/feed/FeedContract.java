@@ -35,6 +35,6 @@ public interface FeedContract {
         void LikeEror();
         void LikeSuccess();
         void noInternet();
-        void showBadge(boolean show);
+        void showBadge(boolean show,int num);
     }
 }
