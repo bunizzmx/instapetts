@@ -48,8 +48,8 @@ import butterknife.OnClick;
 
 public class ComentariosFragment extends Fragment implements  ComentariosContract.View{
 
-    @BindView(R.id.refresh_commentarios)
-    SwipeRefreshLayout refresh_commentarios;
+   // @BindView(R.id.refresh_commentarios)
+   // SwipeRefreshLayout refresh_commentarios;
 
     @BindView(R.id.list_comentarios)
     RecyclerView list_comentarios;
@@ -226,12 +226,12 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
         list_comentarios.setLayoutManager(new LinearLayoutManager(getContext()));
         list_comentarios.setAdapter(adapter);
         presenter.getComentarios(ID_POST);
-        refresh_commentarios.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+       /* refresh_commentarios.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 presenter.getComentarios(ID_POST);
             }
-        });
+        });*/
         Glide.with(getContext())
                 .load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"))
                 .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder))
@@ -291,7 +291,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                             if(IS_ALL == false) {
                                 layout_loanding_comments.setVisibility(View.VISIBLE);
                                 Log.e("DONWLOAD_MORE_COMMENTS","SI");
-                                refresh_commentarios.setVisibility(View.VISIBLE);
+                                //refresh_commentarios.setVisibility(View.VISIBLE);
                                 presenter.loadNextComments(ID_POST);
                             }else {
                                 Log.e("DONWLOAD_MORE_COMMENTS","NO");
@@ -314,7 +314,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
     public void showComments(ArrayList<CommentariosBean> commentariosBeans) {
         cirlce_progress.setVisibility(View.GONE);
         valueAnimator.cancel();
-        refresh_commentarios.setRefreshing(false);
+        //refresh_commentarios.setRefreshing(false);
         if(commentariosBeans.size()>0){
             root_no_data.setVisibility(View.GONE);
             no_comments.setVisibility(View.GONE);
@@ -334,7 +334,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
         cirlce_progress.setVisibility(View.GONE);
         valueAnimator.cancel();
         loading =true;
-        refresh_commentarios.setRefreshing(false);
+        //refresh_commentarios.setRefreshing(false);
         layout_loanding_comments.setVisibility(View.GONE);
         if(commentariosBeans.size()>0){
             root_no_data.setVisibility(View.GONE);

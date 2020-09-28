@@ -60,7 +60,7 @@ android {
             signingConfig signingConfigs.release
         }
         development {
-            versionName "1.0.0.11(DEBUG)"
+            versionName "1.0.0.10(DEBUG)"
             versionCode 29
             dimension "instance"
             buildConfigField 'String', 'ADS_NATIVO', '"ca-app-pub-3940256099942544/2247696110"'

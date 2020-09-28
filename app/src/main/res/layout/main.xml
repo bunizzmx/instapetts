@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    sothree:umanoPanelHeight="250dp"
+    sothree:umanoPanelHeight="450dp"
     sothree:umanoParallaxOffset="100dp"
     sothree:umanoOverlay="true"
     sothree:umanoShadowHeight="0dp"

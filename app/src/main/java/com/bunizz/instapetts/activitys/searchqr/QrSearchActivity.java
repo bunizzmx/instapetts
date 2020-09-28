@@ -230,6 +230,10 @@ public class QrSearchActivity extends AppCompatActivity implements changue_fragm
 
     }
 
+    @Override
+    public void open_sheetFragment(Bundle bundle, int instance) {
+
+    }
 
 
     @Override

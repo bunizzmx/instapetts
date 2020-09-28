@@ -278,7 +278,10 @@ public class LoginActivity extends AppCompatActivity implements change_instance,
 
     }
 
+    @Override
+    public void open_sheetFragment(Bundle bundle, int instance) {
 
+    }
 
 
     @Override

@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
@@ -90,6 +91,7 @@ import com.facebook.AccessToken;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.internal.IStatusCallback;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Task;
 import com.google.android.play.core.review.ReviewInfo;
@@ -195,6 +197,11 @@ public class Main extends AppCompatActivity implements
     FloatingActionButton tab_add_image;
 
 
+    @BindView(R.id.back_to_main_sliding)
+    CardView back_to_main_sliding;
+
+
+
 
     @BindView(R.id.root_bottom_nav)
     RelativeLayout root_bottom_nav;
@@ -221,6 +228,7 @@ public class Main extends AppCompatActivity implements
     JobsServices jobsServices;
     private AddressResultReceiver resultReceiver;
     ReviewManager manager_rate ;
+    boolean IS_COMMENTS_OPEN=false;
     private static final int RC_SIGN_IN = 9001;
     Activity activity;
     @SuppressLint("MissingPermission")
@@ -329,7 +337,8 @@ public class Main extends AppCompatActivity implements
             presenter.isAdsActive();
             petHelper = new PetHelper(this);
             i = new Intent(Main.this, SideMenusActivities.class);
-            changeStatusBarColor(R.color.white);
+            repaint_icons_and_tab();
+            tab_add_image.hide();
             Intent iin = getIntent();
             Bundle b = iin.getExtras();
             IntentFilter server_connected = new IntentFilter(POST_SUCCESFULL);
@@ -389,7 +398,8 @@ public class Main extends AppCompatActivity implements
                 @Override
                 public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
                     if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-                        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                        if(!IS_COMMENTS_OPEN)
+                             mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                     } else if (newState == SlidingUpPanelLayout.PanelState.HIDDEN) {
 
 
@@ -500,11 +510,10 @@ public class Main extends AppCompatActivity implements
 
     private void setupFirstFragment() {
         if(FROM_PUSH == 0){
-            repaint_nav(R.id.tab_feed);
-            mCurrentFragment = new FragmentElement<>(null, FeedViewPager.newInstance(), FragmentElement.INSTANCE_FEED, true);
-            change_main(mCurrentFragment);
+            mCurrentFragment = new FragmentElement<>(null, ViewPagerVideoFragment.newInstance(), FragmentElement.INSTANCE_PLAY_VIDEOS, true);
+            changue_to_play_videos(mCurrentFragment,null,false);
         }else{
-            changeOfInstance(TYPE_FRAGMENT_PUSH,b_from_push,false);
+            changue_to_play_videos(stack_play_videos.pop(),null,false);
         }
     }
 
@@ -901,6 +910,16 @@ public class Main extends AppCompatActivity implements
     }
 
     @Override
+    public void open_sheetFragment(Bundle bundle, int instance) {
+        Bundle b = new Bundle();
+        IS_COMMENTS_OPEN = true;
+        bundle.putInt(BUNDLES.ID_POST,22);
+        back_to_main_sliding.setVisibility(View.GONE);
+        changue_fragment_sheet(FragmentElement.INSTANCE_COMENTARIOS,bundle);
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+    }
+
+    @Override
     public void open_wizard_pet() {
         Intent i = new Intent(Main.this, WizardPetActivity.class);
         startActivityForResult(i, NEW_PET_REQUEST);
@@ -908,89 +927,95 @@ public class Main extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-        changeStatusBarColor(R.color.white);
-        root_bottom_nav.setBackgroundColor(Color.WHITE);
+
+
         try {
-            Log.e("OLD_NEW", "-->" + mCurrentFragment.getInstanceType() + "/" + mOldFragment.getInstanceType());
-            if (IS_SHEET_OPEN) {
+            Log.e("OLD_NEW", "-->" + IS_SHEET_OPEN +"/"+ IS_COMMENTS_OPEN);
+
+            if (IS_SHEET_OPEN || IS_COMMENTS_OPEN) {
                 mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-            }
-            if (FROM_PUSH == 1) {
-                repaint_nav(R.id.tab_feed);
-                changeOfInstance(FragmentElement.INSTANCE_FEED, null, false);
-            } else {
-                if (mOldFragment != null) {
-                    if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS)
-                        ((FragmentTipsViewpager) mOldFragment.getFragment()).stop_player();
-                }
-
-                if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_TIP_DETAIL) {
-                    repaint_nav(R.id.tap_tips);
-                    changeOfInstance(FragmentElement.INSTANCE_TIPS, null, false);
-                } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH || mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED) {
-                    if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED) {
-                        ((FragmentListOfPosts) mCurrentFragment.getFragment()).stop_player();
+            }else{
+                root_bottom_nav.setBackgroundColor(Color.WHITE);
+                changeStatusBarColor(R.color.white);
+                if (FROM_PUSH == 1) {
+                    repaint_nav(R.id.tab_feed);
+                    changeOfInstance(FragmentElement.INSTANCE_FEED, null, false);
+                } else {
+                    if (mOldFragment != null) {
+                        if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS)
+                            ((FragmentTipsViewpager) mOldFragment.getFragment()).stop_player();
                     }
-                    if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET) {
-                        repaint_nav(R.id.tab_profile_pet);
-                        changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, false);
-                    } else {
-                        if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH) {
-                            changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null, true);
-                        } else {
-                            if (App.read(PREFERENCES.OPEN_POST_ADVANCED_FROM, 1) == 1)
-                                changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, true);
-                            else
-                                changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE, null, true);
+
+                    if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_TIP_DETAIL) {
+                        repaint_nav(R.id.tap_tips);
+                        changeOfInstance(FragmentElement.INSTANCE_TIPS, null, false);
+                    } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH || mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED) {
+                        if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED) {
+                            ((FragmentListOfPosts) mCurrentFragment.getFragment()).stop_player();
                         }
-                    }
-                } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS) {
-                    changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null, false);
-                } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH) {
-                    changeOfInstance(FragmentElement.INSTANCE_SEARCH, null, false);
-                } else if (IS_SHEET_OPEN || SIDE_OPEN) {
-                    IS_SHEET_OPEN = false;
-                    SIDE_OPEN = false;
-                    mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-                    if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET)
-                        changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, true);
+                        if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET) {
+                            repaint_nav(R.id.tab_profile_pet);
+                            changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, false);
+                        } else {
+                            if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH) {
+                                changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null, true);
+                            } else {
+                                if (App.read(PREFERENCES.OPEN_POST_ADVANCED_FROM, 1) == 1)
+                                    changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, true);
+                                else
+                                    changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE, null, true);
+                            }
+                        }
+                    } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS) {
+                        changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null, false);
+                    } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH) {
+                        changeOfInstance(FragmentElement.INSTANCE_SEARCH, null, false);
+                    } else if (IS_SHEET_OPEN || SIDE_OPEN) {
+                        IS_SHEET_OPEN = false;
+                        SIDE_OPEN = false;
+                        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                        if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET)
+                            changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, true);
 
-                } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_EDIT_PROFILE_USER) {
-                    Bundle b = new Bundle();
-                    b.putString(BUNDLES.PHOTO_LOCAL, App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH, "INVALID"));
-                    changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, b, false);
-                } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_FOLLOWS_USER) {
-                    if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE) {
-                        changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE, null, true);
-                    } else if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET) {
+                    } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_EDIT_PROFILE_USER) {
                         Bundle b = new Bundle();
                         b.putString(BUNDLES.PHOTO_LOCAL, App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH, "INVALID"));
                         changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, b, false);
-                    }
-                } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_COMENTARIOS && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED) {
-                    changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED, null, true);
-                }
-                else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_COMENTARIOS && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_NOTIFICATIONS) {
-                    changeOfInstance(FragmentElement.INSTANCE_NOTIFICATIONS, null, true);
-                }
-                else {
-                    if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_FEED)
-                        finish();
-                    else {
-                        if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS) {
-                            repaint_nav(R.id.tap_tips);
-                            changeOfInstance(FragmentElement.INSTANCE_TIPS, null, false);
-                        } else {
-                            repaint_nav(R.id.tab_feed);
-                            changeOfInstance(FragmentElement.INSTANCE_FEED, null, false);
+                    } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_FOLLOWS_USER) {
+                        if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE) {
+                            changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE, null, true);
+                        } else if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET) {
+                            Bundle b = new Bundle();
+                            b.putString(BUNDLES.PHOTO_LOCAL, App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH, "INVALID"));
+                            changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, b, false);
                         }
-
+                    } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_COMENTARIOS && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED) {
+                        changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED, null, true);
                     }
-                }
+                    else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_COMENTARIOS && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_NOTIFICATIONS) {
+                        changeOfInstance(FragmentElement.INSTANCE_NOTIFICATIONS, null, true);
+                    }
+                    else {
+                        if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_FEED)
+                            finish();
+                        else {
+                            if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS) {
+                                repaint_nav(R.id.tap_tips);
+                                changeOfInstance(FragmentElement.INSTANCE_TIPS, null, false);
+                            } else {
+                                repaint_nav(R.id.tab_feed);
+                                changeOfInstance(FragmentElement.INSTANCE_FEED, null, false);
+                            }
 
+                        }
+                    }
+
+                }
             }
+
         }catch (Exception e)
         {
+            Log.e("OLD_NEW", "-->error: " + e.getMessage());
             mCurrentFragment = new FragmentElement<>(null, FeedViewPager.newInstance(), FragmentElement.INSTANCE_FEED, true);
             change_main(mCurrentFragment);
         }
@@ -1119,6 +1144,10 @@ public class Main extends AppCompatActivity implements
     void changue_instance_sheet(Bundle data){
         IS_SHEET_OPEN = true;
         changue_sheet(new FragmentElement<>("", InfoPetFragment.newInstance(), FragmentElement.INSTANCE_PROFILE_PET),data);
+    }
+
+    void changue_fragment_sheet(int instance ,Bundle data){
+        changue_sheet(new FragmentElement<>("", ComentariosFragment.newInstance(), FragmentElement.INSTANCE_COMENTARIOS),data);
     }
 
     private void changue_sheet(FragmentElement fragment,Bundle data) {
