@@ -1,5 +1,7 @@
 package com.bunizz.instapetts.fragments.vertical_videos;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +16,9 @@ import com.bumptech.glide.request.target.Target;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PlayVideos;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.tips.FragmentTipsViewpager;
+import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.utils.AnalogTv.AnalogTvNoise;
 import com.bunizz.instapetts.utils.HistoryView.StoryPlayerProgressView;
 import com.bunizz.instapetts.utils.ImagenCircular;
@@ -53,6 +57,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class playVideoItem extends Fragment implements PreviewLoader,View.OnClickListener {
 
@@ -85,7 +90,14 @@ public class playVideoItem extends Fragment implements PreviewLoader,View.OnClic
     @BindView(R.id.image_video_tumbh)
     ImagenCircular image_video_tumbh;
 
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.open_comments_video)
+    void open_comments_video() {
+        Bundle b = new Bundle();
+        listener.open_sheetFragment(b,FragmentElement.INSTANCE_COMENTARIOS);
+    }
 
+    change_instance listener;
 
     public static playVideoItem newInstancex(PlayVideos postBean) {
         arguments = new Bundle();
@@ -264,5 +276,11 @@ public class playVideoItem extends Fragment implements PreviewLoader,View.OnClic
     @Override
     public void onClick(View v) {
         periscope.addHeart();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        listener = (change_instance) context;
     }
 }

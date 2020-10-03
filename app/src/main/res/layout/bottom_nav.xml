@@ -4,9 +4,7 @@
     android:id="@+id/root_bottom_nav"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="5dp"
-    android:layout_alignParentBottom="true"
-    style="@style/BlackSecondary">
+    android:layout_alignParentBottom="true">
     <RelativeLayout
         android:visibility="gone"
         android:id="@+id/root_progres_publish"

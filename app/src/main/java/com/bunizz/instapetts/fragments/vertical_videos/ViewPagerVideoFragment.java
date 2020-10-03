@@ -1,9 +1,11 @@
 package com.bunizz.instapetts.fragments.vertical_videos;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.fragments.vertical_videos.fragments.playVideoFragment;
@@ -34,6 +36,12 @@ public class ViewPagerVideoFragment extends Fragment  {
 
     @BindView(R.id.adView)
      AdView mAdView;
+
+    @BindView(R.id.tab_seguidos)
+    TextView tab_seguidos;
+
+    @BindView(R.id.tab_para_ti)
+    TextView tab_para_ti;
 
     ViewPagerAdapter adapter_pager;
     public static ViewPagerVideoFragment newInstance() {
@@ -71,7 +79,8 @@ public class ViewPagerVideoFragment extends Fragment  {
         view_pager_videos.setOffscreenPageLimit(1);
       //  view_pager_videos.setOnTouchListener((view1, motionEvent) -> false);
         AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+       // mAdView.loadAd(adRequest);
+        change_tab_para_ti();
     }
 
 
@@ -120,4 +129,20 @@ public class ViewPagerVideoFragment extends Fragment  {
             return mFragmentTitleList.get(position);
         }
     }
+
+
+    public void change_tab_para_ti(){
+        tab_para_ti.setTextSize(18);
+        tab_para_ti.setTextColor(getActivity().getResources().getColor(R.color.primary));
+        tab_seguidos.setTextSize(12);
+        tab_seguidos.setTextColor(Color.WHITE);
+    }
+
+    public void change_tab_seguidos(){
+        tab_para_ti.setTextSize(12);
+        tab_para_ti.setTextColor(Color.WHITE);
+        tab_seguidos.setTextSize(18);
+        tab_seguidos.setTextColor(getActivity().getResources().getColor(R.color.primary));
+    }
+
 }

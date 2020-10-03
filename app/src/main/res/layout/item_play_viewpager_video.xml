@@ -52,43 +52,77 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <ImageView
-                android:rotation="180"
-                android:tint="@color/white"
-                android:src="@drawable/ic_quotes"
-                android:layout_width="15dp"
-                android:layout_height="15dp"/>
             <TextView
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="5dp"
                 android:id="@+id/descripcion_video"
-                android:textSize="18dp"
+                android:textSize="16dp"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-            <ImageView
-                android:tint="@color/white"
-                android:src="@drawable/ic_quotes"
-                android:layout_width="15dp"
-                android:layout_height="15dp"/>
         </LinearLayout>
 
     </LinearLayout>
-    <ImageView
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="100dp"
+
+    <LinearLayout
+        android:layout_marginBottom="30dp"
         android:layout_marginEnd="20dp"
-        android:src="@drawable/ic_corazon_black"
-        android:layout_width="30dp"
-        android:layout_height="30dp"/>
+       android:layout_above="@+id/open_comments_video"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/like_video"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_corazon_black"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+        <TextView
+            android:layout_marginTop="5dp"
+            android:textSize="10dp"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:text="39"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+
     <com.bunizz.instapetts.utils.hearts.PeriscopeLayout
-        android:layout_marginBottom="100dp"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/open_comments_video"
         android:layout_alignParentEnd="true"
         android:id="@+id/periscope"
         android:layout_width="80dp"
         android:layout_height="300dp"
         />
+    <LinearLayout
+        android:layout_marginEnd="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="100dp"
+        android:id="@+id/open_comments_video"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_marginTop="10dp"
+           android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_comentario_fill"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            app:tint="@color/white" />
+        <TextView
+            android:layout_marginTop="5dp"
+            android:textSize="10dp"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:text="1,239"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
 
 </RelativeLayout>
