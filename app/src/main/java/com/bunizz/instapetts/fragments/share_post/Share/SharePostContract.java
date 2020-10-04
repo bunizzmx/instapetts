@@ -1,6 +1,7 @@
 package com.bunizz.instapetts.fragments.share_post.Share;
 
 import com.bunizz.instapetts.beans.PetBean;
+import com.bunizz.instapetts.beans.PlayVideos;
 import com.bunizz.instapetts.beans.PostBean;
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 public interface SharePostContract {
     interface Presenter {
          void sendPost(PostBean post);
+         void sendPostInstapettstv(PlayVideos playVideos);
          void sendPostHelpPet(PostBean post);
          void getLocation();
          void savePostVideo(PostBean postBean);

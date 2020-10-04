@@ -107,18 +107,13 @@ public class PeriscopeLayout extends RelativeLayout {
 
 
     public void addHeart() {
-
         ImageView imageView = new ImageView(getContext());
-        //随机选一个
         imageView.setImageDrawable(drawables[random.nextInt(5)]);
         imageView.setLayoutParams(lp);
-
         addView(imageView);
-
         Animator set = getAnimator(imageView);
         set.addListener(new AnimEndListener(imageView));
         set.start();
-
     }
 
     private Animator getAnimator(View target) {

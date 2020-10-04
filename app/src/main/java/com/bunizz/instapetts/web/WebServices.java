@@ -6,6 +6,7 @@ import com.bunizz.instapetts.beans.AutenticateBean;
 import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PetBean;
+import com.bunizz.instapetts.beans.PlayVideos;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.ReportBean;
 import com.bunizz.instapetts.beans.UserBean;
@@ -70,6 +71,9 @@ public interface WebServices {
     // POSTS //////////////////////////////////////////////////////////
     @POST("test/newposts")
     Single<SimpleResponse> sendPost( @Body PostBean post );
+
+    @POST("test/newposts")
+    Single<SimpleResponse> sendPostInstapettsttv( @Body PlayVideos post );
 
     @POST("test/newposts")
     Single<SimpleResponse> delete_post( @Body PostBean post );

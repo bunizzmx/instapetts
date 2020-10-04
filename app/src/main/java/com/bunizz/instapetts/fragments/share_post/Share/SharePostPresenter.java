@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.beans.AutenticateBean;
+import com.bunizz.instapetts.beans.PlayVideos;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.TempPostVideoHelper;
@@ -76,6 +77,33 @@ public class SharePostPresenter implements SharePostContract.Presenter {
                     }
                 });
 
+    }
+
+    @SuppressLint("CheckResult")
+    @Override
+    public void sendPostInstapettstv(PlayVideos playVideos) {
+        apiService.sendPostInstapettsttv(playVideos)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                    @Override
+                    public void onSuccess(SimpleResponse response) {
+                        Log.e("POST","SUCCESS");
+                        if(response!=null){
+                            if(response.getCode_response() ==200){
+                                mView.postStatus(true);
+                            }else{
+                                mView.postStatus(false);
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.postStatus(false);
+                    }
+                });
     }
 
     @SuppressLint("CheckResult")

@@ -487,6 +487,15 @@ public class App extends Application {
         return CONST.BASE_URL_HLS_VIDEO  + App.read(PREFERENCES.UUID,"INVALID") + "/" + formatDateSimple(new Date()) + "/" +  URI.replace(".mp4","") + "1280x720x6500.m3u8";
     }
 
+    public String  make_uri_video_hls_instapettstv(String URI,String  aspect){
+        return CONST.BASE_URL_HLS_VIDEO_INSTAPETTSTV   + formatDateSimple(new Date()) + "/" +  URI.replace(".mp4","") + "960x540x3500.m3u8";
+    }
+
+    public String  make_uri_bucket_posts_thumbh_instapettstv(String URI){
+        return CONST.BASE_URL_BUCKET_FIRESTORE + "bucket_tumbh_video/o/instapettstv%2F" +  formatDateSimple(new Date())  +"%2Fthumb_"+ URI +
+                "?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
+    }
+
     public String  make_uri_bucket_history(String URI){
         return read(PREFERENCES.UUID,"INVALID") +"%2FSTORIES%2F" +URI + "?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
     }

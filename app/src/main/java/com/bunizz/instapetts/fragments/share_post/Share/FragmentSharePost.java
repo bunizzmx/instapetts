@@ -27,8 +27,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bunizz.instapetts.App;
+import com.bunizz.instapetts.BuildConfig;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PetBean;
+import com.bunizz.instapetts.beans.PlayVideos;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
@@ -55,7 +57,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.bunizz.instapetts.web.CONST.BASE_URL_BUCKET;
 
 public class FragmentSharePost extends Fragment implements  SharePostContract.View{
 
@@ -90,7 +91,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     ArrayList<String> paths = new ArrayList<>();
     ArrayList<String> aspects = new ArrayList<>();
 
-
+    PlayVideos PLAY_VIDEO;
     @OnClick(R.id.back_to_main)
     void back_to_main() {
        getActivity().onBackPressed();
@@ -105,65 +106,95 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             dialogShosePet.setListener(new chose_pet_listener() {
                 @Override
                 public void chose(String url_foto, int id_pet, String name_pet,int type_pet,String name_raza) {
-                    post = new PostBean();
+                    if (!BuildConfig.DEVELOPMENT){
+                        post = new PostBean();
                     post.setName_pet(name_pet);
                     post.setId_pet(id_pet);
                     post.setUrl_photo_pet(url_foto);
-                    post.setCp(App.read(PREFERENCES.CP,0));
-                    post.setLat(App.read(PREFERENCES.LAT,0f));
-                    post.setLon(App.read(PREFERENCES.LON,0f));
+                    post.setCp(App.read(PREFERENCES.CP, 0));
+                    post.setLat(App.read(PREFERENCES.LAT, 0f));
+                    post.setLon(App.read(PREFERENCES.LON, 0f));
                     post.setType_pet(type_pet);
-                    Log.e("NAME_RAZA_PET","-->" + name_raza);
+                    Log.e("NAME_RAZA_PET", "-->" + name_raza);
                     post.setName_raza(name_raza);
-                    if(check_apagar_comments.isChecked())
+                    if (check_apagar_comments.isChecked())
                         post.setCan_comment(1);
                     else
                         post.setCan_comment(0);
 
                     paths.clear();
                     paths = adapter.get_selecteds();
-                    for (int i =0;i< paths.size();i++){
+                    for (int i = 0; i < paths.size(); i++) {
                         String splits[] = paths.get(i).split("/");
                         int index = splits.length;
-                        if(i==0) {
-                            if(is_video == 1) {
-                                concat_paths = App.getInstance().make_uri_video_hls(splits[index - 1],ASPECT);
-                            }
-                            else
+                        if (i == 0) {
+                            if (is_video == 1) {
+                                concat_paths = App.getInstance().make_uri_video_hls(splits[index - 1], ASPECT);
+                            } else
                                 concat_paths = App.getInstance().make_uri_bucket_posts(splits[index - 1]);
-                        }
-                        else {
-                            if(is_video == 1)
-                                concat_paths = App.getInstance().make_uri_video_hls(splits[index - 1],ASPECT);
+                        } else {
+                            if (is_video == 1)
+                                concat_paths = App.getInstance().make_uri_video_hls(splits[index - 1], ASPECT);
                             else
                                 concat_paths += "," + App.getInstance().make_uri_bucket_posts(splits[index - 1]);
                         }
-                        if(is_video !=1) {
+                        if (is_video != 1) {
                             ULTIMATE_IMAGE_THUMBH = App.getInstance().make_uri_bucket_posts_thumbh(splits[index - 1]);
                         }
                     }
 
 
-
-                    Log.e("POSICIONES","--->" +adapter.get_selecteds().size());
-                    if(is_video==1) {
+                    Log.e("POSICIONES", "--->" + adapter.get_selecteds().size());
+                    if (is_video == 1) {
                         post.setDuracion(DURACION);
                         post.setAspect(ASPECT);
                         beginUploadInBackground(adapter.get_selecteds(), true);
-                    }
-                    else {
+                    } else {
                         post.setDuracion(0);
-                        if(paths.size() == 1) {
+                        if (paths.size() == 1) {
                             if (aspects.size() > 0) {
                                 post.setAspect(aspects.get(0));
                             } else {
                                 post.setAspect("4_4");
                             }
-                        }
-                        else
+                        } else
                             post.setAspect("4_4");
                         post.setThumb_video(ULTIMATE_IMAGE_THUMBH);
                         beginUploadInBackground(adapter.get_selecteds(), false);
+                    }
+                }else{
+                        paths.clear();
+                        paths = adapter.get_selecteds();
+                        for (int i = 0; i < paths.size(); i++) {
+                            String splits[] = paths.get(i).split("/");
+                            int index = splits.length;
+                            if (i == 0) {
+                                if (is_video == 1) {
+                                    concat_paths = App.getInstance().make_uri_video_hls_instapettstv(splits[index - 1], ASPECT);
+                                } else
+                                    concat_paths = App.getInstance().make_uri_bucket_posts(splits[index - 1]);
+                            } else {
+                                if (is_video == 1)
+                                    concat_paths = App.getInstance().make_uri_video_hls_instapettstv(splits[index - 1], ASPECT);
+                                else
+                                    concat_paths += "," + App.getInstance().make_uri_bucket_posts(splits[index - 1]);
+                            }
+                            if (is_video != 1) {
+                                ULTIMATE_IMAGE_THUMBH = App.getInstance().make_uri_bucket_posts_thumbh_instapettstv(splits[index - 1]);
+                            }
+                        }
+                        PLAY_VIDEO = new PlayVideos();
+                        PLAY_VIDEO.setAlto(300);
+                        PLAY_VIDEO.setAncho(400);
+                        PLAY_VIDEO.setAspecto("4_4");
+                        PLAY_VIDEO.setDuracion(DURACION);
+                        PLAY_VIDEO.setDescripcion(description_post.getText().toString());
+                        PLAY_VIDEO.setTitulo("INSTAPETTS VIDEO");
+                        PLAY_VIDEO.setUrl_video(concat_paths);
+                        PLAY_VIDEO.setUrl_tumbh(ULTIMATE_IMAGE_THUMBH);
+                        PLAY_VIDEO.setTarget("INSTAPETTS_TV");
+                        beginUploadInBackground(adapter.get_selecteds(), true);
+                        send_post_instapettstv();
                     }
                 }
 
@@ -317,14 +348,16 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
                 try {
                     File newfile = savebitmap(bMap,filePaths.get(0));
                     uri_tuhmbh = String.valueOf(newfile.getPath());
-                    post.setThumb_video(App.getInstance().make_uri_bucket_thumbh_video(uri_tuhmbh));
+                    if(!BuildConfig.DEVELOPMENT)
+                     post.setThumb_video(App.getInstance().make_uri_bucket_thumbh_video(uri_tuhmbh));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
             intent.putExtra(BUNDLES.PHOTO_TUMBH,uri_tuhmbh);
             intent.putExtra(BUNDLES.POST_TYPE, 1);
-            save_post_for_later();
+            if(!BuildConfig.DEVELOPMENT)
+              save_post_for_later();
         }
         else {
             if(filePaths.size() == 1)
@@ -399,6 +432,10 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             presenter.sendPost(post);
         }
 
+    }
+
+    void send_post_instapettstv(){
+        presenter.sendPostInstapettstv(PLAY_VIDEO);
     }
 
     void save_post_for_later(){

@@ -52,7 +52,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 public class ImagePostsService extends Service {
-
+//us-east-1:e164de17-c332-4d52-ae4c-53e964555d8c
     private TransferUtility transferUtility;
 
     public final static String INTENT_KEY_NAME = "key";
@@ -248,7 +248,7 @@ public class ImagePostsService extends Service {
         private boolean notifyUploadActivityNeeded = true;
         @Override
         public void onError(int id, Exception e) {
-            Log.e(TAG, "onError: " + id, e);
+            Log.e(TAG, "onError: " + e.getMessage(), e);
             if (notifyUploadActivityNeeded) {
                 notifyUploadActivityNeeded = false;
             }

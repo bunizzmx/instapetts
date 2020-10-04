@@ -43,6 +43,10 @@ public class PlayVideos {
     @Expose
     int alto;
 
+    @SerializedName("target")
+    @Expose
+    String target;
+
     public PlayVideos() {
     }
 
@@ -128,5 +132,13 @@ public class PlayVideos {
 
     public void setAlto(int alto) {
         this.alto = alto;
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
     }
 }

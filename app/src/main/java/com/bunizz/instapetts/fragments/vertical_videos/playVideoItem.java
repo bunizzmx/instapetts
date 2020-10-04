@@ -1,5 +1,7 @@
 package com.bunizz.instapetts.fragments.vertical_videos;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
@@ -9,6 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -22,6 +27,7 @@ import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.utils.AnalogTv.AnalogTvNoise;
 import com.bunizz.instapetts.utils.HistoryView.StoryPlayerProgressView;
 import com.bunizz.instapetts.utils.ImagenCircular;
+import com.bunizz.instapetts.utils.LikeHeart.SmallBangView;
 import com.bunizz.instapetts.utils.hearts.HeartView;
 import com.bunizz.instapetts.utils.hearts.PeriscopeLayout;
 import com.bunizz.instapetts.utils.line_progressbar.LineProgress;
@@ -59,13 +65,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class playVideoItem extends Fragment implements PreviewLoader,View.OnClickListener {
+public class playVideoItem extends Fragment implements View.OnClickListener {
 
    public static  Bundle arguments;
 
     private ExoPlayerMediaSourceBuilder mediaSourceBuilder;
     private SimpleExoPlayer player;
-    private String thumbnailsUrl;
+    private String videoUrl;
+    private  String thumbhnail;
     private ImageView imageView;
     PlayVideos postBean;
 
@@ -89,6 +96,20 @@ public class playVideoItem extends Fragment implements PreviewLoader,View.OnClic
 
     @BindView(R.id.image_video_tumbh)
     ImagenCircular image_video_tumbh;
+
+    @BindView(R.id.progresbar_buferring)
+    ProgressBar progresbar_buferring;
+
+    @BindView(R.id.like_video)
+    RelativeLayout like_video;
+
+    @BindView(R.id.like_heart)
+    SmallBangView like_heart;
+
+    @BindView(R.id.image_heart)
+    ImageView image_heart;
+
+
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.open_comments_video)
@@ -125,12 +146,14 @@ public class playVideoItem extends Fragment implements PreviewLoader,View.OnClic
                 postBean = Parcels.unwrap(arguments.getParcelable("POSTS"));
         }
         Log.e("play_videos_url","-->" +  postBean.getUrl_video());
-        thumbnailsUrl = postBean.getUrl_video();
+        videoUrl = postBean.getUrl_video();
+        thumbhnail = postBean.getUrl_tumbh();
         this.mediaSourceBuilder = new ExoPlayerMediaSourceBuilder(videoSurfaceView.getContext());
-        periscope.setOnClickListener(this);
+        like_video.setOnClickListener(this);
         title_player.setText(postBean.getTitulo());
         descripcion_video.setText(postBean.getDescripcion());
         Glide.with(getContext()).load(R.drawable.logoapp).into(image_video_tumbh);
+        loadThumbhnail();
 
     }
 
@@ -139,12 +162,13 @@ public class playVideoItem extends Fragment implements PreviewLoader,View.OnClic
         super.onDestroy();
     }
 
+
     public void play(Uri uri) {
         mediaSourceBuilder.setUri(uri);
     }
 
     private void createPlayers() {
-        play(Uri.parse(thumbnailsUrl));
+        play(Uri.parse(videoUrl));
         if (player != null) {
             player.release();
         }
@@ -168,6 +192,7 @@ public class playVideoItem extends Fragment implements PreviewLoader,View.OnClic
                 switch (playbackState) {
                     case Player.STATE_BUFFERING:
                         Log.e("ESTATUS_VIDEO","STATE_BUFFERING");
+                        progresbar_buferring.setVisibility(View.VISIBLE);
                         break;
                     case Player.STATE_ENDED:
                         Log.e("ESTATUS_VIDEO","STATE_ENDED");
@@ -178,6 +203,7 @@ public class playVideoItem extends Fragment implements PreviewLoader,View.OnClic
                         break;
                     case Player.STATE_READY:
                         Log.e("ESTATUS_VIDEO","STATE_READY");
+                        progresbar_buferring.setVisibility(View.GONE);
                         tv_noise.setVisibility(View.GONE);
                         break;
                     default:
@@ -242,45 +268,54 @@ public class playVideoItem extends Fragment implements PreviewLoader,View.OnClic
 
     public void onResume() {
         super.onResume();
-        if (Util.SDK_INT <= 23) {
-            createPlayers();
-        }
+        Log.e("ESTATUS_ACTIVITY","ONRESUME");
+        createPlayers();
     }
 
     public void onPause() {
         super.onPause();
-        if (Util.SDK_INT <= 23) {
-            releasePlayers();
-        }
+        Log.e("ESTATUS_ACTIVITY","ONPAUSE");
+        releasePlayers();
     }
 
     public void onStop() {
         super.onStop();
+        Log.e("ESTATUS_ACTIVITY","onStop");
         if (Util.SDK_INT > 23) {
             releasePlayers();
         }
     }
 
-    @Override
-    public void loadPreview(long currentPosition, long max) {
-        Log.e("LKDLASJKDL","KAJDKA");
-        player.setPlayWhenReady(true);
-        Glide.with(getContext())
-                .load(thumbnailsUrl)
-                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                .transform(new GlideThumbnailTransformation(currentPosition))
-                .into(preview_video);
-    }
 
 
     @Override
     public void onClick(View v) {
-        periscope.addHeart();
+        if (like_heart.isSelected()) {
+            like_heart.setSelected(false);
+        } else {
+            for(int i=0;i<5;i++)
+                periscope.addHeart();
+            like_heart.setSelected(true);
+            like_heart.likeAnimation(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                }
+            });
+        }
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         listener = (change_instance) context;
+    }
+
+    public void loadThumbhnail(){
+        Log.e("LKDLASJKDL","KAJDKA");
+        Glide.with(getContext())
+                .load(thumbhnail)
+                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                .into(preview_video);
     }
 }

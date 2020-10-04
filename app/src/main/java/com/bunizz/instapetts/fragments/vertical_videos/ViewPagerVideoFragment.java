@@ -1,5 +1,6 @@
 package com.bunizz.instapetts.fragments.vertical_videos;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.vertical_videos.fragments.playVideoFragment;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -28,6 +30,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ViewPagerVideoFragment extends Fragment  {
 
@@ -43,6 +46,18 @@ public class ViewPagerVideoFragment extends Fragment  {
     @BindView(R.id.tab_para_ti)
     TextView tab_para_ti;
 
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.tab_seguidos)
+    void tab_seguidos() {
+        change_tab_seguidos();
+    }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.tab_para_ti)
+    void tab_para_ti() {
+       change_tab_para_ti();
+    }
+
     ViewPagerAdapter adapter_pager;
     public static ViewPagerVideoFragment newInstance() {
         return new ViewPagerVideoFragment();
@@ -54,15 +69,11 @@ public class ViewPagerVideoFragment extends Fragment  {
         super.onCreate(savedInstanceState);
         adapter_pager = new ViewPagerAdapter(getChildFragmentManager());
         adapter_pager.addFragment(new playVideoFragment(), getString(R.string.pager_discover));
-        adapter_pager.addFragment(new playVideoFragment(), getString(R.string.pager_more_views));
         MobileAds.initialize(getActivity(), new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
             }
         });
-
-
-
     }
 
     @Nullable

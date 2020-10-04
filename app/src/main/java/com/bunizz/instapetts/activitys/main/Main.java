@@ -704,6 +704,12 @@ public class Main extends AppCompatActivity implements
         else {
             runOnUiThread(() -> root_bottom_nav.setVisibility(View.GONE));
         }
+
+        if(intanceType != FragmentElement.INSTANCE_PLAY_VIDEOS)
+            runOnUiThread(() -> tab_add_image.show());
+        else
+            runOnUiThread(() -> tab_add_image.hide());
+
         if(mOldFragment!=null) {
 
             if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_FEED) {

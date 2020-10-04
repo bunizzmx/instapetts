@@ -13,7 +13,7 @@
   },
   "S3TransferUtility": {
     "Default": {
-      "Bucket": "instapetts",
+      "Bucket": "videosinstapetts",
       "Region": "us-east-1"
     }
   }

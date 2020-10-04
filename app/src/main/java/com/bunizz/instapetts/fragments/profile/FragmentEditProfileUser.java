@@ -37,8 +37,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.bunizz.instapetts.web.CONST.BASE_URL_BUCKET;
-
 public class FragmentEditProfileUser extends Fragment {
 
     @SuppressLint("MissingPermission")
