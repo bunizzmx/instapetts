@@ -1,6 +1,7 @@
 package com.bunizz.instapetts.fragments.vertical_videos.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,7 @@ public class playVideoFragment extends Fragment implements playVideoContract.Vie
     ViewPager2 view_pager_stories;
     ScreenSlidePagerAdapter adapter;
     playVideoPresenter presenter;
-
+    ArrayList<PlayVideos>  videos =new ArrayList<>();
     ArrayList<PlayVideos>  playVideos =new ArrayList<>();
 
     public static playVideoFragment newInstance() {
@@ -54,14 +55,45 @@ public class playVideoFragment extends Fragment implements playVideoContract.Vie
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         view_pager_stories.setAdapter(adapter);
-        presenter.getVideos(false,0);
+        presenter.getVideos(-999,false,0);
+        view_pager_stories.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                if(videos.size() - 2 > 0) {
+                    if (position > videos.size() - 2) {
+                        presenter.getVideos(1,true,0);
+                        Log.e("DEBO_PEDIR_MAS", "SI");
+                    }else{
+                        Log.e("DEBO_PEDIR_MAS", "AUN NO");
+                    }
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                super.onPageScrollStateChanged(state);
+            }
+        });
 
     }
 
     @Override
     public void showVideos(ArrayList<PlayVideos> data) {
-        adapter.setPlayVideos(data);
+        videos.clear();
+        videos.addAll(data);
+        adapter.setPlayVideos(videos);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showMoreVideos(ArrayList<PlayVideos> data) {
+
     }
 
 

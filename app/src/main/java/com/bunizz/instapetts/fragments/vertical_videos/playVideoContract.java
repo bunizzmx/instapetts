@@ -10,12 +10,13 @@ import java.util.ArrayList;
 
 public interface playVideoContract {
     interface Presenter {
-        void getVideos(boolean one_user,int id_one);
+        void getVideos(int paginador,boolean more,int type_videos);
 
 
     }
 
     interface View{
         void showVideos(ArrayList<PlayVideos> data);
+        void showMoreVideos(ArrayList<PlayVideos> data);
     }
 }

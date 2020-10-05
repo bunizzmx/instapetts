@@ -60,9 +60,14 @@ public class playVideoPresenter implements  playVideoContract.Presenter{
     }
 
     @Override
-    public void getVideos(boolean one_user, int id_one) {
+    public void getVideos( int paginador,boolean more,int type_videos) {
         AutenticateBean autenticateBean = new AutenticateBean();
-        autenticateBean.setTarget(WEBCONSTANTS.DISCOVER);
+        if(type_videos == 0)
+           autenticateBean.setTarget(WEBCONSTANTS.INSTAPETTSTV);
+        else
+            autenticateBean.setTarget(WEBCONSTANTS.VIDEOS_USERS);
+
+        autenticateBean.setPaginador(paginador);
         disposable.add(
                 apiService.getPlayVideos(autenticateBean)
                         .subscribeOn(Schedulers.io())

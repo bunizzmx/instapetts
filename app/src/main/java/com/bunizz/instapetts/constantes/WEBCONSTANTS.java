@@ -15,4 +15,8 @@ public interface WEBCONSTANTS {
     String DELETE_OF_MY_FRIENDS ="DELETE_OF_MY_FRIENDS";
     String MULTIPLE ="MULTIPLE";
     String TOKEN ="TOKEN";
+
+
+    String INSTAPETTSTV = "INSTAPETTSTV";
+    String VIDEOS_USERS = "VIDEOS_USERS";
 }
