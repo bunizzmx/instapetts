@@ -86,6 +86,13 @@ public class playVideoFragment extends Fragment implements playVideoContract.Vie
     @Override
     public void showVideos(ArrayList<PlayVideos> data) {
         videos.clear();
+        for (int i =0;i<data.size();i++){
+            if(presenter.is_video_liked(data.get(i).getId())){
+                data.get(i).setLiked(true);
+            }else{
+                data.get(i).setLiked(false);
+            }
+        }
         videos.addAll(data);
         adapter.setPlayVideos(videos);
         adapter.notifyDataSetChanged();

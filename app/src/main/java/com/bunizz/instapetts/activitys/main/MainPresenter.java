@@ -30,6 +30,7 @@ import com.bunizz.instapetts.db.helpers.IdentificadoresHistoriesHelper;
 import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
 import com.bunizz.instapetts.db.helpers.MyStoryHelper;
 import com.bunizz.instapetts.db.helpers.PetHelper;
+import com.bunizz.instapetts.db.helpers.PlayVideosHelper;
 import com.bunizz.instapetts.db.helpers.SearchResentHelper;
 import com.bunizz.instapetts.db.helpers.TempPostVideoHelper;
 import com.bunizz.instapetts.fragments.share_post.Share.SharePostContract;
@@ -101,6 +102,7 @@ public class MainPresenter implements MainContract.Presenter {
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
     private static final int RC_SIGN_IN = 9001;
+    PlayVideosHelper playVideosHelper;
 
     MainPresenter(MainContract.View view, Activity context) {
         this.mView = view;
@@ -115,6 +117,7 @@ public class MainPresenter implements MainContract.Presenter {
         storageReference = FirebaseStorage.getInstance(CONST.BUCKET_FILES_BACKUP).getReference();
         tempPostVideoHelper = new TempPostVideoHelper(mContext);
         searchResentHelper = new SearchResentHelper(mContext);
+        playVideosHelper = new PlayVideosHelper(mContext);
         mAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -470,34 +473,7 @@ public class MainPresenter implements MainContract.Presenter {
                         }));
     }
 
-    @Override
-    public ArrayList<Integer> getIdsFolows() {
-        return idsUsersHelper.getMyFriendsForPost();
-    }
 
-    @Override
-    public void sendFileBackup() {
-        Log.e("SEND_FILE","TRUE");
-        UploadTask uploadTask;
-        metadata = new StorageMetadata.Builder()
-                .setContentType("text/txt")
-                .build();
-        String filename = App.read(PREFERENCES.UUID,"INVALID") + "_BACKUP.txt";
-        final StorageReference reference = storageReference.child(filename);
-        uploadTask  = reference.putFile(Uri.fromFile(new File(mContext.getFilesDir()+"/" + App.read(PREFERENCES.UUID,"INVALID")+".txt")),metadata);
-        uploadTask.addOnFailureListener(exception -> {}).addOnSuccessListener(taskSnapshot -> {
-        }).addOnProgressListener(taskSnapshot -> {});
-        Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
-            if (!task.isSuccessful()) {
-                throw task.getException();
-            }
-            return reference.getDownloadUrl();
-        }).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                App.write(PREFERENCES.FECHA_BACKUP_FILE,App.formatDateSimple(new Date()));
-            }
-        });
-    }
 
     @Override
     public void getFileBackup() {
@@ -836,6 +812,11 @@ public class MainPresenter implements MainContract.Presenter {
 
                             }
                         }));
+    }
+
+    @Override
+    public void likeVideoInstapettsTv(int id_video) {
+        playVideosHelper.saveLikePost(id_video);
     }
 
 

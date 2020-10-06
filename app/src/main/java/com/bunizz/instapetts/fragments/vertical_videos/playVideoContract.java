@@ -11,6 +11,8 @@ import java.util.ArrayList;
 public interface playVideoContract {
     interface Presenter {
         void getVideos(int paginador,boolean more,int type_videos);
+        void likeVideo(int id_video);
+        boolean is_video_liked(int id_video);
 
 
     }

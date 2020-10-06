@@ -253,6 +253,7 @@ public class Tips extends Fragment implements  TipsContract.View {
             PAGINADOR = tips_list.get(tips_list.size() - 1).getId();
             mNativeAds.clear();
             mNativeAds.addAll(App.getInstance().getMoreAds());
+
             if(mNativeAds.size() > 0) {
                 int offset = mNativeAds.size() + 1;
                 int index = 3;
@@ -263,9 +264,11 @@ public class Tips extends Fragment implements  TipsContract.View {
                     else{offset +=1;}
                     index = index + offset;
                 }
+                list_tips.setMediaObjectsBelow(data_below);
                 adapter.setMoreTips(data_below);
                 refresh_tips.setRefreshing(false);
             }else{
+                list_tips.setMediaObjectsBelow(data_below);
                 adapter.setMoreTips(data_below);
                 refresh_tips.setRefreshing(false);
             }

@@ -63,6 +63,7 @@ public class ExoPlayerRecyclerViewTips extends RecyclerView {
     private PlayerView videoSurfaceView;
     private SimpleExoPlayer videoPlayer;
     boolean IS_PLAY=false;
+    int currentPosition =0;
     /**
      * variable declaration
      */
@@ -213,51 +214,58 @@ public class ExoPlayerRecyclerViewTips extends RecyclerView {
 
     public void playVideo(boolean isEndOfList) {
 
-        int targetPosition;
-        if (!isEndOfList) {
-            int startPosition = ((LinearLayoutManager) Objects.requireNonNull(
-                    getLayoutManager())).findFirstVisibleItemPosition();
-            int endPosition = ((LinearLayoutManager) getLayoutManager()).findLastVisibleItemPosition();
-            // if there is more than 2 list-items on the screen, set the difference to be 1
-            if (endPosition - startPosition > 1) {
-                endPosition = startPosition + 1;
+        try {
+            Log.d(TAG, "RETORNOOOOOOOOOOO  PLAY");
+            int targetPosition;
+            if (!isEndOfList) {
+                Log.d(TAG, "RETORNOOOOOOOOOOO  FIN");
+                int startPosition = ((LinearLayoutManager) Objects.requireNonNull(
+                        getLayoutManager())).findFirstVisibleItemPosition();
+                int endPosition = ((LinearLayoutManager) getLayoutManager()).findLastVisibleItemPosition();
+                // if there is more than 2 list-items on the screen, set the difference to be 1
+                if (endPosition - startPosition > 1) {
+                    endPosition = startPosition + 1;
+                }
+                // something is wrong. return.
+                if (startPosition < 0 || endPosition < 0) {
+                    Log.d(TAG, "RETORNOOOOOOOOOOO  3333");
+                    return;
+                }
+                // if there is more than 1 list-item on the screen
+                if (startPosition != endPosition) {
+                    int startPositionVideoHeight = getVisibleVideoSurfaceHeight(startPosition);
+                    int endPositionVideoHeight = getVisibleVideoSurfaceHeight(endPosition);
+                    targetPosition =
+                            startPositionVideoHeight > endPositionVideoHeight ? startPosition : endPosition;
+                } else {
+                    targetPosition = startPosition;
+                }
+            } else {
+                targetPosition = mediaObjects.size() - 1;
             }
-            // something is wrong. return.
-            if (startPosition < 0 || endPosition < 0) {
+            Log.d(TAG, "playVideo: target position: " + targetPosition);
+            // video is already playing so return
+            if (targetPosition == playPosition) {
+                Log.d(TAG, "RETORNOOOOOOOOOOO  1111");
                 return;
             }
-            // if there is more than 1 list-item on the screen
-            if (startPosition != endPosition) {
-                int startPositionVideoHeight = getVisibleVideoSurfaceHeight(startPosition);
-                int endPositionVideoHeight = getVisibleVideoSurfaceHeight(endPosition);
-                targetPosition =
-                        startPositionVideoHeight > endPositionVideoHeight ? startPosition : endPosition;
-            } else {
-                targetPosition = startPosition;
+            // set the position of the list-item that is to be played
+            playPosition = targetPosition;
+            if (videoSurfaceView == null) {
+                Log.d(TAG, "RETORNOOOOOOOOOOO 22");
+                return;
             }
-        } else {
-            targetPosition = mediaObjects.size() - 1;
-        }
-        Log.d(TAG, "playVideo: target position: " + targetPosition);
-        // video is already playing so return
-        if (targetPosition == playPosition) {
-            return;
-        }
-        // set the position of the list-item that is to be played
-        playPosition = targetPosition;
-        if (videoSurfaceView == null) {
-            return;
-        }
-        // remove any old surface views from previously playing videos
-        videoSurfaceView.setVisibility(INVISIBLE);
-        removeVideoView(videoSurfaceView);
-        int currentPosition =
-                targetPosition - ((LinearLayoutManager) Objects.requireNonNull(
-                        getLayoutManager())).findFirstVisibleItemPosition();
-        View child = getChildAt(currentPosition);
-        if (child == null) {
-            return;
-        }
+            // remove any old surface views from previously playing videos
+            videoSurfaceView.setVisibility(INVISIBLE);
+            removeVideoView(videoSurfaceView);
+
+            currentPosition = targetPosition - ((LinearLayoutManager) Objects.requireNonNull(getLayoutManager())).findFirstVisibleItemPosition();
+
+            View child = getChildAt(currentPosition);
+            if (child == null) {
+                Log.d(TAG, "RETORNOOOOOOOOOOO  6666");
+                return;
+            }
         if(getChildViewHolder(child) instanceof TipsAdapter.TipsHolderVideo) {
             TipsAdapter.TipsHolderVideo holder = (TipsAdapter.TipsHolderVideo) getChildViewHolder(child);
             if (holder == null) {
@@ -290,6 +298,9 @@ public class ExoPlayerRecyclerViewTips extends RecyclerView {
             IS_PLAY = false;
             if(videoPlayer!=null)
             videoPlayer.stop();
+        }
+        }catch (Exception e){
+            Log.d(TAG, "RETORNOOOOOOOOOOO  INDICES DESFAZADOS");
         }
     }
 
@@ -409,6 +420,10 @@ public class ExoPlayerRecyclerViewTips extends RecyclerView {
     }
     public void setMediaObjects(ArrayList<Object> mediaObjects) {
         this.mediaObjects = mediaObjects;
+    }
+
+    public void setMediaObjectsBelow(ArrayList<Object> mediaObjects) {
+        this.mediaObjects.addAll(mediaObjects);
     }
     /**
      * Volume ENUM

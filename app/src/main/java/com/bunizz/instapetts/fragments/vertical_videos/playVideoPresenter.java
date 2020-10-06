@@ -12,6 +12,7 @@ import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
 import com.bunizz.instapetts.db.helpers.LikePostHelper;
 import com.bunizz.instapetts.db.helpers.MyStoryHelper;
 import com.bunizz.instapetts.db.helpers.NotificationHelper;
+import com.bunizz.instapetts.db.helpers.PlayVideosHelper;
 import com.bunizz.instapetts.db.helpers.SavedPostHelper;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.web.ApiClient;
@@ -41,6 +42,7 @@ public class playVideoPresenter implements  playVideoContract.Presenter{
     FollowsHelper followsHelper;
     NotificationHelper notificationHelper;
     IdsUsersHelper idsUsersHelper;
+    PlayVideosHelper playVideosHelper;
 
 
 
@@ -56,6 +58,7 @@ public class playVideoPresenter implements  playVideoContract.Presenter{
         followsHelper = new FollowsHelper(this.mContext);
         notificationHelper = new NotificationHelper(mContext);
         idsUsersHelper = new IdsUsersHelper(mContext);
+        playVideosHelper = new PlayVideosHelper(mContext);
         db = App.getIntanceFirestore();
     }
 
@@ -82,5 +85,15 @@ public class playVideoPresenter implements  playVideoContract.Presenter{
                             public void onError(Throwable e) {}
                         })
         );
+    }
+
+    @Override
+    public void likeVideo(int id_video) {
+        playVideosHelper.saveLikePost(id_video);
+    }
+
+    @Override
+    public boolean is_video_liked(int id_video) {
+        return playVideosHelper.searchPostById(id_video);
     }
 }

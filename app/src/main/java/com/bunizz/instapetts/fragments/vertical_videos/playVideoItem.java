@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,16 +19,23 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
+import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.activitys.reports.ReportActiviy;
 import com.bunizz.instapetts.beans.PlayVideos;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.constantes.PREFERENCES;
+import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.tips.FragmentTipsViewpager;
+import com.bunizz.instapetts.listeners.actions_dialog_profile;
 import com.bunizz.instapetts.listeners.change_instance;
+import com.bunizz.instapetts.listeners.simpleLikeListener;
 import com.bunizz.instapetts.utils.AnalogTv.AnalogTvNoise;
 import com.bunizz.instapetts.utils.HistoryView.StoryPlayerProgressView;
 import com.bunizz.instapetts.utils.ImagenCircular;
 import com.bunizz.instapetts.utils.LikeHeart.SmallBangView;
+import com.bunizz.instapetts.utils.dilogs.DialogOptionsPosts;
 import com.bunizz.instapetts.utils.hearts.HeartView;
 import com.bunizz.instapetts.utils.hearts.PeriscopeLayout;
 import com.bunizz.instapetts.utils.line_progressbar.LineProgress;
@@ -55,6 +63,7 @@ import com.google.android.exoplayer2.util.Util;
 
 import org.parceler.Parcels;
 
+import java.text.NumberFormat;
 import java.util.Random;
 
 import androidx.annotation.NonNull;
@@ -109,7 +118,14 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
     @BindView(R.id.image_heart)
     ImageView image_heart;
 
+    @BindView(R.id.num_likes_video)
+    TextView num_likes_video;
 
+    @BindView(R.id.num_comentarios_video)
+    TextView num_comentarios_video;
+
+    @BindView(R.id.num_views_video)
+    TextView num_views_video;
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.open_comments_video)
@@ -118,6 +134,29 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
         listener.open_sheetFragment(b,FragmentElement.INSTANCE_COMENTARIOS);
     }
 
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.open_options_video)
+    void open_options_video() {
+        DialogOptionsPosts optionsPosts = new DialogOptionsPosts(getContext(),-999,-999,"xxxx");
+        optionsPosts.setListener(new actions_dialog_profile() {
+            @Override
+            public void delete_post(int id_post) {}
+
+            @Override
+            public void reportPost(int id_post) {
+                Intent reportIntent = new Intent(getActivity(), ReportActiviy.class);
+                reportIntent.putExtra("ID_RECURSO",id_post);
+                reportIntent.putExtra("TYPO_RECURSO",1);
+                startActivity(reportIntent);
+            }
+            @Override
+            public void unfollowUser(int id_user,String uuid) { }
+        });
+        optionsPosts.show();
+    }
+
+
+    simpleLikeListener listener_video;
     change_instance listener;
 
     public static playVideoItem newInstancex(PlayVideos postBean) {
@@ -152,8 +191,16 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
         like_video.setOnClickListener(this);
         title_player.setText(postBean.getTitulo());
         descripcion_video.setText(postBean.getDescripcion());
+        num_likes_video.setText("" + NumberFormat.getInstance().format(postBean.getLikes()));
+        num_comentarios_video.setText(""+ NumberFormat.getInstance().format(postBean.getComentarios()) );
+        num_views_video.setText(""+ NumberFormat.getInstance().format(postBean.getVisto()));
         Glide.with(getContext()).load(R.drawable.logoapp).into(image_video_tumbh);
         loadThumbhnail();
+        if(postBean.isLiked()){
+            like_heart.setSelected(true);
+        }else{
+            like_heart.setSelected(false);
+        }
 
     }
 
@@ -290,6 +337,9 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+
+            listener_video.onLike(postBean.getId());
+
         if (like_heart.isSelected()) {
             like_heart.setSelected(false);
         } else {
@@ -309,6 +359,7 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         listener = (change_instance) context;
+        listener_video =(simpleLikeListener)context;
     }
 
     public void loadThumbhnail(){

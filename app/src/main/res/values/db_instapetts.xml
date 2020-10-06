@@ -26,4 +26,6 @@
     <string name="update_pets_v1">ALTER TABLE pets ADD id_type_raza INTEGER</string>
     <string name="update_notificaciones_v1">ALTER TABLE notifications ADD id_recurso INTEGER</string>
 
+    <string name="table_play_ideos">CREATE TABLE IF NOT EXISTS play_ideos(id_from_web INT);</string>
+
 </resources>

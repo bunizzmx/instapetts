@@ -72,6 +72,7 @@ import com.bunizz.instapetts.listeners.login_invitado_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.open_sheet_listener;
 import com.bunizz.instapetts.listeners.open_side_menu;
+import com.bunizz.instapetts.listeners.simpleLikeListener;
 import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.services.FetchAddressIntentService;
 import com.bunizz.instapetts.services.ImageService;
@@ -125,7 +126,8 @@ public class Main extends AppCompatActivity implements
         conexion_listener,
         folowFavoriteListener,
         open_side_menu,
-        login_invitado_listener {
+        login_invitado_listener
+         , simpleLikeListener {
 
     public static final String POST_SUCCESFULL = "com.bunizz.instapetts.activitys.main.Main.POST_SUCCESFULL";
     public static final String POST_SENDEND_START = "com.bunizz.instapetts.activitys.main.Main.POST_SENDEND_START";
@@ -1374,9 +1376,9 @@ public class Main extends AppCompatActivity implements
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            //window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), color));
+           // window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), color));
             window.setNavigationBarColor(ContextCompat.getColor(getApplicationContext(), color));
         }
     }
@@ -1521,6 +1523,10 @@ public class Main extends AppCompatActivity implements
         presenter.handleFacebookAccessToken(accessToken);
     }
 
+    @Override
+    public void onLike(int id_video) {
+        presenter.likeVideoInstapettsTv(id_video);
+    }
 
 
     class AddressResultReceiver extends ResultReceiver {

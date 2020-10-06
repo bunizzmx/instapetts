@@ -22,8 +22,6 @@ public interface MainContract {
         void update_token(UserBean userBean);
         void logout();
         void getIdentificadoresHistories();
-        ArrayList<Integer> getIdsFolows();
-        void sendFileBackup();
         void getFileBackup();
         void delete_data();
         void isAdsActive();
@@ -35,6 +33,7 @@ public interface MainContract {
         void startGoggleSignin();
         void getNameAvailable(String name);
         void updateUser(UserBean userBean);
+        void likeVideoInstapettsTv(int id_video);
     }
 
     interface View{

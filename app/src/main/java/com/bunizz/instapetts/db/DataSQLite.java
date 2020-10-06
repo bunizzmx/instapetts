@@ -34,7 +34,7 @@ public class DataSQLite extends SQLiteOpenHelper {
     }
 
     private DataSQLite(Context context) {
-        super(context, DATABASE_NAME, null, 3);
+        super(context, DATABASE_NAME, null, 4);
         this.context = context;
     }
 
@@ -58,6 +58,7 @@ public class DataSQLite extends SQLiteOpenHelper {
         db.execSQL(context.getString(R.string.table_ids_users_follows));
         db.execSQL(context.getString(R.string.table_liked_stories));
         db.execSQL(context.getString(R.string.table_temp_video_post));
+        db.execSQL(context.getString(R.string.table_play_ideos));
 
     }
 
@@ -68,6 +69,8 @@ public class DataSQLite extends SQLiteOpenHelper {
         db.execSQL(context.getString(R.string.update_pets_v1));
         if(oldVersion < 3)
         db.execSQL(context.getString(R.string.update_notificaciones_v1));
+        if(oldVersion <4)
+        db.execSQL(context.getString(R.string.table_play_ideos));
 
     }
 }

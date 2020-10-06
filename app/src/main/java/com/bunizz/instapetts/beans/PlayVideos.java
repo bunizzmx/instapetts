@@ -47,6 +47,20 @@ public class PlayVideos {
     @Expose
     String target;
 
+    @SerializedName("likes")
+    @Expose
+    int likes;
+
+    @SerializedName("visto")
+    @Expose
+    int visto;
+
+    @SerializedName("comentarios")
+    @Expose
+    int comentarios;
+
+    boolean liked;
+
     public PlayVideos() {
     }
 
@@ -140,5 +154,37 @@ public class PlayVideos {
 
     public void setTarget(String target) {
         this.target = target;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public int getVisto() {
+        return visto;
+    }
+
+    public void setVisto(int visto) {
+        this.visto = visto;
+    }
+
+    public int getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(int comentarios) {
+        this.comentarios = comentarios;
+    }
+
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
     }
 }
