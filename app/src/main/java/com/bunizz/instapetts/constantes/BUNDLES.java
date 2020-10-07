@@ -22,7 +22,7 @@ public interface BUNDLES {
     String NAME_USUARIO = "NAME_USUARIO";
     String URL_RESOURCE = "URL_RESOURCE";
 
-
+    String TYPE_RESOURCE_TO_COMMNET = "TYPE_RESOURCE_TO_COMMNET";
     String UUID = "UUID";
 
     // PET BUNDLES WIZZARD

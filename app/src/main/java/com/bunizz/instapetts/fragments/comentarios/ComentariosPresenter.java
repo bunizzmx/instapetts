@@ -16,6 +16,7 @@ import com.bunizz.instapetts.db.helpers.SavedPostHelper;
 import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
+import com.bunizz.instapetts.web.parameters.PlayVideoParameters;
 import com.bunizz.instapetts.web.parameters.PostLikeBean;
 import com.bunizz.instapetts.web.responses.SimpleResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -63,7 +64,7 @@ public class ComentariosPresenter implements ComentariosContract.Presenter {
 
 
     @Override
-    public void comment(CommentariosBean commentariosBean) {
+    public void comment(CommentariosBean commentariosBean,int type_resource_to_comment) {
         Map<String,Object> data = new HashMap<>();
         data.put("commentario",commentariosBean.getCommentario());
         data.put("fecha_comentario",commentariosBean.getFecha_comentario());
@@ -72,15 +73,15 @@ public class ComentariosPresenter implements ComentariosContract.Presenter {
         data.put("id_user",commentariosBean.getId_user());
         data.put("id_post",commentariosBean.getId_post());
         data.put("likes",commentariosBean.getLikes());
-
-        db.collection(FIRESTORE.COLLECTION_COMENTARIOS).document("-"+commentariosBean.getId_post()+"-").collection(FIRESTORE.COLLECTION_COMENTARIOS_SUBCOLECCION)
-                .document(App.formatDateComments(new Date()))
-                .set(data)
-                .addOnSuccessListener(aVoid -> {})
-               .addOnCompleteListener(new OnCompleteListener<Void>() {
-                   @Override
-                   public void onComplete(@NonNull Task<Void> task) { } })
-                .addOnFailureListener(e -> {});
+        if(type_resource_to_comment == 1){
+            db.collection(FIRESTORE.COLLECTION_COMENTARIOS).document("-"+commentariosBean.getId_post()+"-").collection(FIRESTORE.COLLECTION_COMENTARIOS_SUBCOLECCION)
+                    .document(App.formatDateComments(new Date()))
+                    .set(data)
+                    .addOnSuccessListener(aVoid -> {})
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) { } })
+                    .addOnFailureListener(e -> {});
             PostLikeBean postLikeBean = new PostLikeBean();
             postLikeBean.setId_post(commentariosBean.getId_post());
             postLikeBean.setId_user(commentariosBean.getId_user());
@@ -102,16 +103,16 @@ public class ComentariosPresenter implements ComentariosContract.Presenter {
                                         if (responsePost.getCode_response() == 200) {
                                             if(commentariosBean.getId_destinatario() !=  App.read(PREFERENCES.ID_USER_FROM_WEB,0)){
                                                 Log.e("ESTATUS_NOTIFICACION","SE VA A ENVIAR A : " + commentariosBean.getId_user());
-                                            Map<String, Object> data_notification = new HashMap<>();
-                                            data_notification.put("TOKEN",responsePost.getResult_data_extra());
-                                            data_notification.put("ID_RECURSO",commentariosBean.getId_post());
-                                            data_notification.put("TYPE_NOTIFICATION",3);
-                                            data_notification.put("NAME_REMITENTE",App.read(PREFERENCES.NAME_USER,"INVALID"));
-                                            data_notification.put("ID_REMITENTE",App.read(PREFERENCES.ID_USER_FROM_WEB,0));
-                                            data_notification.put("URL_EXTRA",commentariosBean.getCommentario());
-                                            data_notification.put("FOTO_REMITENTE",App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
-                                            data_notification.put("FECHA",App.formatDateGMT(new Date()));
-                                            App.getInstance().sendNotification(data_notification,commentariosBean.getId_destinatario());
+                                                Map<String, Object> data_notification = new HashMap<>();
+                                                data_notification.put("TOKEN",responsePost.getResult_data_extra());
+                                                data_notification.put("ID_RECURSO",commentariosBean.getId_post());
+                                                data_notification.put("TYPE_NOTIFICATION",3);
+                                                data_notification.put("NAME_REMITENTE",App.read(PREFERENCES.NAME_USER,"INVALID"));
+                                                data_notification.put("ID_REMITENTE",App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+                                                data_notification.put("URL_EXTRA",commentariosBean.getCommentario());
+                                                data_notification.put("FOTO_REMITENTE",App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"));
+                                                data_notification.put("FECHA",App.formatDateGMT(new Date()));
+                                                App.getInstance().sendNotification(data_notification,commentariosBean.getId_destinatario());
                                             }
                                         } else {
                                             RETRY++;
@@ -139,12 +140,59 @@ public class ComentariosPresenter implements ComentariosContract.Presenter {
                                 }
                             })
             );
+        }
+        else{
+            db.collection(FIRESTORE.COLLECTION_COMENTARIOS_INSTAPETTSTV).document("-"+commentariosBean.getId_post()+"-").collection(FIRESTORE.COLLECTION_COMENTARIOS_INSTAPETTSTV)
+                    .document(App.formatDateComments(new Date()))
+                    .set(data)
+                    .addOnSuccessListener(aVoid -> {})
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                            PlayVideoParameters playVideoParameters = new PlayVideoParameters();
+                            playVideoParameters.setTarget("COMMENT");
+                            playVideoParameters.setId_video(commentariosBean.getId_post());
+                            disposable.add(
+                                    apiService
+                                            .actionsPlayVideos(playVideoParameters)
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                                                @Override
+                                                public void onSuccess(SimpleResponse user) {
+                                                    if(user!=null) {
+                                                        if (user.getCode_response() == 200)
+                                                            Log.e("LIKE_SUCCESS",":)");
+                                                        else
+                                                            Log.e("LIKE_SUCCESS",":(");
+                                                    }else{
+
+                                                    }
+                                                }
+                                                @Override
+                                                public void onError(Throwable e) {
+
+                                                }
+                                            }));
+                        } })
+                    .addOnFailureListener(e -> {});
+        }
+
+
     }
 
     @Override
-    public void getComentarios(int id_post) {
+    public void getComentarios(int id_post,int type_resoruce_to_comment) {
         ArrayList<CommentariosBean> COMMENTARIOS = new ArrayList<>();
-        db.collection(FIRESTORE.COLLECTION_COMENTARIOS).document("-"+id_post+"-").collection(FIRESTORE.COLLECTION_COMENTARIOS_SUBCOLECCION)
+        String COLLECCTION_REQUEST ="";
+
+        if(type_resoruce_to_comment == 1)
+            COLLECCTION_REQUEST =FIRESTORE.COLLECTION_COMENTARIOS;
+        else
+            COLLECCTION_REQUEST =FIRESTORE.COLLECTION_COMENTARIOS_INSTAPETTSTV;
+
+        db.collection(COLLECCTION_REQUEST).document("-"+id_post+"-").collection(COLLECCTION_REQUEST)
                 .limit(20)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -179,37 +227,76 @@ public class ComentariosPresenter implements ComentariosContract.Presenter {
     }
 
     @Override
-    public void deleteComment(int id_post,String document) {
+    public void deleteComment(int id_post,String document,int type_resource_to_comment) {
+
+        String COLLECCTION_REQUEST ="";
+
+        if(type_resource_to_comment == 1)
+            COLLECCTION_REQUEST =FIRESTORE.COLLECTION_COMENTARIOS;
+        else
+            COLLECCTION_REQUEST =FIRESTORE.COLLECTION_COMENTARIOS_INSTAPETTSTV;
+
+
+
         if((""+id_post)!=null && document!=null) {
-            db.collection(FIRESTORE.COLLECTION_COMENTARIOS).document("-" + id_post + "-").collection(FIRESTORE.COLLECTION_COMENTARIOS_SUBCOLECCION)
+            db.collection(COLLECCTION_REQUEST).document("-" + id_post + "-").collection(COLLECCTION_REQUEST)
                     .document(document)
                     .delete()
                     .addOnSuccessListener(aVoid -> {
                     })
                     .addOnSuccessListener(aVoid -> {
-                        PostLikeBean postLikeBean = new PostLikeBean();
-                        postLikeBean.setId_post(id_post);
-                        postLikeBean.setTarget("DELETE_COMMENT");
-                        disposable.add(
-                                apiService.like_posts(postLikeBean)
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
-                                            @Override
-                                            public void onSuccess(SimpleResponse responsePost) {
-                                                if (responsePost != null) {
-                                                    if (responsePost.getCode_response() == 200) {
-                                                        Log.e("DESCONTAR_COMENTARIO", "COMENTARIO DESCONTADO ");
+                        if(type_resource_to_comment ==1){
+                            PostLikeBean postLikeBean = new PostLikeBean();
+                            postLikeBean.setId_post(id_post);
+                            postLikeBean.setTarget("DELETE_COMMENT");
+                            disposable.add(
+                                    apiService.like_posts(postLikeBean)
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                                                @Override
+                                                public void onSuccess(SimpleResponse responsePost) {
+                                                    if (responsePost != null) {
+                                                        if (responsePost.getCode_response() == 200) {
+                                                            Log.e("DESCONTAR_COMENTARIO", "COMENTARIO DESCONTADO ");
+                                                        }
                                                     }
                                                 }
-                                            }
 
-                                            @Override
-                                            public void onError(Throwable e) {
-                                                Log.e("NUMBER_POSTS", "-->EROR : " + e.getMessage());
-                                            }
-                                        })
-                        );
+                                                @Override
+                                                public void onError(Throwable e) {
+                                                    Log.e("NUMBER_POSTS", "-->EROR : " + e.getMessage());
+                                                }
+                                            })
+                            );
+                        }else{
+                            PlayVideoParameters playVideoParameters = new PlayVideoParameters();
+                            playVideoParameters.setTarget("DELETE");
+                            playVideoParameters.setId_video(id_post);
+                            disposable.add(
+                                    apiService
+                                            .actionsPlayVideos(playVideoParameters)
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                                                @Override
+                                                public void onSuccess(SimpleResponse user) {
+                                                    if(user!=null) {
+                                                        if (user.getCode_response() == 200)
+                                                            Log.e("LIKE_SUCCESS",":)");
+                                                        else
+                                                            Log.e("LIKE_SUCCESS",":(");
+                                                    }else{
+
+                                                    }
+                                                }
+                                                @Override
+                                                public void onError(Throwable e) {
+
+                                                }
+                                            }));
+                        }
+
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -223,10 +310,19 @@ public class ComentariosPresenter implements ComentariosContract.Presenter {
     }
 
     @Override
-    public void likeComment(int id_post, String id_document) {
+    public void likeComment(int id_post, String id_document,int type_resource_to_comment) {
+
+        String COLLECCTION_REQUEST ="";
+
+        if(type_resource_to_comment == 1)
+            COLLECCTION_REQUEST =FIRESTORE.COLLECTION_COMENTARIOS;
+        else
+            COLLECCTION_REQUEST =FIRESTORE.COLLECTION_COMENTARIOS_INSTAPETTSTV;
+
+
         if(!comentariosHelper.isLikedComment(id_document)) {
-            db.collection(FIRESTORE.COLLECTION_COMENTARIOS).document("-" + id_post+"-")
-                    .collection(FIRESTORE.COLLECTION_COMENTARIOS_SUBCOLECCION)
+            db.collection(COLLECCTION_REQUEST).document("-" + id_post+"-")
+                    .collection(COLLECCTION_REQUEST)
                     .document(id_document)
                     .update("likes", FieldValue.increment(1))
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -253,20 +349,27 @@ public class ComentariosPresenter implements ComentariosContract.Presenter {
     }
 
     @Override
-    public void loadNextComments(int id_post) {
+    public void loadNextComments(int id_post,int type_resoruce_to_comment) {
         ArrayList<CommentariosBean> COMMENTARIOS = new ArrayList<>();
         COMMENTARIOS.clear();
+        String COLLECCTION_REQUEST ="";
+
+        if(type_resoruce_to_comment == 1)
+            COLLECCTION_REQUEST =FIRESTORE.COLLECTION_COMENTARIOS;
+        else
+            COLLECCTION_REQUEST =FIRESTORE.COLLECTION_COMENTARIOS_INSTAPETTSTV;
+
         Query query;
         if (x == null) {
             is_first_pagination = true;
-            query = db.collection(FIRESTORE.COLLECTION_COMENTARIOS).document("-" + id_post+"-")
-                    .collection(FIRESTORE.COLLECTION_COMENTARIOS_SUBCOLECCION)
+            query = db.collection(COLLECCTION_REQUEST).document("-" + id_post+"-")
+                    .collection(COLLECCTION_REQUEST)
                     .limit(20);
         } else {
             is_first_pagination = false;
-            query = db.collection(FIRESTORE.COLLECTION_COMENTARIOS)
+            query = db.collection(COLLECCTION_REQUEST)
                     .document("-"+id_post+"-")
-                    .collection(FIRESTORE.COLLECTION_COMENTARIOS_SUBCOLECCION)
+                    .collection(COLLECCTION_REQUEST)
                     .startAfter(x)
                     .limit(20);
         }

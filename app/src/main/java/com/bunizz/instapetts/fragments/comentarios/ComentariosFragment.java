@@ -108,6 +108,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
     final ValueAnimator valueAnimator = ValueAnimator.ofInt(1,360);
     private boolean loading =true;
     private boolean IS_ALL = false;
+    int TYPE_RESOURCE_TO_COMMENT =0;
     @SuppressLint("MissingPermission")
     @OnClick(R.id.back_to_main)
     void back_to_main() {
@@ -136,7 +137,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
 
             Log.e("HELP_PET_STSTU","--->" + TYPE_PET);
 
-            presenter.comment(commentariosBean);
+            presenter.comment(commentariosBean,TYPE_RESOURCE_TO_COMMENT);
             input_commentarios.setText("");
             adapter.addBelow(commentariosBean);
            scrolbottom();
@@ -157,7 +158,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
             @Override
             public void onLike(int post, String document) {
                 if(document!=null && !document.isEmpty())
-                  presenter.likeComment(post,document);
+                  presenter.likeComment(post,document,TYPE_RESOURCE_TO_COMMENT);
                 else
                     Log.e("DOCUMENTO_NULO","no se envia el like");
             }
@@ -165,7 +166,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
             @Override
             public void onDeleteComment(String document) {
                 Log.e("DELETES_COMMENTS","-->" + ID_POST + "/" + document);
-                presenter.deleteComment(ID_POST,document);
+                presenter.deleteComment(ID_POST,document,TYPE_RESOURCE_TO_COMMENT);
             }
         });
         presenter = new ComentariosPresenter(this,getContext());
@@ -175,6 +176,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
             CAN_COMMENT = bundle.getBoolean(BUNDLES.CAN_COMMENT);
             TYPE_PET  = bundle.getInt(BUNDLES.TYPE_PET);
             IDUSER_POST = bundle.getInt(BUNDLES.ID_USUARIO);
+            TYPE_RESOURCE_TO_COMMENT = bundle.getInt(BUNDLES.TYPE_RESOURCE_TO_COMMNET,0);
         }
     }
 
@@ -187,9 +189,10 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                 CAN_COMMENT = bundle.getBoolean(BUNDLES.CAN_COMMENT);
                 TYPE_PET  = bundle.getInt(BUNDLES.TYPE_PET);
                 IDUSER_POST = bundle.getInt(BUNDLES.ID_USUARIO);
+                TYPE_RESOURCE_TO_COMMENT = bundle.getInt(BUNDLES.TYPE_RESOURCE_TO_COMMNET,0);
             }
             adapter.clear();
-            presenter.getComentarios(ID_POST);
+            presenter.getComentarios(ID_POST,TYPE_RESOURCE_TO_COMMENT);
             Glide.with(getContext()).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID"))
                     .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder))
                     .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
@@ -225,7 +228,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
         ButterKnife.bind(this,view);
         list_comentarios.setLayoutManager(new LinearLayoutManager(getContext()));
         list_comentarios.setAdapter(adapter);
-        presenter.getComentarios(ID_POST);
+        presenter.getComentarios(ID_POST,TYPE_RESOURCE_TO_COMMENT);
        /* refresh_commentarios.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -292,7 +295,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                                 layout_loanding_comments.setVisibility(View.VISIBLE);
                                 Log.e("DONWLOAD_MORE_COMMENTS","SI");
                                 //refresh_commentarios.setVisibility(View.VISIBLE);
-                                presenter.loadNextComments(ID_POST);
+                                presenter.loadNextComments(ID_POST,TYPE_RESOURCE_TO_COMMENT);
                             }else {
                                 Log.e("DONWLOAD_MORE_COMMENTS","NO");
                             }

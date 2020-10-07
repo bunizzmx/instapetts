@@ -33,7 +33,7 @@ public interface MainContract {
         void startGoggleSignin();
         void getNameAvailable(String name);
         void updateUser(UserBean userBean);
-        void likeVideoInstapettsTv(int id_video);
+        void likeViewVideoInstapettsTv(int id_video,int type);
     }
 
     interface View{

@@ -9,6 +9,8 @@ public interface FIRESTORE {
 
     String COLLECTION_NOTIFICATIONS="notificaciones";
 
+    String COLLECTION_COMENTARIOS_INSTAPETTSTV ="comentarios_instapettstv";
+
 
     String POSTS ="posts";
     String SEGUIDOS="seguidos";

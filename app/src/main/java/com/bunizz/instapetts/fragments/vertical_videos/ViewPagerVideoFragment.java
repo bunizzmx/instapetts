@@ -88,9 +88,9 @@ public class ViewPagerVideoFragment extends Fragment  {
         ButterKnife.bind(this, view);
         view_pager_videos.setAdapter(adapter_pager);
         view_pager_videos.setOffscreenPageLimit(1);
-      //  view_pager_videos.setOnTouchListener((view1, motionEvent) -> false);
+        view_pager_videos.setOnTouchListener((view1, motionEvent) -> false);
         AdRequest adRequest = new AdRequest.Builder().build();
-       // mAdView.loadAd(adRequest);
+        mAdView.loadAd(adRequest);
         change_tab_para_ti();
     }
 

@@ -333,6 +333,7 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
                             //COMENTARIO ABRE EL FRAGMENT DE LOS COMENTARIOS
                             b.putInt(BUNDLES.ID_POST,notificationBeans.get(position).getId_recurso()); // EL ID REPRESENTA EL ID DEL RECURSO
                             b.putBoolean(BUNDLES.CAN_COMMENT,true);
+                            b.putInt(BUNDLES.TYPE_RESOURCE_TO_COMMNET,1);
                             listener_changue_instance.change_fragment_parameter(FragmentElement.INSTANCE_COMENTARIOS,b);
                             break;
                         case 2:
@@ -347,6 +348,7 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
                             b.putBoolean(BUNDLES.CAN_COMMENT,true);
                             b.putInt(BUNDLES.TYPE_PET,0);
                             b.putInt(BUNDLES.ID_USUARIO,App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+                            b.putInt(BUNDLES.TYPE_RESOURCE_TO_COMMNET,1);
                             listener_changue_instance.change_fragment_parameter(FragmentElement.INSTANCE_COMENTARIOS,b);
                             break;
                         case 4:

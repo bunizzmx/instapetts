@@ -1,5 +1,5 @@
 package com.bunizz.instapetts.listeners;
 
 public interface simpleLikeListener {
-    void onLike(int id_video);
+    void onLikeOrView(int id_video,int type);
 }

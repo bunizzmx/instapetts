@@ -42,6 +42,7 @@ import com.bunizz.instapetts.web.WebServices;
 import com.bunizz.instapetts.web.parameters.FollowParameter;
 import com.bunizz.instapetts.web.parameters.IdentificadorHistoryParameter;
 import com.bunizz.instapetts.web.parameters.ParameterAvailableNames;
+import com.bunizz.instapetts.web.parameters.PlayVideoParameters;
 import com.bunizz.instapetts.web.responses.IdentificadoresHistoriesResponse;
 import com.bunizz.instapetts.web.responses.PetsResponse;
 import com.bunizz.instapetts.web.responses.ResponseNamesAvailables;
@@ -815,8 +816,37 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void likeVideoInstapettsTv(int id_video) {
+    public void likeViewVideoInstapettsTv(int id_video,int type) {
+        PlayVideoParameters playVideoParameters = new PlayVideoParameters();
+        if(type == 0)
+           playVideoParameters.setTarget("LIKE");
+        else
+            playVideoParameters.setTarget("VIEW");
+
+        playVideoParameters.setId_video(id_video);
         playVideosHelper.saveLikePost(id_video);
+        disposable.add(
+                apiService
+                        .actionsPlayVideos(playVideoParameters)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                            @Override
+                            public void onSuccess(SimpleResponse user) {
+                                if(user!=null) {
+                                    if (user.getCode_response() == 200)
+                                       Log.e("LIKE_SUCCESS",":)");
+                                    else
+                                        Log.e("LIKE_SUCCESS",":(");
+                                }else{
+
+                                }
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+                        }));
     }
 
 

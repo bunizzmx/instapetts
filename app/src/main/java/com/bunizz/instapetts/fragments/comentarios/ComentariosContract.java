@@ -10,11 +10,11 @@ import java.util.ArrayList;
 
 public interface ComentariosContract {
     interface Presenter {
-       void comment(CommentariosBean commentariosBean);
-       void getComentarios(int id_post);
-       void likeComment(int id_post,String id_document);
-       void loadNextComments(int id_post);
-       void deleteComment(int id_post,String document);
+       void comment(CommentariosBean commentariosBean,int type_resource_to_comment);
+       void getComentarios(int id_post,int type_resoruce_to_comment);
+       void likeComment(int id_post,String id_document,int type_resource_to_comment);
+       void loadNextComments(int id_post,int type_resoruce_to_comment);
+       void deleteComment(int id_post,String document,int type_resource_to_comment);
 
     }
 

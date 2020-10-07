@@ -921,7 +921,6 @@ public class Main extends AppCompatActivity implements
     public void open_sheetFragment(Bundle bundle, int instance) {
         Bundle b = new Bundle();
         IS_COMMENTS_OPEN = true;
-        bundle.putInt(BUNDLES.ID_POST,22);
         back_to_main_sliding.setVisibility(View.GONE);
         changue_fragment_sheet(FragmentElement.INSTANCE_COMENTARIOS,bundle);
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
@@ -1524,8 +1523,8 @@ public class Main extends AppCompatActivity implements
     }
 
     @Override
-    public void onLike(int id_video) {
-        presenter.likeVideoInstapettsTv(id_video);
+    public void onLikeOrView(int id_video,int type) {
+        presenter.likeViewVideoInstapettsTv(id_video,type);
     }
 
 

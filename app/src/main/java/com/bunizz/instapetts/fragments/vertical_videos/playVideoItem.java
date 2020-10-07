@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.icu.text.TimeZoneFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,7 @@ import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.reports.ReportActiviy;
 import com.bunizz.instapetts.beans.PlayVideos;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.fragments.FragmentElement;
@@ -127,13 +129,21 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
     @BindView(R.id.num_views_video)
     TextView num_views_video;
 
+    @BindView(R.id.info_video)
+    LinearLayout info_video;
+
+
+
     @SuppressLint("MissingPermission")
     @OnClick(R.id.open_comments_video)
     void open_comments_video() {
         Bundle b = new Bundle();
+        b.putInt(BUNDLES.TYPE_RESOURCE_TO_COMMNET,0);
+        b.putBoolean(BUNDLES.CAN_COMMENT,true);
+        b.putInt(BUNDLES.ID_POST,postBean.getId());
+        b.putInt(BUNDLES.ID_USUARIO,-999);
         listener.open_sheetFragment(b,FragmentElement.INSTANCE_COMENTARIOS);
     }
-
     @SuppressLint("MissingPermission")
     @OnClick(R.id.open_options_video)
     void open_options_video() {
@@ -186,14 +196,15 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
         }
         Log.e("play_videos_url","-->" +  postBean.getUrl_video());
         videoUrl = postBean.getUrl_video();
+        info_video.setVisibility(View.GONE);
         thumbhnail = postBean.getUrl_tumbh();
         this.mediaSourceBuilder = new ExoPlayerMediaSourceBuilder(videoSurfaceView.getContext());
         like_video.setOnClickListener(this);
         title_player.setText(postBean.getTitulo());
         descripcion_video.setText(postBean.getDescripcion());
-        num_likes_video.setText("" + NumberFormat.getInstance().format(postBean.getLikes()));
-        num_comentarios_video.setText(""+ NumberFormat.getInstance().format(postBean.getComentarios()) );
-        num_views_video.setText(""+ NumberFormat.getInstance().format(postBean.getVisto()));
+        num_likes_video.setText(NumberFormat.getInstance().format(postBean.getLikes()).toString());
+        num_comentarios_video.setText(NumberFormat.getInstance().format(postBean.getComentarios()).toString() );
+        num_views_video.setText( NumberFormat.getInstance().format(postBean.getVisto()).toString());
         Glide.with(getContext()).load(R.drawable.logoapp).into(image_video_tumbh);
         loadThumbhnail();
         if(postBean.isLiked()){
@@ -201,6 +212,8 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
         }else{
             like_heart.setSelected(false);
         }
+         if(listener_video!=null)
+            listener_video.onLikeOrView(postBean.getId(),1);
 
     }
 
@@ -222,7 +235,10 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
         player = createFullPlayer();
 
         videoSurfaceView.setPlayer(player);
-        videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_ZOOM);
+        if(postBean.getAspecto().equals("16_9"))
+            videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
+        else
+            videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_ZOOM);
         player.addListener(new Player.EventListener() {
             @Override
             public void onTimelineChanged(Timeline timeline, @Nullable Object manifest, int reason) {
@@ -338,7 +354,7 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
-            listener_video.onLike(postBean.getId());
+            listener_video.onLikeOrView(postBean.getId(),0);
 
         if (like_heart.isSelected()) {
             like_heart.setSelected(false);

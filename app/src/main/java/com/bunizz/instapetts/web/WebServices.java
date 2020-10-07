@@ -1,10 +1,7 @@
 package com.bunizz.instapetts.web;
 
-import android.provider.ContactsContract;
-
 import com.bunizz.instapetts.beans.AutenticateBean;
 import com.bunizz.instapetts.beans.HistoriesBean;
-import com.bunizz.instapetts.beans.IndividualDataPetHistoryBean;
 import com.bunizz.instapetts.beans.PetBean;
 import com.bunizz.instapetts.beans.PlayVideos;
 import com.bunizz.instapetts.beans.PostBean;
@@ -19,6 +16,7 @@ import com.bunizz.instapetts.web.parameters.ParameterAvailableNames;
 import com.bunizz.instapetts.web.parameters.ParameterSearching;
 import com.bunizz.instapetts.web.parameters.PostFriendsBean;
 import com.bunizz.instapetts.web.parameters.PostLikeBean;
+import com.bunizz.instapetts.web.parameters.PlayVideoParameters;
 import com.bunizz.instapetts.web.responses.HistoriesBeanResponse;
 import com.bunizz.instapetts.web.responses.IdentificadoresHistoriesResponse;
 import com.bunizz.instapetts.web.responses.PetsResponse;
@@ -36,19 +34,9 @@ import com.bunizz.instapetts.web.responses.SearchUsersResponse;
 import com.bunizz.instapetts.web.responses.SimpleResponse;
 import com.bunizz.instapetts.web.responses.SimpleResponseLogin;
 
-import java.util.List;
-import io.reactivex.Completable;
 import io.reactivex.Single;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
-import retrofit2.http.Path;
 
 public interface WebServices {
 
@@ -92,6 +80,8 @@ public interface WebServices {
     @POST("test/getplayvideos")
     Single<ResponsePlayVideos> getPlayVideos(@Body AutenticateBean postFriendsBean);
 
+    @POST("test/getplayvideos")
+    Single<SimpleResponse> actionsPlayVideos(@Body PlayVideoParameters playVideoParameters);
 
     // STORIES //////////////////////////////////////////////////////////
     @POST("test/newstories")
