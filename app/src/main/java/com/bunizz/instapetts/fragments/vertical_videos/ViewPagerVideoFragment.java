@@ -3,6 +3,7 @@ package com.bunizz.instapetts.fragments.vertical_videos;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -155,5 +156,19 @@ public class ViewPagerVideoFragment extends Fragment  {
         tab_seguidos.setTextSize(18);
         tab_seguidos.setTextColor(getActivity().getResources().getColor(R.color.primary));
     }
+
+
+    @Override
+    public void onPause() {
+        Log.e("ESTATUS_PARENT_F","onPause");
+        super.onPause();
+        ((playVideoFragment)adapter_pager.getItem(0)).stopVideos();
+    }
+
+    public void stop_videos(){
+        ((playVideoFragment)adapter_pager.getItem(0)).stopVideos();
+    }
+
+
 
 }

@@ -31,4 +31,6 @@
     <color name="warningColor">#FFA900</color>
     <color name="normalColor">#E5E6E6</color>
 
+    <color name="transparetnte">#00FFFFFF</color>
+
 </resources>

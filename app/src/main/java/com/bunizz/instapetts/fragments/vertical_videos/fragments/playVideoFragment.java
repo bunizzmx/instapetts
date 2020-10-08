@@ -31,6 +31,7 @@ public class playVideoFragment extends Fragment implements playVideoContract.Vie
     playVideoPresenter presenter;
     ArrayList<PlayVideos>  videos =new ArrayList<>();
     ArrayList<PlayVideos>  playVideos =new ArrayList<>();
+    int CURRENT_POSITION =0;
 
     public static playVideoFragment newInstance() {
         return new playVideoFragment();
@@ -65,6 +66,7 @@ public class playVideoFragment extends Fragment implements playVideoContract.Vie
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+                CURRENT_POSITION = position;
                 if(videos.size() - 2 > 0) {
                     if (position > videos.size() - 2) {
                         presenter.getVideos(1,true,0);
@@ -103,14 +105,16 @@ public class playVideoFragment extends Fragment implements playVideoContract.Vie
 
     }
 
+    public void stopVideos(){
+          adapter.stop_videos();
+    }
+
+
 
     // An equivalent ViewPager2 adapter class
     private class ScreenSlidePagerAdapter extends FragmentStateAdapter {
         ArrayList<PlayVideos>  videos =new ArrayList<>();
-
-        public ArrayList<PlayVideos> getPlayVideos() {
-            return videos;
-        }
+        Fragment currentfragment = null;
 
         public void setPlayVideos(ArrayList<PlayVideos> playVideos) {
             this.videos = playVideos;
@@ -122,8 +126,14 @@ public class playVideoFragment extends Fragment implements playVideoContract.Vie
 
         @Override
         public Fragment createFragment(int position) {
-            return  playVideoItem.newInstancex(videos.get(position));
+             currentfragment =  playVideoItem.newInstancex(videos.get(position));
+            return currentfragment;
         }
+
+        public void stop_videos(){
+            ((playVideoItem )currentfragment).stopPlayers();
+        }
+
 
         @Override
         public int getItemCount() {

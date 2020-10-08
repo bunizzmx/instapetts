@@ -68,6 +68,7 @@ import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.conexion_listener;
 import com.bunizz.instapetts.listeners.folowFavoriteListener;
+import com.bunizz.instapetts.listeners.isMyFragmentVisibleListener;
 import com.bunizz.instapetts.listeners.login_invitado_listener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.open_sheet_listener;
@@ -127,7 +128,8 @@ public class Main extends AppCompatActivity implements
         folowFavoriteListener,
         open_side_menu,
         login_invitado_listener
-         , simpleLikeListener {
+         , simpleLikeListener,
+        isMyFragmentVisibleListener {
 
     public static final String POST_SUCCESFULL = "com.bunizz.instapetts.activitys.main.Main.POST_SUCCESFULL";
     public static final String POST_SENDEND_START = "com.bunizz.instapetts.activitys.main.Main.POST_SENDEND_START";
@@ -699,6 +701,24 @@ public class Main extends AppCompatActivity implements
 
     private synchronized void changeOfInstance(int intanceType,Bundle bundle,boolean back) {
         saveFragment();
+        Log.e("CURRENT_FRAGMENT_C","->"+mCurrentFragment.getInstanceType());
+        if(mCurrentFragment!=null){
+            if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PLAY_VIDEOS){
+                Log.e("CURRENT_FRAGMENT_C","->"+mCurrentFragment.getInstanceType());
+                ((ViewPagerVideoFragment) mCurrentFragment.getFragment()).stop_videos();
+            }
+        }
+        if(intanceType != FragmentElement.INSTANCE_PLAY_VIDEOS){
+            runOnUiThread(() ->{
+                root_bottom_nav.setBackgroundColor(Color.WHITE);
+                changeStatusBarColor(R.color.white);
+            });
+
+        }else{
+            runOnUiThread(() ->{
+                repaint_icons_and_tab();
+            });
+        }
 
         if(intanceType!=FragmentElement.INSTANCE_COMENTARIOS && intanceType!=FragmentElement.INSTANCE_EDIT_PROFILE_USER && intanceType != FragmentElement.INSTANCE_SIDE_MENU) {
             runOnUiThread(() -> root_bottom_nav.setVisibility(View.VISIBLE));
@@ -942,8 +962,6 @@ public class Main extends AppCompatActivity implements
             if (IS_SHEET_OPEN || IS_COMMENTS_OPEN) {
                 mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
             }else{
-                root_bottom_nav.setBackgroundColor(Color.WHITE);
-                changeStatusBarColor(R.color.white);
                 if (FROM_PUSH == 1) {
                     repaint_nav(R.id.tab_feed);
                     changeOfInstance(FragmentElement.INSTANCE_FEED, null, false);
@@ -1003,17 +1021,21 @@ public class Main extends AppCompatActivity implements
                         changeOfInstance(FragmentElement.INSTANCE_NOTIFICATIONS, null, true);
                     }
                     else {
-                        if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_FEED)
+                        if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PLAY_VIDEOS)
                             finish();
                         else {
-                            if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS) {
-                                repaint_nav(R.id.tap_tips);
-                                changeOfInstance(FragmentElement.INSTANCE_TIPS, null, false);
-                            } else {
-                                repaint_nav(R.id.tab_feed);
-                                changeOfInstance(FragmentElement.INSTANCE_FEED, null, false);
+                            if(mOldFragment!=null){
+                                if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS) {
+                                    repaint_nav(R.id.tap_tips);
+                                    changeOfInstance(FragmentElement.INSTANCE_TIPS, null, false);
+                                } else {
+                                    repaint_icons_and_tab();
+                                    changeOfInstance(FragmentElement.INSTANCE_PLAY_VIDEOS, null, false);
+                                }
+                            }else{
+                                repaint_icons_and_tab();
+                                changeOfInstance(FragmentElement.INSTANCE_PLAY_VIDEOS, null, false);
                             }
-
                         }
                     }
 
@@ -1379,8 +1401,13 @@ public class Main extends AppCompatActivity implements
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
            // window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), color));
             window.setNavigationBarColor(ContextCompat.getColor(getApplicationContext(), color));
+
         }
+
+
     }
+
+
 
     @Override
     public void followUser(UserBean userBeanx,boolean follow_unfollow) {
@@ -1525,6 +1552,14 @@ public class Main extends AppCompatActivity implements
     @Override
     public void onLikeOrView(int id_video,int type) {
         presenter.likeViewVideoInstapettsTv(id_video,type);
+    }
+
+    @Override
+    public boolean isVisible(int instanceType) {
+        if(mCurrentFragment.getInstanceType() == instanceType)
+            return true;
+        else
+            return  false;
     }
 
 

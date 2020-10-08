@@ -32,6 +32,7 @@ import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.tips.FragmentTipsViewpager;
 import com.bunizz.instapetts.listeners.actions_dialog_profile;
 import com.bunizz.instapetts.listeners.change_instance;
+import com.bunizz.instapetts.listeners.isMyFragmentVisibleListener;
 import com.bunizz.instapetts.listeners.simpleLikeListener;
 import com.bunizz.instapetts.utils.AnalogTv.AnalogTvNoise;
 import com.bunizz.instapetts.utils.HistoryView.StoryPlayerProgressView;
@@ -132,6 +133,8 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
     @BindView(R.id.info_video)
     LinearLayout info_video;
 
+    boolean FRAGMENT_HIDE =false;
+
 
 
     @SuppressLint("MissingPermission")
@@ -168,6 +171,7 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
 
     simpleLikeListener listener_video;
     change_instance listener;
+    isMyFragmentVisibleListener fragmentVisible ;
 
     public static playVideoItem newInstancex(PlayVideos postBean) {
         arguments = new Bundle();
@@ -324,15 +328,16 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
 
     public void onStart() {
         super.onStart();
-        if (Util.SDK_INT > 23) {
+        if(fragmentVisible.isVisible(FragmentElement.INSTANCE_PLAY_VIDEOS))
             createPlayers();
-        }
+
     }
 
     public void onResume() {
         super.onResume();
         Log.e("ESTATUS_ACTIVITY","ONRESUME");
-        createPlayers();
+        if(fragmentVisible.isVisible(FragmentElement.INSTANCE_PLAY_VIDEOS))
+             createPlayers();
     }
 
     public void onPause() {
@@ -344,9 +349,8 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
     public void onStop() {
         super.onStop();
         Log.e("ESTATUS_ACTIVITY","onStop");
-        if (Util.SDK_INT > 23) {
-            releasePlayers();
-        }
+        releasePlayers();
+
     }
 
 
@@ -376,6 +380,7 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
         super.onAttach(context);
         listener = (change_instance) context;
         listener_video =(simpleLikeListener)context;
+        fragmentVisible = (isMyFragmentVisibleListener)context;
     }
 
     public void loadThumbhnail(){
@@ -384,5 +389,23 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
                 .load(thumbhnail)
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                 .into(preview_video);
+    }
+
+    public void stopPlayers(){
+        Log.e("ESTATUS_ACTIVITY","stopPlayers");
+        releasePlayers();
+    }
+
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.e("ESTATUS_ACTIVITY","onDetach");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.e("ESTATUS_ACTIVITY","onDestroyView");
     }
 }
