@@ -2,6 +2,11 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <com.bunizz.instapetts.utils.AnalogTv.AnalogTvNoise
+        android:id="@+id/noise"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"/>
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager_videos"
         android:layout_width="match_parent"

@@ -28,6 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
+            android:id="@+id/name_foto_user_video"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -47,16 +48,18 @@
                 android:layout_height="wrap_content"/>
         </LinearLayout>
         <LinearLayout
+            android:layout_marginRight="70dp"
             android:id="@+id/layout_descripcion"
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
+                android:textStyle="bold"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="5dp"
                 android:id="@+id/descripcion_video"
-                android:textSize="16dp"
+                android:textSize="14dp"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>

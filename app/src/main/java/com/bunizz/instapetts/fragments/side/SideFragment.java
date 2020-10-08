@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.BuildConfig;
 import com.bunizz.instapetts.R;
@@ -103,6 +105,11 @@ public class SideFragment extends  Fragment{
     @BindView(R.id.version_app)
     TextView version_app;
 
+    @BindView(R.id.image_side)
+    ImageView image_side;
+
+
+
     public static SideFragment newInstance() {
         return new SideFragment();
     }
@@ -123,8 +130,9 @@ public class SideFragment extends  Fragment{
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-            app_name_user.setText("@" + App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"INVALID"));
+            app_name_user.setText(App.read(PREFERENCES.NAME_USER,"INVALID"));
             version_app.setText("Version : " + BuildConfig.VERSION_NAME);
+            Glide.with(getContext()).load(App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH,"INVALID")).into(image_side);
 
 
     }

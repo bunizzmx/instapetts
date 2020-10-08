@@ -727,7 +727,7 @@ public class Main extends AppCompatActivity implements
             runOnUiThread(() -> root_bottom_nav.setVisibility(View.GONE));
         }
 
-        if(intanceType != FragmentElement.INSTANCE_PLAY_VIDEOS)
+        if(intanceType != FragmentElement.INSTANCE_PLAY_VIDEOS && intanceType != FragmentElement.INSTANCE_SIDE_MENU)
             runOnUiThread(() -> tab_add_image.show());
         else
             runOnUiThread(() -> tab_add_image.hide());
@@ -1399,7 +1399,7 @@ public class Main extends AppCompatActivity implements
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-           // window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), color));
+            window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), color));
             window.setNavigationBarColor(ContextCompat.getColor(getApplicationContext(), color));
 
         }

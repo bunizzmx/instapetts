@@ -130,8 +130,8 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
     @BindView(R.id.num_views_video)
     TextView num_views_video;
 
-    @BindView(R.id.info_video)
-    LinearLayout info_video;
+    @BindView(R.id.name_foto_user_video)
+    LinearLayout name_foto_user_video;
 
     boolean FRAGMENT_HIDE =false;
 
@@ -200,12 +200,16 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
         }
         Log.e("play_videos_url","-->" +  postBean.getUrl_video());
         videoUrl = postBean.getUrl_video();
-        info_video.setVisibility(View.GONE);
+        name_foto_user_video.setVisibility(View.GONE);
         thumbhnail = postBean.getUrl_tumbh();
         this.mediaSourceBuilder = new ExoPlayerMediaSourceBuilder(videoSurfaceView.getContext());
         like_video.setOnClickListener(this);
         title_player.setText(postBean.getTitulo());
-        descripcion_video.setText(postBean.getDescripcion());
+        if(postBean.getDescripcion().length() > 80){
+            descripcion_video.setText(postBean.getDescripcion().substring(0,79) + "...");
+        }else {
+            descripcion_video.setText(postBean.getDescripcion());
+        }
         num_likes_video.setText(NumberFormat.getInstance().format(postBean.getLikes()).toString());
         num_comentarios_video.setText(NumberFormat.getInstance().format(postBean.getComentarios()).toString() );
         num_views_video.setText( NumberFormat.getInstance().format(postBean.getVisto()).toString());
