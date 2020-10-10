@@ -392,8 +392,7 @@ public class Main extends AppCompatActivity implements
             stack_comentarios = new Stack<>();
             stack_side_menu = new Stack<>();
             stack_play_videos = new Stack<>();
-            setupFirstFragment();
-            mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+
             mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
                 @Override
                 public void onPanelSlide(View panel, float slideOffset) {
@@ -496,7 +495,8 @@ public class Main extends AppCompatActivity implements
                 }
             });
         }
-
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+        setupFirstFragment();
     }
 
     @Override
@@ -686,7 +686,9 @@ public class Main extends AppCompatActivity implements
                 stack_play_videos.push(mCurrentFragment);
             }
         }
+
         inflateFragment(is_back);
+        ((ViewPagerVideoFragment) mCurrentFragment.getFragment()).reanudarPLayers();
     }
 
 
@@ -1176,6 +1178,7 @@ public class Main extends AppCompatActivity implements
     }
 
     void changue_fragment_sheet(int instance ,Bundle data){
+
         changue_sheet(new FragmentElement<>("", ComentariosFragment.newInstance(), FragmentElement.INSTANCE_COMENTARIOS),data);
     }
 
@@ -1189,6 +1192,7 @@ public class Main extends AppCompatActivity implements
 
     @SuppressLint("RestrictedApi")
     private synchronized void inflate_sheet() {
+        Log.e("SHEET_STSTUS","ABRO");
         try {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager

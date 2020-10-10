@@ -134,12 +134,19 @@ public class playVideoFragment extends Fragment implements playVideoContract.Vie
             ((playVideoItem )currentfragment).stopPlayers();
         }
 
-
+        public void reanudar(){
+            if(currentfragment!=null)
+               ((playVideoItem )currentfragment).reanudarPLayers();
+        }
         @Override
         public int getItemCount() {
             return videos.size();
         }
     }
-
+    public void reanudarPLayers(){
+        Log.e("ESTATUS_ACTIVITY","release players");
+        if(adapter!= null)
+           adapter.reanudar();
+    }
 
 }

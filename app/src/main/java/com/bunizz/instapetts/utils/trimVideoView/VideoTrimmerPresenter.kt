@@ -19,7 +19,7 @@ internal class VideoTrimmerPresenter : VideoTrimmerContract.Presenter,
 
     private var video: File? = null
     private var maxDuration = 30_000L
-    private var minDuration = 3_000L
+    private var minDuration = 6_000L
     private var frameCountInWindow = 10
 
     private var onSelectedRangeChangedListener: VideoTrimmerView.OnSelectedRangeChangedListener? = null
@@ -81,7 +81,7 @@ internal class VideoTrimmerPresenter : VideoTrimmerContract.Presenter,
     override fun show() {
         Log.e("VIDEO_LENGHT","NO ES VALIDO")
         if (!isValidState()) {
-            Log.e("VIDEO_LENGHT","NO ES VALIDO")
+            Log.e("VIDEO_LENGHT","isValidState")
             return
         }
         Log.e("VIDEO_LENGHT","SI ES VALIDO" )

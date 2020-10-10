@@ -169,6 +169,10 @@ public class ViewPagerVideoFragment extends Fragment  {
         ((playVideoFragment)adapter_pager.getItem(0)).stopVideos();
     }
 
-
+    public void reanudarPLayers(){
+        Log.e("ESTATUS_ACTIVITY","release players");
+        if(adapter_pager!=null)
+            ((playVideoFragment)adapter_pager.getItem(0)).reanudarPLayers();
+    }
 
 }

@@ -32,6 +32,7 @@ import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.tips.FragmentTipsViewpager;
 import com.bunizz.instapetts.listeners.actions_dialog_profile;
 import com.bunizz.instapetts.listeners.change_instance;
+import com.bunizz.instapetts.listeners.conexion_listener;
 import com.bunizz.instapetts.listeners.isMyFragmentVisibleListener;
 import com.bunizz.instapetts.listeners.simpleLikeListener;
 import com.bunizz.instapetts.utils.AnalogTv.AnalogTvNoise;
@@ -150,28 +151,38 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
     @SuppressLint("MissingPermission")
     @OnClick(R.id.open_options_video)
     void open_options_video() {
-        DialogOptionsPosts optionsPosts = new DialogOptionsPosts(getContext(),-999,-999,"xxxx");
-        optionsPosts.setListener(new actions_dialog_profile() {
-            @Override
-            public void delete_post(int id_post) {}
+        if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+            DialogOptionsPosts optionsPosts = new DialogOptionsPosts(getContext(), -999, -999, "xxxx");
+            optionsPosts.setListener(new actions_dialog_profile() {
+                @Override
+                public void delete_post(int id_post) {
+                }
 
-            @Override
-            public void reportPost(int id_post) {
-                Intent reportIntent = new Intent(getActivity(), ReportActiviy.class);
-                reportIntent.putExtra("ID_RECURSO",id_post);
-                reportIntent.putExtra("TYPO_RECURSO",1);
-                startActivity(reportIntent);
+                @Override
+                public void reportPost(int id_post) {
+                    Intent reportIntent = new Intent(getActivity(), ReportActiviy.class);
+                    reportIntent.putExtra("ID_RECURSO", id_post);
+                    reportIntent.putExtra("TYPO_RECURSO", 1);
+                    startActivity(reportIntent);
+                }
+
+                @Override
+                public void unfollowUser(int id_user, String uuid) {
+                }
+            });
+            optionsPosts.show();
+        }else{
+            if(conexion_list!=null){
+                conexion_list.message(getContext().getString(R.string.no_action_invitado));
             }
-            @Override
-            public void unfollowUser(int id_user,String uuid) { }
-        });
-        optionsPosts.show();
+        }
     }
 
 
     simpleLikeListener listener_video;
     change_instance listener;
     isMyFragmentVisibleListener fragmentVisible ;
+    conexion_listener conexion_list ;
 
     public static playVideoItem newInstancex(PlayVideos postBean) {
         arguments = new Bundle();
@@ -385,6 +396,7 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
         listener = (change_instance) context;
         listener_video =(simpleLikeListener)context;
         fragmentVisible = (isMyFragmentVisibleListener)context;
+       conexion_list = ( conexion_listener )context;
     }
 
     public void loadThumbhnail(){
@@ -398,6 +410,12 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
     public void stopPlayers(){
         Log.e("ESTATUS_ACTIVITY","stopPlayers");
         releasePlayers();
+    }
+
+    public void reanudarPLayers(){
+
+        Log.e("ESTATUS_ACTIVITY","release players");
+        createPlayers();
     }
 
 

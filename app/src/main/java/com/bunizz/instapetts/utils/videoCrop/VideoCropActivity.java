@@ -165,6 +165,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
     }
 
     public void play(){
+        Log.e("MOSTRAR_TIMER","SI");
         videoTrimmerView
                 .setVideo(new File(inputPath))
                 .setMaxDuration(40_000)
@@ -283,7 +284,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
 
     @SuppressLint("DefaultLocale")
     private void handleCropStart() {
-        if ((DURATION / 1000) >= 10){
+        if ((DURATION / 1000) >= 6){
             IS_IN_CROP = true;
         if (STARTCROP < 0) {
             STARTCROP = 0;
