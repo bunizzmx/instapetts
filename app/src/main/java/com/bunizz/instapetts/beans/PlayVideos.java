@@ -23,7 +23,7 @@ public class PlayVideos {
     @Expose
     String url_video;
 
-    @SerializedName("url_tumbh")
+    @SerializedName("url_thumbh")
     @Expose
     String url_tumbh;
 

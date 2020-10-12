@@ -505,8 +505,12 @@ public class App extends Application {
     public String  make_uri_bucket_thumbh_video(String URI){
         String splits[] = URI.split("/");
         String file_name = splits[splits.length-1];
+        if(!BuildConfig.DEVELOPMENT)
         return CONST.BASE_URL_BUCKET_FIRESTORE + "bucket_tumbh_video/o/" + read(PREFERENCES.UUID,"INVALID") +"%2F"+ file_name +
                 "?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
+        else
+            return CONST.BASE_URL_BUCKET_FIRESTORE + "bucket_tumbh_video/o/instapettstv%2F"+ file_name +
+                    "?alt=media&token=1c4cec2c-d8ba-48d2-9e44-9ce384ddaffa";
     }
 
     public String  make_uri_bucket_for_pet(String ID_PET){

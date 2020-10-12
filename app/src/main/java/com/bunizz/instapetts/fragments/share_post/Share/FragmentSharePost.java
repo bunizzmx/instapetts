@@ -350,6 +350,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
                     uri_tuhmbh = String.valueOf(newfile.getPath());
                     if(!BuildConfig.DEVELOPMENT)
                      post.setThumb_video(App.getInstance().make_uri_bucket_thumbh_video(uri_tuhmbh));
+                    PLAY_VIDEO.setUrl_tumbh(App.getInstance().make_uri_bucket_thumbh_video(uri_tuhmbh));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

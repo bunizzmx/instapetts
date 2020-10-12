@@ -169,7 +169,7 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
         videoTrimmerView
                 .setVideo(new File(inputPath))
                 .setMaxDuration(40_000)
-                .setMinDuration(1_000)
+                .setMinDuration(6_000)
                 .setFrameCountInWindow(8)
                 .setExtraDragSpace(Utilities.convertDpToPixel(2f,VideoCropActivity.this))
                 .setOnSelectedRangeChangedListener(this)

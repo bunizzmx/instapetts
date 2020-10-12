@@ -11,12 +11,8 @@
         android:layout_height="match_parent"
          app:use_controller="false"
          android:background="@color/black" />
-    <com.bunizz.instapetts.utils.AnalogTv.AnalogTvNoise
-        android:id="@+id/noise"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"/>
     <ImageView
+        android:scaleType="centerCrop"
         android:id="@+id/preview_video"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

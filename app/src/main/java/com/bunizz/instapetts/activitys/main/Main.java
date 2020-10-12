@@ -254,7 +254,9 @@ public class Main extends AppCompatActivity implements
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tab_instapetts_tv)
     void tab_instapetts_tv() {
-        repaint_icons_and_tab();
+       // repaint_icons_and_tab();
+
+        repaint_nav(R.id.tab_instapetts_tv);
         tab_add_image.hide();
         if(mCurrentFragment.getInstanceType() != FragmentElement.INSTANCE_PLAY_VIDEOS) {
             changeOfInstance(FragmentElement.INSTANCE_PLAY_VIDEOS, null, false);
@@ -341,7 +343,7 @@ public class Main extends AppCompatActivity implements
             presenter.isAdsActive();
             petHelper = new PetHelper(this);
             i = new Intent(Main.this, SideMenusActivities.class);
-            repaint_icons_and_tab();
+            repaint_nav(R.id.tab_instapetts_tv);
             tab_add_image.hide();
             Intent iin = getIntent();
             Bundle b = iin.getExtras();
@@ -710,17 +712,6 @@ public class Main extends AppCompatActivity implements
                 ((ViewPagerVideoFragment) mCurrentFragment.getFragment()).stop_videos();
             }
         }
-        if(intanceType != FragmentElement.INSTANCE_PLAY_VIDEOS){
-            runOnUiThread(() ->{
-                root_bottom_nav.setBackgroundColor(Color.WHITE);
-                changeStatusBarColor(R.color.white);
-            });
-
-        }else{
-            runOnUiThread(() ->{
-                repaint_icons_and_tab();
-            });
-        }
 
         if(intanceType!=FragmentElement.INSTANCE_COMENTARIOS && intanceType!=FragmentElement.INSTANCE_EDIT_PROFILE_USER && intanceType != FragmentElement.INSTANCE_SIDE_MENU) {
             runOnUiThread(() -> root_bottom_nav.setVisibility(View.VISIBLE));
@@ -1031,11 +1022,11 @@ public class Main extends AppCompatActivity implements
                                     repaint_nav(R.id.tap_tips);
                                     changeOfInstance(FragmentElement.INSTANCE_TIPS, null, false);
                                 } else {
-                                    repaint_icons_and_tab();
+                                    repaint_nav(R.id.tab_instapetts_tv);
                                     changeOfInstance(FragmentElement.INSTANCE_PLAY_VIDEOS, null, false);
                                 }
                             }else{
-                                repaint_icons_and_tab();
+                                repaint_nav(R.id.tab_instapetts_tv);
                                 changeOfInstance(FragmentElement.INSTANCE_PLAY_VIDEOS, null, false);
                             }
                         }
@@ -1170,6 +1161,11 @@ public class Main extends AppCompatActivity implements
             text_search_pet.setTextColor(this.getResources().getColor(R.color.primary));
             icon_search_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_search_black));
         }
+        else if(id == R.id.tab_instapetts_tv) {
+            icon_instapetts_tv.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_instapetts_tv_w));
+        }
+
+
     }
 
     void changue_instance_sheet(Bundle data){

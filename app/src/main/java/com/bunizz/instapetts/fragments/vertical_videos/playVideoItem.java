@@ -95,9 +95,6 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
     @BindView(R.id.preview_video)
     ImageView preview_video;
 
-    @BindView(R.id.noise)
-    AnalogTvNoise tv_noise;
-
     @BindView(R.id.periscope)
     PeriscopeLayout periscope;
 
@@ -209,7 +206,7 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
             if (arguments.getParcelable("POSTS") != null)
                 postBean = Parcels.unwrap(arguments.getParcelable("POSTS"));
         }
-        Log.e("play_videos_url","-->" +  postBean.getUrl_video());
+        Log.e("play_videos_url","-->" +  postBean.getUrl_tumbh());
         videoUrl = postBean.getUrl_video();
         name_foto_user_video.setVisibility(View.GONE);
         thumbhnail = postBean.getUrl_tumbh();
@@ -248,6 +245,7 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
 
     private void createPlayers() {
         play(Uri.parse(videoUrl));
+
         if (player != null) {
             player.release();
         }
@@ -285,8 +283,8 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
                         break;
                     case Player.STATE_READY:
                         Log.e("ESTATUS_VIDEO","STATE_READY");
+                        preview_video.setVisibility(View.GONE);
                         progresbar_buferring.setVisibility(View.GONE);
-                        tv_noise.setVisibility(View.GONE);
                         break;
                     default:
                         Log.e("ESTATUS_VIDEO","default");
@@ -340,6 +338,15 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
         }
     }
 
+    private void pausePlayer(){
+        player.setPlayWhenReady(false);
+        player.getPlaybackState();
+    }
+    private void startPlayer(){
+        player.setPlayWhenReady(true);
+        player.getPlaybackState();
+    }
+
 
     public void onStart() {
         super.onStart();
@@ -351,19 +358,25 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
     public void onResume() {
         super.onResume();
         Log.e("ESTATUS_ACTIVITY","ONRESUME");
-        if(fragmentVisible.isVisible(FragmentElement.INSTANCE_PLAY_VIDEOS))
-             createPlayers();
+        if(fragmentVisible.isVisible(FragmentElement.INSTANCE_PLAY_VIDEOS)) {
+            if(player == null) {
+                createPlayers();
+            }
+            progresbar_buferring.setVisibility(View.VISIBLE);
+        }
     }
 
     public void onPause() {
         super.onPause();
         Log.e("ESTATUS_ACTIVITY","ONPAUSE");
+        preview_video.setVisibility(View.VISIBLE);
         releasePlayers();
     }
 
     public void onStop() {
         super.onStop();
         Log.e("ESTATUS_ACTIVITY","onStop");
+        preview_video.setVisibility(View.VISIBLE);
         releasePlayers();
 
     }
@@ -400,22 +413,27 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
     }
 
     public void loadThumbhnail(){
-        Log.e("LKDLASJKDL","KAJDKA");
+
         Glide.with(getContext())
                 .load(thumbhnail)
-                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                 .into(preview_video);
     }
 
     public void stopPlayers(){
         Log.e("ESTATUS_ACTIVITY","stopPlayers");
-        releasePlayers();
+        pausePlayer();
+       // releasePlayers();
     }
 
     public void reanudarPLayers(){
 
         Log.e("ESTATUS_ACTIVITY","release players");
-        createPlayers();
+        if(preview_video!=null) {
+            progresbar_buferring.setVisibility(View.VISIBLE);
+            preview_video.setVisibility(View.VISIBLE);
+        }
+        startPlayer();
+       // createPlayers();
     }
 
 

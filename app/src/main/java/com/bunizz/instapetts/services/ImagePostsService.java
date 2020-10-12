@@ -32,6 +32,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.bunizz.instapetts.App;
+import com.bunizz.instapetts.BuildConfig;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.main.Main;
 import com.bunizz.instapetts.constantes.BUNDLES;
@@ -217,19 +218,15 @@ public class ImagePostsService extends Service {
         metadata = new StorageMetadata.Builder()
                 .setContentType("image/jpeg")
                 .build();
-        final StorageReference reference = storageReference_thumbs.child(App.read(PREFERENCES.UUID,"INVALID")+"/" + filename);
+        StorageReference reference = null;
+        if(!BuildConfig.DEVELOPMENT)
+            reference = storageReference_thumbs.child(App.read(PREFERENCES.UUID,"INVALID")+"/" + filename);
+        else
+            reference = storageReference_thumbs.child("instapettstv/" + filename);
+
         uploadTask  = reference.putFile(Uri.fromFile(file_thumbh),metadata);
         uploadTask.addOnFailureListener(exception -> {}).addOnSuccessListener(taskSnapshot -> {
         }).addOnProgressListener(taskSnapshot -> {
-        });
-        Task<Uri> urlTask = uploadTask.continueWithTask(task -> {
-            if (!task.isSuccessful()) {
-                throw task.getException();
-            }
-            return reference.getDownloadUrl();
-        }).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-            }
         });
     }
 

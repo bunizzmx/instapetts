@@ -117,7 +117,8 @@ public class playVideoFragment extends Fragment implements playVideoContract.Vie
         Fragment currentfragment = null;
 
         public void setPlayVideos(ArrayList<PlayVideos> playVideos) {
-            this.videos = playVideos;
+            this.videos.clear();
+            this.videos.addAll(playVideos);
         }
 
         public ScreenSlidePagerAdapter(FragmentActivity fa) {
@@ -131,7 +132,8 @@ public class playVideoFragment extends Fragment implements playVideoContract.Vie
         }
 
         public void stop_videos(){
-            ((playVideoItem )currentfragment).stopPlayers();
+            if(currentfragment!=null)
+                ((playVideoItem )currentfragment).stopPlayers();
         }
 
         public void reanudar(){

@@ -249,6 +249,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e("ESTATUS_PROIFLE","onCreate");
         mCallbackManager = CallbackManager.Factory.create();
         petsPropietaryAdapter = new PetsPropietaryAdapter(getContext());
         petHelper = new PetHelper(getContext());
@@ -282,8 +283,13 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
                 refresh_profile.setVisibility(View.VISIBLE);
                 UserBean userBean = new UserBean();
                 userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
-                presenter.getInfoUser(userBean);
-                presenter.getPostUser(true, App.read(PREFERENCES.ID_USER_FROM_WEB, 0), POSITION_PAGER);
+                if(USERBEAN.getName_tag().isEmpty()) {
+                    Log.e("STATUS_RELOAD","SI LO CARGO");
+                    presenter.getInfoUser(userBean);
+                    presenter.getPostUser(true, App.read(PREFERENCES.ID_USER_FROM_WEB, 0), POSITION_PAGER);
+                }else{
+                    Log.e("STATUS_RELOAD","NO CARGO NADA");
+                }
             }
         }
     }
@@ -292,6 +298,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        Log.e("ESTATUS_PROIFLE","onViewCreated");
         App.write(PREFERENCES.OPEN_POST_ADVANCED_FROM,1);
         title_toolbar.setText(App.read(PREFERENCES.NAME_USER,"-"));
         icon_toolbar.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_settings));
@@ -569,6 +576,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     @Override
     public void onResume() {
         super.onResume();
+        Log.e("ESTATUS_PROIFLE","ONRSUME");
         if(!App.read(PREFERENCES.MODO_INVITADO,false))
           refresh_list_pets();
     }
