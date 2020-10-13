@@ -119,6 +119,9 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
     @BindView(R.id.image_heart)
     ImageView image_heart;
 
+    @BindView(R.id.play_pause)
+    ImageView play_pause;
+
     @BindView(R.id.num_likes_video)
     TextView num_likes_video;
 
@@ -130,6 +133,11 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
 
     @BindView(R.id.name_foto_user_video)
     LinearLayout name_foto_user_video;
+
+    @BindView(R.id.root_video)
+    RelativeLayout root_video;
+
+    boolean IS_PAUSE =false;
 
     boolean FRAGMENT_HIDE =false;
 
@@ -311,6 +319,19 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
             }
         });
 
+        root_video.setOnClickListener(view -> {
+            Log.e("CLICK_IN_VIDEO","KAKSJ");
+            if(IS_PAUSE){
+                player.setPlayWhenReady(true);
+                IS_PAUSE =false;
+                play_pause.setVisibility(View.GONE);
+            }else{
+                IS_PAUSE =true;
+                player.setPlayWhenReady(false);
+                play_pause.setVisibility(View.VISIBLE);
+            }
+        });
+
     }
 
     private SimpleExoPlayer createFullPlayer() {
@@ -339,12 +360,18 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
     }
 
     private void pausePlayer(){
-        player.setPlayWhenReady(false);
-        player.getPlaybackState();
+        if(player!=null) {
+            player.setPlayWhenReady(false);
+            player.getPlaybackState();
+        }
     }
     private void startPlayer(){
-        player.setPlayWhenReady(true);
-        player.getPlaybackState();
+        if(player!=null) {
+            player.setPlayWhenReady(true);
+            player.getPlaybackState();
+        }else{
+            createPlayers();
+        }
     }
 
 

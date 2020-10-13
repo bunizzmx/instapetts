@@ -20,6 +20,11 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +37,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.amazonaws.mobile.auth.core.internal.util.ThreadUtils.runOnUiThread;
 
 public class ViewPagerVideoFragment extends Fragment  {
 
@@ -58,7 +65,7 @@ public class ViewPagerVideoFragment extends Fragment  {
     void tab_para_ti() {
        change_tab_para_ti();
     }
-
+    AdRequest adRequest;
     ViewPagerAdapter adapter_pager;
     public static ViewPagerVideoFragment newInstance() {
         return new ViewPagerVideoFragment();
@@ -89,29 +96,21 @@ public class ViewPagerVideoFragment extends Fragment  {
         ButterKnife.bind(this, view);
         view_pager_videos.setAdapter(adapter_pager);
         view_pager_videos.setOffscreenPageLimit(1);
-        view_pager_videos.setOnTouchListener((view1, motionEvent) -> false);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
         change_tab_para_ti();
+        ScheduledExecutorService scheduleTaskExecutor = Executors.newScheduledThreadPool(1);
+        scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
+            public void run() {
+                runOnUiThread(() -> {
+                    Log.e("REFRESH_MY_AD","si");
+                    adRequest = new AdRequest.Builder().build();
+                    mAdView.loadAd(adRequest);
+                });
+            }
+
+        }, 0, 40, TimeUnit.SECONDS);
     }
 
 
-    // An equivalent ViewPager2 adapter class
-    private class ScreenSlidePagerAdapter extends FragmentStateAdapter {
-        public ScreenSlidePagerAdapter(FragmentActivity fa) {
-            super(fa);
-        }
-
-        @Override
-        public Fragment createFragment(int position) {
-            return new playVideoItem();
-        }
-
-        @Override
-        public int getItemCount() {
-            return 4;
-        }
-    }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -162,11 +161,13 @@ public class ViewPagerVideoFragment extends Fragment  {
     public void onPause() {
         Log.e("ESTATUS_PARENT_F","onPause");
         super.onPause();
-        ((playVideoFragment)adapter_pager.getItem(0)).stopVideos();
+        if(adapter_pager!=null)
+          ((playVideoFragment)adapter_pager.getItem(0)).stopVideos();
     }
 
     public void stop_videos(){
-        ((playVideoFragment)adapter_pager.getItem(0)).stopVideos();
+        if(adapter_pager!=null)
+          ((playVideoFragment)adapter_pager.getItem(0)).stopVideos();
     }
 
     public void reanudarPLayers(){

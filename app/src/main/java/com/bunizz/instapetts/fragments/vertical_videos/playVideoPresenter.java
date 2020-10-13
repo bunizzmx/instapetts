@@ -79,7 +79,10 @@ public class playVideoPresenter implements  playVideoContract.Presenter{
                             @Override
                             public void onSuccess(ResponsePlayVideos responsePost) {
                                 Log.e("play_videos","-->" + responsePost.getList_videos().size());
-                                mView.showVideos(responsePost.getList_videos());
+                                if(!more)
+                                  mView.showVideos(responsePost.getList_videos());
+                                else
+                                    mView.showMoreVideos(responsePost.getList_videos());
                             }
                             @Override
                             public void onError(Throwable e) {}

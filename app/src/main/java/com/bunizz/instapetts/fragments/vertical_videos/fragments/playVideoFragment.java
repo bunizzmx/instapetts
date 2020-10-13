@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 import butterknife.BindView;
@@ -27,11 +28,18 @@ public class playVideoFragment extends Fragment implements playVideoContract.Vie
 
     @BindView(R.id.view_pager_stories)
     ViewPager2 view_pager_stories;
+
+    @BindView(R.id.refresh_videos)
+    SwipeRefreshLayout refresh_videos;
+
+
+
     ScreenSlidePagerAdapter adapter;
     playVideoPresenter presenter;
     ArrayList<PlayVideos>  videos =new ArrayList<>();
     ArrayList<PlayVideos>  playVideos =new ArrayList<>();
     int CURRENT_POSITION =0;
+    int PAGINADOR = -999;
 
     public static playVideoFragment newInstance() {
         return new playVideoFragment();
@@ -69,8 +77,8 @@ public class playVideoFragment extends Fragment implements playVideoContract.Vie
                 CURRENT_POSITION = position;
                 if(videos.size() - 2 > 0) {
                     if (position > videos.size() - 2) {
-                        presenter.getVideos(1,true,0);
-                        Log.e("DEBO_PEDIR_MAS", "SI");
+                        presenter.getVideos(PAGINADOR,true,0);
+                        Log.e("DEBO_PEDIR_MAS", "SI : " + PAGINADOR);
                     }else{
                         Log.e("DEBO_PEDIR_MAS", "AUN NO");
                     }
@@ -82,14 +90,19 @@ public class playVideoFragment extends Fragment implements playVideoContract.Vie
                 super.onPageScrollStateChanged(state);
             }
         });
-
+        refresh_videos.setOnRefreshListener(() -> {
+            PAGINADOR= -999;
+            presenter.getVideos(PAGINADOR,false,0);
+        });
     }
 
     @Override
     public void showVideos(ArrayList<PlayVideos> data) {
+        refresh_videos.setRefreshing(false);
         videos.clear();
         for (int i =0;i<data.size();i++){
-            if(presenter.is_video_liked(data.get(i).getId())){
+            PAGINADOR = data.get(i).getId()
+;            if(presenter.is_video_liked(data.get(i).getId())){
                 data.get(i).setLiked(true);
             }else{
                 data.get(i).setLiked(false);
@@ -102,7 +115,18 @@ public class playVideoFragment extends Fragment implements playVideoContract.Vie
 
     @Override
     public void showMoreVideos(ArrayList<PlayVideos> data) {
-
+        videos.clear();
+        for (int i =0;i<data.size();i++){
+            PAGINADOR = data.get(i).getId()
+            ;            if(presenter.is_video_liked(data.get(i).getId())){
+                data.get(i).setLiked(true);
+            }else{
+                data.get(i).setLiked(false);
+            }
+        }
+        videos.addAll(data);
+        adapter.addMoreVideos(videos);
+        adapter.notifyDataSetChanged();
     }
 
     public void stopVideos(){
@@ -120,6 +144,12 @@ public class playVideoFragment extends Fragment implements playVideoContract.Vie
             this.videos.clear();
             this.videos.addAll(playVideos);
         }
+
+        public void addMoreVideos(ArrayList<PlayVideos> playVideos) {
+            this.videos.addAll(playVideos);
+        }
+
+
 
         public ScreenSlidePagerAdapter(FragmentActivity fa) {
             super(fa);
