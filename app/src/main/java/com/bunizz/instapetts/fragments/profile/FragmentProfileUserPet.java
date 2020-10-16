@@ -283,12 +283,17 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
                 refresh_profile.setVisibility(View.VISIBLE);
                 UserBean userBean = new UserBean();
                 userBean.setId(App.read(PREFERENCES.ID_USER_FROM_WEB, 0));
-                if(USERBEAN.getName_tag().isEmpty()) {
-                    Log.e("STATUS_RELOAD","SI LO CARGO");
+                if(USERBEAN.getName_tag()!=null) {
+                    if (USERBEAN.getName_tag().isEmpty()) {
+                        Log.e("STATUS_RELOAD", "SI LO CARGO");
+                        presenter.getInfoUser(userBean);
+                        presenter.getPostUser(true, App.read(PREFERENCES.ID_USER_FROM_WEB, 0), POSITION_PAGER);
+                    } else {
+                        Log.e("STATUS_RELOAD", "NO CARGO NADA");
+                    }
+                }else{
                     presenter.getInfoUser(userBean);
                     presenter.getPostUser(true, App.read(PREFERENCES.ID_USER_FROM_WEB, 0), POSITION_PAGER);
-                }else{
-                    Log.e("STATUS_RELOAD","NO CARGO NADA");
                 }
             }
         }
@@ -404,64 +409,66 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
 
     @Override
     public void showInfoUser(UserBean userBean, ArrayList<PetBean> pets) {
-        loanding_preview_root.setVisibility(View.GONE);
-        root_info_ptofile.setVisibility(View.VISIBLE);
-        if(pets.size()>0)
-            petHelper.cleanTable();
+        try {
+            loanding_preview_root.setVisibility(View.GONE);
+            root_info_ptofile.setVisibility(View.VISIBLE);
+            if (pets.size() > 0)
+                petHelper.cleanTable();
 
-        for (int i =0;i<pets.size();i++){
-            petHelper.savePet(pets.get(i));
-        }
-        float RATE_PETS=0;
-        float ACOMULATIVO_RATE=0;
-        if(pets.size()>0) {
-            PETS.clear();
-            PETS.addAll(pets);
-            PETS.add(new PetBean());
-        }
-        if(PETS.size()==1) {
-            if(pets.size()<1 && PETS.size() ==1){
-                fist_pet();
+            for (int i = 0; i < pets.size(); i++) {
+                petHelper.savePet(pets.get(i));
             }
+            float RATE_PETS = 0;
+            float ACOMULATIVO_RATE = 0;
+            if (pets.size() > 0) {
+                PETS.clear();
+                PETS.addAll(pets);
+                PETS.add(new PetBean());
+            }
+            if (PETS.size() == 1) {
+                if (pets.size() < 1 && PETS.size() == 1) {
+                    fist_pet();
+                }
+            }
+            for (int i = 0; i < pets.size(); i++) {
+                presenter.updateMyPetLocal(pets.get(i));
+                ACOMULATIVO_RATE += pets.get(i).getRate_pet();
+            }
+            RATE_PETS = ACOMULATIVO_RATE / pets.size();
+            USERBEAN = userBean;
+            title_toolbar.setText(USERBEAN.getName_user());
+            if (USERBEAN.getName_tag() != null)
+                name_property_pet.setText("@" + USERBEAN.getName_tag());
+            else
+                name_property_pet.setText("@" + App.read(PREFERENCES.NAME_TAG_INSTAPETTS, "INVALID"));
+
+            if (!USERBEAN.getDescripcion().equals("INVALID"))
+                descripcion_perfil_user.setText(USERBEAN.getDescripcion());
+            Glide.with(getContext()).load(USERBEAN.getPhoto_user())
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
+                    .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
+            petsPropietaryAdapter.setPets(PETS);
+            num_posts.setText(String.valueOf(USERBEAN.getPosts()));
+            if (RATE_PETS > 0) {
+                num_rate_pets.setText(String.format("%.2f", RATE_PETS));
+            } else {
+                num_rate_pets.setText("5");
+            }
+
+            if (USERBEAN.getFolowers() < 0)
+                num_followers.setText("0");
+            else
+                num_followers.setText(String.valueOf(USERBEAN.getFolowers()));
+
+            if (USERBEAN.getFollowed() < 0)
+                num_followed.setText("0");
+            else
+                num_followed.setText("" + USERBEAN.getFollowed());
+        }catch (Exception e){
+            Log.e("ACTIVITY_STATUS","destruida");
         }
-        for(int i=0;i <pets.size();i++){
-            presenter.updateMyPetLocal(pets.get(i));
-            ACOMULATIVO_RATE +=pets.get(i).getRate_pet();
-        }
-        RATE_PETS = ACOMULATIVO_RATE / pets.size();
-        USERBEAN = userBean;
-        title_toolbar.setText(USERBEAN.getName_user());
-        if(USERBEAN.getName_tag()!=null)
-            name_property_pet.setText("@" + USERBEAN.getName_tag());
-        else
-            name_property_pet.setText("@" + App.read(PREFERENCES.NAME_TAG_INSTAPETTS,"INVALID"));
-
-        if(!USERBEAN.getDescripcion().equals("INVALID"))
-          descripcion_perfil_user.setText(USERBEAN.getDescripcion());
-        Glide.with(getContext()).load(USERBEAN.getPhoto_user())
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
-                .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_profile_property_pet);
-        petsPropietaryAdapter.setPets(PETS);
-        num_posts.setText(String.valueOf(USERBEAN.getPosts()));
-        if(RATE_PETS > 0) {
-            num_rate_pets.setText(String.format("%.2f", RATE_PETS));
-        }else{
-            num_rate_pets.setText("5");
-        }
-
-        if(USERBEAN.getFolowers() < 0)
-            num_followers.setText("0");
-        else
-            num_followers.setText(String.valueOf(USERBEAN.getFolowers()));
-
-
-
-        if(USERBEAN.getFollowed() < 0)
-          num_followed.setText("0");
-        else
-            num_followed.setText(""+USERBEAN.getFollowed());
     }
 
 

@@ -363,7 +363,8 @@ public class Main extends AppCompatActivity implements
                     DOWNLOAD_INFO = true;
                 }
                 if (is_login_again == 1) {
-                    presenter.getFileBackup();
+                    if(!App.read(PREFERENCES.MODO_INVITADO,false))
+                        presenter.getFileBackup();
                 }
                 if (FROM_PUSH == 1) {
                     int ID_RESOURCE = 0;

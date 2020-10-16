@@ -219,11 +219,7 @@ public class ImagePostsService extends Service {
                 .setContentType("image/jpeg")
                 .build();
         StorageReference reference = null;
-        if(!BuildConfig.DEVELOPMENT)
-            reference = storageReference_thumbs.child(App.read(PREFERENCES.UUID,"INVALID")+"/" + filename);
-        else
-            reference = storageReference_thumbs.child("instapettstv/" + filename);
-
+        reference = storageReference_thumbs.child(App.read(PREFERENCES.UUID,"INVALID")+"/" + filename);
         uploadTask  = reference.putFile(Uri.fromFile(file_thumbh),metadata);
         uploadTask.addOnFailureListener(exception -> {}).addOnSuccessListener(taskSnapshot -> {
         }).addOnProgressListener(taskSnapshot -> {

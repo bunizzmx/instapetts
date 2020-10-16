@@ -86,6 +86,14 @@ public class ExoPlayerManager implements PreviewLoader {
         mediaSourceBuilder.setUri(uri);
     }
 
+    public void pause(){
+        player.setPlayWhenReady(false);
+    }
+
+    public void reanude(){
+        player.setPlayWhenReady(true);
+    }
+
     public void onStart() {
         if (Util.SDK_INT > 23) {
             createPlayers();

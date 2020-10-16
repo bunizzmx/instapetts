@@ -91,7 +91,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     ArrayList<String> paths = new ArrayList<>();
     ArrayList<String> aspects = new ArrayList<>();
 
-    PlayVideos PLAY_VIDEO;
+
     @OnClick(R.id.back_to_main)
     void back_to_main() {
        getActivity().onBackPressed();
@@ -106,7 +106,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             dialogShosePet.setListener(new chose_pet_listener() {
                 @Override
                 public void chose(String url_foto, int id_pet, String name_pet,int type_pet,String name_raza) {
-                    if (!BuildConfig.DEVELOPMENT){
+
                         post = new PostBean();
                     post.setName_pet(name_pet);
                     post.setId_pet(id_pet);
@@ -161,40 +161,6 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
                             post.setAspect("4_4");
                         post.setThumb_video(ULTIMATE_IMAGE_THUMBH);
                         beginUploadInBackground(adapter.get_selecteds(), false);
-                    }
-                }else{
-                        paths.clear();
-                        paths = adapter.get_selecteds();
-                        for (int i = 0; i < paths.size(); i++) {
-                            String splits[] = paths.get(i).split("/");
-                            int index = splits.length;
-                            if (i == 0) {
-                                if (is_video == 1) {
-                                    concat_paths = App.getInstance().make_uri_video_hls_instapettstv(splits[index - 1], ASPECT);
-                                } else
-                                    concat_paths = App.getInstance().make_uri_bucket_posts(splits[index - 1]);
-                            } else {
-                                if (is_video == 1)
-                                    concat_paths = App.getInstance().make_uri_video_hls_instapettstv(splits[index - 1], ASPECT);
-                                else
-                                    concat_paths += "," + App.getInstance().make_uri_bucket_posts(splits[index - 1]);
-                            }
-                            if (is_video != 1) {
-                                ULTIMATE_IMAGE_THUMBH = App.getInstance().make_uri_bucket_posts_thumbh_instapettstv(splits[index - 1]);
-                            }
-                        }
-                        PLAY_VIDEO = new PlayVideos();
-                        PLAY_VIDEO.setAlto(300);
-                        PLAY_VIDEO.setAncho(400);
-                        PLAY_VIDEO.setAspecto("4_4");
-                        PLAY_VIDEO.setDuracion(DURACION);
-                        PLAY_VIDEO.setDescripcion(description_post.getText().toString());
-                        PLAY_VIDEO.setTitulo("INSTAPETTS VIDEO");
-                        PLAY_VIDEO.setUrl_video(concat_paths);
-                        PLAY_VIDEO.setUrl_tumbh(ULTIMATE_IMAGE_THUMBH);
-                        PLAY_VIDEO.setTarget("INSTAPETTS_TV");
-                        beginUploadInBackground(adapter.get_selecteds(), true);
-                        send_post_instapettstv();
                     }
                 }
 
@@ -348,17 +314,14 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
                 try {
                     File newfile = savebitmap(bMap,filePaths.get(0));
                     uri_tuhmbh = String.valueOf(newfile.getPath());
-                    if(!BuildConfig.DEVELOPMENT)
                      post.setThumb_video(App.getInstance().make_uri_bucket_thumbh_video(uri_tuhmbh));
-                    PLAY_VIDEO.setUrl_tumbh(App.getInstance().make_uri_bucket_thumbh_video(uri_tuhmbh));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
             intent.putExtra(BUNDLES.PHOTO_TUMBH,uri_tuhmbh);
             intent.putExtra(BUNDLES.POST_TYPE, 1);
-            if(!BuildConfig.DEVELOPMENT)
-              save_post_for_later();
+            save_post_for_later();
         }
         else {
             if(filePaths.size() == 1)
@@ -435,9 +398,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
 
     }
 
-    void send_post_instapettstv(){
-        presenter.sendPostInstapettstv(PLAY_VIDEO);
-    }
+
 
     void save_post_for_later(){
         post.setDescription(description_post.getText().toString());

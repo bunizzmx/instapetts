@@ -112,6 +112,8 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
     @BindView(R.id.layout_descripcion)
     LinearLayout layout_descripcion;
 
+
+    boolean IS_PAUSE =false;
     @SuppressLint("MissingPermission")
     @OnClick(R.id.info_video)
     void info_video() {
@@ -246,12 +248,6 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
             if(TYPE_PLAYER == 0)
                 TIPS_BEAN = Parcels.unwrap(getIntent().getParcelableExtra("BEAN"));
             else {
-                if( Parcels.unwrap(getIntent().getParcelableExtra("BEAN")) instanceof  PostBean){
-                    Log.e("CLICK_PARSED","-->es post");
-                }else{
-                    Log.e("CLICK_PARSED","-->no es post");
-                }
-
                 if(getIntent().getParcelableExtra("BEAN")==null) {
                     POST_BEAN = new PostBean();
                     POST_BEAN.setName_user(getIntent().getStringExtra(BUNDLES.POST_NAME));
@@ -327,6 +323,9 @@ public class PlayVideoActivity extends AppCompatActivity implements PreviewView.
         name_user_player.setText(POST_BEAN.getName_user());
         Glide.with(PlayVideoActivity.this).load(POST_BEAN.getUrl_photo_user()).into(image_video_tumbh);
     }
+
+
+
     }
 
     @SuppressLint("ClickableViewAccessibility")
