@@ -824,29 +824,34 @@ public class MainPresenter implements MainContract.Presenter {
             playVideoParameters.setTarget("VIEW");
 
         playVideoParameters.setId_video(id_video);
-        playVideosHelper.saveLikePost(id_video);
-        disposable.add(
-                apiService
-                        .actionsPlayVideos(playVideoParameters)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
-                            @Override
-                            public void onSuccess(SimpleResponse user) {
-                                if(user!=null) {
-                                    if (user.getCode_response() == 200)
-                                       Log.e("LIKE_SUCCESS",":)");
-                                    else
-                                        Log.e("LIKE_SUCCESS",":(");
-                                }else{
+        if(!playVideosHelper.searchPostById(id_video)){
+            playVideosHelper.saveLikePost(id_video);
+            disposable.add(
+                    apiService
+                            .actionsPlayVideos(playVideoParameters)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                                @Override
+                                public void onSuccess(SimpleResponse user) {
+                                    if(user!=null) {
+                                        if (user.getCode_response() == 200)
+                                            Log.e("LIKE_SUCCESS",":)");
+                                        else
+                                            Log.e("LIKE_SUCCESS",":(");
+                                    }else{
+
+                                    }
+                                }
+                                @Override
+                                public void onError(Throwable e) {
 
                                 }
-                            }
-                            @Override
-                            public void onError(Throwable e) {
+                            }));
+        }else{
+            Log.e("VIDEOPLAY","YA LIKEADO");
+        }
 
-                            }
-                        }));
     }
 
 

@@ -412,16 +412,32 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-
+        int likes_num = 0;
             listener_video.onLikeOrView(postBean.getId(),0);
-
         if (like_heart.isSelected()) {
             like_heart.setSelected(false);
+            try{
+                likes_num= Integer.parseInt(num_likes_video.getText().toString().trim());
+                likes_num -= 1;
+                if(likes_num<0)
+                    likes_num = 0;
+            }catch (Exception e){
+                likes_num =999;
+            }
+            num_likes_video.setText(""+likes_num);
         } else {
+
+            try{
+                likes_num= Integer.parseInt(num_likes_video.getText().toString().trim());
+                likes_num += 1;
+            }catch (Exception e){
+                likes_num =999;
+            }
+            num_likes_video.setText(""+likes_num);
             for(int i=0;i<5;i++)
                 periscope.addHeart();
-            like_heart.setSelected(true);
-            like_heart.likeAnimation(new AnimatorListenerAdapter() {
+                like_heart.setSelected(true);
+                like_heart.likeAnimation(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);

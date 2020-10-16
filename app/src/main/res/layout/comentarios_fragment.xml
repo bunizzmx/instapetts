@@ -18,8 +18,8 @@
             android:layout_height="wrap_content">
         <ImageView
             android:src="@drawable/ic_cross"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
             app:tint="@color/black" />
         </androidx.cardview.widget.CardView>
 

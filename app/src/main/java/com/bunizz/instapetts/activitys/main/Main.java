@@ -947,11 +947,7 @@ public class Main extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-
-
         try {
-            Log.e("OLD_NEW", "-->" + IS_SHEET_OPEN +"/"+ IS_COMMENTS_OPEN);
-
             if (IS_SHEET_OPEN || IS_COMMENTS_OPEN) {
                 mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
             }else{

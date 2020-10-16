@@ -107,7 +107,7 @@ public class ViewPagerVideoFragment extends Fragment  {
                 });
             }
 
-        }, 0, 40, TimeUnit.SECONDS);
+        }, 0, 60, TimeUnit.SECONDS);
     }
 
 
