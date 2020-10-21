@@ -90,6 +90,8 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     String ASPECT="";
     ArrayList<String> paths = new ArrayList<>();
     ArrayList<String> aspects = new ArrayList<>();
+    int h = 0;
+    int w=0;
 
     PlayVideos PLAY_VIDEO;
     @OnClick(R.id.back_to_main)
@@ -184,9 +186,9 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
                             }
                         }
                         PLAY_VIDEO = new PlayVideos();
-                        PLAY_VIDEO.setAlto(300);
-                        PLAY_VIDEO.setAncho(400);
-                        PLAY_VIDEO.setAspecto("4_4");
+                        PLAY_VIDEO.setAlto(h);
+                        PLAY_VIDEO.setAncho(w);
+                        PLAY_VIDEO.setAspecto(ASPECT);
                         PLAY_VIDEO.setDuracion(DURACION);
                         PLAY_VIDEO.setDescripcion(description_post.getText().toString());
                         PLAY_VIDEO.setTitulo("INSTAPETTS VIDEO");
@@ -231,6 +233,7 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        helper = new PetHelper(getContext());
         adapter = new ListSelectedAdapter(getContext());
         adapter.setListener_remove(new remove_litener() {
             @Override
@@ -243,7 +246,6 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
         });
         presenter = new SharePostPresenter(this, getContext());
         Bundle bundle=getArguments();
-        helper = new PetHelper(getContext());
         if(bundle!=null){
             paths.addAll(bundle.getStringArrayList("data_pahs"));
             if(bundle.getStringArrayList("array_aspect")!=null)
@@ -251,6 +253,8 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
             is_video = bundle.getInt("is_video");
             DURACION = bundle.getInt(BUNDLES.VIDEO_DURATION,30);
             ASPECT =   bundle.getString(BUNDLES.VIDEO_ASPECT);
+            h = bundle.getInt(BUNDLES.HEIGHT_CROP,0);
+            w = bundle.getInt(BUNDLES.WIDTH_CROP,0);
         }
         adapter.setData(paths);
         pets_cuerrent = helper.getMyPets();

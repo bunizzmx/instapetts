@@ -45,6 +45,9 @@ public interface BUNDLES {
     String VIDEO_DURATION ="VIDEO_DURATION";
     String VIDEO_ASPECT ="VIDEO_ASPECT";
 
+    String WIDTH_CROP ="WIDTH_CROP";
+    String HEIGHT_CROP ="HEIGHT_CROP";
+
 
     String DOWNLOADS_INFO ="DOWNLOADS_INFO";
 

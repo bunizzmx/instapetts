@@ -90,6 +90,8 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
     @BindView(R.id.durationView)
     TextView durationView;
     boolean IS_IN_CROP = false;
+    int WIDTH_CROP=0;
+    int HEIGHT_CROP=0;
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.btSave)
@@ -124,7 +126,8 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
         int widthData = Integer.parseInt(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
         int rotation = Integer.parseInt(mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));
 
-
+        WIDTH_CROP =widthData;
+        HEIGHT_CROP =heightData;
         switch (rotation){
             case 0:
                 if(heightData < widthData)
@@ -310,6 +313,8 @@ public class VideoCropActivity extends AppCompatActivity implements VideoPlayer.
                 Intent intent = new Intent();
                 intent.putExtra(BUNDLES.VIDEO_DURATION, (DURATION / 1000));
                 intent.putExtra(BUNDLES.VIDEO_ASPECT, ASPECT);
+                intent.putExtra(BUNDLES.HEIGHT_CROP, HEIGHT_CROP);
+                intent.putExtra(BUNDLES.WIDTH_CROP, WIDTH_CROP);
                 setResult(RESULT_OK, intent);
                 finish();
             }

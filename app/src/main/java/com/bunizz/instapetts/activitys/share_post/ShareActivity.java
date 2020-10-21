@@ -369,6 +369,8 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
             if (resultCode == RESULT_OK) {
                         int duracion = (int) data.getLongExtra(BUNDLES.VIDEO_DURATION,30);
                         String aspect =  data.getStringExtra(BUNDLES.VIDEO_ASPECT);
+                        int h = data.getIntExtra(BUNDLES.HEIGHT_CROP,0);
+                         int w = data.getIntExtra(BUNDLES.WIDTH_CROP,0);
                         Intent mediaScannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                         Uri fileContentUri = Uri.parse(outputPath);
                         mediaScannerIntent.setData(fileContentUri);
@@ -380,6 +382,8 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
                         b.putInt("is_video",1);
                         b.putString(BUNDLES.VIDEO_ASPECT,aspect);
                         b.putInt(BUNDLES.VIDEO_DURATION,duracion);
+                        b.putInt(BUNDLES.HEIGHT_CROP, h);
+                        b.putInt(BUNDLES.WIDTH_CROP, w);
                         changeOfInstance(FragmentElement.INSTANCE_SHARE,b);
             }
         }else if(requestCode ==  REQUEST_IMAGE_CAPTURE){
