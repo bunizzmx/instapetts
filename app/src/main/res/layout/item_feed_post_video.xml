@@ -192,6 +192,23 @@
         android:paddingRight="10dp"
         android:layout_width="match_parent"
         android:layout_height="40dp">
+        <LinearLayout
+            android:orientation="horizontal"
+           android:layout_centerHorizontal="true"
+            android:id="@+id/l_views"
+            android:background="?attr/selectableItemBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <TextView
+                android:textSize="10dp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/num_views"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
         <RelativeLayout
             android:layout_toRightOf="@+id/l_icon_like"
             android:id="@+id/l_icon_commentar"
@@ -278,7 +295,8 @@
         android:layout_width="10dp"
         android:layout_height="10dp"/>
     <TextView
-        android:textSize="14sp"
+        android:textColor="@color/black"
+        android:textSize="12sp"
         android:id="@+id/description_posts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>

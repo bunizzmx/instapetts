@@ -270,10 +270,10 @@ public class App extends Application {
 
 
 
-    public  String fecha_lenguaje_humano(String fecha){
+    public  String fecha_lenguaje_humano(String fecha,int op){
         try {
 
-            Date fechaInicial = StringToDate(fecha, "-", 0);
+            Date fechaInicial = StringToDate(fecha, "-", op);
             Calendar calFechaInicial = Calendar.getInstance();
             Calendar calFechaFinal = Calendar.getInstance();
             calFechaInicial.setTime(fechaInicial);
@@ -422,12 +422,13 @@ public class App extends Application {
             formato="dd"+caracter+"yyyy"+caracter+"MM"+formatoHora;
         else if(op==5)
             formato="dd"+caracter+"MM"+caracter+"yyyy"+formatoHora;
+        else if(op == 6)
+            formato="yyyy"+caracter+"MM"+caracter+"dd"+formatoHora;
+
         SimpleDateFormat sdf = new SimpleDateFormat(formato, Locale.getDefault());
         Date fechaFormato=null;
         try {
-
             sdf.setLenient(false);
-
             fechaFormato=sdf.parse(fecha);
         } catch (ParseException ex) {
            Log.e("FORAMT_ERROR","--->" + ex.getMessage());

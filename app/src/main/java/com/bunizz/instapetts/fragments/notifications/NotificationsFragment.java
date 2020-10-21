@@ -293,7 +293,7 @@ public class NotificationsFragment extends Fragment implements  NotificationsCon
                 }
             }
            Log.e("FECHA_NOTIFICACION","-->:" + notificationBeans.get(position).getFecha());
-            h.fecha_notificacion.setText(App.getInstance().fecha_lenguaje_humano(notificationBeans.get(position).getFecha()));
+            h.fecha_notificacion.setText(App.getInstance().fecha_lenguaje_humano(notificationBeans.get(position).getFecha(),0));
                 h.title_notification.setText(notificationBeans.get(position).getTitle());
                 h.delete_notification.setOnClickListener(v -> {
                     if(listener!=null)

@@ -229,7 +229,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
                 Glide.with(context).load(mo.getUrl_photo_pet()).into(vid_h.image_pet);
                 Glide.with(context).load(mo.getUrl_photo_user()).into(vid_h.mini_user_photo);
-                vid_h.date_post.setText(App.getInstance().fecha_lenguaje_humano(mo.getDate_post()));
+                vid_h.date_post.setText(App.getInstance().fecha_lenguaje_humano(mo.getDate_post(),0));
                 vid_h.save_posts.setOnClickListener(view -> {
                     if(mo.isSaved()) {
                         mo.setSaved(false);
@@ -425,7 +425,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
                         .error(context.getResources().getDrawable(R.drawable.ic_holder))
                         .into(f.mini_user_photo);
-                f.date_post.setText(App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()));
+                f.date_post.setText(App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post(),0));
                 f.save_posts.setOnClickListener(view -> {
                     if(data_parsed.isSaved()) {
                         data_parsed.setSaved(false);

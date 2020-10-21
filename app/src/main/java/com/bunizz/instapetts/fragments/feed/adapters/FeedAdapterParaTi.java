@@ -272,6 +272,7 @@ public class FeedAdapterParaTi extends RecyclerView.Adapter<RecyclerView.ViewHol
                         listener_post.commentPost(mo.getId_post_from_web(),true,mo.getId_usuario());
                 });
 
+                vid_h.num_views.setText(mo.getViews() + " views");
                 vid_h.time_video.setText(mo.getDuracion() + " seg");
                 vid_h.blink_text.setText(mo.getDuracion() + " seg");
                 vid_h.blink_text.setFadingDuration(500);
@@ -336,7 +337,7 @@ public class FeedAdapterParaTi extends RecyclerView.Adapter<RecyclerView.ViewHol
                         .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
                         .error(context.getResources().getDrawable(R.drawable.ic_holder))
                         .into(vid_h.mini_user_photo);
-                vid_h.date_post.setText( App.getInstance().fecha_lenguaje_humano(mo.getDate_post()));
+                vid_h.date_post.setText( App.getInstance().fecha_lenguaje_humano(mo.getDate_post(),0));
                 vid_h.l_saved_post.setOnClickListener(view -> {
                     if(mo.isSaved()) {
                         mo.setSaved(false);
@@ -525,7 +526,7 @@ public class FeedAdapterParaTi extends RecyclerView.Adapter<RecyclerView.ViewHol
                         .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
                         .error(context.getResources().getDrawable(R.drawable.ic_holder))
                         .into(f.mini_user_photo);
-                f.date_post.setText(App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()));
+                f.date_post.setText(App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post(),0));
                 f.l_saved_post.setOnClickListener(view -> {
                      if(data_parsed.isSaved()) {
                          data_parsed.setSaved(false);

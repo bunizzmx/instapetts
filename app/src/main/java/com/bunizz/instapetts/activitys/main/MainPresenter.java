@@ -817,6 +817,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void likeViewVideoInstapettsTv(int id_video,int type) {
+        Log.e("LIKE_SUCCESS","ID_VIDEO" +id_video + "/"+ type);
         PlayVideoParameters playVideoParameters = new PlayVideoParameters();
         if(type == 0)
            playVideoParameters.setTarget("LIKE");
@@ -824,7 +825,7 @@ public class MainPresenter implements MainContract.Presenter {
             playVideoParameters.setTarget("VIEW");
 
         playVideoParameters.setId_video(id_video);
-        if(!playVideosHelper.searchPostById(id_video)){
+        if(!playVideosHelper.searchPostById(id_video) || type == 1){
             playVideosHelper.saveLikePost(id_video);
             disposable.add(
                     apiService

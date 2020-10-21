@@ -212,7 +212,7 @@ public class DialogShosePet extends BaseAlertDialog{
                 Glide.with(context).load(context.getResources().getDrawable(R.drawable.logo)).into(h.pet_chose_list);
             }else{
                 Glide.with(context).load(petBeans.get(position).getUrl_photo_tumbh()).into(h.pet_chose_list);
-                h.edad_pet_chose.setText(App.getInstance().fecha_lenguaje_humano(petBeans.get(position).getEdad_pet().replace("T"," ").replace("T","")+" años"));
+                h.edad_pet_chose.setText(App.getInstance().fecha_lenguaje_humano(petBeans.get(position).getEdad_pet().replace("T"," ").replace("T","")+" años",0));
                 h.raza_mascota_chose_pet.setText(petBeans.get(position).getRaza_pet());
             }
         }

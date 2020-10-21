@@ -143,7 +143,7 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 Glide.with(context).load(data_parsed.getUrl_photo_pet()).into(f.image_pet);
                 Glide.with(context).load(data_parsed.getUrl_photo_user()).into(f.mini_user_photo);
-                f.date_post.setText(App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()));
+                f.date_post.setText(App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post(),0));
                 f.save_posts.setOnClickListener(view -> {
                     if(data_parsed.isSaved()) {
                         //listener_post.onDisfavorite(data_parsed.getId_post_from_web());

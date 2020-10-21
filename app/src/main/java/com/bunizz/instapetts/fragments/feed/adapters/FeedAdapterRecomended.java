@@ -79,13 +79,13 @@ public class FeedAdapterRecomended extends RecyclerView.Adapter<RecyclerView.Vie
            h.name_user_recomended.setText(data_parsed.getName_user().substring(0,18) + "...");
         else
             h.name_user_recomended.setText(data_parsed.getName_user());
-        if(App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()).contains(context.getString(R.string.hace))){
-            h.date_user_recomended.setText( App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()));
+        if(App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post(),0).contains(context.getString(R.string.hace))){
+            h.date_user_recomended.setText( App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post(),0));
         }else{
             if(App.read(PREFERENCES.IDIOMA,"es").equals("es"))
-              h.date_user_recomended.setText(context.getString(R.string.hace) + " "  + App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post()));
+              h.date_user_recomended.setText(context.getString(R.string.hace) + " "  + App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post(),0));
             else
-                h.date_user_recomended.setText( App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post())   + " ago");
+                h.date_user_recomended.setText( App.getInstance().fecha_lenguaje_humano(data_parsed.getDate_post(),0)   + " ago");
 
         }
 

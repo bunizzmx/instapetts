@@ -8,11 +8,14 @@ import android.view.ViewGroup;
 
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PlayVideos;
+import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.vertical_videos.playVideoContract;
 import com.bunizz.instapetts.fragments.vertical_videos.playVideoItem;
 import com.bunizz.instapetts.fragments.vertical_videos.playVideoPresenter;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -137,6 +140,7 @@ public class playVideoFragment extends Fragment implements playVideoContract.Vie
 
     // An equivalent ViewPager2 adapter class
     private class ScreenSlidePagerAdapter extends FragmentStateAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
         ArrayList<PlayVideos>  videos =new ArrayList<>();
         Fragment currentfragment = null;
 
@@ -157,18 +161,20 @@ public class playVideoFragment extends Fragment implements playVideoContract.Vie
 
         @Override
         public Fragment createFragment(int position) {
-             currentfragment =  playVideoItem.newInstancex(videos.get(position));
-            return currentfragment;
+            Log.e("CURRENT_POSITION","->" + position);
+            mFragmentList.add(playVideoItem.newInstancex(videos.get(position)));
+            return mFragmentList.get(position);
         }
 
         public void stop_videos(){
-            if(currentfragment!=null)
-                ((playVideoItem )currentfragment).stopPlayers();
+            if(mFragmentList!=null) {
+                ((playVideoItem) mFragmentList.get(CURRENT_POSITION)).stopPlayers();
+            }
         }
 
         public void reanudar(){
-            if(currentfragment!=null)
-               ((playVideoItem )currentfragment).reanudarPLayers();
+            if(mFragmentList!=null)
+               ((playVideoItem )mFragmentList.get(CURRENT_POSITION)).reanudarPLayers();
         }
         @Override
         public int getItemCount() {

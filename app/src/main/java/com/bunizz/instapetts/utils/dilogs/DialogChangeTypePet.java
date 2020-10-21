@@ -2,17 +2,20 @@ package com.bunizz.instapetts.utils.dilogs;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.beans.RazaBean;
 import com.bunizz.instapetts.fragments.wizardPets.PetTtype;
-import com.bunizz.instapetts.fragments.wizardPets.adapters.SearchRazaAdapter;
 import com.bunizz.instapetts.fragments.wizardPets.adapters.TypePetsAdapter;
 import com.bunizz.instapetts.listeners.change_instance_wizard;
 import com.bunizz.instapetts.listeners.process_save_pet_listener;
@@ -28,7 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 /**
  * Created by Tony Zaitoun on 5/14/2016.
  */
-public class DialogChangeRaza extends BaseAlertDialog{
+public class DialogChangeTypePet extends BaseAlertDialog{
     private boolean allowAnimation = true;
     private boolean cancelable = true;
     private boolean isLocked = false;
@@ -36,22 +39,10 @@ public class DialogChangeRaza extends BaseAlertDialog{
     Activity context;
     int tipo_permision;
     RecyclerView list_type_pet;
-    SearchRazaAdapter adapter;
+    TypePetsAdapter adapter;
     ArrayList<PetTtype> petTtypes = new ArrayList<>();
     process_save_pet_listener listener_pet_config;
-    ArrayList<RazaBean> razaBeans = new ArrayList<>();
     ImageView close_dialog;
-    public ArrayList<RazaBean> getRazaBeans() {
-        return razaBeans;
-    }
-
-    public void setRazaBeans(ArrayList<RazaBean> razaBeans) {
-        this.razaBeans.clear();
-        this.razaBeans.addAll(razaBeans);
-        adapter.setData(razaBeans,"");
-        adapter.notifyDataSetChanged();
-    }
-
     public process_save_pet_listener getListener_pet_config() {
         return listener_pet_config;
     }
@@ -60,7 +51,7 @@ public class DialogChangeRaza extends BaseAlertDialog{
         this.listener_pet_config = listener_pet_config;
     }
 
-    public DialogChangeRaza(Activity context){
+    public DialogChangeTypePet(Activity context){
         this.context = context;
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this.context);
         LayoutInflater inflater = LayoutInflater.from(this.context);
@@ -68,8 +59,8 @@ public class DialogChangeRaza extends BaseAlertDialog{
         list_type_pet = dialogView.findViewById(R.id.list_type_pet);
         close_dialog = dialogView.findViewById(R.id.close_dialog);
         close_dialog.setOnClickListener(view -> dismiss());
-        list_type_pet.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new SearchRazaAdapter(getContext());
+        list_type_pet.setLayoutManager(new GridLayoutManager(context,3));
+        adapter = new TypePetsAdapter(getContext());
         adapter.setListener(new change_instance_wizard() {
             @Override
             public void onchange(int type_fragment, Bundle data) {
@@ -84,7 +75,18 @@ public class DialogChangeRaza extends BaseAlertDialog{
 
             }
         });
+        petTtypes.add(new PetTtype(R.drawable.ic_perro,getContext().getResources().getString(R.string.pet_type_dog),1));
+        petTtypes.add(new PetTtype(R.drawable.ic_gato,getContext().getResources().getString(R.string.pet_type_cat),2));
+        petTtypes.add(new PetTtype(R.drawable.ic_mascota_perico,getContext().getResources().getString(R.string.pet_type_ave),3));
+        petTtypes.add(new PetTtype(R.drawable.ic_mascota_conejo,getContext().getResources().getString(R.string.pet_type_conejo),4));
+        petTtypes.add(new PetTtype(R.drawable.ic_mascota_hamster,getContext().getResources().getString(R.string.pet_type_hamster),5));
+        petTtypes.add(new PetTtype(R.drawable.ic_serpiente,getContext().getResources().getString(R.string.reptil),6));
+        petTtypes.add(new PetTtype(R.drawable.ic_pez,getContext().getResources().getString(R.string.pez),8));
+        petTtypes.add(new PetTtype(R.drawable.ic_cabra,getContext().getResources().getString(R.string.bovinos),9));
+        petTtypes.add(new PetTtype(R.drawable.ic_otro,getContext().getResources().getString(R.string.pet_type_otro),7));
+        adapter.setPetTtypes(petTtypes);
         list_type_pet.setAdapter(adapter);
+
         dialogBuilder.setView(dialogView);
         dialog = dialogBuilder.create();
         this.dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

@@ -423,7 +423,7 @@ public class ComentariosFragment extends Fragment implements  ComentariosContrac
                     .error(getContext().getResources().getDrawable(R.drawable.ic_holder))
                     .into(h.imagen_user_comment);
             h.item_comentarios_comentario.setText(data.get(position).getCommentario());
-            h.fecha_comment.setText(App.getInstance().fecha_lenguaje_humano(data.get(position).getFecha_comentario()));
+            h.fecha_comment.setText(App.getInstance().fecha_lenguaje_humano(data.get(position).getFecha_comentario(),0));
             h.like_comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

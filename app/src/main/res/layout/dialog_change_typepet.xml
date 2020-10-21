@@ -23,8 +23,8 @@
             android:id="@+id/close_dialog"
             android:tint="@color/black"
             android:src="@drawable/ic_cross"
-            android:layout_width="15dp"
-            android:layout_height="15dp"/>
+            android:layout_width="20dp"
+            android:layout_height="20dp"/>
         <androidx.recyclerview.widget.RecyclerView
             android:layout_below="@+id/close_dialog"
             android:id="@+id/list_type_pet"

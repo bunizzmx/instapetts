@@ -190,7 +190,7 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
                 h.title_tip_top.setText(data_parsed.getTitle_tip());
-                h.fecha_tip.setText(App.getInstance().fecha_lenguaje_humano(data_parsed.getFecha_tip().replace("Z","").replace("T"," ")));
+                h.fecha_tip.setText(App.getInstance().fecha_lenguaje_humano(data_parsed.getFecha_tip().replace("Z","").replace("T"," "),0));
                 h.num_views.setText("" + data_parsed.getViews_tip());
                 h.num_likes.setText(""+ data_parsed.getLikes_tip());
                 h.root_tip_simple.setOnClickListener(new View.OnClickListener() {
@@ -231,7 +231,7 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Glide.with(context).load(data_parsed_video.getPhoto_tumbh_tip())
                 .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
                         .error(context.getResources().getDrawable(R.drawable.ic_holder)).into(hv.mediaCoverImage);
-                hv.fecha_tip.setText(App.getInstance().fecha_lenguaje_humano(data_parsed_video.getFecha_tip().replace("Z","").replace("T"," ")));
+                hv.fecha_tip.setText(App.getInstance().fecha_lenguaje_humano(data_parsed_video.getFecha_tip().replace("Z","").replace("T"," "),0));
                 hv.root_multiple_image.setOnLongClickListener(v -> {
                     listener_video.StopVideo();
                     Intent i = new Intent(context, PlayVideoActivity.class);
@@ -387,7 +387,7 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
                             .error(context.getResources().getDrawable(R.drawable.ic_holder))
                             .into(help.mini_user_photo);
-                    help.date_post.setText( "Hace " + App.getInstance().fecha_lenguaje_humano(data_parsed_help.getDate_post()));
+                    help.date_post.setText( "Hace " + App.getInstance().fecha_lenguaje_humano(data_parsed_help.getDate_post(),0));
 
                     if(data_parsed_help.isLiked()){
                         help.icon_like.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_corazon_black));
@@ -424,7 +424,7 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     f.tipo_tip_notice.setCardBackgroundColor(context.getResources().getColor(R.color.colorPrimaryDark));
                 }
 
-                f.fecha_tip.setText(App.getInstance().fecha_lenguaje_humano(data_parsed_n.getFecha_tip().replace("Z","").replace("T"," ")));
+                f.fecha_tip.setText(App.getInstance().fecha_lenguaje_humano(data_parsed_n.getFecha_tip().replace("Z","").replace("T"," "),0));
                 f.num_views.setText("" + data_parsed_n.getViews_tip());
                 f.num_likes.setText(""+ data_parsed_n.getLikes_tip());
                 if(data_parsed_n.getBody_tip()!=null) {

@@ -213,8 +213,10 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
         if(arguments!=null) {
             if (arguments.getParcelable("POSTS") != null)
                 postBean = Parcels.unwrap(arguments.getParcelable("POSTS"));
+        }else{
+            Log.e("ARGUMENTS","NULOS");
         }
-        Log.e("play_videos_url","-->" +  postBean.getUrl_tumbh());
+
         videoUrl = postBean.getUrl_video();
         name_foto_user_video.setVisibility(View.GONE);
         thumbhnail = postBean.getUrl_tumbh();
@@ -237,7 +239,7 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
             like_heart.setSelected(false);
         }
          if(listener_video!=null)
-            listener_video.onLikeOrView(postBean.getId(),1);
+             listener_video.onLikeOrView(postBean.getId(),1);
 
     }
 
@@ -252,105 +254,116 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
     }
 
     private void createPlayers() {
-        play(Uri.parse(videoUrl));
+        if(videoUrl!=null) {
+            play(Uri.parse(videoUrl));
 
-        if (player != null) {
-            player.release();
-        }
-        player = createFullPlayer();
+            if (player != null) {
+                player.release();
+            }
+            player = createFullPlayer();
 
-        videoSurfaceView.setPlayer(player);
-        if(postBean.getAspecto().equals("16_9"))
-            videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
-        else
-            videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_ZOOM);
-        player.addListener(new Player.EventListener() {
-            @Override
-            public void onTimelineChanged(Timeline timeline, @Nullable Object manifest, int reason) {
-            }
-            @Override
-            public void onTracksChanged(TrackGroupArray trackGroups,
-                                        TrackSelectionArray trackSelections) {
-            }
-            @Override
-            public void onLoadingChanged(boolean isLoading) {
-            }
-            @Override
-            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-                switch (playbackState) {
-                    case Player.STATE_BUFFERING:
-                        Log.e("ESTATUS_VIDEO","STATE_BUFFERING");
-                        progresbar_buferring.setVisibility(View.VISIBLE);
-                        break;
-                    case Player.STATE_ENDED:
-                        Log.e("ESTATUS_VIDEO","STATE_ENDED");
-                        // Log.d(TAG, "onPlayerStateChanged: Video ended.");
-                        player.seekTo(0);
-                        break;
-                    case Player.STATE_IDLE:
-                        break;
-                    case Player.STATE_READY:
-                        Log.e("ESTATUS_VIDEO","STATE_READY");
-                        preview_video.setVisibility(View.GONE);
-                        progresbar_buferring.setVisibility(View.GONE);
-                        break;
-                    default:
-                        Log.e("ESTATUS_VIDEO","default");
-                        break;
+            videoSurfaceView.setPlayer(player);
+            if (postBean.getAspecto().equals("16_9"))
+                videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
+            else
+                videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_ZOOM);
+            player.addListener(new Player.EventListener() {
+                @Override
+                public void onTimelineChanged(Timeline timeline, @Nullable Object manifest, int reason) {
                 }
-            }
-            @Override
-            public void onRepeatModeChanged(int repeatMode) {
-            }
-            @Override
-            public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
-            }
-            @Override
-            public void onPlayerError(ExoPlaybackException error) {
-            }
-            @Override
-            public void onPositionDiscontinuity(int reason) {
-            }
-            @Override
-            public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-            }
-            @Override
-            public void onSeekProcessed() {
-            }
-        });
 
-        root_video.setOnClickListener(view -> {
-            Log.e("CLICK_IN_VIDEO","KAKSJ");
-            if(IS_PAUSE){
-                player.setPlayWhenReady(true);
-                IS_PAUSE =false;
-                play_pause.setVisibility(View.GONE);
-            }else{
-                IS_PAUSE =true;
-                player.setPlayWhenReady(false);
-                play_pause.setVisibility(View.VISIBLE);
-            }
-        });
+                @Override
+                public void onTracksChanged(TrackGroupArray trackGroups,
+                                            TrackSelectionArray trackSelections) {
+                }
+
+                @Override
+                public void onLoadingChanged(boolean isLoading) {
+                }
+
+                @Override
+                public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                    switch (playbackState) {
+                        case Player.STATE_BUFFERING:
+                            Log.e("ESTATUS_VIDEO", "STATE_BUFFERING");
+                            progresbar_buferring.setVisibility(View.VISIBLE);
+                            break;
+                        case Player.STATE_ENDED:
+                            Log.e("ESTATUS_VIDEO", "STATE_ENDED");
+                            // Log.d(TAG, "onPlayerStateChanged: Video ended.");
+                            player.seekTo(0);
+                            break;
+                        case Player.STATE_IDLE:
+                            break;
+                        case Player.STATE_READY:
+                            Log.e("ESTATUS_VIDEO", "STATE_READY");
+                            preview_video.setVisibility(View.GONE);
+                            progresbar_buferring.setVisibility(View.GONE);
+                            break;
+                        default:
+                            Log.e("ESTATUS_VIDEO", "default");
+                            break;
+                    }
+                }
+
+                @Override
+                public void onRepeatModeChanged(int repeatMode) {
+                }
+
+                @Override
+                public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+                }
+
+                @Override
+                public void onPlayerError(ExoPlaybackException error) {
+                }
+
+                @Override
+                public void onPositionDiscontinuity(int reason) {
+                }
+
+                @Override
+                public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+                }
+
+                @Override
+                public void onSeekProcessed() {
+                }
+            });
+
+            root_video.setOnClickListener(view -> {
+
+                if (IS_PAUSE) {
+                    player.setPlayWhenReady(true);
+                    IS_PAUSE = false;
+                    play_pause.setVisibility(View.GONE);
+                } else {
+                    IS_PAUSE = true;
+                    player.setPlayWhenReady(false);
+                    play_pause.setVisibility(View.VISIBLE);
+                }
+            });
+        }else{
+            Log.e("CLICK_IN_VIDEO", "CREATE PLAYERS URL NULA");
+        }
 
     }
 
     private SimpleExoPlayer createFullPlayer() {
-        TrackSelection.Factory videoTrackSelectionFactory
-                = new AdaptiveTrackSelection.Factory(new DefaultBandwidthMeter());
-        TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-        LoadControl loadControl = new DefaultLoadControl();
-        SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(
-                getActivity(),
-                trackSelector, loadControl);
-        player.setPlayWhenReady(true);
-        player.prepare(mediaSourceBuilder.getMediaSource(false));
-        // player.addListener(eventListener);
-        return player;
+            TrackSelection.Factory videoTrackSelectionFactory
+                    = new AdaptiveTrackSelection.Factory(new DefaultBandwidthMeter());
+            TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+            LoadControl loadControl = new DefaultLoadControl();
+            SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(
+                    getActivity(),
+                    trackSelector, loadControl);
+            player.setPlayWhenReady(true);
+            player.prepare(mediaSourceBuilder.getMediaSource(false));
+            // player.addListener(eventListener);
+            return player;
+
     }
-    public void stopPreview(long position) {
-        player.seekTo(position);
-        player.setPlayWhenReady(true);
-    }
+
 
     private void releasePlayers() {
         if (player != null) {

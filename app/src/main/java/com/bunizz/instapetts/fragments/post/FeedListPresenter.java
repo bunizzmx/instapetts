@@ -386,6 +386,11 @@ public class FeedListPresenter implements FeedContract.Presenter {
         savedPostHelper.deleteSavedPost(id_post);
     }
 
+    @Override
+    public void viewPost(int post) {
+
+    }
+
     @SuppressLint("CheckResult")
     @Override
     public void deletePost(PostBean postBean) {

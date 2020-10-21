@@ -116,6 +116,12 @@ public class PetsPropietaryAdapter extends  RecyclerView.Adapter<RecyclerView.Vi
                     case 7:
                         h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_otro));
                         break;
+                    case 8:
+                        h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_pez));
+                        break;
+                    case 9:
+                        h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_cabra));
+                        break;
                     default:
                         h.type_pet_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_otro));
                         break;

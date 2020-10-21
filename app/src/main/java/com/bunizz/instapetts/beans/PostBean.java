@@ -117,6 +117,10 @@ public class PostBean {
     @Expose
     String pixeles;
 
+    @SerializedName("views")
+    @Expose
+    int views;
+
     boolean saved;
     boolean liked;
 
@@ -392,6 +396,14 @@ public class PostBean {
 
     public void setPixeles(String pixeles) {
         this.pixeles = pixeles;
+    }
+
+    public int getViews() {
+        return views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
     }
 }
 

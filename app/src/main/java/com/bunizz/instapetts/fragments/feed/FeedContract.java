@@ -19,6 +19,7 @@ public interface FeedContract {
         void likePost(PostActions postActions);
         void saveFavorite(PostActions postActions,PostBean postBean);
         void deleteFavorite(int id_post);
+        void viewPost(int post);
         void deletePost(PostBean postBean);
         HistoriesBean getMyStories();
         void haveNotificatiosn();

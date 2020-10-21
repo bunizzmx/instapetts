@@ -489,6 +489,28 @@ public class FeedPresenter implements FeedContract.Presenter {
                 });
     }
 
+    @Override
+    public void viewPost(int post) {
+        PostLikeBean postLikeBean = new PostLikeBean();
+        postLikeBean.setId_post(post);
+        postLikeBean.setTarget("NEW_VIEW");
+        disposable.add(
+                apiService.like_posts(postLikeBean)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<SimpleResponse>() {
+                            @Override
+                            public void onSuccess(SimpleResponse responsePost) {
+                                if (responsePost != null) {
+                                    if (responsePost.getCode_response() == 200) {}
+                                }
+                            }
+                            @Override
+                            public void onError(Throwable e) {}
+                        })
+        );
+    }
+
     @SuppressLint("CheckResult")
     @Override
     public void deletePost(PostBean postBean) {

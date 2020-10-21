@@ -32,6 +32,7 @@ import com.bunizz.instapetts.fragments.feed.adapters.FeedAdapterParaTi;
 import com.bunizz.instapetts.listeners.actions_dialog_profile;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
 import com.bunizz.instapetts.listeners.conexion_listener;
+import com.bunizz.instapetts.listeners.isPlayingListener;
 import com.bunizz.instapetts.listeners.open_camera_histories_listener;
 import com.bunizz.instapetts.listeners.postsListener;
 import com.bunizz.instapetts.utils.ProgressCircle;
@@ -264,7 +265,9 @@ public class FeedParaTi  extends Fragment implements  FeedContract.View{
         });
 
         refresh_feed.setOnRefreshListener(() -> mPresenter.getFeedParaTi());
-
+        mRecyclerView.setListener(id -> {
+              mPresenter.viewPost(id);
+        });
     }
     private RequestManager initGlide() {
         RequestOptions options = new RequestOptions();

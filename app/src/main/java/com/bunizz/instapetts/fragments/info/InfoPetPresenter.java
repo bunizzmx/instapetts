@@ -12,8 +12,10 @@ import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.tips.detail.DetailContract;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
+import com.bunizz.instapetts.web.parameters.CatalogoParameters;
 import com.bunizz.instapetts.web.parameters.EventsPetsBean;
 import com.bunizz.instapetts.web.parameters.EventsTipsBean;
+import com.bunizz.instapetts.web.responses.ResponseCatalogo;
 import com.bunizz.instapetts.web.responses.SimpleResponse;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -135,6 +137,30 @@ public class InfoPetPresenter implements  InfoPetContract.Presenter {
                                     //mView.noInternet();
                                 }
                             }
+                        })
+        );
+    }
+
+    @Override
+    public void getRazas(int id_type_pet) {
+        CatalogoParameters catalogoParameters = new CatalogoParameters();
+        catalogoParameters.setId_raza(id_type_pet);
+        disposable.add(
+                apiService.getCatalogos(catalogoParameters)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<ResponseCatalogo>() {
+                            @Override
+                            public void onSuccess(ResponseCatalogo responsePost) {
+
+                                if(responsePost!=null){
+                                    if(responsePost.getCode_response()==200){
+                                        mView.showRazas(responsePost.getList_catalogo());
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onError(Throwable e) {}
                         })
         );
     }

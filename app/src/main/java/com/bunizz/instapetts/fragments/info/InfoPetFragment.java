@@ -23,34 +23,29 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
-import com.bunizz.instapetts.activitys.main.Main;
-import com.bunizz.instapetts.activitys.wizardPets.WizardPetActivity;
-import com.bunizz.instapetts.beans.HistoriesBean;
 import com.bunizz.instapetts.beans.PetBean;
-import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.beans.RazaBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
-import com.bunizz.instapetts.fragments.feed.FeedContract;
-import com.bunizz.instapetts.listeners.RatePetListener;
 import com.bunizz.instapetts.listeners.conexion_listener;
 import com.bunizz.instapetts.listeners.delete;
 import com.bunizz.instapetts.listeners.process_save_pet_listener;
 import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.services.ImageService;
 import com.bunizz.instapetts.utils.ImagenCircular;
+import com.bunizz.instapetts.utils.datepicker.date.DatePickerDialogFragment;
 import com.bunizz.instapetts.utils.dilogs.DialogChangeRaza;
+import com.bunizz.instapetts.utils.dilogs.DialogChangeTypePet;
 import com.bunizz.instapetts.utils.dilogs.DialogDeletes;
 import com.bunizz.instapetts.utils.dilogs.DialogPreviewImage;
 import com.bunizz.instapetts.utils.dilogs.DialogRatePet;
-import com.bunizz.instapetts.utils.snackbar.SnackBar;
 
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
-import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -123,6 +118,13 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
     @BindView(R.id.changue_type_pet)
     TextView changue_type_pet;
 
+    @BindView(R.id.changue_raza_pet)
+    TextView changue_raza_pet;
+
+    @BindView(R.id.changue_fecha_pet)
+    TextView changue_fecha_pet;
+
+
     @BindView(R.id.new_descripcion_pet)
     EditText new_descripcion_pet;
     InfoPetPresenter presenter;
@@ -132,14 +134,14 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
 
     String REFRESH_IMAGE ="INVALID";
     conexion_listener  listener_conexion;
-
-
-
+    DialogChangeRaza dialogChangeTypePet;
+    DatePickerDialogFragment datePickerDialogFragment;
+    String FECHA_CUMPLEAN ="";
     @SuppressLint("MissingPermission")
     @OnClick(R.id.changue_type_pet)
     void changue_type_pet() {
-        DialogChangeRaza dialogChangeRaza = new DialogChangeRaza(getActivity());
-        dialogChangeRaza.setListener_pet_config(new process_save_pet_listener() {
+        DialogChangeTypePet dialogChangeTypePet = new DialogChangeTypePet(getActivity());
+        dialogChangeTypePet.setListener_pet_config(new process_save_pet_listener() {
             @Override
             public void SaveDataPet(Bundle b, int donde) {
                int new_type_pet =  b.getInt(BUNDLES.TYPE_PET,0);
@@ -147,7 +149,48 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
                 petBean.setType_pet(new_type_pet);
             }
         });
-        dialogChangeRaza.show();
+        dialogChangeTypePet.show();
+    }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.changue_fecha_pet)
+    void changue_fecha_pet() {
+
+        datePickerDialogFragment= new DatePickerDialogFragment();
+        datePickerDialogFragment.setOnDateChooseListener((year, month, day) -> {
+            FECHA_CUMPLEAN = year+"-"+month+"-"+day;
+            petBean.setEdad_pet(FECHA_CUMPLEAN);
+            edad_pet.setText(App.getInstance().fecha_lenguaje_humano(FECHA_CUMPLEAN.replace("T"," ").replace("Z",""),0));
+        });
+        datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
+    }
+
+
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.changue_raza_pet)
+    void changue_raza_pet() {
+        dialogChangeTypePet = new DialogChangeRaza(getActivity());
+        presenter.getRazas(petBean.getType_pet());
+        dialogChangeTypePet.setListener_pet_config(new process_save_pet_listener() {
+            @Override
+            public void SaveDataPet(Bundle b, int donde) {
+                String nombre = b.getString(BUNDLES.RAZA_PET,"");
+                int id_raza = b.getInt(BUNDLES.RAZA_PET_ID,0);
+                petBean.setId_type_raza(id_raza);
+                petBean.setRaza_pet(nombre);
+                if(petBean.getRaza_pet() == null ){
+                    name_raza_pet.setText(getContext().getString(R.string.indeterminate));
+                }else{
+                    if(petBean.getRaza_pet().trim().isEmpty() || petBean.getRaza_pet().equals("undefined")){
+                        name_raza_pet.setText(getContext().getString(R.string.indeterminate));
+                    }else{
+                        name_raza_pet.setText(petBean.getRaza_pet());
+                    }
+                }
+            }
+        });
+        dialogChangeTypePet.show();
     }
 
     @SuppressLint("MissingPermission")
@@ -163,6 +206,8 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
                     IN_EDICION = false;
                 }
                 if (IN_EDICION) {
+                    changue_fecha_pet.setVisibility(View.VISIBLE);
+                    changue_raza_pet.setVisibility(View.VISIBLE);
                     peso_pet_profile.setVisibility(View.GONE);
                     descripcion_pet_profile.setVisibility(View.GONE);
                     new_peso_pet.setVisibility(View.VISIBLE);
@@ -181,6 +226,8 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
                     new_peso_pet.setVisibility(View.GONE);
                     new_descripcion_pet.setVisibility(View.GONE);
                     presenter.updatePet(petBean);
+                    changue_fecha_pet.setVisibility(View.GONE);
+                    changue_raza_pet.setVisibility(View.GONE);
                 }
             } else {
                 DialogRatePet dialogRatePet = new DialogRatePet(getContext(), petBean);
@@ -272,8 +319,7 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
                 .skipMemoryCache(true)
         .placeholder(getContext().getResources().getDrawable(R.drawable.ic_holder)).error(getContext().getResources().getDrawable(R.drawable.ic_holder)).into(image_pet_info);
         stars_pet.setText(String.format("%.2f", petBean.getRate_pet()));
-        Log.e("PENDDD","-->" + petBean.getId_propietary() + "/" + App.read(PREFERENCES.ID_USER_FROM_WEB,0) );
-        Log.e("ID_PETXX","-->" + petBean.getId_propietary() + "/" + App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        paint_type_pet(petBean.getType_pet());
         if(petBean.getId_propietary() == App.read(PREFERENCES.ID_USER_FROM_WEB,0)){
             name_property_pet_profile.setText("@" + App.read(PREFERENCES.NAME_USER,"INVALID"));
             delete_trash.setVisibility(View.VISIBLE);
@@ -307,16 +353,18 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
             icon_genero_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_hembra));
         }
 
-        edad_pet.setText(App.getInstance().fecha_lenguaje_humano(petBean.getEdad_pet().replace("T"," ").replace("Z","")));
+        edad_pet.setText(App.getInstance().fecha_lenguaje_humano(petBean.getEdad_pet().replace("T"," ").replace("Z",""),0));
 
-        image_pet_info.setOnClickListener(new View.OnClickListener() {
+        image_pet_info.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onLongClick(View view) {
                 DialogPreviewImage dialogPreviewImage = new DialogPreviewImage(getContext(),petBean.getUrl_photo());
                 dialogPreviewImage.show();
+                paint_type_pet(petBean.getType_pet());
+                return false;
             }
         });
-          paint_type_pet(petBean.getType_pet());
+
     }
 
     @Override
@@ -334,6 +382,14 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
         Log.e("PET_DELETED","SI");
         listener_conexion.message("Mascota eliminada");
         getActivity().onBackPressed();
+    }
+
+    @Override
+    public void showRazas(ArrayList<RazaBean> razaBeans) {
+        if(dialogChangeTypePet!=null){
+            dialogChangeTypePet.setRazaBeans(razaBeans);
+
+        }
     }
 
 
@@ -391,7 +447,9 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
             case 14:break;
             case 15:break;
             case 16:break;
-            default:break;
+            default:
+                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_perro));
+                break;
 
         }
     }

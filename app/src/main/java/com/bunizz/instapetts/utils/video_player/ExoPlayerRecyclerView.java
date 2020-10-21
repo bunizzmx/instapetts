@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.bumptech.glide.RequestManager;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.listeners.isPlayingListener;
 import com.bunizz.instapetts.utils.AnimatedTextViews.BlinkTextView;
 import com.bunizz.instapetts.utils.smoot.SmoothProgressBar;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -74,6 +75,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     private SimpleExoPlayer videoPlayer;
     boolean AUTOPLAY=false;
     int currentPosition =0;
+    int ID_POST =0;
     /**
      * variable declaration
      */
@@ -87,6 +89,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     private RequestManager requestManager;
     // controlling volume state
     private VolumeState volumeState;
+    isPlayingListener listener;
     private OnClickListener videoViewClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -176,22 +179,21 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             }
             @Override
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-                Log.d(TAG, "SEKARIO  7 :" + playbackState);
                 switch (playbackState) {
                     case Player.STATE_BUFFERING:
-                        Log.e(TAG, "onPlayerStateChanged: Buffering video.");
                         blink_text.setVisibility(VISIBLE);
                         time_video.setVisibility(GONE);
                         loading_video.setVisibility(VISIBLE);
                         break;
                     case Player.STATE_ENDED:
-                        Log.d(TAG, "onPlayerStateChanged: Video ended.");
                         videoPlayer.seekTo(0);
                         break;
                     case Player.STATE_IDLE:
                         break;
                     case Player.STATE_READY:
-                        Log.e(TAG, "onPlayerStateChanged: Ready to play.");
+                        if(listener!=null){
+                            listener.id_post(ID_POST);
+                        }
                         blink_text.setVisibility(GONE);
                         loading_video.setVisibility(GONE);
                         time_video.setVisibility(VISIBLE);
@@ -303,6 +305,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                 DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(
                         context, Util.getUserAgent(context, AppName));
                 PostBean data_parsed = (PostBean) mediaObjects.get(targetPosition);
+                ID_POST = data_parsed.getId_post_from_web();
                 String mediaUrl = data_parsed.getUrls_posts();
                 if (mediaUrl != null) {
                     HlsMediaSource hlsMediaSource =
@@ -352,6 +355,15 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             viewHolderParent.setOnClickListener(null);
         }
     }
+
+    public isPlayingListener getListener() {
+        return listener;
+    }
+
+    public void setListener(isPlayingListener listener) {
+        this.listener = listener;
+    }
+
     private void addVideoView() {
         mediaContainer.addView(videoSurfaceView);
         isVideoViewAdded = true;

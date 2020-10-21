@@ -68,6 +68,8 @@ public class DialogPermision extends BaseAlertDialog{
         LayoutInflater inflater = LayoutInflater.from(this.context);
         dialogView = inflater.inflate(R.layout.dialog_permision, null);
         label_body = dialogView.findViewById(R.id.label_body);
+        close_dialog = dialogView.findViewById(R.id.close_dialog);
+        close_dialog.setOnClickListener(view -> dismiss());
         label_activate= dialogView.findViewById(R.id.label_activate);
         dialogBuilder.setView(dialogView);
         dialog = dialogBuilder.create();
