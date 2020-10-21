@@ -44,8 +44,8 @@
                     android:id="@+id/image_pet_info"
                     android:layout_marginTop="10dp"
                     android:src="@drawable/ic_holder"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"/>
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"/>
                 <androidx.cardview.widget.CardView
                     android:id="@+id/edit_photo_pet"
                     android:layout_marginRight="5dp"
@@ -57,8 +57,8 @@
                     android:layout_height="wrap_content">
                     <ImageView
                         android:src="@drawable/ic_editar"
-                        android:layout_width="10dp"
-                        android:layout_height="10dp"/>
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"/>
                 </androidx.cardview.widget.CardView>
             </RelativeLayout>
             <LinearLayout

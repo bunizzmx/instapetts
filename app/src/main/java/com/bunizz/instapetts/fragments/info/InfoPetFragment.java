@@ -36,9 +36,11 @@ import com.bunizz.instapetts.fragments.feed.FeedContract;
 import com.bunizz.instapetts.listeners.RatePetListener;
 import com.bunizz.instapetts.listeners.conexion_listener;
 import com.bunizz.instapetts.listeners.delete;
+import com.bunizz.instapetts.listeners.process_save_pet_listener;
 import com.bunizz.instapetts.listeners.uploads;
 import com.bunizz.instapetts.services.ImageService;
 import com.bunizz.instapetts.utils.ImagenCircular;
+import com.bunizz.instapetts.utils.dilogs.DialogChangeRaza;
 import com.bunizz.instapetts.utils.dilogs.DialogDeletes;
 import com.bunizz.instapetts.utils.dilogs.DialogPreviewImage;
 import com.bunizz.instapetts.utils.dilogs.DialogRatePet;
@@ -118,6 +120,9 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
     @BindView(R.id.new_peso_pet)
     EditText new_peso_pet;
 
+    @BindView(R.id.changue_type_pet)
+    TextView changue_type_pet;
+
     @BindView(R.id.new_descripcion_pet)
     EditText new_descripcion_pet;
     InfoPetPresenter presenter;
@@ -127,6 +132,23 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
 
     String REFRESH_IMAGE ="INVALID";
     conexion_listener  listener_conexion;
+
+
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.changue_type_pet)
+    void changue_type_pet() {
+        DialogChangeRaza dialogChangeRaza = new DialogChangeRaza(getActivity());
+        dialogChangeRaza.setListener_pet_config(new process_save_pet_listener() {
+            @Override
+            public void SaveDataPet(Bundle b, int donde) {
+               int new_type_pet =  b.getInt(BUNDLES.TYPE_PET,0);
+                paint_type_pet(new_type_pet);
+                petBean.setType_pet(new_type_pet);
+            }
+        });
+        dialogChangeRaza.show();
+    }
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.rate_pet_card)
@@ -147,7 +169,9 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
                     new_descripcion_pet.setVisibility(View.VISIBLE);
                     new_peso_pet.setText("" + petBean.getPeso_pet());
                     new_descripcion_pet.setText("" + petBean.getDescripcion_pet());
+                    changue_type_pet.setVisibility(View.VISIBLE);
                 } else {
+                    changue_type_pet.setVisibility(View.GONE);
                     petBean.setPeso_pet(new_peso_pet.getText().toString());
                     petBean.setDescripcion_pet(new_descripcion_pet.getText().toString());
                     peso_pet_profile.setText(new_peso_pet.getText().toString() + " kg");
@@ -266,39 +290,7 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
             edit_photo_pet.setVisibility(View.GONE);
         }
         acerca_de_pet.setText(getContext().getString(R.string.about_pet) + " " +  petBean.getName_pet());
-        switch (petBean.getType_pet()){
-            case 1:
-                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_perro));
-                break;
-            case 2:
-                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_gato));
-                break;
-            case 3:
-                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mascota_perico));
-                break;
-            case 4:
-                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mascota_conejo));
-                break;
-            case 5:
-                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mascota_hamster));
-                break;
-            case 6:
-                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_serpiente));
-                break;
-            case 7:
-                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_otro));break;
-            case 8:break;
-            case 9:break;
-            case 10:break;
-            case 11:break;
-            case 12:break;
-            case 13:break;
-            case 14:break;
-            case 15:break;
-            case 16:break;
-            default:break;
 
-        }
         if(petBean.getRaza_pet() == null ){
             name_raza_pet.setText(getContext().getString(R.string.indeterminate));
         }else{
@@ -324,7 +316,7 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
                 dialogPreviewImage.show();
             }
         });
-
+          paint_type_pet(petBean.getType_pet());
     }
 
     @Override
@@ -364,5 +356,45 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
         Toast.makeText(getActivity(),getContext().getString(R.string.actualizando_foto),Toast.LENGTH_LONG).show();
         App.getInstance().delete_cache();
     }
+
+    void paint_type_pet(int type){
+        switch (type){
+            case 1:
+                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_perro));
+                break;
+            case 2:
+                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_gato));
+                break;
+            case 3:
+                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mascota_perico));
+                break;
+            case 4:
+                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mascota_conejo));
+                break;
+            case 5:
+                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_mascota_hamster));
+                break;
+            case 6:
+                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_serpiente));
+                break;
+            case 7:
+                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_otro));break;
+            case 8:
+                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_pez));break;
+            case 9:
+                icon_type_pet_info_pet.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_cabra));
+                break;
+            case 10:break;
+            case 11:break;
+            case 12:break;
+            case 13:break;
+            case 14:break;
+            case 15:break;
+            case 16:break;
+            default:break;
+
+        }
+    }
+
 }
 

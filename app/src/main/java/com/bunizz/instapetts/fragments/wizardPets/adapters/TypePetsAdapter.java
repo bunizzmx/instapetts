@@ -59,16 +59,6 @@ public class TypePetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         TypePetsHolder h =(TypePetsHolder)holder;
         h.name_type_pet.setText(petTtypes.get(position).getName_pet());
-        if(position == 0){
-            h.label_first_pet.setVisibility(View.VISIBLE);
-        }else{
-           if(position == 1){
-               h.label_first_pet.setVisibility(View.INVISIBLE);
-           }else{
-               h.label_first_pet.setVisibility(View.GONE);
-           }
-        }
-
         h.type_pet_image.setImageDrawable(context.getResources().getDrawable(petTtypes.get(position).getId_drawable()));
         if(petTtypes.get(position).getId() == 7){
             h.type_pet_image.setOnClickListener(view -> {
@@ -105,12 +95,12 @@ public class TypePetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public class TypePetsHolder extends RecyclerView.ViewHolder{
         ImagenCircular type_pet_image;
-        TextView name_type_pet,label_first_pet;
+        TextView name_type_pet;
         public TypePetsHolder(@NonNull View itemView) {
             super(itemView);
             type_pet_image = itemView.findViewById(R.id.type_pet_image);
             name_type_pet = itemView.findViewById(R.id.name_type_pet);
-            label_first_pet = itemView.findViewById(R.id.label_first_pet);
+
         }
     }
 }

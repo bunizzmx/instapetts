@@ -2,24 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_marginBottom="10dp"
+    android:background="?attr/selectableItemBackground"
     android:layout_height="wrap_content">
-   <TextView
-       android:layout_marginLeft="20dp"
-       android:layout_marginBottom="10dp"
-       android:layout_marginTop="50dp"
-       android:id="@+id/label_first_pet"
-       android:textStyle="bold"
-       android:textSize="24dp"
-       android:text="@string/type_pet"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"/>
    <com.bunizz.instapetts.utils.ImagenCircular
-       android:layout_below="@+id/label_first_pet"
        android:layout_centerHorizontal="true"
      android:src="@drawable/ic_holder"
        android:id="@+id/type_pet_image"
-       android:layout_width="wrap_content"
-       android:layout_height="150dp"/>
+       android:layout_width="70dp"
+       android:layout_height="70dp"/>
    <TextView
        android:fontFamily="@font/avenir_black"
        android:textSize="20dp"

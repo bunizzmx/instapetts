@@ -84,13 +84,31 @@
             android:layout_alignParentLeft="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-        <ImageView
-            android:src="@drawable/ic_perro"
-            android:id="@+id/icon_type_pet_info_pet"
-            android:layout_marginRight="20dp"
+        <LinearLayout
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
             android:layout_alignParentRight="true"
-            android:layout_width="20dp"
-            android:layout_height="20dp"/>
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_perro"
+                android:id="@+id/icon_type_pet_info_pet"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/changue_type_pet"
+                android:layout_marginLeft="10dp"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:text="Cambiar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
     </RelativeLayout>
     <RelativeLayout
         android:padding="15dp"

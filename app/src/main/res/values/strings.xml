@@ -24,7 +24,8 @@
 <string name="pet_type_hamster">Hamster</string>
     <string name="reptil">Reptil</string>
 <string name="pet_type_otro">Otro</string>
-
+    <string name="pez">Marinos</string>
+    <string name="bovinos">Bovinos</string>
     <string name="edit_profile">Editar Perfil</string>
 
     <array name="funny_colors">

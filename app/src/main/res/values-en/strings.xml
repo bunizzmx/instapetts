@@ -24,6 +24,8 @@
         <string name="pet_type_conejo">Rabbit</string>
         <string name="pet_type_hamster">Hamster</string>
         <string name="reptil">Reptile</string>
+    <string name="pez">Marine</string>
+    <string name="bovinos">Bovines</string>
         <string name="pet_type_otro">Other</string>
 
         <string name="edit_profile">Edit profile</string>
