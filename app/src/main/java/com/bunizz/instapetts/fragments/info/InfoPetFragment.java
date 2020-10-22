@@ -141,13 +141,10 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
     @OnClick(R.id.changue_type_pet)
     void changue_type_pet() {
         DialogChangeTypePet dialogChangeTypePet = new DialogChangeTypePet(getActivity());
-        dialogChangeTypePet.setListener_pet_config(new process_save_pet_listener() {
-            @Override
-            public void SaveDataPet(Bundle b, int donde) {
-               int new_type_pet =  b.getInt(BUNDLES.TYPE_PET,0);
-                paint_type_pet(new_type_pet);
-                petBean.setType_pet(new_type_pet);
-            }
+        dialogChangeTypePet.setListener_pet_config((b, donde) -> {
+           int new_type_pet =  b.getInt(BUNDLES.TYPE_PET,0);
+            paint_type_pet(new_type_pet);
+            petBean.setType_pet(new_type_pet);
         });
         dialogChangeTypePet.show();
     }
@@ -159,10 +156,16 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
         datePickerDialogFragment= new DatePickerDialogFragment();
         datePickerDialogFragment.setOnDateChooseListener((year, month, day) -> {
             FECHA_CUMPLEAN = year+"-"+month+"-"+day;
-            petBean.setEdad_pet(FECHA_CUMPLEAN);
-            edad_pet.setText(App.getInstance().fecha_lenguaje_humano(FECHA_CUMPLEAN.replace("T"," ").replace("Z",""),0));
+            petBean.setEdad_pet(FECHA_CUMPLEAN.replace("T"," ").replace("Z",""));
+            edad_pet.setText(App.getInstance().fecha_lenguaje_humano(FECHA_CUMPLEAN.replace("T"," ").replace("Z",""),6));
         });
         datePickerDialogFragment.show(getFragmentManager(), "DatePickerDialogFragment");
+    }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.edit_photo_pet)
+    void edit_photo_pet() {
+        listener.onImageProfileUpdated("PROFILE_PHOTO_PET");
     }
 
 
@@ -269,6 +272,9 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
     }
 
 
+
+
+
     public void refresh_data_on_pet(String url) {
         REFRESH_IMAGE = url;
         Log.e("REFRESH_OFTO_PET","-->A: " + url+"/" + petBean.getName_pet());
@@ -313,7 +319,6 @@ public class InfoPetFragment extends Fragment implements InfoPetContract.View {
         pet_name_profile.setText(petBean.getName_pet());
         descripcion_pet_profile.setText(petBean.getDescripcion_pet());
         peso_pet_profile.setText(petBean.getPeso_pet() + "kg");
-        Log.e("CARGO_TUMBH","perror : " + petBean.getUrl_photo_tumbh());
         Glide.with(getContext()).load(petBean.getUrl_photo_tumbh())
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)

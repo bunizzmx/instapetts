@@ -66,6 +66,7 @@ public class FragmentListOfPosts extends Fragment implements FeedContract.View {
     @SuppressLint("MissingPermission")
     @OnClick(R.id.back_to_main)
     void back_to_main() {
+        Log.e("ONBABABA","BAKABKA");
         getActivity().onBackPressed();
     }
 

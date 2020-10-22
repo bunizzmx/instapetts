@@ -422,8 +422,10 @@ public class App extends Application {
             formato="dd"+caracter+"yyyy"+caracter+"MM"+formatoHora;
         else if(op==5)
             formato="dd"+caracter+"MM"+caracter+"yyyy"+formatoHora;
-        else if(op == 6)
-            formato="yyyy"+caracter+"MM"+caracter+"dd"+formatoHora;
+        else if(op == 6) {
+            Log.e("lo_parceo_con","6");
+            formato = "yyyy" + caracter + "MM" + caracter + "dd";
+        }
 
         SimpleDateFormat sdf = new SimpleDateFormat(formato, Locale.getDefault());
         Date fechaFormato=null;

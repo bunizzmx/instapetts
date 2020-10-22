@@ -955,90 +955,114 @@ public class Main extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
+
+        if(mOldFragment!=null){
+            Log.e("estatus_fragment","-->" + mOldFragment.getInstanceType() + "/" + mCurrentFragment.getInstanceType());
+        }else{
+            Log.e("estatus_fragment","-->" + mCurrentFragment.getInstanceType());
+        }
+
+
         try {
             if (IS_SHEET_OPEN || IS_COMMENTS_OPEN) {
                 mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                IS_SHEET_OPEN = false;
+                SIDE_OPEN = false;
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+
             }else{
+                if(mCurrentFragment.getInstanceType()  == FragmentElement.INSTANCE_PLAY_VIDEOS )
+                    finish();
+
                 if (FROM_PUSH == 1) {
                     repaint_nav(R.id.tab_feed);
                     changeOfInstance(FragmentElement.INSTANCE_FEED, null, false);
                 } else {
                     if (mOldFragment != null) {
+                        // SI EL VIEJO FRAGMENT ES DE TIPS SE PAUSA LA REPRODUCCION
                         if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS)
-                            ((FragmentTipsViewpager) mOldFragment.getFragment()).stop_player();
-                    }
+                              ((FragmentTipsViewpager) mOldFragment.getFragment()).stop_player();
+                        // SI ESTAMOS EN EL PERFIL DE UN USUARIO Y ANTES ESTABAMOS EN EL FEED NOS REGRESAMOS AL FEED
+                        else if(mOldFragment.getInstanceType() == FragmentElement.INSTANCE_FEED && mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE)
+                            changeOfInstance(FragmentElement.INSTANCE_FEED,null,false);
+                        else  if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS) {
+                                repaint_nav(R.id.tap_tips);
+                                changeOfInstance(FragmentElement.INSTANCE_TIPS, null, false);
+                            } else if(mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PLAY_VIDEOS && mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PLAY_VIDEOS)
+                                finish();
 
-                    if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_TIP_DETAIL) {
-                        repaint_nav(R.id.tap_tips);
-                        changeOfInstance(FragmentElement.INSTANCE_TIPS, null, false);
-                    } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH || mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED) {
-                        if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED) {
-                            ((FragmentListOfPosts) mCurrentFragment.getFragment()).stop_player();
+                        else {
+                            repaint_nav(R.id.tab_instapetts_tv);
+                            changeOfInstance(FragmentElement.INSTANCE_PLAY_VIDEOS, null, false);
                         }
-                        if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET) {
-                            repaint_nav(R.id.tab_profile_pet);
-                            changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, false);
-                        } else {
-                            if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH) {
-                                changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null, true);
+
+                    }else{
+                         // SI EL FRAGMENTO QUE ESTA ACTUAL ES UN DETALLE DE TIP ME REGRESO A LA VISTA PRINCIPAL DE TIPS
+                        if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_TIP_DETAIL) {
+                            repaint_nav(R.id.tap_tips);
+                            changeOfInstance(FragmentElement.INSTANCE_TIPS, null, false);
+                        }
+                        // SI ESTOY EN LA BUSQUEDA DE POST O USUARIOS O EN UNA VISTA AVAZADA DE LAS PUBLICACIONES
+                        else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH || mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED) {
+                            // SI EL ACTUAL FRAGMENT ES LA LISTA VERTICAL DE POST, PAUSO LOS VIDEOS PORQUE SE PRESIONO ONBACK
+                            if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED)
+                                    ((FragmentListOfPosts) mCurrentFragment.getFragment()).stop_player();
+                            // SI EL FRAGMENT QUE ESTABA ANTES ES DEL PERFIL DEL USUARIO SE REGRESA ALLI
+                            if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET) {
+                                repaint_nav(R.id.tab_profile_pet);
+                                changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, false);
                             } else {
-                                if (App.read(PREFERENCES.OPEN_POST_ADVANCED_FROM, 1) == 1)
-                                    changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, true);
-                                else
-                                    changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE, null, true);
+                                if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH) {
+                                    changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null, true);
+                                } else {
+                                    if (App.read(PREFERENCES.OPEN_POST_ADVANCED_FROM, 1) == 1)
+                                        changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, true);
+                                    else
+                                        changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE, null, true);
+                                }
                             }
                         }
-                    } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS) {
-                        changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null, false);
-                    } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH) {
-                        changeOfInstance(FragmentElement.INSTANCE_SEARCH, null, false);
-                    } else if (IS_SHEET_OPEN || SIDE_OPEN) {
-                        IS_SHEET_OPEN = false;
-                        SIDE_OPEN = false;
-                        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-                        if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET)
-                            changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, true);
-
-                    } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_EDIT_PROFILE_USER) {
-                        Bundle b = new Bundle();
-                        b.putString(BUNDLES.PHOTO_LOCAL, App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH, "INVALID"));
-                        changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, b, false);
-                    } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_FOLLOWS_USER) {
-                        if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE) {
-                            changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE, null, true);
-                        } else if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET) {
+                        //SI EL ACTUAL FRAGMENT ESTA EN LA PREVIEW DE UN PERFIL Y ANTES ESTABA EN LA LISTA GENERAL DE POST PUBLICOS SE REGRESA A LA VISTA DE POST PUBLICOS
+                        else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS)
+                             changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null, false);
+                        //SI EL ACTUAL FRAGMENT ESTA EN LA PREVIEW DE UN PERFIL Y ANTES ESTABA EN LA BUSQUEDA DE POST SE REGRESA A LA BUSQUEDA DE POST
+                        else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH)
+                            changeOfInstance(FragmentElement.INSTANCE_SEARCH, null, false);
+                        //SI EL ACTUAL FRAGMENT ES LA EDICION DEL PERFIL DE USUARIO POR CONSIGUIENTE ANTES ESTABA EN EL PERFIL POR LO QUE LO REGRESO ALLI
+                        else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_EDIT_PROFILE_USER) {
                             Bundle b = new Bundle();
                             b.putString(BUNDLES.PHOTO_LOCAL, App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH, "INVALID"));
                             changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, b, false);
                         }
-                    } else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_COMENTARIOS && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED) {
-                        changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED, null, true);
-                    }
-                    else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_COMENTARIOS && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_NOTIFICATIONS) {
-                        changeOfInstance(FragmentElement.INSTANCE_NOTIFICATIONS, null, true);
-                    }
-                    else {
-                        if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PLAY_VIDEOS)
-                            finish();
-                        else {
-                            if(mOldFragment!=null){
-                                if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS) {
-                                    repaint_nav(R.id.tap_tips);
-                                    changeOfInstance(FragmentElement.INSTANCE_TIPS, null, false);
-                                } else {
-                                    repaint_nav(R.id.tab_instapetts_tv);
-                                    changeOfInstance(FragmentElement.INSTANCE_PLAY_VIDEOS, null, false);
-                                }
-                            }else{
-                                repaint_nav(R.id.tab_instapetts_tv);
-                                changeOfInstance(FragmentElement.INSTANCE_PLAY_VIDEOS, null, false);
+                        //SI ESTOY EN EL FRAGMENT DE PERSONAS SEGUIDAD
+                        else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_FOLLOWS_USER) {
+                            //PERO SI VENGO DESDE EL PERFIL DEL OTRO USUARIO ME REGRESO A ESE
+                            if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE) {
+                                changeOfInstance(FragmentElement.INSTANCE_PREVIEW_PROFILE, null, true);
+                            }
+                            //EN CASO CONTRARIO SIGNIFICA QUE ERA DESDE MI PERFIL
+                            else if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET) {
+                                Bundle b = new Bundle();
+                                b.putString(BUNDLES.PHOTO_LOCAL, App.read(PREFERENCES.FOTO_PROFILE_USER_THUMBH, "INVALID"));
+                                changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, b, false);
                             }
                         }
+                        //SI ESTOY EN EL FRAGMENT DE COMENTARIOS PERO VENGO DESDE LA LISTA AVANZADA DE POST ME REGRESO A LA LISTA AVANZADA DE POST
+                        else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_COMENTARIOS && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED)
+                            changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED, null, true);
+                        //SI ESTOY EN EL FRAGMENT DE COMENTARIOS PERO ES PORQUE ABRI UNA NOTIFICACION ME REGRESO A LAS NOTIFICACIONES
+                        else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_COMENTARIOS && mOldFragment.getInstanceType() == FragmentElement.INSTANCE_NOTIFICATIONS)
+                            changeOfInstance(FragmentElement.INSTANCE_NOTIFICATIONS, null, true);
+                        //SI NO ES NADA DE LO ANTERIOR
+                        else {
+                            // SI ESTABA EN INSTAPETTSTV Y ES LO ULTIMO DONDE ESTUVE FINALIZO LA APP
+                            if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PLAY_VIDEOS)
+                                  finish();
+                            // SI NO
+                        }
                     }
-
                 }
             }
-
         }catch (Exception e)
         {
             Log.e("OLD_NEW", "-->error: " + e.getMessage());

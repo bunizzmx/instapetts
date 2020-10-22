@@ -297,9 +297,9 @@ public class FeedParaTi  extends Fragment implements  FeedContract.View{
         valueAnimator.cancel();
         data_feed.addAll(data);
         mRecyclerView.setMediaObjects(data_feed);
-       // if(App.getInstance().getMoreAds().size()>0)
-         //   insertAdsInMenuItems(data_feed,false);
-       // else
+        if(App.getInstance().getMoreAds().size()>0)
+            insertAdsInMenuItems(data_feed,false);
+        else
             feedAdapter.addData(data_feed);
         mRecyclerView.playVideo(true);
     }
@@ -318,12 +318,12 @@ public class FeedParaTi  extends Fragment implements  FeedContract.View{
         data_feed.clear();
         data_feed.addAll(data);
 
-       // if(App.getInstance().getMoreAds().size()>0)
-         //   insertAdsInMenuItems(data_feed,true);
-      //  else {
+        if(App.getInstance().getMoreAds().size()>0)
+           insertAdsInMenuItems(data_feed,true);
+        else {
             mRecyclerView.addMoreMediaObjects(data_feed);
             feedAdapter.addMoreFeed(data_feed);
-       // }
+        }
 
     }
 

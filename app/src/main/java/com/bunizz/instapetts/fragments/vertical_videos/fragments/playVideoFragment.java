@@ -168,13 +168,16 @@ public class playVideoFragment extends Fragment implements playVideoContract.Vie
 
         public void stop_videos(){
             if(mFragmentList!=null) {
-                ((playVideoItem) mFragmentList.get(CURRENT_POSITION)).stopPlayers();
+                if(mFragmentList.size()>0)
+                   ((playVideoItem) mFragmentList.get(CURRENT_POSITION)).stopPlayers();
             }
         }
 
         public void reanudar(){
-            if(mFragmentList!=null)
-               ((playVideoItem )mFragmentList.get(CURRENT_POSITION)).reanudarPLayers();
+            if(mFragmentList!=null) {
+                if(mFragmentList.size()>0)
+                   ((playVideoItem) mFragmentList.get(CURRENT_POSITION)).reanudarPLayers();
+            }
         }
         @Override
         public int getItemCount() {
@@ -182,9 +185,8 @@ public class playVideoFragment extends Fragment implements playVideoContract.Vie
         }
     }
     public void reanudarPLayers(){
-        Log.e("ESTATUS_ACTIVITY","release players");
         if(adapter!= null)
-           adapter.reanudar();
+            adapter.reanudar();
     }
 
 }
