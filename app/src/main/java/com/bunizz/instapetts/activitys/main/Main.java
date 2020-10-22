@@ -332,7 +332,7 @@ public class Main extends AppCompatActivity implements
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        ButterKnife.bind(this);Log.e("ID_FROM_WEB","-->" + App.read(PREFERENCES.ID_USER_FROM_WEB,0));
+        ButterKnife.bind(this);
         activity = this;
         if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
             jobsServices = new JobsServices(this);
@@ -706,13 +706,14 @@ public class Main extends AppCompatActivity implements
 
     private synchronized void changeOfInstance(int intanceType,Bundle bundle,boolean back) {
         saveFragment();
-        Log.e("CURRENT_FRAGMENT_C","->"+mCurrentFragment.getInstanceType());
+        Log.e("CURRENT_FRAGMENT_C","->xxxxx"+mCurrentFragment.getInstanceType() + "/" + intanceType);
         if(mCurrentFragment!=null){
             if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PLAY_VIDEOS){
                 Log.e("CURRENT_FRAGMENT_C","->"+mCurrentFragment.getInstanceType());
                 ((ViewPagerVideoFragment) mCurrentFragment.getFragment()).stop_videos();
             }
         }
+
 
         if(intanceType!=FragmentElement.INSTANCE_COMENTARIOS && intanceType!=FragmentElement.INSTANCE_EDIT_PROFILE_USER && intanceType != FragmentElement.INSTANCE_SIDE_MENU) {
             runOnUiThread(() -> root_bottom_nav.setVisibility(View.VISIBLE));
@@ -727,7 +728,7 @@ public class Main extends AppCompatActivity implements
             runOnUiThread(() -> tab_add_image.hide());
 
         if(mOldFragment!=null) {
-
+            Log.e("CURRENT_FRAGMENT_C","->aaaaaa"+mOldFragment.getInstanceType() + "/" + intanceType);
             if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_FEED) {
                 ((FeedViewPager) mOldFragment.getFragment()).stop_player();
             }
@@ -739,7 +740,7 @@ public class Main extends AppCompatActivity implements
 
         if (intanceType == FragmentElement.INSTANCE_FEED) {
             if (stack_feed.size() == 0) {
-                change_main(new FragmentElement<>("", FeedViewPager.newInstance(), FragmentElement.INSTANCE_LOGIN));
+                change_main(new FragmentElement<>("", FeedViewPager.newInstance(), FragmentElement.INSTANCE_FEED));
             } else {
                 change_main(stack_feed.pop());
             }
@@ -838,6 +839,12 @@ public class Main extends AppCompatActivity implements
                 changue_to_play_videos(new FragmentElement<>("", ViewPagerVideoFragment.newInstance(), FragmentElement.INSTANCE_PLAY_VIDEOS),bundle,back);
             } else {
                 changue_to_play_videos(stack_play_videos.pop(),bundle,back);
+            }
+        }
+
+        if(intanceType == FragmentElement.INSTANCE_FEED){
+            if(mCurrentFragment!=null){
+                ((FeedViewPager) mCurrentFragment.getFragment()).release_player();
             }
         }
 

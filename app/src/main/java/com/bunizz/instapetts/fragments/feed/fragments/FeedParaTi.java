@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -296,9 +297,9 @@ public class FeedParaTi  extends Fragment implements  FeedContract.View{
         valueAnimator.cancel();
         data_feed.addAll(data);
         mRecyclerView.setMediaObjects(data_feed);
-        if(App.getInstance().getMoreAds().size()>0)
-            insertAdsInMenuItems(data_feed,false);
-        else
+       // if(App.getInstance().getMoreAds().size()>0)
+         //   insertAdsInMenuItems(data_feed,false);
+       // else
             feedAdapter.addData(data_feed);
         mRecyclerView.playVideo(true);
     }
@@ -314,13 +315,16 @@ public class FeedParaTi  extends Fragment implements  FeedContract.View{
         {
             IS_ALL = true;
         }
-        ArrayList<Object> more_post = new ArrayList<>();
-        more_post.addAll(data);
-        mRecyclerView.addMoreMediaObjects(more_post);
-        if(App.getInstance().getMoreAds().size()>0)
-            insertAdsInMenuItems(more_post,true);
-        else
-            feedAdapter.addMoreFeed(more_post);
+        data_feed.clear();
+        data_feed.addAll(data);
+
+       // if(App.getInstance().getMoreAds().size()>0)
+         //   insertAdsInMenuItems(data_feed,true);
+      //  else {
+            mRecyclerView.addMoreMediaObjects(data_feed);
+            feedAdapter.addMoreFeed(data_feed);
+       // }
+
     }
 
     @Override
@@ -368,14 +372,17 @@ public class FeedParaTi  extends Fragment implements  FeedContract.View{
     @Override
     public void onResume() {
         super.onResume();
-        if(mRecyclerView!=null){}
-        // mRecyclerView.releasePlayer();
     }
 
 
     public void stop_player(){
         if(mRecyclerView!=null)
             mRecyclerView.onPausePlayer();
+    }
+
+    public void release_player(){
+        if(mRecyclerView!=null)
+            mRecyclerView.releasePlayer();
     }
 
 
@@ -394,12 +401,13 @@ public class FeedParaTi  extends Fragment implements  FeedContract.View{
             else{offset +=1;}
             index = index + offset;
         }
-        if(more)
+        if(more) {
+           Log.e("CURRENTX","-->"+current_data.size());
+            mRecyclerView.addMoreMediaObjects(current_data);
             feedAdapter.addMoreFeed(current_data);
+        }
         else
             feedAdapter.addData(current_data);
         refresh_feed.setRefreshing(false);
-
-        mRecyclerView.playVideo(true);
     }
 }

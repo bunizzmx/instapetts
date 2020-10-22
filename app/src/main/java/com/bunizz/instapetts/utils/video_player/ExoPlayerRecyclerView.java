@@ -76,6 +76,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     boolean AUTOPLAY=false;
     int currentPosition =0;
     int ID_POST =0;
+    String URL_TEMPH ="";
     /**
      * variable declaration
      */
@@ -181,6 +182,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 switch (playbackState) {
                     case Player.STATE_BUFFERING:
+                        Log.e("CURRENTX","-->yyyy"+ URL_TEMPH);
                         blink_text.setVisibility(VISIBLE);
                         time_video.setVisibility(GONE);
                         loading_video.setVisibility(VISIBLE);
@@ -307,6 +309,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                 PostBean data_parsed = (PostBean) mediaObjects.get(targetPosition);
                 ID_POST = data_parsed.getId_post_from_web();
                 String mediaUrl = data_parsed.getUrls_posts();
+                URL_TEMPH =mediaUrl;
                 if (mediaUrl != null) {
                     HlsMediaSource hlsMediaSource =
                             new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(mediaUrl));
@@ -382,14 +385,12 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     }
     public void releasePlayer() {
         if (videoPlayer != null) {
-            videoPlayer.release();
-            videoPlayer = null;
+            videoPlayer.setPlayWhenReady(true);
         }
-        viewHolderParent = null;
     }
     public void onPausePlayer() {
         if (videoPlayer != null) {
-            videoPlayer.stop();
+            videoPlayer.setPlayWhenReady(false);
         }
     }
     private void toggleVolume() {
@@ -441,6 +442,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     }
     public void addMoreMediaObjects(ArrayList<Object> mediaObjects) {
         this.mediaObjects.addAll(mediaObjects);
+        Log.e("CURRENTX","-->xx"+this.mediaObjects.size());
     }
     /**
      * Volume ENUM

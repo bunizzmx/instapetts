@@ -390,14 +390,16 @@ public class playVideoItem extends Fragment implements View.OnClickListener {
 
     public void onStart() {
         super.onStart();
-        if(fragmentVisible.isVisible(FragmentElement.INSTANCE_PLAY_VIDEOS))
-            createPlayers();
+      //  if(fragmentVisible.isVisible(FragmentElement.INSTANCE_PLAY_VIDEOS))
+         //   createPlayers();
+
+        Log.e("ESTATUS_ACTIVITYA","onStart");
 
     }
 
     public void onResume() {
         super.onResume();
-        Log.e("ESTATUS_ACTIVITY","ONRESUME");
+        Log.e("ESTATUS_ACTIVITYA","ONRESUME");
         if(fragmentVisible.isVisible(FragmentElement.INSTANCE_PLAY_VIDEOS)) {
             if(player == null) {
                 createPlayers();

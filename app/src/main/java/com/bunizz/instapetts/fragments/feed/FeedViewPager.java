@@ -38,6 +38,7 @@ import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.db.helpers.IdsUsersHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
+import com.bunizz.instapetts.fragments.camera.CameraStoryt;
 import com.bunizz.instapetts.fragments.feed.adapters.FeedAdapter;
 import com.bunizz.instapetts.fragments.feed.fragments.Feed;
 import com.bunizz.instapetts.fragments.feed.fragments.FeedParaTi;
@@ -381,7 +382,17 @@ public class FeedViewPager extends Fragment implements  FeedContract.View{
 
 
     public void stop_player(){
+        try {
+            ((FeedParaTi) adapter_pager.getItem(1)).stop_player();
+        }catch (Exception e){}
     }
+
+    public void release_player(){
+        try {
+            ((FeedParaTi) adapter_pager.getItem(1)).release_player();
+        }catch (Exception e){}
+    }
+
 
 
     private void insertAdsInMenuItems(ArrayList<Object>  data,boolean more) {
@@ -450,6 +461,9 @@ public class FeedViewPager extends Fragment implements  FeedContract.View{
         tab_seguidos.setTextSize(16);
         tab_seguidos.setTextColor(getActivity().getResources().getColor(R.color.primary));
     }
+
+
+
 
 }
 
