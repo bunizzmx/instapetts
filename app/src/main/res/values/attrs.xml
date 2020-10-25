@@ -543,4 +543,8 @@
         <attr name="liked" format="boolean"/>
         <attr name="anim_scale_factor" format="float"/>
     </declare-styleable>
+
+    <declare-styleable name="TintableImageView">
+        <attr name="tint" format="reference|color"/>
+    </declare-styleable>
 </resources>

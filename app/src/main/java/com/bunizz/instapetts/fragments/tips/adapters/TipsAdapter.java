@@ -232,6 +232,13 @@ public class TipsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 .placeholder(context.getResources().getDrawable(R.drawable.ic_holder))
                         .error(context.getResources().getDrawable(R.drawable.ic_holder)).into(hv.mediaCoverImage);
                 hv.fecha_tip.setText(App.getInstance().fecha_lenguaje_humano(data_parsed_video.getFecha_tip().replace("Z","").replace("T"," "),0));
+                hv.card_view_full.setOnClickListener(view -> {
+                    listener_video.StopVideo();
+                    Intent i = new Intent(context, PlayVideoActivity.class);
+                    i.putExtra("TYPE_PLAYER",0);
+                    i.putExtra("BEAN", Parcels.wrap(data_parsed_video));
+                    context.startActivity(i);
+                });
                 hv.root_multiple_image.setOnLongClickListener(v -> {
                     listener_video.StopVideo();
                     Intent i = new Intent(context, PlayVideoActivity.class);
@@ -508,6 +515,7 @@ CardView tipo_tip_notice;
         public ProgressBar progressBar;
         CardView tipo_tip_notice;
         TextView num_likes,num_views;
+        RelativeLayout card_view_full;
         public TipsHolderVideo(@NonNull View itemView) {
             super(itemView);
             tipo_tip_notice = itemView.findViewById(R.id.tipo_tip_notice);
@@ -522,6 +530,7 @@ CardView tipo_tip_notice;
             tip_notice_text = itemView.findViewById(R.id.tip_notice_text);
             num_likes = itemView.findViewById(R.id.num_likes);
             num_views = itemView.findViewById(R.id.num_views);
+            card_view_full = itemView.findViewById(R.id.card_view_full);
         }
     }
 

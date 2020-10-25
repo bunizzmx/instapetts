@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root_bottom_nav"
     android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true">
     <RelativeLayout
@@ -66,7 +67,7 @@
         android:layout_below="@+id/root_progres_publish"
         android:id="@+id/root_tabs"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="15"
         tools:ignore="DisableBaselineAlignment">
@@ -80,17 +81,16 @@
             android:background="?attr/selectableItemBackground">
             <ImageView
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
                 android:id="@+id/icon_feed_pet"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_home_pet"
                 tools:ignore="ContentDescription" />
            <TextView
-               android:visibility="gone"
+               android:textStyle="bold"
                android:id="@+id/text_feed_pet"
                android:layout_marginTop="3dp"
-               android:textColor="@color/black"
+               android:textColor="#A1A1A1"
                android:textSize="9dp"
                android:layout_below="@id/icon_feed_pet"
                android:layout_centerHorizontal="true"
@@ -99,23 +99,7 @@
                android:layout_height="wrap_content"/>
         </RelativeLayout>
 
-        <RelativeLayout
-            android:layout_gravity="center_vertical"
-            android:padding="10dp"
-            android:id="@+id/tab_instapetts_tv"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:background="?attr/selectableItemBackground">
-            <ImageView
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:id="@+id/icon_instapetts_tv"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_instapetts_tv"
-                tools:ignore="ContentDescription" />
-        </RelativeLayout>
+
         <RelativeLayout
 
             android:padding="10dp"
@@ -125,7 +109,6 @@
             android:layout_weight="3"
             android:background="?attr/selectableItemBackground">
             <ImageView
-                android:layout_centerVertical="true"
                 android:rotation="90"
                 android:layout_centerHorizontal="true"
                 android:id="@+id/icon_tips"
@@ -135,7 +118,6 @@
                 android:src="@drawable/ic_food_pet"
                 tools:ignore="ContentDescription" />
             <TextView
-                android:visibility="gone"
                 android:id="@+id/text_tips"
                 android:textStyle="bold"
                 android:layout_marginTop="3dp"
@@ -150,6 +132,33 @@
         <RelativeLayout
             android:layout_gravity="center_vertical"
             android:padding="10dp"
+            android:id="@+id/tab_instapetts_tv"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:background="?attr/selectableItemBackground">
+            <ImageView
+                android:layout_centerHorizontal="true"
+                android:id="@+id/icon_instapetts_tv"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_instapetts_tv"
+                tools:ignore="ContentDescription" />
+            <TextView
+                android:id="@+id/text_instapettv"
+                android:layout_marginTop="3dp"
+                android:textColor="@color/black"
+                android:textSize="9dp"
+                android:textStyle="bold"
+                android:layout_below="@id/icon_instapetts_tv"
+                android:layout_centerHorizontal="true"
+                android:text="@string/nav_instapettv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_gravity="center_vertical"
+            android:padding="10dp"
             android:id="@+id/tab_search_pet"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -157,7 +166,6 @@
             android:background="?attr/selectableItemBackground"
             >
             <ImageView
-                android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
                 android:id="@+id/icon_search_pet"
                 android:layout_width="20dp"
@@ -165,7 +173,6 @@
                 android:src="@drawable/ic_search"
                 tools:ignore="ContentDescription" />
             <TextView
-                android:visibility="gone"
                 android:id="@+id/text_search_pet"
                 android:textStyle="bold"
                 android:layout_marginTop="3dp"
@@ -190,7 +197,6 @@
             <com.bunizz.instapetts.utils.ImagenCircular
                 app:civ_border_width="2dp"
                 app:civ_border_color="@color/white"
-                android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
                 android:id="@+id/icon_profile_pet"
                 android:layout_width="25dp"
@@ -198,10 +204,8 @@
                 android:src="@drawable/ic_usuario"
                 tools:ignore="ContentDescription" />
             <TextView
-                android:visibility="gone"
                 android:id="@+id/text_profile_pet"
                 android:textStyle="bold"
-                android:layout_marginTop="3dp"
                 android:textColor="@color/black"
                 android:textSize="9dp"
                 android:layout_below="@id/icon_profile_pet"

@@ -119,9 +119,10 @@
     <string name="search">Buscar...</string>
 
     <string name="nav_home">Inicio</string>
+    <string name="nav_instapettv">InstapettsTv</string>
     <string name="nav_tips">Tips</string>
     <string name="nav_search">Buscar</string>
-    <string name="nav_perfil">Perfil</string>
+    <string name="nav_perfil">Yo</string>
 
 
     <string name="intro_title_1">Son especiales y lo sabemos</string>

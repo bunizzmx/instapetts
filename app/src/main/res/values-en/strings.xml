@@ -123,8 +123,8 @@
         <string name="nav_home">Home</string>
         <string name="nav_tips">Tips</string>
         <string name="nav_search">Search</string>
-        <string name="nav_perfil">Profile</string>
-
+        <string name="nav_perfil">Me</string>
+    <string name="nav_instapettv">InstapettsTv</string>
 
         <string name="intro_title_1">They are special and we know it</string>
         <string name="intro_body_1">That is why we developed Instapets for you, those who love their pets</string>

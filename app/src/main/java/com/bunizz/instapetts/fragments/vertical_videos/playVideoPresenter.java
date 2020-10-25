@@ -78,7 +78,6 @@ public class playVideoPresenter implements  playVideoContract.Presenter{
                         .subscribeWith(new DisposableSingleObserver<ResponsePlayVideos>() {
                             @Override
                             public void onSuccess(ResponsePlayVideos responsePost) {
-                                Log.e("play_videos","-->" + responsePost.getList_videos().size());
                                 if(!more)
                                   mView.showVideos(responsePost.getList_videos());
                                 else

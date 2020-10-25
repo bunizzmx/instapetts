@@ -146,7 +146,25 @@
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_marginRight="10dp"
+                android:background="?attr/selectableItemBackground"
+                android:id="@+id/card_view_full"
+                android:layout_width="50dp"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:background="#00FFFFFF"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:tint="@color/black"
+                    android:src="@drawable/ic_pantalla_completa"
+                    />
+            </RelativeLayout>
             <LinearLayout
+                android:layout_gravity="center_vertical"
                 android:layout_marginRight="20dp"
                 android:orientation="vertical"
                 android:layout_width="wrap_content"

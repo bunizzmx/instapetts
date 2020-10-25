@@ -33,28 +33,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <include layout="@layout/tollbar_profile"/>
-             <include layout="@layout/include_info_profile"></include>
+             <include layout="@layout/include_info_profile"/>
                 <com.bunizz.instapetts.utils.tabs2.SmartTabLayout
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_below="@+id/root_info_profile_include"
                     android:id="@+id/tabs_profile_propietary"
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:clipToPadding="false"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
-                    android:layout_marginBottom="10dp"
-                    app:stl_defaultTabTextColor="@color/black"
-                    app:stl_defaultTabTextHorizontalPadding="18dp"
-                    app:stl_dividerColor="#00FFFFFF"
+                    android:layout_height="90dp"
+                    app:stl_distributeEvenly="true"
+                    app:stl_dividerColor="@color/white"
                     app:stl_dividerThickness="0dp"
-                    app:stl_indicatorColor="#ECEBEB"
-                    app:stl_indicatorCornerRadius="18dp"
-                    app:stl_indicatorGravity="center"
-                    app:stl_indicatorInterpolation="smart"
-                    app:stl_indicatorThickness="36dp"
-                    app:stl_underlineColor="@color/colorPrimaryDark"
+                    app:stl_indicatorColor="@color/white"
+                    app:stl_indicatorThickness="0dp"
+                    app:stl_underlineColor="@color/white"
                     app:stl_underlineThickness="0dp"
                     />
             </RelativeLayout>

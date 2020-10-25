@@ -28,6 +28,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
@@ -43,6 +44,7 @@ import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
+import com.bunizz.instapetts.fragments.post.FragmentPostGaleryVideo;
 import com.bunizz.instapetts.fragments.profile.adapters.PetsPropietaryAdapter;
 import com.bunizz.instapetts.listeners.change_instance;
 import com.bunizz.instapetts.listeners.changue_fragment_parameters_listener;
@@ -263,7 +265,7 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
             petsPropietaryAdapter.setPets(PETS);
         adapter_pager = new ViewPagerAdapter(getChildFragmentManager());
         adapter_pager.addFragment(new FragmentPostGalery(), getContext().getString(R.string.post));
-        adapter_pager.addFragment(new FragmentPostGalery(), getContext().getString(R.string.only_videos));
+        adapter_pager.addFragment(new FragmentPostGaleryVideo(), getContext().getString(R.string.only_videos));
         adapter_pager.addFragment(new FragmentPostGalery(), getContext().getString(R.string.only_photos));
     }
 
@@ -483,6 +485,8 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         results.addAll(POSTS);
         if (frag instanceof FragmentPostGalery) {
             ((FragmentPostGalery) frag).setData_posts(results);
+        }else if(frag instanceof FragmentPostGaleryVideo){
+            ((FragmentPostGaleryVideo) frag).setData_posts(results);
         }
        if( IS_REFRESHING_REQUEST){
            listener_conexion.refreshedComplete();
@@ -501,6 +505,8 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         results.addAll(POSTS);
         if (frag instanceof FragmentPostGalery) {
             ((FragmentPostGalery) frag).setData_posts(results);
+        }else if(frag instanceof FragmentPostGaleryVideo){
+            ((FragmentPostGaleryVideo) frag).setData_posts(results);
         }
     }
 
@@ -543,10 +549,16 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         }
 
         public void addFragment(Fragment fragment, String title) {
-            ((FragmentPostGalery) fragment).setListener_pager(() -> POSITION_PAGER);
+            try {
+                ((FragmentPostGalery) fragment).setListener_pager(() -> POSITION_PAGER);
+            }catch (Exception e){
+                ((FragmentPostGaleryVideo) fragment).setListener_pager(() -> POSITION_PAGER);
+            }
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }
+
+
 
         @Override
         public CharSequence getPageTitle(int position) {
@@ -617,6 +629,27 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
             }
         });
         tabs_profile_propietary.setViewPager(viewpager_profile);
+        final LayoutInflater inflater = LayoutInflater.from(tabs_profile_propietary.getContext());
+        tabs_profile_propietary.setCustomTabView((container, position, adapter) -> {
+            ImageView icon = (ImageView) inflater.inflate(R.layout.custom_tab_icon1, container,
+                    false);
+            switch (position) {
+                case 0:
+                    icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_search_black));
+                    break;
+                case 1:
+                    icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_search_black));
+                    break;
+                case 2:
+                    icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_search_black));
+                    break;
+                default:
+                    throw new IllegalStateException("Invalid position: " + position);
+            }
+            return icon;
+        });
+
+
         spinky_loading_profile_info.setIndeterminateDrawable(drawable);
         spinky_loading_profile_info.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         loanding_preview_root.setVisibility(View.VISIBLE);

@@ -180,6 +180,9 @@ public class Main extends AppCompatActivity implements
     TextView text_search_pet;
     @BindView(R.id.text_profile_pet)
     TextView text_profile_pet;
+    @BindView(R.id.text_instapettv)
+    TextView text_instapettv;
+
 
     @BindView(R.id.root_progres_publish)
     RelativeLayout root_progres_publish;
@@ -1168,28 +1171,30 @@ public class Main extends AppCompatActivity implements
         icon_search_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_search));
         icon_instapetts_tv.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_instapetts_tv));
         icon_profile_pet.setBorderColor(getResources().getColor(R.color.white));
-        text_profile_pet.setTextColor(Color.BLACK);
-        text_tips.setTextColor(Color.BLACK);
-        text_search_pet.setTextColor(Color.BLACK);
-        text_feed_pet.setTextColor(Color.BLACK);
+        text_profile_pet.setTextColor(getResources().getColor(R.color.disabledd));
+        text_tips.setTextColor(getResources().getColor(R.color.disabledd));
+        text_search_pet.setTextColor(getResources().getColor(R.color.disabledd));
+        text_feed_pet.setTextColor(getResources().getColor(R.color.disabledd));
+        text_instapettv.setTextColor(getResources().getColor(R.color.disabledd));
 
         if(id == R.id.tap_tips) {
-            text_tips.setTextColor(this.getResources().getColor(R.color.primary));
+            text_tips.setTextColor(this.getResources().getColor(R.color.shadow_color));
             icon_tips.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_food_pet_black));
         }
         else if(id == R.id.tab_profile_pet){
-            text_profile_pet.setTextColor(this.getResources().getColor(R.color.primary));
+            text_profile_pet.setTextColor(this.getResources().getColor(R.color.shadow_color));
             icon_profile_pet.setBorderColor(getResources().getColor(R.color.primary));
         }
         else if(id == R.id.tab_feed) {
-            text_feed_pet.setTextColor(this.getResources().getColor(R.color.primary));
+            text_feed_pet.setTextColor(this.getResources().getColor(R.color.shadow_color));
             icon_feed_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_home_pet_black));
         }
         else if(id == R.id.tab_search_pet) {
-            text_search_pet.setTextColor(this.getResources().getColor(R.color.primary));
+            text_search_pet.setTextColor(this.getResources().getColor(R.color.shadow_color));
             icon_search_pet.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_search_black));
         }
         else if(id == R.id.tab_instapetts_tv) {
+            text_instapettv.setTextColor(this.getResources().getColor(R.color.shadow_color));
             icon_instapetts_tv.setImageDrawable(this.getResources().getDrawable(R.drawable.ic_instapetts_tv_w));
         }
 
