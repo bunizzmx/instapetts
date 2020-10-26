@@ -523,7 +523,17 @@ public class Main extends AppCompatActivity implements
             mCurrentFragment = new FragmentElement<>(null, ViewPagerVideoFragment.newInstance(), FragmentElement.INSTANCE_PLAY_VIDEOS, true);
             changue_to_play_videos(mCurrentFragment,null,false);
         }else{
-            changue_to_play_videos(stack_play_videos.pop(),null,false);
+            if(stack_play_videos!=null){
+                if(stack_play_videos.size()>0)
+                    changue_to_play_videos(stack_play_videos.pop(),null,false);
+                else{
+                    mCurrentFragment = new FragmentElement<>(null, ViewPagerVideoFragment.newInstance(), FragmentElement.INSTANCE_PLAY_VIDEOS, true);
+                    changue_to_play_videos(mCurrentFragment,null,false);
+                }
+            }else{
+                mCurrentFragment = new FragmentElement<>(null, ViewPagerVideoFragment.newInstance(), FragmentElement.INSTANCE_PLAY_VIDEOS, true);
+                changue_to_play_videos(mCurrentFragment,null,false);
+            }
         }
     }
 
@@ -709,14 +719,10 @@ public class Main extends AppCompatActivity implements
 
     private synchronized void changeOfInstance(int intanceType,Bundle bundle,boolean back) {
         saveFragment();
-        Log.e("CURRENT_FRAGMENT_C","->xxxxx"+mCurrentFragment.getInstanceType() + "/" + intanceType);
         if(mCurrentFragment!=null){
-            if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PLAY_VIDEOS){
-                Log.e("CURRENT_FRAGMENT_C","->"+mCurrentFragment.getInstanceType());
+            if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PLAY_VIDEOS)
                 ((ViewPagerVideoFragment) mCurrentFragment.getFragment()).stop_videos();
-            }
         }
-
 
         if(intanceType!=FragmentElement.INSTANCE_COMENTARIOS && intanceType!=FragmentElement.INSTANCE_EDIT_PROFILE_USER && intanceType != FragmentElement.INSTANCE_SIDE_MENU) {
             runOnUiThread(() -> root_bottom_nav.setVisibility(View.VISIBLE));
@@ -731,7 +737,6 @@ public class Main extends AppCompatActivity implements
             runOnUiThread(() -> tab_add_image.hide());
 
         if(mOldFragment!=null) {
-            Log.e("CURRENT_FRAGMENT_C","->aaaaaa"+mOldFragment.getInstanceType() + "/" + intanceType);
             if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_FEED) {
                 ((FeedViewPager) mOldFragment.getFragment()).stop_player();
             }
@@ -739,7 +744,6 @@ public class Main extends AppCompatActivity implements
             if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS)
                 ((FragmentTipsViewpager) mOldFragment.getFragment()).stop_player();
         }
-
 
         if (intanceType == FragmentElement.INSTANCE_FEED) {
             if (stack_feed.size() == 0) {

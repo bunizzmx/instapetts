@@ -181,12 +181,6 @@
           android:text="Apagar Comentarios"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"/>
-      <TextView
-          android:layout_marginTop="10dp"
-          android:textSize="14dp"
-          android:text="Los usuarios no podran hacer comentarios en esta publicacion"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"/>
     </LinearLayout>
     <Switch
         android:theme="@style/SwitchCompatTheme"
