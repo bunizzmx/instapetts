@@ -91,8 +91,6 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     @BindView(R.id.image_profile_property_pet)
     ImagenCircular image_profile_property_pet;
 
-    @BindView(R.id.tabs_profile_propietary)
-    SmartTabLayout tabs_profile_propietary;
 
     @BindView(R.id.viewpager_profile)
     ViewPager viewpager_profile;
@@ -120,6 +118,17 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
 
     @BindView(R.id.num_followed)
     TextView num_followed;
+
+    @BindView(R.id.icon_filter_all)
+    ImageView icon_filter_all;
+
+    @BindView(R.id.icon_filter_images)
+    ImageView icon_filter_images;
+
+    @BindView(R.id.icon_filter_videos)
+    ImageView icon_filter_videos;
+
+
 
 
     @BindView(R.id.name_property_pet)
@@ -178,6 +187,27 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
         i = new Intent(getActivity(), SideMenusActivities.class);
         i.putExtra("TYPE_MENU",2);
         startActivity(i);
+    }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.filter_all)
+    void filter_all() {
+        repaint_tab(R.id.filter_all);
+       viewpager_profile.setCurrentItem(0);
+    }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.filter_videos)
+    void filter_videos() {
+        repaint_tab(R.id.filter_videos);
+        viewpager_profile.setCurrentItem(1);
+    }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.filter_images)
+    void filter_images() {
+        repaint_tab(R.id.filter_images);
+        viewpager_profile.setCurrentItem(2);
     }
 
     @SuppressLint("MissingPermission")
@@ -305,8 +335,8 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        Log.e("ESTATUS_PROIFLE","onViewCreated");
         App.write(PREFERENCES.OPEN_POST_ADVANCED_FROM,1);
+        repaint_tab(R.id.filter_all);
         title_toolbar.setText(App.read(PREFERENCES.NAME_USER,"-"));
         icon_toolbar.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_settings));
         list_pets_propietary.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
@@ -612,12 +642,29 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
 
             @Override
             public void onPageSelected(int position) {
+
+                switch (position){
+                    case 0:
+                        repaint_tab(R.id.filter_all);
+                        break;
+                    case 1:
+                        repaint_tab(R.id.filter_videos);
+                        break;
+                    case 2:
+                        repaint_tab(R.id.filter_images);
+                        break;
+                }
                 POSITION_PAGER = position;
                 Fragment frag = adapter_pager.getItem(POSITION_PAGER);
                 if (frag instanceof FragmentPostGalery) {
                     if(!((FragmentPostGalery) frag).isDataAdded()) {
                         if(!App.read(PREFERENCES.MODO_INVITADO,false))
-                          presenter.getPostUser(true, App.read(PREFERENCES.ID_USER_FROM_WEB, 0), POSITION_PAGER);
+                           presenter.getPostUser(true, App.read(PREFERENCES.ID_USER_FROM_WEB, 0), POSITION_PAGER);
+                    }
+                }else  if(frag instanceof FragmentPostGaleryVideo){
+                    if(!((FragmentPostGaleryVideo) frag).isDataAdded()) {
+                        if(!App.read(PREFERENCES.MODO_INVITADO,false))
+                            presenter.getPostUser(true, App.read(PREFERENCES.ID_USER_FROM_WEB, 0), POSITION_PAGER);
                     }
                 }
 
@@ -628,28 +675,6 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
 
             }
         });
-        tabs_profile_propietary.setViewPager(viewpager_profile);
-        final LayoutInflater inflater = LayoutInflater.from(tabs_profile_propietary.getContext());
-        tabs_profile_propietary.setCustomTabView((container, position, adapter) -> {
-            ImageView icon = (ImageView) inflater.inflate(R.layout.custom_tab_icon1, container,
-                    false);
-            switch (position) {
-                case 0:
-                    icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_search_black));
-                    break;
-                case 1:
-                    icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_search_black));
-                    break;
-                case 2:
-                    icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_search_black));
-                    break;
-                default:
-                    throw new IllegalStateException("Invalid position: " + position);
-            }
-            return icon;
-        });
-
-
         spinky_loading_profile_info.setIndeterminateDrawable(drawable);
         spinky_loading_profile_info.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         loanding_preview_root.setVisibility(View.VISIBLE);
@@ -687,5 +712,26 @@ public class FragmentProfileUserPet extends Fragment implements  ProfileUserCont
             }
         });
     }
+    public void repaint_tab(int id){
+        icon_filter_all.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_grid));
+        icon_filter_images.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_paisaje));
+        icon_filter_videos.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_tv));
+        switch (id) {
+            case R.id.filter_all:
+                icon_filter_all.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_grid_black));
+                break;
+            case R.id.filter_images:
+                icon_filter_images.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_paisaje_black));
+                break;
+            case R.id.filter_videos:
+                icon_filter_videos.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_tv_black));
+                break;
+            default:
+
+        }
+    }
+
 }
+
+
 

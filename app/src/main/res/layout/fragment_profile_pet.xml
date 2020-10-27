@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    >
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white">
     <com.google.android.material.appbar.AppBarLayout
         android:background="@color/white"
         android:id="@+id/appbar"
@@ -34,23 +33,61 @@
                 android:layout_height="wrap_content">
                 <include layout="@layout/tollbar_profile"/>
              <include layout="@layout/include_info_profile"/>
-                <com.bunizz.instapetts.utils.tabs2.SmartTabLayout
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
+                <LinearLayout
                     android:layout_below="@+id/root_info_profile_include"
-                    android:id="@+id/tabs_profile_propietary"
-                    xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
-                    android:layout_height="90dp"
-                    app:stl_distributeEvenly="true"
-                    app:stl_dividerColor="@color/white"
-                    app:stl_dividerThickness="0dp"
-                    app:stl_indicatorColor="@color/white"
-                    app:stl_indicatorThickness="0dp"
-                    app:stl_underlineColor="@color/white"
-                    app:stl_underlineThickness="0dp"
-                    />
+                    android:weightSum="3"
+                    android:layout_height="50dp">
+                    <RelativeLayout
+                        android:layout_gravity="center_vertical"
+                        android:padding="10dp"
+                        android:id="@+id/filter_all"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="?attr/selectableItemBackground">
+                        <ImageView
+                            android:layout_centerHorizontal="true"
+                            android:id="@+id/icon_filter_all"
+                            android:layout_width="23dp"
+                            android:layout_height="23dp"
+                            android:src="@drawable/ic_grid"
+                            tools:ignore="ContentDescription" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_gravity="center_vertical"
+                        android:padding="10dp"
+                        android:id="@+id/filter_videos"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="?attr/selectableItemBackground">
+                        <ImageView
+                            android:layout_centerHorizontal="true"
+                            android:id="@+id/icon_filter_videos"
+                            android:layout_width="23dp"
+                            android:layout_height="23dp"
+                            android:src="@drawable/ic_paisaje"
+                            tools:ignore="ContentDescription" />
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_gravity="center_vertical"
+                        android:padding="10dp"
+                        android:id="@+id/filter_images"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="?attr/selectableItemBackground">
+                        <ImageView
+                            android:layout_centerHorizontal="true"
+                            android:id="@+id/icon_filter_images"
+                            android:layout_width="23dp"
+                            android:layout_height="23dp"
+                            android:src="@drawable/ic_tv"
+                            tools:ignore="ContentDescription" />
+                    </RelativeLayout>
+                </LinearLayout>
             </RelativeLayout>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>

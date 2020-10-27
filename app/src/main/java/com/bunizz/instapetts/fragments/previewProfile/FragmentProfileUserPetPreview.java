@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -34,6 +35,7 @@ import com.bunizz.instapetts.constantes.PREFERENCES;
 import com.bunizz.instapetts.db.helpers.PetHelper;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.post.FragmentPostGalery;
+import com.bunizz.instapetts.fragments.post.FragmentPostGaleryVideo;
 import com.bunizz.instapetts.fragments.profile.adapters.PetsPropietaryAdapter;
 import com.bunizz.instapetts.fragments.profile.ProfileUserContract;
 import com.bunizz.instapetts.listeners.change_instance;
@@ -66,9 +68,6 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
 
     @BindView(R.id.image_profile_property_pet)
     ImagenCircular image_profile_property_pet;
-
-    @BindView(R.id.tabs_profile_propietary)
-    SmartTabLayout tabs_profile_propietary;
 
     @BindView(R.id.viewpager_profile)
     ViewPager viewpager_profile;
@@ -112,6 +111,16 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
 
     @BindView(R.id.label_lista_mascotas)
     TextView label_lista_mascotas;
+
+    @BindView(R.id.icon_filter_all)
+    ImageView icon_filter_all;
+
+    @BindView(R.id.icon_filter_images)
+    ImageView icon_filter_images;
+
+    @BindView(R.id.icon_filter_videos)
+    ImageView icon_filter_videos;
+
 
 
     conexion_listener listener_wifi ;
@@ -161,6 +170,27 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
      getActivity().onBackPressed();
     }
 
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.filter_all)
+    void filter_all() {
+        repaint_tab(R.id.filter_all);
+        viewpager_profile.setCurrentItem(0);
+    }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.filter_videos)
+    void filter_videos() {
+        repaint_tab(R.id.filter_videos);
+        viewpager_profile.setCurrentItem(1);
+    }
+
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.filter_images)
+    void filter_images() {
+        repaint_tab(R.id.filter_images);
+        viewpager_profile.setCurrentItem(2);
+    }
+
 
 
     @SuppressLint("MissingPermission")
@@ -185,7 +215,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         petsPropietaryAdapter = new PetsPropietaryAdapter(getContext());
         adapter_pager = new ViewPagerAdapter(getChildFragmentManager());
         adapter_pager.addFragment(new FragmentPostGalery(), getContext().getString(R.string.post));
-        adapter_pager.addFragment(new FragmentPostGalery(), getContext().getString(R.string.only_videos));
+        adapter_pager.addFragment(new FragmentPostGaleryVideo(), getContext().getString(R.string.only_videos));
         adapter_pager.addFragment(new FragmentPostGalery(), getContext().getString(R.string.only_photos));
         petHelper = new PetHelper(getContext());
         presenter = new PreviewProfileUserPresenter(this,getContext());
@@ -226,6 +256,7 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         App.write(PREFERENCES.OPEN_POST_ADVANCED_FROM,2);
+        repaint_tab(R.id.filter_all);
         open_saved.setVisibility(View.GONE);
         list_pets_propietary.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
         petsPropietaryAdapter.setListener(new open_sheet_listener() {
@@ -250,15 +281,29 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
 
             @Override
             public void onPageSelected(int position) {
+
+                switch (position){
+                    case 0:
+                        repaint_tab(R.id.filter_all);
+                        break;
+                    case 1:
+                        repaint_tab(R.id.filter_videos);
+                        break;
+                    case 2:
+                        repaint_tab(R.id.filter_images);
+                        break;
+                }
                 POSITION_PAGER = position;
                 Fragment frag = adapter_pager.getItem(POSITION_PAGER);
                 if (frag instanceof FragmentPostGalery) {
                     if(!((FragmentPostGalery) frag).isDataAdded()) {
-                        Log.e("DATOS_CARGADOS","YA_CARGUE_DATOS_AQUI : " + POSITION_PAGER);
-                        presenter.getPostUser(true, ID_USER_PARAMETER, POSITION_PAGER);
+                        if(!App.read(PREFERENCES.MODO_INVITADO,false))
+                            presenter.getPostUser(true, ID_USER_PARAMETER , POSITION_PAGER);
                     }
-                    else {
-                        Log.e("DATOS_CARGADOS", "YA_CARGUE_DATOS_AQUI" + POSITION_PAGER);
+                }else  if(frag instanceof FragmentPostGaleryVideo){
+                    if(!((FragmentPostGaleryVideo) frag).isDataAdded()) {
+                        if(!App.read(PREFERENCES.MODO_INVITADO,false))
+                            presenter.getPostUser(true, ID_USER_PARAMETER, POSITION_PAGER);
                     }
                 }
             }
@@ -268,7 +313,6 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
 
             }
         });
-        tabs_profile_propietary.setViewPager(viewpager_profile);
         spinky_loading_profile_info.setIndeterminateDrawable(drawable);
         spinky_loading_profile_info.setColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
         loanding_preview_root.setVisibility(View.VISIBLE);
@@ -443,9 +487,13 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         POSTS.addAll(posts);
         ArrayList<Object> results = new ArrayList<>();
         results.addAll(POSTS);
+
         if (frag instanceof FragmentPostGalery) {
             ((FragmentPostGalery) frag).setIdUser(ID_USER_PARAMETER);
             ((FragmentPostGalery) frag).setData_posts(results);
+        }else if(frag instanceof FragmentPostGaleryVideo){
+            ((FragmentPostGaleryVideo) frag).setIdUser(ID_USER_PARAMETER);
+            ((FragmentPostGaleryVideo) frag).setData_posts(results);
         }
     }
 
@@ -505,7 +553,11 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         }
 
         public void addFragment(Fragment fragment, String title) {
-            ((FragmentPostGalery) fragment).setListener_pager(() -> POSITION_PAGER);
+            try {
+                ((FragmentPostGalery) fragment).setListener_pager(() -> POSITION_PAGER);
+            }catch (Exception e){
+                ((FragmentPostGaleryVideo) fragment).setListener_pager(() -> POSITION_PAGER);
+            }
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }
@@ -513,6 +565,25 @@ public class FragmentProfileUserPetPreview extends Fragment implements  ProfileU
         @Override
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
+        }
+    }
+
+    public void repaint_tab(int id){
+        icon_filter_all.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_grid));
+        icon_filter_images.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_paisaje));
+        icon_filter_videos.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_tv));
+        switch (id) {
+            case R.id.filter_all:
+                icon_filter_all.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_grid_black));
+                break;
+            case R.id.filter_images:
+                icon_filter_images.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_paisaje_black));
+                break;
+            case R.id.filter_videos:
+                icon_filter_videos.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_tv_black));
+                break;
+            default:
+
         }
     }
 }

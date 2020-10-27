@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,6 +68,10 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
 
     @BindView(R.id.location_user)
     TextView location_user;
+
+    @BindView(R.id.layout_posicion)
+    LinearLayout layout_posicion;
+
 
     @BindView(R.id.caracteres_share_post)
     TextView caracteres_share_post;
@@ -290,10 +295,12 @@ public class FragmentSharePost extends Fragment implements  SharePostContract.Vi
 
     @Override
     public void showLocation(String address) {
-        if(!address.equals("INVALID"))
-          location_user.setText(address);
+        if(!address.equals("INVALID")) {
+            layout_posicion.setVisibility(View.VISIBLE);
+            location_user.setText(address);
+        }
         else
-            location_user.setText(getContext().getString(R.string.no_available));
+            layout_posicion.setVisibility(View.GONE);
     }
 
     private void beginUploadInBackground(ArrayList<String> filePaths,boolean is_video) {

@@ -85,7 +85,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
 
     @BindView(R.id.changue_to_videos)
     RelativeLayout changue_to_videos;
-    String outputPath =  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + "Instapetts/"+"INSTAPETS_" + UUID.randomUUID() + ".mp4";
+    String outputPath ="";
 
     int CROP_REQUEST = 200;
 
@@ -130,7 +130,7 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
         stack_crop_video = new Stack<>();
         stack_crop_images = new Stack<>();
         stack_share = new Stack<>();
-
+        outputPath = make_uri_video();
 
         Intent intent = getIntent();
 
@@ -525,5 +525,44 @@ public class ShareActivity extends AppCompatActivity implements changue_fragment
     }
 
 
+
+    public String  make_uri_video(){
+       File file;
+        if(isExternalStorageWritable()){
+            Log.e("MEMORIA_EXTERNA","si");
+            file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator + "Instapetts/"+"INSTAPETS_"  + UUID.randomUUID() + ".mp4");
+            if (!file.exists()) {
+                file.mkdir();
+            }
+            file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath() + File.separator +  "Instapetts/"+"INSTAPETS_"  + UUID.randomUUID() + ".mp4");
+
+            if(!file.exists()) {
+                Log.e("MEMORIA_EXTERNA","el archivo no se creo");
+                file = new File(getApplication().getFilesDir() + File.separator + "Instapetts/");
+                if (!file.exists()) {
+                    file.mkdir();
+                }
+                file = new File(getApplication().getFilesDir() + File.separator + "Instapetts/" + File.separator + "INSTAPETS_"  + UUID.randomUUID() + ".mp4");
+            }
+
+        }else{
+            Log.e("MEMORIA_EXTERNA","no");
+            file = new File(getApplication().getFilesDir() + File.separator + "Instapetts/");
+            if (!file.exists()) {
+                file.mkdir();
+            }
+            file = new File(getApplication().getFilesDir() + File.separator + "Instapetts/" + File.separator +"INSTAPETS_"  + UUID.randomUUID() + ".mp4");
+        }
+
+        return  file.getAbsolutePath();
+    }
+
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
 
 }
