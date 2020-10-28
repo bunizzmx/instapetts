@@ -16,7 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <FrameLayout
-                android:layout_above="@+id/root_bottom_nav"
                 android:id="@+id/root_main"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
