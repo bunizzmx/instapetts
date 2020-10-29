@@ -1,5 +1,6 @@
 package com.bunizz.instapetts.utils.dilogs;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,6 +21,7 @@ import com.bunizz.instapetts.fragments.wizardPets.PetTtype;
 import com.bunizz.instapetts.fragments.wizardPets.adapters.TypePetsAdapter;
 import com.bunizz.instapetts.listeners.change_instance_wizard;
 import com.bunizz.instapetts.listeners.process_save_pet_listener;
+import com.bunizz.instapetts.utils.ProgressCircle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
 
 /**
  * Created by Tony Zaitoun on 5/14/2016.
@@ -58,6 +62,7 @@ public class DialogChangeTypePet extends BaseAlertDialog{
         dialogView = inflater.inflate(R.layout.dialog_change_typepet, null);
         list_type_pet = dialogView.findViewById(R.id.list_type_pet);
         close_dialog = dialogView.findViewById(R.id.close_dialog);
+
         close_dialog.setOnClickListener(view -> dismiss());
         list_type_pet.setLayoutManager(new GridLayoutManager(context,3));
         adapter = new TypePetsAdapter(getContext());

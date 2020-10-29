@@ -33,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
+            android:textColor="@color/black"
             android:textSize="12dp"
             android:layout_marginTop="5dp"
             android:id="@+id/body_notification"
@@ -46,6 +47,7 @@
         android:textSize="10dp"
         android:textStyle="bold"
         android:text="-"
+        android:textColor="@color/black"
         android:id="@+id/fecha_notificacion"
         android:layout_marginLeft="10dp"
         android:layout_below="@+id/body_title_notification"

@@ -1,6 +1,7 @@
 package com.bunizz.instapetts.fragments.vertical_videos;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.vertical_videos.fragments.playVideoFragment;
+import com.bunizz.instapetts.listeners.isMyFragmentVisibleListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -53,6 +55,8 @@ public class ViewPagerVideoFragment extends Fragment  {
 
     @BindView(R.id.tab_para_ti)
     TextView tab_para_ti;
+
+    isMyFragmentVisibleListener fragmentVisible;
 
     @SuppressLint("MissingPermission")
     @OnClick(R.id.tab_seguidos)
@@ -101,13 +105,16 @@ public class ViewPagerVideoFragment extends Fragment  {
         scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
             public void run() {
                 runOnUiThread(() -> {
-                    Log.e("REFRESH_MY_AD","si");
-                    adRequest = new AdRequest.Builder().build();
-                    mAdView.loadAd(adRequest);
+                    if(fragmentVisible!=null){
+                        if(fragmentVisible.isVisible(FragmentElement.INSTANCE_PLAY_VIDEOS)){
+                            Log.e("REFRESH_MY_AD","si");
+                            adRequest = new AdRequest.Builder().build();
+                            mAdView.loadAd(adRequest);
+                        }
+                    }
                 });
             }
-
-        }, 0, 60, TimeUnit.SECONDS);
+        }, 0, 40, TimeUnit.SECONDS);
     }
 
 
@@ -176,4 +183,9 @@ public class ViewPagerVideoFragment extends Fragment  {
             ((playVideoFragment)adapter_pager.getItem(0)).reanudarPLayers();
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        fragmentVisible = (isMyFragmentVisibleListener)context;
+    }
 }

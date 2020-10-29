@@ -983,7 +983,7 @@ public class Main extends AppCompatActivity implements
 
                 if (FROM_PUSH == 1) {
                     repaint_nav(R.id.tab_feed);
-                    changeOfInstance(FragmentElement.INSTANCE_FEED, null, false);
+                    changeOfInstance(FragmentElement.INSTANCE_FEED, null, true);
                 } else {
                     if (mOldFragment != null) {
                         // SI EL VIEJO FRAGMENT ES DE TIPS SE PAUSA LA REPRODUCCION
@@ -991,23 +991,25 @@ public class Main extends AppCompatActivity implements
                               ((FragmentTipsViewpager) mOldFragment.getFragment()).stop_player();
                         // SI ESTAMOS EN EL PERFIL DE UN USUARIO Y ANTES ESTABAMOS EN EL FEED NOS REGRESAMOS AL FEED
                         else if(mOldFragment.getInstanceType() == FragmentElement.INSTANCE_FEED && mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PREVIEW_PROFILE)
-                            changeOfInstance(FragmentElement.INSTANCE_FEED,null,false);
+                            changeOfInstance(FragmentElement.INSTANCE_FEED,null,true);
                         else  if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_TIPS) {
                                 repaint_nav(R.id.tap_tips);
-                                changeOfInstance(FragmentElement.INSTANCE_TIPS, null, false);
+                                changeOfInstance(FragmentElement.INSTANCE_TIPS, null, true);
                             } else if(mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PLAY_VIDEOS && mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_PLAY_VIDEOS)
                                 finish();
+                        else if(mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SIDE_MENU)
+                                     changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, true);
 
                         else {
                             repaint_nav(R.id.tab_instapetts_tv);
-                            changeOfInstance(FragmentElement.INSTANCE_PLAY_VIDEOS, null, false);
+                            changeOfInstance(FragmentElement.INSTANCE_PLAY_VIDEOS, null, true);
                         }
 
                     }else{
                          // SI EL FRAGMENTO QUE ESTA ACTUAL ES UN DETALLE DE TIP ME REGRESO A LA VISTA PRINCIPAL DE TIPS
                         if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_TIP_DETAIL) {
                             repaint_nav(R.id.tap_tips);
-                            changeOfInstance(FragmentElement.INSTANCE_TIPS, null, false);
+                            changeOfInstance(FragmentElement.INSTANCE_TIPS, null, true);
                         }
                         // SI ESTOY EN LA BUSQUEDA DE POST O USUARIOS O EN UNA VISTA AVAZADA DE LAS PUBLICACIONES
                         else if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH || mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_GET_POSTS_PUBLICS_ADVANCED) {
@@ -1017,7 +1019,7 @@ public class Main extends AppCompatActivity implements
                             // SI EL FRAGMENT QUE ESTABA ANTES ES DEL PERFIL DEL USUARIO SE REGRESA ALLI
                             if (mOldFragment.getInstanceType() == FragmentElement.INSTANCE_PROFILE_PET) {
                                 repaint_nav(R.id.tab_profile_pet);
-                                changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, false);
+                                changeOfInstance(FragmentElement.INSTANCE_PROFILE_PET, null, true);
                             } else {
                                 if (mCurrentFragment.getInstanceType() == FragmentElement.INSTANCE_SEARCH) {
                                     changeOfInstance(FragmentElement.INSTANCE_GET_POSTS_PUBLICS, null, true);

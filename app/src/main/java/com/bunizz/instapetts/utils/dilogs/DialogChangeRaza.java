@@ -1,5 +1,6 @@
 package com.bunizz.instapetts.utils.dilogs;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -7,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
 import com.bunizz.instapetts.R;
@@ -16,6 +18,7 @@ import com.bunizz.instapetts.fragments.wizardPets.adapters.SearchRazaAdapter;
 import com.bunizz.instapetts.fragments.wizardPets.adapters.TypePetsAdapter;
 import com.bunizz.instapetts.listeners.change_instance_wizard;
 import com.bunizz.instapetts.listeners.process_save_pet_listener;
+import com.bunizz.instapetts.utils.ProgressCircle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,11 +44,17 @@ public class DialogChangeRaza extends BaseAlertDialog{
     process_save_pet_listener listener_pet_config;
     ArrayList<RazaBean> razaBeans = new ArrayList<>();
     ImageView close_dialog;
+    final ValueAnimator valueAnimator = ValueAnimator.ofInt(1,360);
+    ProgressCircle cirlce_progress;
     public ArrayList<RazaBean> getRazaBeans() {
         return razaBeans;
     }
 
     public void setRazaBeans(ArrayList<RazaBean> razaBeans) {
+        if(cirlce_progress!=null)
+            cirlce_progress.setVisibility(View.GONE);
+        if(valueAnimator!=null)
+            valueAnimator.end();
         this.razaBeans.clear();
         this.razaBeans.addAll(razaBeans);
         adapter.setData(razaBeans,"");
@@ -65,6 +74,15 @@ public class DialogChangeRaza extends BaseAlertDialog{
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this.context);
         LayoutInflater inflater = LayoutInflater.from(this.context);
         dialogView = inflater.inflate(R.layout.dialog_change_typepet, null);
+        cirlce_progress = dialogView.findViewById(R.id.cirlce_progress);
+        cirlce_progress.setVisibility(View.VISIBLE);
+        valueAnimator.setInterpolator(new LinearInterpolator());
+        valueAnimator.setDuration(2000);
+        valueAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        valueAnimator.addUpdateListener(animation -> {
+            cirlce_progress.setValue((Integer) animation.getAnimatedValue());
+        });
+        valueAnimator.start();
         list_type_pet = dialogView.findViewById(R.id.list_type_pet);
         close_dialog = dialogView.findViewById(R.id.close_dialog);
         close_dialog.setOnClickListener(view -> dismiss());
@@ -106,6 +124,10 @@ public class DialogChangeRaza extends BaseAlertDialog{
     @Override
     public void dismiss(){
         if(!isLocked){
+            if(cirlce_progress!=null)
+                cirlce_progress.setVisibility(View.GONE);
+            if(valueAnimator!=null)
+                valueAnimator.end();
             dialog.dismiss();
         }
     }

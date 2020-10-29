@@ -87,7 +87,7 @@
                             android:layout_marginLeft="5dp"
                             android:id="@+id/pet_name_profile"
                             android:fontFamily="@font/avenir_black"
-                            android:textSize="18dp"
+                            android:textSize="16dp"
                             android:textColor="@color/black"
                             android:text="-"
                             android:layout_gravity="center_horizontal"
