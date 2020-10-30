@@ -35,6 +35,7 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.activitys.camera_history.CameraHistoryActivity;
 import com.bunizz.instapetts.activitys.login.LoginActivity;
+import com.bunizz.instapetts.activitys.record.RecordActivity;
 import com.bunizz.instapetts.activitys.searchqr.QrSearchActivity;
 import com.bunizz.instapetts.activitys.share_post.ShareActivity;
 import com.bunizz.instapetts.activitys.side_menus_activities.SideMenusActivities;
@@ -96,10 +97,6 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.internal.IStatusCallback;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Task;
-import com.google.android.play.core.review.ReviewInfo;
-import com.google.android.play.core.review.ReviewManager;
-import com.google.android.play.core.review.ReviewManagerFactory;
-import com.google.android.play.core.tasks.OnFailureListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -234,7 +231,6 @@ public class Main extends AppCompatActivity implements
     Bundle b_from_push = new Bundle();
     JobsServices jobsServices;
     private AddressResultReceiver resultReceiver;
-    ReviewManager manager_rate ;
     boolean IS_COMMENTS_OPEN=false;
     private static final int RC_SIGN_IN = 9001;
     Activity activity;
@@ -287,7 +283,9 @@ public class Main extends AppCompatActivity implements
     @SuppressLint({"MissingPermission", "CheckResult"})
     @OnClick(R.id.tab_add_image)
     void tab_add_image() {
-        if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
+        Intent i = new Intent(Main.this, RecordActivity.class);
+        startActivityForResult(i, NEW_POST_REQUEST);
+      /*  if(!App.read(PREFERENCES.MODO_INVITADO,false)) {
             rxPermissions
                     .request(Manifest.permission.READ_EXTERNAL_STORAGE,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -308,7 +306,7 @@ public class Main extends AppCompatActivity implements
         }else{
             View v = findViewById(R.id.root_main);
             SnackBar.info(v, R.string.no_post_invitado, SnackBar.LENGTH_LONG).show();
-        }
+        }*/
     }
 
     @SuppressLint("MissingPermission")
@@ -464,42 +462,6 @@ public class Main extends AppCompatActivity implements
 
         if(App.read(PREFERENCES.PRIMER_USUARIO_INVITADO,false)){
             show_dialog_first_user();
-        }
-
-        if(!App.read(PREFERENCES.DATE_OF_USE,App.formatDateSimple(new Date())).equals(App.formatDateSimple(new Date()))){
-            int num_opens = App.read(PREFERENCES.COUNTER_OPEN_APP,0);
-            App.write(PREFERENCES.COUNTER_OPEN_APP,num_opens +1);
-        }
-        if(App.read(PREFERENCES.COUNTER_OPEN_APP,0) >=3 && App.read(PREFERENCES.RATE_APP,false)== false){
-            Log.e("ESTATUS_RATE","lainch rate");
-            ReviewManager manager = ReviewManagerFactory.create(this);
-            com.google.android.play.core.tasks.Task<ReviewInfo> request = manager.requestReviewFlow();
-            request.addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Log.e("ESTATUS_RATE","successful");
-                    // We can get the ReviewInfo object
-                    ReviewInfo reviewInfo = task.getResult();
-                    com.google.android.play.core.tasks.Task<Void> flow = manager.launchReviewFlow(activity, reviewInfo);
-                    flow.addOnCompleteListener(taskx -> {
-                        App.write(PREFERENCES.RATE_APP,true);
-                        Log.e("ESTATUS_RATE","CALIFICACION EXITOSA" );
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(Exception e) {
-                            App.write(PREFERENCES.RATE_APP,true);
-                            Log.e("ESTATUS_RATE","CALIFICACION ERRONIA" + e.getMessage() );
-                        }
-                    });
-                } else {
-                    Log.e("ESTATUS_RATE","errorx: " + task.getException().getMessage());
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(Exception e) {
-                    Log.e("ESTATUS_RATE","falla : " + e.getMessage());
-                }
-            });
         }
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         setupFirstFragment();

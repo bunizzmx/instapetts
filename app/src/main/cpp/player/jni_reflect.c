@@ -10,7 +10,8 @@
 
 void jni_reflect_java_class(JavaClass ** p_jc, JNIEnv *env) {
     JavaClass* java_class = malloc(sizeof(JavaClass));
-    jclass player_class = (*env)->FindClass(env, "com/buniz/instapetts/utils/trinity/editor/VideoEditor");
+
+    jclass player_class = (*env)->FindClass(env, "com/bunizz/instapetts/utils/trinity/editor/VideoEditor");
     java_class->player_onPlayStatusChanged = (*env)->GetMethodID(env, player_class, "onPlayStatusChanged", "(I)V");
     java_class->player_onPlayError = (*env)->GetMethodID(env, player_class, "onPlayError", "(I)V");
     (*env)->DeleteLocalRef(env, player_class);

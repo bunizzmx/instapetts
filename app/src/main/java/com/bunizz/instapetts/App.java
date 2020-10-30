@@ -122,12 +122,15 @@ public class App extends Application {
 
 
 
-        File file = new File(getCacheDir().getAbsolutePath() +  "/filter/");
+        File file = new File(getExternalCacheDir().getAbsolutePath() +  "/filter/");
         if (!file.exists()) {
             Log.e("FILES_CACHE","filter no existe");
-            Log.e("CREO_CARPETA_VIDEO",getCacheDir().getAbsolutePath() +  "/filter/");
+            Log.e("CREO_CARPETA_VIDEO",getExternalCacheDir().getAbsolutePath() +  "/filter/");
             file.mkdirs();
-            copyAssets("filter", file.getAbsolutePath());
+            copies c = new copies(this,"filter", file.getAbsolutePath());
+            c.copyAssets(this,"filter", file.getAbsolutePath());
+
+           // copyAssets("filter", file.getAbsolutePath());
         }else{
             Log.e("FILES_CACHE","filter ya existe");
         }
@@ -137,7 +140,9 @@ public class App extends Application {
             Log.e("FILES_CACHE","effect no existe");
             Log.e("CREO_CARPETA_VIDEO",getExternalCacheDir().getAbsolutePath() +  "/effect");
             fileeffects.mkdirs();
-            copyAssets("effect", fileeffects.getAbsolutePath());
+            copies c = new copies(this,"effect", file.getAbsolutePath());
+            c.copyAssets(this,"filter", file.getAbsolutePath());
+            //copyAssets("effect", fileeffects.getAbsolutePath());
         }else{
             Log.e("FILES_CACHE","effect ya existe");
         }

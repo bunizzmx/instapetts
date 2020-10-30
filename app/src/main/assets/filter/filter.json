@@ -1,6 +1,6 @@
  [
     {
-      "name": "白皙",
+      "name": "Justa",
       "thumbnail": "baizan/thumbnail.jpg",
       "config": "baizan",
       "lut": "baizan/lut_117/lut_117.png",
@@ -8,7 +8,7 @@
       "downloadUrl": "https://videofactory.oss-cn-shanghai.aliyuncs.com/filter/baizan.zip"
     },
     {
-      "name": "白雪",
+      "name": "Bai Xue",
       "thumbnail": "baixue/thumbnail.jpg",
       "config": "baixue",
       "lut": "baixue/snow/snow.png",
@@ -16,7 +16,7 @@
       "downloadUrl": "https://videofactory.oss-cn-shanghai.aliyuncs.com/filter/baixue.zip"
     },
     {
-      "name": "茶灰",
+      "name": "Ceniza de té",
       "thumbnail": "chahui/thumbnail.jpg",
       "config": "chahui",
       "lut": "chahui/lut_124/lut_124.png",
@@ -24,7 +24,7 @@
       "downloadUrl": "https://videofactory.oss-cn-shanghai.aliyuncs.com/filter/chahui.zip"
     },
     {
-      "name": "城市",
+      "name": "ciudad",
       "thumbnail": "chengshi/thumbnail.jpg",
       "config": "chengshi",
       "lut": "chengshi/lut_149/lut_149.png",
@@ -32,7 +32,7 @@
       "downloadUrl": "https://videofactory.oss-cn-shanghai.aliyuncs.com/filter/chengshi.zip"
     },
     {
-      "name": "初恋",
+      "name": "Primer amor",
       "thumbnail": "chulian/thumbnail.jpg",
       "config": "chulian",
       "lut": "chulian/lut_118/lut_118.png",
@@ -40,7 +40,7 @@
       "downloadUrl": "https://videofactory.oss-cn-shanghai.aliyuncs.com/filter/chulian.zip"
     },
     {
-      "name": "初心",
+      "name": "Intención original",
       "thumbnail": "chuxin/thumbnail.jpg",
       "config": "chuxin",
       "lut": "chuxin/lut137/lut137.png",
@@ -48,7 +48,7 @@
       "downloadUrl": "https://videofactory.oss-cn-shanghai.aliyuncs.com/filter/chuxin.zip"
     },
     {
-      "name": "纯净",
+      "name": "Puro",
       "thumbnail": "chunjing/thumbnail.jpg",
       "config": "chunjing",
       "lut": "chunjing/pure/pure.png",
@@ -56,7 +56,7 @@
       "downloadUrl": "https://videofactory.oss-cn-shanghai.aliyuncs.com/filter/chunjing.zip"
     },
     {
-      "name": "纯真",
+      "name": "Inocencia",
       "thumbnail": "chunzhen/thumbnail.jpg",
       "config": "chunzhen",
       "lut": "chunzhen/sincere/sincere.png",
@@ -64,7 +64,7 @@
       "downloadUrl": "https://videofactory.oss-cn-shanghai.aliyuncs.com/filter/chunzhen.zip"
     },
     {
-      "name": "单色",
+      "name": "monocromo",
       "thumbnail": "danse/thumbnail.jpg",
       "config": "danse",
       "lut": "danse/lut_114/lut_114.png",
@@ -72,7 +72,7 @@
       "downloadUrl": "https://videofactory.oss-cn-shanghai.aliyuncs.com/filter/danse.zip"
     },
     {
-      "name": "岛屿",
+      "name": "islas",
       "thumbnail": "daoyu/thumbnail.jpg",
       "config": "daoyu",
       "lut": "daoyu/lut_151/lut_151.png",

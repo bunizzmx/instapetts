@@ -82,7 +82,7 @@ class RecordActivity : AppCompatActivity(), OnRecordingListener, OnRenderListene
   private var mSampleRate = 44100
   private var mVideoBitRate = 18432000
   private var mAudioBitRate = 12800
-  private var mRecordDuration = 60 * 1000
+  private var mRecordDuration = 15 * 1000
   private var mAutoFocusMarker = DefaultAutoFocusMarker()
   private var mPermissionDenied = false
   private var mSpeed = Speed.NORMAL
@@ -520,7 +520,7 @@ class RecordActivity : AppCompatActivity(), OnRecordingListener, OnRenderListene
       mSampleRate = (preferences.getString("sample_rate", "44100") ?: "44100").toInt()
       mVideoBitRate = (preferences.getString("video_bit_rate", "18432") ?: "18432").toInt()
       mAudioBitRate = (preferences.getString("audio_bit_rate", "128") ?: "128").toInt()
-      mRecordDuration = (preferences.getString("record_duration", "60000") ?: "60000").toInt()
+      mRecordDuration = (preferences.getString("record_duration", "15000") ?: "15000").toInt()
     } catch (e: Exception) {
       e.printStackTrace()
     }
