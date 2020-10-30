@@ -15,4 +15,10 @@
     <item type="id" name="restart_preview"/>
 
     <item name="instructions_view" type="id" />
+
+    <item name="overlay_text_label" type="id" />
+    <item name="overlay_transform" type="id" />
+    <item name="overlay_cancel" type="id" />
+    <item name="overlay_mirror" type="id" />
+    <item name="overlay_content_text" type="id" />
 </resources>

@@ -6,6 +6,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.media.SoundPool;
@@ -17,6 +18,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
@@ -30,6 +32,7 @@ import com.bunizz.instapetts.db.Utilities;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.utils.AndroidIdentifier;
 import com.bunizz.instapetts.utils.dilogs.DialogPermision;
+import com.bunizz.instapetts.utils.trinity.Xlog;
 import com.bunizz.instapetts.web.CONST;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -44,8 +47,13 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,6 +66,8 @@ import java.util.TimeZone;
 import java.util.UUID;
 
 import androidx.annotation.RequiresApi;
+import kotlinx.coroutines.Dispatchers;
+import kotlinx.coroutines.GlobalScope;
 
 import static com.bunizz.instapetts.constantes.PREFERENCES.IS_INTRO_COMPLETED;
 
@@ -85,10 +95,17 @@ public class App extends Application {
     ArrayList<UnifiedNativeAd> ads = new ArrayList<>();
     private static final String AD_UNIT_ID = BuildConfig.ADS_NATIVO;
 
+
+    static {
+        System.loadLibrary("trinity");
+        System.loadLibrary("c++_shared");
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
         SQLiteDatabase.loadLibs(getApplicationContext());
+
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -101,8 +118,34 @@ public class App extends Application {
         Log.e("IDIOMA","-->" + idioma);
         write("IDIOMA",idioma);
         write(PREFERENCES.ANDROID_ID, Utilities.Md5Hash(new AndroidIdentifier(this).generateCombinationID()));
-
          new Handler().postDelayed(() ->App.getInstance().inicializar_ads(), 2000);
+
+
+
+        File file = new File(getCacheDir().getAbsolutePath() +  "/filter/");
+        if (!file.exists()) {
+            Log.e("FILES_CACHE","filter no existe");
+            Log.e("CREO_CARPETA_VIDEO",getCacheDir().getAbsolutePath() +  "/filter/");
+            file.mkdirs();
+            copyAssets("filter", file.getAbsolutePath());
+        }else{
+            Log.e("FILES_CACHE","filter ya existe");
+        }
+
+        File fileeffects = new File(getExternalCacheDir().getAbsolutePath() +  "/effect");
+        if (!fileeffects.exists()) {
+            Log.e("FILES_CACHE","effect no existe");
+            Log.e("CREO_CARPETA_VIDEO",getExternalCacheDir().getAbsolutePath() +  "/effect");
+            fileeffects.mkdirs();
+            copyAssets("effect", fileeffects.getAbsolutePath());
+        }else{
+            Log.e("FILES_CACHE","effect ya existe");
+        }
+
+
+        String  logPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/trinity";
+
+
     }
 
     public void inicializar_ads(){
@@ -675,5 +718,67 @@ public class App extends Application {
                     Log.e("ESTATUS_NOTIFICACION","VOID");
                 });
     }
+
+
+private void copy(String source,String targetPath ){
+    Log.e("FILES_CACHE","entro al copy ");
+        if (TextUtils.isEmpty(source) || TextUtils.isEmpty(targetPath)) {
+            return;
+        }
+         File dest = new File(targetPath);
+         if(!dest.exists()){
+             dest.mkdirs();
+         }
+         try{
+             BufferedInputStream  inputStream = new BufferedInputStream(getAssets().open(source));
+             BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(dest));
+             byte[] buffer = new byte[2048];
+             int length = 0;
+             while (true) {
+                 length = inputStream.read(buffer);
+                 if (length < 0) {
+                     break;
+                 }
+                 out.write(buffer, 0, length);
+             }
+             out.close();
+             inputStream.close();
+         }catch (FileNotFoundException e){
+             Log.e("FILES_CACHE","FileNotFoundException :  " + e.getMessage());
+         } catch (IOException e) {
+             Log.e("FILES_CACHE","IOException:  " + e.getMessage());
+             e.printStackTrace();
+         }
+}
+
+    private void copyAssets(String assetDir,String targetDir ){
+
+        Log.e("FILES_CACHE","entro al copyAssets :  " + assetDir +"/" +targetDir);
+        if (TextUtils.isEmpty(assetDir) || TextUtils.isEmpty(targetDir)) {
+            Log.e("FILES_CACHE","copyAssets return ");
+            return;
+        }
+        try {
+            AssetManager am=getAssets();
+            String [] fileNames = am.list(assetDir);
+            // 如果是文件夹(目录),则继续递归遍历
+            if (fileNames.length > 0) {
+                File targetFile = new File(targetDir);
+                if (!targetFile.exists() && !targetFile.mkdirs()) {
+                    return;
+                }
+                for (String fileName : fileNames) {
+                    copyAssets(assetDir + File.separator + fileName, targetDir + File.separator + fileName);
+                }
+            } else { // 文件,则执行拷贝
+                copy(assetDir, targetDir);
+            }
+        } catch (Exception e) {
+            Log.e("FILES_CACHE","Exceptionxxx:  " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
 
 }
