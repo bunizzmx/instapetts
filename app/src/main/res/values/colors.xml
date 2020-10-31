@@ -15,7 +15,7 @@
 
 <color name="orange">#f54b64</color>
     <!-- VIDEO TRIMMER -->
-    <color name="background_video_color">#2f3031</color>
+    <color name="background_video_color">#22000000</color>
     <color name="background_progress_color">#C4C3C3</color>
     <color name="progress_color">@color/primary</color>
     <color name="line_color">#0DC143</color>

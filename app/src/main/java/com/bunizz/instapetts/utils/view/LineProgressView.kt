@@ -129,7 +129,7 @@ class LineProgressView : View {
 
         private const val DIVIDER_WIDTH = 2
 
-        private val BACKGROUND_COLOR = Color.parseColor("#22000000")
+        private val BACKGROUND_COLOR = Color.parseColor("#ffffff")
 
         private val CONTENT_COLOR = Color.parseColor("#face15")
 

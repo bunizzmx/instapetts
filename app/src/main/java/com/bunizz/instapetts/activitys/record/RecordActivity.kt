@@ -67,6 +67,7 @@ class RecordActivity : AppCompatActivity(), OnRecordingListener, OnRenderListene
   private lateinit var mFlash: ImageView
   private lateinit var mInsideBottomSheet: FrameLayout
   private lateinit var mMarkerLayout: MarkerLayout
+  private lateinit var group: RadioGroup
   private val mFlashModes = arrayOf(Flash.TORCH, Flash.OFF, Flash.AUTO)
   private val mFlashImage = arrayOf(R.mipmap.ic_flash_on, R.mipmap.ic_flash_off, R.mipmap.ic_flash_auto)
   private var mFlashIndex = 0
@@ -101,7 +102,7 @@ class RecordActivity : AppCompatActivity(), OnRecordingListener, OnRenderListene
     mMarkerLayout.onMarker(MarkerLayout.TYPE_AUTOFOCUS, mAutoFocusMarker)
     val preview = findViewById<TrinityPreviewView>(R.id.preview)
     mLineView = findViewById(R.id.line_view)
-
+    group = findViewById<RadioGroup>(R.id.rate_bar)
     mRecord = TrinityRecord(this, preview)
     mRecord.setOnRenderListener(this)
     mRecord.setOnRecordingListener(this)
@@ -120,10 +121,6 @@ class RecordActivity : AppCompatActivity(), OnRecordingListener, OnRenderListene
     deleteFile(deleteView)
     setRate()
 
-    findViewById<View>(R.id.music)
-      .setOnClickListener {
-        showMusic()
-      }
 
     findViewById<View>(R.id.filter)
         .setOnClickListener {
@@ -140,11 +137,18 @@ class RecordActivity : AppCompatActivity(), OnRecordingListener, OnRenderListene
       }
 
     mInsideBottomSheet = findViewById(R.id.frame_container)
-    findViewById<View>(R.id.setting)
+   /* findViewById<View>(R.id.setting)
       .setOnClickListener {
         mInsideBottomSheet.visibility = View.VISIBLE
         showSetting()
-      }
+      }*/
+
+    findViewById<View>(R.id.velocidad)
+            .setOnClickListener {
+              hide_show_clock()
+            }
+
+
     setFrame()
 
     findViewById<View>(R.id.done)
@@ -155,10 +159,7 @@ class RecordActivity : AppCompatActivity(), OnRecordingListener, OnRenderListene
           startActivity(intent)
         }
       }
-    findViewById<View>(R.id.photo)
-        .setOnClickListener {
-          showMedia()
-        }
+
     preview.setOnTouchListener { _, event ->
 //      closeBottomSheet()
       mRecord.focus(PointF(event.x, event.y))
@@ -312,7 +313,7 @@ class RecordActivity : AppCompatActivity(), OnRecordingListener, OnRenderListene
     }
   }
 
-  private fun showMusic() {
+  /*private fun showMusic() {
     var musicFragment = supportFragmentManager.findFragmentByTag(MUSIC_TAG)
     if (musicFragment == null) {
       musicFragment = MusicFragment.newInstance()
@@ -326,7 +327,7 @@ class RecordActivity : AppCompatActivity(), OnRecordingListener, OnRenderListene
     } else {
       behavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
-  }
+  }*/
 
   fun closeBottomSheet() {
     val behavior = BottomSheetBehavior.from(mInsideBottomSheet)
@@ -350,7 +351,6 @@ class RecordActivity : AppCompatActivity(), OnRecordingListener, OnRenderListene
   }
 
   private fun setRate() {
-    val group = findViewById<RadioGroup>(R.id.rate_bar)
     group.setOnCheckedChangeListener { _, checkedId ->
       when (checkedId) {
         R.id.rate_quarter -> {
@@ -544,6 +544,15 @@ class RecordActivity : AppCompatActivity(), OnRecordingListener, OnRenderListene
 
   override fun onSurfaceCreated() {
     println("onSurfaceCreated")
+  }
+
+  fun hide_show_clock()
+  {
+    if(group.visibility == View.VISIBLE)
+        group.visibility = View.GONE
+    else
+      group.visibility = View.VISIBLE
+
   }
 
   override fun onDrawFrame(textureId: Int, width: Int, height: Int, matrix: FloatArray?): Int {
