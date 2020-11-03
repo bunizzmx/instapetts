@@ -47,6 +47,21 @@
           android:layout_height="wrap_content"/>
     </LinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/open_retos_eventos"
+        android:layout_centerVertical="true"
+        android:padding="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+      <ImageView
+          android:layout_centerVertical="true"
+          android:layout_centerHorizontal="true"
+          android:src="@drawable/ic_premio"
+          android:layout_width="25dp"
+          android:layout_height="25dp"/>
+    </RelativeLayout>
+
   </RelativeLayout>
   <androidx.viewpager.widget.ViewPager
       android:layout_below="@+id/root_toolbar"

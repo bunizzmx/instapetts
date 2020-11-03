@@ -1,4 +1,5 @@
-package com.bunizz.instapetts.utils.videocrop4;
+package com.bunizz.instapetts.utils;
+
 
 import android.annotation.SuppressLint;
 import android.content.ContentUris;

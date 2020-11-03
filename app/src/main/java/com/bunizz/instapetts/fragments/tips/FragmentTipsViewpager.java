@@ -26,6 +26,7 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.beans.TipsBean;
+import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.feed.FeedViewPager;
 import com.bunizz.instapetts.fragments.feed.fragments.Feed;
 import com.bunizz.instapetts.fragments.feed.fragments.FeedParaTi;
@@ -91,7 +92,11 @@ public class FragmentTipsViewpager extends Fragment implements  TipsContract.Vie
         change_tab_seguidos();
     }
 
-
+    @OnClick(R.id.open_retos_eventos)
+    void open_retos_eventos()
+    {
+        listener.change(FragmentElement.INSTANCE_EVENTOS);
+    }
 
     private List<UnifiedNativeAd> mNativeAds = new ArrayList<>();
     public static FragmentTipsViewpager newInstance() {

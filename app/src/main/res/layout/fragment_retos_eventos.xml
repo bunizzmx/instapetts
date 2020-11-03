@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white">
+    <com.google.android.material.appbar.AppBarLayout
+        android:background="@color/white"
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="0.1dp"
+        android:fitsSystemWindows="true"
+        >
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            >
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar_prfile"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:minHeight="?attr/actionBarSize"
+                android:gravity="top"
+                app:layout_collapseMode="pin" />
+            <RelativeLayout
+                android:layout_gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <include layout="@layout/tollbar_profile"/>
+                <androidx.viewpager.widget.ViewPager
+                    android:layout_below="@+id/root_toolbar"
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:clipChildren="false"
+                    android:overScrollMode="never"
+                    app:layoutManager=".utils.sliders_cards.CardSliderLayoutManager"
+                    />
+            </RelativeLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:id="@+id/refresh_profile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_photos_eventos"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

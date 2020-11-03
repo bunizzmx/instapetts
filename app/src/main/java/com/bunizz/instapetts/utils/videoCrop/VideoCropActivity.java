@@ -29,6 +29,7 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.db.Utilities;
+import com.bunizz.instapetts.utils.TrimmerUtils;
 import com.bunizz.instapetts.utils.dilogs.DialogProgresCrop;
 import com.bunizz.instapetts.utils.snackbar.SnackBar;
 import com.bunizz.instapetts.utils.trimVideoView.VideoTrimmerView;
@@ -37,7 +38,6 @@ import com.bunizz.instapetts.utils.videoCrop.ffmpeg.ExecuteBinaryResponseHandler
 import com.bunizz.instapetts.utils.videoCrop.ffmpeg.FFmpeg;
 import com.bunizz.instapetts.utils.videoCrop.ffmpeg.FFtask;
 import com.bunizz.instapetts.utils.videoCrop.player.VideoPlayer;
-import com.bunizz.instapetts.utils.videocrop4.TrimmerUtils;
 import com.google.android.exoplayer2.util.Util;
 
 import Jni.FFmpegCmd;

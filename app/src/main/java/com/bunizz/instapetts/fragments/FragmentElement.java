@@ -61,6 +61,7 @@ public class FragmentElement<T extends Fragment> {
     public static final int INSTANCE_SIDE_MENU = 41;
 
     public static final int INSTANCE_PLAY_VIDEOS = 42;
+    public static final int INSTANCE_EVENTOS = 43;
     //endregion
     private String mTitle;
     private T fragment;

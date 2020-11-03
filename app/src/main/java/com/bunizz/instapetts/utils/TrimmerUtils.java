@@ -1,4 +1,5 @@
-package com.bunizz.instapetts.utils.videocrop4;
+package com.bunizz.instapetts.utils;
+
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -117,20 +118,19 @@ public class TrimmerUtils {
     }
 
     public static String getLimitedTimeFormatted(long secs){
-            long hours = secs / 3600;
-            long secondsLeft = secs - hours * 3600;
-            long minutes = secondsLeft / 60;
-            long seconds = secondsLeft - minutes * 60;
-            String time;
-            if (hours!=0){
-                time=hours+" Hrs "+(minutes!=0 ? minutes+" Mins " : "")+
-                        (seconds!=0 ? seconds+" Secs " : "");
-            }else if (minutes!=0)
-                time=minutes+" Mins "+(seconds!=0 ? seconds+" Secs ":"");
-            else
-                time=seconds+" Secs ";
-            LogMessage.v(time);
-            return time;
+        long hours = secs / 3600;
+        long secondsLeft = secs - hours * 3600;
+        long minutes = secondsLeft / 60;
+        long seconds = secondsLeft - minutes * 60;
+        String time;
+        if (hours!=0){
+            time=hours+" Hrs "+(minutes!=0 ? minutes+" Mins " : "")+
+                    (seconds!=0 ? seconds+" Secs " : "");
+        }else if (minutes!=0)
+            time=minutes+" Mins "+(seconds!=0 ? seconds+" Secs ":"");
+        else
+            time=seconds+" Secs ";
+        return time;
     }
 
 

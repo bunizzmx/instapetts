@@ -57,6 +57,7 @@ import com.bunizz.instapetts.fragments.post.FragmentListOfPosts;
 import com.bunizz.instapetts.fragments.previewProfile.FragmentProfileUserPetPreview;
 import com.bunizz.instapetts.fragments.profile.FragmentEditProfileUser;
 import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
+import com.bunizz.instapetts.fragments.retos_eventos.RetosFragment;
 import com.bunizz.instapetts.fragments.search.FragmentSearchPet;
 import com.bunizz.instapetts.fragments.search.posts.FragmentPostPublics;
 import com.bunizz.instapetts.fragments.side.SideFragment;
@@ -96,10 +97,6 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.internal.IStatusCallback;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Task;
-import com.google.android.play.core.review.ReviewInfo;
-import com.google.android.play.core.review.ReviewManager;
-import com.google.android.play.core.review.ReviewManagerFactory;
-import com.google.android.play.core.tasks.OnFailureListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -147,6 +144,7 @@ public class Main extends AppCompatActivity implements
     private Stack<FragmentElement> stack_comentarios;
     private Stack<FragmentElement> stack_side_menu;
     private Stack<FragmentElement> stack_play_videos;
+    private Stack<FragmentElement> stack_eventos_retos;
 
     private FragmentElement mCurrentFragment;
 
@@ -234,7 +232,6 @@ public class Main extends AppCompatActivity implements
     Bundle b_from_push = new Bundle();
     JobsServices jobsServices;
     private AddressResultReceiver resultReceiver;
-    ReviewManager manager_rate ;
     boolean IS_COMMENTS_OPEN=false;
     private static final int RC_SIGN_IN = 9001;
     Activity activity;
@@ -398,6 +395,7 @@ public class Main extends AppCompatActivity implements
             stack_comentarios = new Stack<>();
             stack_side_menu = new Stack<>();
             stack_play_videos = new Stack<>();
+            stack_eventos_retos = new Stack<>();
 
             mLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
                 @Override
@@ -466,41 +464,6 @@ public class Main extends AppCompatActivity implements
             show_dialog_first_user();
         }
 
-        if(!App.read(PREFERENCES.DATE_OF_USE,App.formatDateSimple(new Date())).equals(App.formatDateSimple(new Date()))){
-            int num_opens = App.read(PREFERENCES.COUNTER_OPEN_APP,0);
-            App.write(PREFERENCES.COUNTER_OPEN_APP,num_opens +1);
-        }
-        if(App.read(PREFERENCES.COUNTER_OPEN_APP,0) >=3 && App.read(PREFERENCES.RATE_APP,false)== false){
-            Log.e("ESTATUS_RATE","lainch rate");
-            ReviewManager manager = ReviewManagerFactory.create(this);
-            com.google.android.play.core.tasks.Task<ReviewInfo> request = manager.requestReviewFlow();
-            request.addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Log.e("ESTATUS_RATE","successful");
-                    // We can get the ReviewInfo object
-                    ReviewInfo reviewInfo = task.getResult();
-                    com.google.android.play.core.tasks.Task<Void> flow = manager.launchReviewFlow(activity, reviewInfo);
-                    flow.addOnCompleteListener(taskx -> {
-                        App.write(PREFERENCES.RATE_APP,true);
-                        Log.e("ESTATUS_RATE","CALIFICACION EXITOSA" );
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(Exception e) {
-                            App.write(PREFERENCES.RATE_APP,true);
-                            Log.e("ESTATUS_RATE","CALIFICACION ERRONIA" + e.getMessage() );
-                        }
-                    });
-                } else {
-                    Log.e("ESTATUS_RATE","errorx: " + task.getException().getMessage());
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(Exception e) {
-                    Log.e("ESTATUS_RATE","falla : " + e.getMessage());
-                }
-            });
-        }
         mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         setupFirstFragment();
     }
@@ -707,6 +670,19 @@ public class Main extends AppCompatActivity implements
         ((ViewPagerVideoFragment) mCurrentFragment.getFragment()).reanudarPLayers();
     }
 
+    private void changue_retos(FragmentElement fragment,Bundle data,boolean is_back) {
+        if (fragment != null) {
+            mCurrentFragment = fragment;
+            mCurrentFragment.getFragment().setArguments(data);
+            if (stack_eventos_retos.size() <= 0) {
+                stack_eventos_retos.push(mCurrentFragment);
+            }
+        }
+        inflateFragment(is_back);
+    }
+
+
+
 
 
 
@@ -846,6 +822,14 @@ public class Main extends AppCompatActivity implements
                 changue_to_play_videos(new FragmentElement<>("", ViewPagerVideoFragment.newInstance(), FragmentElement.INSTANCE_PLAY_VIDEOS),bundle,back);
             } else {
                 changue_to_play_videos(stack_play_videos.pop(),bundle,back);
+            }
+        }
+
+        else if(intanceType == FragmentElement.INSTANCE_EVENTOS){
+            if (stack_eventos_retos.size() == 0) {
+                changue_retos(new FragmentElement<>("", RetosFragment.newInstance(), FragmentElement.INSTANCE_EVENTOS),bundle,back);
+            } else {
+                changue_retos(stack_eventos_retos.pop(),bundle,back);
             }
         }
 

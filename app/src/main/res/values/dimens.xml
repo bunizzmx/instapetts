@@ -158,4 +158,8 @@
     <bool name="spb_default_progressiveStart_activated">false</bool>
 
     <dimen name="icon_padding">8dp</dimen>
+
+    <dimen name="recycler_view_left_offset">9dp</dimen>
+    <dimen name="left_offset">61dp</dimen>
+    <dimen name="card_corner_radius">10dp</dimen>
 </resources>
