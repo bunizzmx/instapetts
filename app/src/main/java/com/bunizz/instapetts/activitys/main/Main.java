@@ -707,7 +707,7 @@ public class Main extends AppCompatActivity implements
             runOnUiThread(() -> root_bottom_nav.setVisibility(View.GONE));
         }
 
-        if(intanceType != FragmentElement.INSTANCE_PLAY_VIDEOS && intanceType != FragmentElement.INSTANCE_SIDE_MENU)
+        if(intanceType != FragmentElement.INSTANCE_PLAY_VIDEOS && intanceType != FragmentElement.INSTANCE_SIDE_MENU &&  intanceType != FragmentElement.INSTANCE_EVENTOS)
             runOnUiThread(() -> tab_add_image.show());
         else
             runOnUiThread(() -> tab_add_image.hide());

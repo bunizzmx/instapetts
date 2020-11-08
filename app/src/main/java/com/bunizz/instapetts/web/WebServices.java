@@ -22,6 +22,7 @@ import com.bunizz.instapetts.web.responses.IdentificadoresHistoriesResponse;
 import com.bunizz.instapetts.web.responses.PetsResponse;
 import com.bunizz.instapetts.web.responses.ResponseCatalogo;
 import com.bunizz.instapetts.web.responses.ResponseCodesCountries;
+import com.bunizz.instapetts.web.responses.ResponseEventos;
 import com.bunizz.instapetts.web.responses.ResponseListReports;
 import com.bunizz.instapetts.web.responses.ResponseNamesAvailables;
 import com.bunizz.instapetts.web.responses.ResponsePlayVideos;
@@ -79,6 +80,10 @@ public interface WebServices {
 
     @POST("test/getplayvideos")
     Single<ResponsePlayVideos> getPlayVideos(@Body AutenticateBean postFriendsBean);
+
+    @POST("test/eventos")
+    Single<ResponseEventos> getEventos(@Body AutenticateBean postFriendsBean);
+
 
     @POST("test/getplayvideos")
     Single<SimpleResponse> actionsPlayVideos(@Body PlayVideoParameters playVideoParameters);

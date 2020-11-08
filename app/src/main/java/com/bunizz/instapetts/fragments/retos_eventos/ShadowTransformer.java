@@ -1,20 +1,22 @@
 package com.bunizz.instapetts.fragments.retos_eventos;
 
-
 import android.view.View;
 
 import androidx.cardview.widget.CardView;
 import androidx.viewpager.widget.ViewPager;
 
+/**
+ * Shadow Transformer Created by farshid roohi on 12/12/17.
+ */
 
 public class ShadowTransformer implements ViewPager.OnPageChangeListener, ViewPager.PageTransformer {
 
     private ViewPager mViewPager;
-    private CardAdapter mAdapter;
+    private CardElevationMax mAdapter;
     private float mLastOffset;
     private boolean mScalingEnabled;
 
-    public ShadowTransformer(ViewPager viewPager, CardAdapter adapter) {
+    public ShadowTransformer(ViewPager viewPager, CardElevationMax adapter) {
         mViewPager = viewPager;
         viewPager.addOnPageChangeListener(this);
         mAdapter = adapter;
@@ -25,10 +27,10 @@ public class ShadowTransformer implements ViewPager.OnPageChangeListener, ViewPa
             // shrink main card
             CardView currentCard = mAdapter.getCardViewAt(mViewPager.getCurrentItem());
             if (currentCard != null) {
-                currentCard.animate().scaleY(1);
-                currentCard.animate().scaleX(1);
+                currentCard.animate().scaleY(100);
+                currentCard.animate().scaleX(100);
             }
-        }else if(!mScalingEnabled && enable){
+        } else if (!mScalingEnabled && enable) {
             // grow main card
             CardView currentCard = mAdapter.getCardViewAt(mViewPager.getCurrentItem());
             if (currentCard != null) {
@@ -81,7 +83,7 @@ public class ShadowTransformer implements ViewPager.OnPageChangeListener, ViewPa
                 currentCard.setScaleY((float) (1 + 0.1 * (1 - realOffset)));
             }
             currentCard.setCardElevation((baseElevation + baseElevation
-                    * (CardAdapter.MAX_ELEVATION_FACTOR - 1) * (1 - realOffset)));
+                    * (CardElevationMax.MAX_ELEVATION_FACTOR - 1) * (1 - realOffset)));
         }
 
         CardView nextCard = mAdapter.getCardViewAt(nextPosition);
@@ -94,7 +96,7 @@ public class ShadowTransformer implements ViewPager.OnPageChangeListener, ViewPa
                 nextCard.setScaleY((float) (1 + 0.1 * (realOffset)));
             }
             nextCard.setCardElevation((baseElevation + baseElevation
-                    * (CardAdapter.MAX_ELEVATION_FACTOR - 1) * (realOffset)));
+                    * (CardElevationMax.MAX_ELEVATION_FACTOR - 1) * (realOffset)));
         }
 
         mLastOffset = positionOffset;
@@ -109,4 +111,5 @@ public class ShadowTransformer implements ViewPager.OnPageChangeListener, ViewPa
     public void onPageScrollStateChanged(int state) {
 
     }
+
 }

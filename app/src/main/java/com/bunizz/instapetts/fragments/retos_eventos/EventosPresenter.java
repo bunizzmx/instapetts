@@ -3,6 +3,8 @@ package com.bunizz.instapetts.fragments.retos_eventos;
 import android.content.Context;
 
 import com.bunizz.instapetts.App;
+import com.bunizz.instapetts.beans.AutenticateBean;
+import com.bunizz.instapetts.beans.EventBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.db.helpers.LikePostHelper;
@@ -12,6 +14,7 @@ import com.bunizz.instapetts.fragments.post.PostGaleryContract;
 import com.bunizz.instapetts.web.ApiClient;
 import com.bunizz.instapetts.web.WebServices;
 import com.bunizz.instapetts.web.parameters.PostFriendsBean;
+import com.bunizz.instapetts.web.responses.ResponseEventos;
 import com.bunizz.instapetts.web.responses.ResponsePost;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -45,7 +48,7 @@ public class EventosPresenter  implements  EventosContract.Presenter{
         }
 
     @Override
-    public void getEventos(int type_Search, int paginador, int id_usuario, int filter) {
+    public void getEventosPosts(int type_Search, int paginador, int id_usuario, int filter) {
         PostFriendsBean postFriendsBean = new PostFriendsBean();
         postFriendsBean.setPaginador(paginador);
         postFriendsBean.setId_one(id_usuario);
@@ -80,7 +83,7 @@ public class EventosPresenter  implements  EventosContract.Presenter{
                                             post.add(responsePost.getList_posts().get(i));
                                         }
                                     }
-                                    mView.showEventos(post);
+                                    mView.showEventosPost(post);
                                 }  else{
                                     RETRY ++;
                                     if(RETRY < 3) {
@@ -99,6 +102,31 @@ public class EventosPresenter  implements  EventosContract.Presenter{
                                 }else{
                                     // mView.noInternet();
                                 }
+                            }
+                        })
+        );
+    }
+
+    @Override
+    public void getEventos(int type_Search, int paginador, int id_usuario, int filter) {
+        AutenticateBean postFriendsBean = new AutenticateBean();
+        postFriendsBean.setPaginador(paginador);
+        postFriendsBean.setTarget(WEBCONSTANTS.GET);
+        disposable.add(
+                apiService.getEventos(postFriendsBean)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<ResponseEventos>() {
+                            @Override
+                            public void onSuccess(ResponseEventos responsePost) {
+                                if(responsePost.getList_Eventos()!=null) {
+                                    ArrayList<EventBean> post = new ArrayList<>();
+                                    post.addAll(responsePost.getList_Eventos());
+                                    mView.showEventos(post);
+                                }
+                            }
+                            @Override
+                            public void onError(Throwable e) {
                             }
                         })
         );

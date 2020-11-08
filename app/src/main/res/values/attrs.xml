@@ -558,4 +558,27 @@
         <!-- ViewUpdater implementation class. If not set, DefaultViewUpdater class is used. -->
         <attr name="viewUpdater" format="string"/>
     </declare-styleable>
+
+    <declare-styleable name="CardViewPager">
+        <attr name="visibleIndicator" format="boolean" />
+        <attr name="visibleRightPadding" />
+        <attr name="visibleLeftPadding" />
+        <attr name="visibleTopPadding" />
+        <attr name="visibleBottomPadding" />
+
+        <attr name="selectIndicatorColor" />
+        <attr name="unSelectIndicatorColor" />
+        <!--<attr name="transparentIndicatorResource" />-->
+        <attr name="indicatorSize" />
+        <!--<attr name="indicatorGapSize" />-->
+        <!--<attr name="indicatorScrollSpeed" />-->
+        <!--<attr name="indicatorVisibleItems" />-->
+    </declare-styleable>
+
+    <declare-styleable name="ScrollViewPagerIndicator">
+        <attr name="dotSize" />
+        <attr name="gapSize" />
+        <attr name="scrollSpeed" />
+        <attr name="visibleItems" />
+    </declare-styleable>
 </resources>

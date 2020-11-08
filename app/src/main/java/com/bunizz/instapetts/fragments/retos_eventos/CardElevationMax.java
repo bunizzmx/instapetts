@@ -1,11 +1,14 @@
 package com.bunizz.instapetts.fragments.retos_eventos;
 
-
 import androidx.cardview.widget.CardView;
 
-public interface CardAdapter {
+/**
+ * Card ViewPager Created by farshid roohi on 12/12/17.
+ */
 
-    int MAX_ELEVATION_FACTOR = 2;
+public interface CardElevationMax {
+
+    int MAX_ELEVATION_FACTOR = 20;
 
     float getBaseElevation();
 
