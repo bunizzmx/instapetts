@@ -1,4 +1,4 @@
-package com.bunizz.instapetts.fragments.retos_eventos;
+package com.bunizz.instapetts.utils.retos_viewpager;
 
 
 import android.animation.ObjectAnimator;

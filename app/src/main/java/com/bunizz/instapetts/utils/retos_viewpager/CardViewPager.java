@@ -1,4 +1,4 @@
-package com.bunizz.instapetts.fragments.retos_eventos;
+package com.bunizz.instapetts.utils.retos_viewpager;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.bunizz.instapetts.R;
+import com.bunizz.instapetts.fragments.retos_eventos.adapters.BaseCardViewPagerItem;
 
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;

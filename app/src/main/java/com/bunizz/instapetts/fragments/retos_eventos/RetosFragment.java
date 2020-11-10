@@ -1,51 +1,39 @@
 package com.bunizz.instapetts.fragments.retos_eventos;
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-import android.app.ActivityOptions;
-import android.content.Intent;
-import android.graphics.Bitmap;
+import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
-import android.widget.ImageSwitcher;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextSwitcher;
 import android.widget.TextView;
 
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.EventBean;
-import com.bunizz.instapetts.beans.FilterBean;
 import com.bunizz.instapetts.beans.PostBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.db.Utilities;
 import com.bunizz.instapetts.fragments.FragmentElement;
 import com.bunizz.instapetts.fragments.post.adapters.PostsAdapter;
-import com.bunizz.instapetts.fragments.retos_eventos.adapters.FilterAdapter;
-import com.bunizz.instapetts.utils.AnimatedTextViews.HTextView;
+import com.bunizz.instapetts.fragments.retos_eventos.adapters.Adapter;
+import com.bunizz.instapetts.fragments.retos_eventos.adapters.AdapterRanking;
+import com.bunizz.instapetts.listeners.change_instance;
+import com.bunizz.instapetts.utils.retos_viewpager.CardViewPager;
 import com.bunizz.instapetts.utils.sliders_cards.CardSliderLayoutManager;
-import com.bunizz.instapetts.utils.sliders_cards.CardSnapHelper;
-import com.bunizz.instapetts.utils.videoCrop.util.Utils;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,6 +65,9 @@ public class RetosFragment extends Fragment implements  EventosContract.View{
     @BindView(R.id.list_photos_eventos)
     RecyclerView list_photos_eventos;
 
+    @BindView(R.id.list_ranking)
+    RecyclerView list_ranking;
+
     @BindView(R.id.refresh_profile_item)
     RelativeLayout refresh_profile_item;
 
@@ -92,21 +83,27 @@ public class RetosFragment extends Fragment implements  EventosContract.View{
     @BindView(R.id.filter_ranking)
     Button filter_ranking;
 
+    @BindView(R.id.refresh_events)
+    SwipeRefreshLayout refresh_events;
+
 
     PostsAdapter adapter;
-
+    change_instance listener;
     EventosPresenter presenter;
 
     ArrayList<EventBean> eventos;
     Adapter adapter_eventos ;
+    AdapterRanking adapter_ranking;
     private int currentPosition;
     public static RetosFragment newInstance() {
         return new RetosFragment();
     }
-
+int POSITION =0;
     @SuppressLint("MissingPermission")
     @OnClick(R.id.filter_ranking)
     void filter_ranking() {
+        list_ranking.setVisibility(View.VISIBLE);
+        list_photos_eventos.setVisibility(View.GONE);
         filter_ranking.setBackground(getActivity().getResources().getDrawable(R.drawable.filter_enabled));
         filter_ranking.setTextColor(Color.WHITE);
         filter_votados.setBackground(getActivity().getResources().getDrawable(R.drawable.filter_disabled));
@@ -118,6 +115,8 @@ public class RetosFragment extends Fragment implements  EventosContract.View{
     @SuppressLint("MissingPermission")
     @OnClick(R.id.filter_votados)
     void filter_votados() {
+        list_ranking.setVisibility(View.GONE);
+        list_photos_eventos.setVisibility(View.VISIBLE);
         filter_votados.setBackground(getActivity().getResources().getDrawable(R.drawable.filter_enabled));
         filter_votados.setTextColor(Color.WHITE);
         filter_ranking.setBackground(getActivity().getResources().getDrawable(R.drawable.filter_disabled));
@@ -130,6 +129,8 @@ public class RetosFragment extends Fragment implements  EventosContract.View{
     @SuppressLint("MissingPermission")
     @OnClick(R.id.filter_recent)
     void filter_recent() {
+        list_ranking.setVisibility(View.GONE);
+        list_photos_eventos.setVisibility(View.VISIBLE);
         filter_recent.setBackground(getActivity().getResources().getDrawable(R.drawable.filter_enabled));
         filter_recent.setTextColor(Color.WHITE);
         filter_votados.setBackground(getActivity().getResources().getDrawable(R.drawable.filter_disabled));
@@ -138,13 +139,23 @@ public class RetosFragment extends Fragment implements  EventosContract.View{
         filter_ranking.setTextColor(Color.BLACK);
         //filter_ranking.selle
     }
+    @SuppressLint("MissingPermission")
+    @OnClick(R.id.card_participar)
+    void card_participar() {
+        Bundle b = new Bundle();
+        b.putString("URL_RESOURCE",eventos.get(POSITION).getUrl_resource());
+        b.putString("TITLE_EVENT",eventos.get(POSITION).getTitle());
+        b.putString("DESCRIPTION_EVENT",eventos.get(POSITION).getDescription());
+        listener.open_sheetFragment(b, FragmentElement.INSTANCE_DETAIL_EVENTO);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         adapter = new PostsAdapter(getActivity());
         presenter = new EventosPresenter(this,getActivity());
-        adapter_eventos = new Adapter();
+        adapter_eventos = new Adapter(getContext());
+        adapter_ranking = new AdapterRanking(getContext());
         eventos = new ArrayList<>();
     }
 
@@ -162,32 +173,34 @@ public class RetosFragment extends Fragment implements  EventosContract.View{
         open_side_menu.setVisibility(View.GONE);
         list_photos_eventos.setLayoutManager(new LinearLayoutManager(getActivity()));
         list_photos_eventos.setAdapter(adapter);
+        list_ranking.setAdapter(adapter_ranking);
+        list_ranking.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter_eventos.setElevation(0.2f);
         mViewPager.setAdapter(adapter_eventos);
         mViewPager.isShowShadowTransformer(true);
         title_toolbar.setTextSize(Utilities.convertDpToPixel(10,getActivity()));
         title_toolbar.setText("Retos y Eventos");
         presenter.getEventos(0,-999,0,0);
-        presenter.getEventosPosts(0,-999,0,0);
         mViewPager.getViewPager().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
             @Override
             public void onPageSelected(int position) {
-              String color  = eventos.get(position).getColor();
-                card_participar.setCardBackgroundColor(Color.parseColor(color));
+                POSITION = position;
+                presenter.getEventosPosts(eventos.get(position).getId(),-999,0,eventos.get(position).getId());
             }
-
             @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
+            public void onPageScrollStateChanged(int state) {}
         });
         filter_recent.setBackground(getActivity().getResources().getDrawable(R.drawable.filter_enabled));
         filter_recent.setTextColor(Color.WHITE);
+        refresh_events.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                presenter.getEventosPosts(eventos.get(POSITION).getId(),-999,0,eventos.get(POSITION).getId());
+            }
+        });
     }
 
 
@@ -204,26 +217,29 @@ public class RetosFragment extends Fragment implements  EventosContract.View{
 
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        listener = (change_instance) context;
+    }
 
     @Override
     public void showEventosPost(ArrayList<PostBean> posts) {
+        refresh_events.setRefreshing(false);
         ArrayList<Object> data = new ArrayList<>();
         data.addAll(posts);
         adapter.setData(data);
+
     }
 
     @Override
     public void showEventos(ArrayList<EventBean> events) {
         eventos.addAll(events);
-        if(events.size()>0) {
-            String color = eventos.get(0).getColor();
-            card_participar.setCardBackgroundColor(Color.parseColor(color));
-        }
-        Log.e("EVENTSXX","-->xxx");
-        for (int i =0;i<eventos.size();i++){
-            Log.e("EVENTSXX","-->" + i);
+         if(events.size()>0)
+              presenter.getEventosPosts(eventos.get(0).getId(),-999,0,eventos.get(0).getId());
+
+        for (int i =0;i<eventos.size();i++)
             adapter_eventos.addCardItem(eventos.get(i));
-        }
 
     }
 

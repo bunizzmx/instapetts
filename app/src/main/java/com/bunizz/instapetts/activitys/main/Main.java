@@ -57,6 +57,7 @@ import com.bunizz.instapetts.fragments.post.FragmentListOfPosts;
 import com.bunizz.instapetts.fragments.previewProfile.FragmentProfileUserPetPreview;
 import com.bunizz.instapetts.fragments.profile.FragmentEditProfileUser;
 import com.bunizz.instapetts.fragments.profile.FragmentProfileUserPet;
+import com.bunizz.instapetts.fragments.retos_eventos.DetailEvento;
 import com.bunizz.instapetts.fragments.retos_eventos.RetosFragment;
 import com.bunizz.instapetts.fragments.search.FragmentSearchPet;
 import com.bunizz.instapetts.fragments.search.posts.FragmentPostPublics;
@@ -931,11 +932,9 @@ public class Main extends AppCompatActivity implements
 
     @Override
     public void open_sheetFragment(Bundle bundle, int instance) {
-        Bundle b = new Bundle();
-        IS_COMMENTS_OPEN = true;
         back_to_main_sliding.setVisibility(View.GONE);
-        changue_fragment_sheet(FragmentElement.INSTANCE_COMENTARIOS,bundle);
-        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        changue_fragment_sheet(instance,bundle);
+
     }
 
     @Override
@@ -1197,8 +1196,19 @@ public class Main extends AppCompatActivity implements
     }
 
     void changue_fragment_sheet(int instance ,Bundle data){
+        switch (instance){
+            case FragmentElement.INSTANCE_COMENTARIOS:
+                IS_COMMENTS_OPEN = true;
+                changue_sheet(new FragmentElement<>("", ComentariosFragment.newInstance(), FragmentElement.INSTANCE_COMENTARIOS),data);
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                break;
+            case FragmentElement.INSTANCE_DETAIL_EVENTO:
+                IS_SHEET_OPEN = true;
+                changue_sheet(new FragmentElement<>("", DetailEvento.newInstance(), FragmentElement.INSTANCE_DETAIL_EVENTO),data);
+                mLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                break;
+        }
 
-        changue_sheet(new FragmentElement<>("", ComentariosFragment.newInstance(), FragmentElement.INSTANCE_COMENTARIOS),data);
     }
 
     private void changue_sheet(FragmentElement fragment,Bundle data) {

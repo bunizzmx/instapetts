@@ -1,10 +1,10 @@
-package com.bunizz.instapetts.fragments.retos_eventos;
+package com.bunizz.instapetts.fragments.retos_eventos.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bunizz.instapetts.beans.EventBean;
+import com.bunizz.instapetts.utils.retos_viewpager.CardElevationMax;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,29 +17,29 @@ import androidx.viewpager.widget.PagerAdapter;
  * Base Card View ViewPager Item Created by farshid roohi on 12/12/17.
  */
 
-public abstract class BaseCardViewPagerItem<T> extends PagerAdapter implements CardElevationMax {
+public abstract class BaseCardViewPagerItem<EventBean> extends PagerAdapter implements CardElevationMax {
 
     private List<CardView> views;
-    private List<T> models;
+    private List<EventBean> models;
     private float baseElevation;
 
     @LayoutRes
     public abstract int getLayout();
 
-    public abstract void bindView(View view, T item);
+    public abstract void bindView(View view, EventBean item);
 
     public BaseCardViewPagerItem() {
         this.views = new ArrayList<>();
         this.models = new ArrayList<>();
     }
 
-    public void addCardItem(T item) {
+    public void addCardItem(EventBean item) {
         this.views.add(null);
         this.models.add(item);
         notifyDataSetChanged();
     }
 
-    public T getItem(int position) {
+    public EventBean getItem(int position) {
         return this.models.get(position);
     }
 

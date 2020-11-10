@@ -6,42 +6,61 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <androidx.cardview.widget.CardView
+        app:cardBackgroundColor="#00ACFA"
        android:id="@+id/card_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:cardCornerRadius="10dp"
-        app:contentPadding="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="10dp">
-
+        android:layout_margin="3dp"
+        app:contentPadding="10dp">
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <LinearLayout
+        <RelativeLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-            <ImageView
-                android:src="@drawable/logoapp"
-                android:layout_width="50dp"
-                android:layout_height="50dp"/>
+            android:layout_height="wrap_content">
+            <androidx.cardview.widget.CardView
+                app:cardCornerRadius="8dp"
+                android:id="@+id/card_f"
+               android:layout_alignParentStart="true"
+                android:layout_width="80dp"
+                android:layout_height="80dp">
+                <ImageView
+                    android:scaleType="centerCrop"
+                    android:id="@+id/image_evento"
+                    android:src="@drawable/logoapp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </androidx.cardview.widget.CardView>
             <TextView
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="10dp"
+                android:layout_toRightOf="@+id/card_f"
                 android:textStyle="bold"
-                android:text="Reto de Noviempre"
+                android:text="-"
                 android:id="@+id/txt_title"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+            <TextView
+                android:layout_below="@+id/txt_title"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/card_f"
+                android:text="-"
+                android:id="@+id/description_reto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
 
-        </LinearLayout>
+        </RelativeLayout>
             <RelativeLayout
 
                 android:layout_marginTop="5dp"
@@ -49,25 +68,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center">
+
                 <TextView
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_toLeftOf="@+id/limite"
                     android:textStyle="bold"
-                    android:text="Sube una foto de tu perro comiendo veneno"
-                    android:id="@+id/description_reto"
+                   android:layout_alignParentStart="true"
+                    android:text="26 Participantes"
+                    android:id="@+id/participants_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="15sp" />
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
                 <TextView
                     android:layout_alignParentRight="true"
                     android:text="Termina en 2 dias"
                     android:id="@+id/limite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="10sp" />
 
 

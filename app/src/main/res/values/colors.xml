@@ -28,7 +28,7 @@
     <color name="errorColor">#D50000</color>
     <color name="infoColor">#3F51B5</color>
     <color name="successColor">#388E3C</color>
-    <color name="warningColor">#FFA900</color>
+    <color name="warningColor">#555555</color>
     <color name="normalColor">#E5E6E6</color>
 
     <color name="transparetnte">#00FFFFFF</color>

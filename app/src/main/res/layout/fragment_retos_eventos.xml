@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <include layout="@layout/tollbar_profile"/>
-                <com.bunizz.instapetts.fragments.retos_eventos.CardViewPager
+                <com.bunizz.instapetts.utils.retos_viewpager.CardViewPager
                     android:layout_below="@+id/root_toolbar"
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
@@ -97,27 +97,53 @@
     </com.google.android.material.appbar.AppBarLayout>
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:id="@+id/refresh_profile"
+        android:id="@+id/refresh_events"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <androidx.recyclerview.widget.RecyclerView
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+>      <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_photos_eventos"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:visibility="gone"
+            android:id="@+id/list_ranking"
+            android:layout_width="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_ranking"
+            android:layout_height="match_parent"/>
+        </RelativeLayout>
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <androidx.cardview.widget.CardView
         android:id="@+id/card_participar"
-        app:cardBackgroundColor="@color/colorPrimaryDark"
+        app:cardBackgroundColor="#00ACFA"
         android:layout_marginBottom="80dp"
         app:cardCornerRadius="10dp"
         android:layout_gravity="center_horizontal|bottom"
         app:contentPadding="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <TextView
-            android:textColor="@color/white"
-            android:text="PARTICIPAR"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_corona"
+                android:layout_width="25dp"
+                android:layout_height="25dp"/>
+            <TextView
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:textColor="@color/white"
+                android:text="PARTICIPAR"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
