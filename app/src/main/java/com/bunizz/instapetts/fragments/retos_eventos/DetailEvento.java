@@ -1,6 +1,8 @@
 package com.bunizz.instapetts.fragments.retos_eventos;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +24,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DetailEvento extends Fragment {
+public class DetailEvento extends Fragment implements  DetailEventosContract.View{
 
     @BindView(R.id.preview_image)
     ImageView preview_image;
@@ -33,7 +35,11 @@ public class DetailEvento extends Fragment {
     @BindView(R.id.description_event)
     TextView description_event;
 
+    @BindView(R.id.html_politica)
+    TextView html_politica;
 
+
+    DetailEventosPresenter presenter;
 
     public static DetailEvento newInstance() {
         return new DetailEvento();
@@ -51,6 +57,8 @@ public class DetailEvento extends Fragment {
             TITLE = bundle.getString("TITLE_EVENT");
             DESCRIPTION  = bundle.getString("DESCRIPTION_EVENT");
         }
+        presenter = new DetailEventosPresenter(this,getContext());
+
     }
 
     @Nullable
@@ -66,5 +74,16 @@ public class DetailEvento extends Fragment {
         Glide.with(getContext()).load(URL_RESOURCE).into(preview_image);
         description_event.setText(DESCRIPTION);
         title_event.setText(TITLE);
+        presenter.getPoliticasDetailReto(1);
+    }
+
+    @Override
+    public void showPolitica(String politica) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            html_politica.setText(Html.fromHtml(politica, Html.FROM_HTML_MODE_COMPACT));
+        } else {
+            html_politica.setText(Html.fromHtml(politica));
+        }
+
     }
 }

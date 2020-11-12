@@ -8,6 +8,7 @@ public class AutenticateBean {
     String name_user;
     String token;
     String target;
+    String id_resource;
     int paginador;
     String idioma;
     int id_usuario;
@@ -72,5 +73,13 @@ public class AutenticateBean {
 
     public void setId_usuario(int id_usuario) {
         this.id_usuario = id_usuario;
+    }
+
+    public String getId_resource() {
+        return id_resource;
+    }
+
+    public void setId_resource(String id_resource) {
+        this.id_resource = id_resource;
     }
 }

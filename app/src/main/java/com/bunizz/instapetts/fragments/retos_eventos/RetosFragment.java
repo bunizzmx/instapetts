@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.bunizz.instapetts.R;
 import com.bunizz.instapetts.beans.EventBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.beans.RankingBean;
 import com.bunizz.instapetts.constantes.BUNDLES;
 import com.bunizz.instapetts.db.Utilities;
 import com.bunizz.instapetts.fragments.FragmentElement;
@@ -95,6 +96,7 @@ public class RetosFragment extends Fragment implements  EventosContract.View{
     Adapter adapter_eventos ;
     AdapterRanking adapter_ranking;
     private int currentPosition;
+    boolean IS_IN_RANKING=false;
     public static RetosFragment newInstance() {
         return new RetosFragment();
     }
@@ -102,6 +104,8 @@ int POSITION =0;
     @SuppressLint("MissingPermission")
     @OnClick(R.id.filter_ranking)
     void filter_ranking() {
+        IS_IN_RANKING = true;
+        presenter.getCurrentRanking();
         list_ranking.setVisibility(View.VISIBLE);
         list_photos_eventos.setVisibility(View.GONE);
         filter_ranking.setBackground(getActivity().getResources().getDrawable(R.drawable.filter_enabled));
@@ -115,6 +119,7 @@ int POSITION =0;
     @SuppressLint("MissingPermission")
     @OnClick(R.id.filter_votados)
     void filter_votados() {
+        IS_IN_RANKING =false;
         list_ranking.setVisibility(View.GONE);
         list_photos_eventos.setVisibility(View.VISIBLE);
         filter_votados.setBackground(getActivity().getResources().getDrawable(R.drawable.filter_enabled));
@@ -129,6 +134,7 @@ int POSITION =0;
     @SuppressLint("MissingPermission")
     @OnClick(R.id.filter_recent)
     void filter_recent() {
+        IS_IN_RANKING = false;
         list_ranking.setVisibility(View.GONE);
         list_photos_eventos.setVisibility(View.VISIBLE);
         filter_recent.setBackground(getActivity().getResources().getDrawable(R.drawable.filter_enabled));
@@ -198,7 +204,10 @@ int POSITION =0;
         refresh_events.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                presenter.getEventosPosts(eventos.get(POSITION).getId(),-999,0,eventos.get(POSITION).getId());
+                if(IS_IN_RANKING)
+                    presenter.getCurrentRanking();
+                else
+                   presenter.getEventosPosts(eventos.get(POSITION).getId(),-999,0,eventos.get(POSITION).getId());
             }
         });
     }
@@ -241,6 +250,12 @@ int POSITION =0;
         for (int i =0;i<eventos.size();i++)
             adapter_eventos.addCardItem(eventos.get(i));
 
+    }
+
+    @Override
+    public void showRanking(ArrayList<RankingBean> rankings) {
+        refresh_events.setRefreshing(false);
+        adapter_ranking.setData(rankings);
     }
 
     private class OnCardClickListener implements View.OnClickListener {

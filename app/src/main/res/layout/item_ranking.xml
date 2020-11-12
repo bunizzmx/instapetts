@@ -3,6 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ImageView
+        android:layout_marginRight="5dp"
+        android:elevation="3dp"
+        android:layout_marginTop="-1dp"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_firts"
+        android:id="@+id/medall_ranking"
+        android:layout_width="25dp"
+        android:layout_height="25dp"/>
 
     <androidx.cardview.widget.CardView
         android:layout_centerVertical="true"
@@ -28,7 +37,10 @@
   <androidx.cardview.widget.CardView
       android:layout_toRightOf="@+id/card_number_ranking"
       app:cardCornerRadius="10dp"
-      android:layout_margin="5dp"
+     android:layout_marginTop="8dp"
+      android:layout_marginRight="5dp"
+      android:layout_marginLeft="5dp"
+      android:layout_marginBottom="5dp"
       app:contentPadding="5dp"
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
@@ -36,8 +48,9 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content">
           <com.bunizz.instapetts.utils.ImagenCircular
+              app:civ_border_color="@color/primary"
+              app:civ_border_width="2dp"
               android:id="@+id/image_pet_ranking"
-              android:src="@drawable/logoapp"
               android:layout_margin="5dp"
               android:layout_alignParentStart="true"
               android:layout_width="50dp"
@@ -49,6 +62,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
               <TextView
+                  android:id="@+id/name_pet_ranking"
                   android:textColor="@color/shadow_color"
                   android:textStyle="bold"
                   android:text="EL FIRULAIS"
@@ -59,7 +73,8 @@
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"/>
               <TextView
-                  android:text="Adolfo es sus dueño"
+                  android:id="@+id/name_propietary_pet"
+                  android:text="-"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"/>
           </LinearLayout>
@@ -79,6 +94,8 @@
                       android:layout_width="15dp"
                       android:layout_height="15dp"/>
                   <TextView
+                      android:textColor="@color/shadow_color"
+                      android:id="@+id/likes_ranking"
                       android:layout_marginLeft="5dp"
                       android:layout_gravity="center_vertical"
                       android:textStyle="bold"

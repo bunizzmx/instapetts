@@ -6,6 +6,7 @@ import com.bunizz.instapetts.App;
 import com.bunizz.instapetts.beans.AutenticateBean;
 import com.bunizz.instapetts.beans.EventBean;
 import com.bunizz.instapetts.beans.PostBean;
+import com.bunizz.instapetts.beans.RankingBean;
 import com.bunizz.instapetts.constantes.WEBCONSTANTS;
 import com.bunizz.instapetts.db.helpers.LikePostHelper;
 import com.bunizz.instapetts.db.helpers.SavedPostHelper;
@@ -16,6 +17,7 @@ import com.bunizz.instapetts.web.WebServices;
 import com.bunizz.instapetts.web.parameters.PostFriendsBean;
 import com.bunizz.instapetts.web.responses.ResponseEventos;
 import com.bunizz.instapetts.web.responses.ResponsePost;
+import com.bunizz.instapetts.web.responses.ResponseRankings;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -123,6 +125,30 @@ public class EventosPresenter  implements  EventosContract.Presenter{
                                     ArrayList<EventBean> post = new ArrayList<>();
                                     post.addAll(responsePost.getList_Eventos());
                                     mView.showEventos(post);
+                                }
+                            }
+                            @Override
+                            public void onError(Throwable e) {
+                            }
+                        })
+        );
+    }
+
+    @Override
+    public void getCurrentRanking() {
+        AutenticateBean postFriendsBean = new AutenticateBean();
+        postFriendsBean.setTarget(WEBCONSTANTS.RANKING);
+        disposable.add(
+                apiService.getRanking(postFriendsBean)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSingleObserver<ResponseRankings>() {
+                            @Override
+                            public void onSuccess(ResponseRankings responsePost) {
+                                if(responsePost.getList_rankings()!=null) {
+                                    ArrayList<RankingBean> rankings = new ArrayList<>();
+                                    rankings.addAll(responsePost.getList_rankings());
+                                    mView.showRanking(rankings);
                                 }
                             }
                             @Override

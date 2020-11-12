@@ -22,6 +22,7 @@ import com.bunizz.instapetts.web.responses.IdentificadoresHistoriesResponse;
 import com.bunizz.instapetts.web.responses.PetsResponse;
 import com.bunizz.instapetts.web.responses.ResponseCatalogo;
 import com.bunizz.instapetts.web.responses.ResponseCodesCountries;
+import com.bunizz.instapetts.web.responses.ResponseDetailEventPolitic;
 import com.bunizz.instapetts.web.responses.ResponseEventos;
 import com.bunizz.instapetts.web.responses.ResponseListReports;
 import com.bunizz.instapetts.web.responses.ResponseNamesAvailables;
@@ -29,6 +30,7 @@ import com.bunizz.instapetts.web.responses.ResponsePlayVideos;
 import com.bunizz.instapetts.web.responses.ResponsePost;
 import com.bunizz.instapetts.web.responses.ResponsePostRecomended;
 import com.bunizz.instapetts.web.responses.ResponseProfileUser;
+import com.bunizz.instapetts.web.responses.ResponseRankings;
 import com.bunizz.instapetts.web.responses.ResponseTips;
 import com.bunizz.instapetts.web.responses.SearchPetsResponse;
 import com.bunizz.instapetts.web.responses.SearchUsersResponse;
@@ -84,6 +86,11 @@ public interface WebServices {
     @POST("test/eventos")
     Single<ResponseEventos> getEventos(@Body AutenticateBean postFriendsBean);
 
+    @POST("test/eventos")
+    Single<ResponseRankings> getRanking(@Body AutenticateBean postFriendsBean);
+
+    @POST("test/eventos")
+    Single<ResponseDetailEventPolitic> getPoliticEvent(@Body AutenticateBean postFriendsBean);
 
     @POST("test/getplayvideos")
     Single<SimpleResponse> actionsPlayVideos(@Body PlayVideoParameters playVideoParameters);
